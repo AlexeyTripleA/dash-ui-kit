@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "dist/components",   // ✅ кладёт .d.ts в ту же структуру
+    "outDir": "dist/components",           // ✅ (на всякий случай)
+    "rootDir": "src/components",           // ✅ сохраняет структуру
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Node"
+  },
+  "include": ["src/components"]
+}
