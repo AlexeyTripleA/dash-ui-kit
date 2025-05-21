@@ -1,7 +1,11 @@
 {
   "name": "dash-ui",
   "version": "0.1.0",
+  "description": "Dash UI Kit for React js",
+  "keywords": ["dash", "ui-kit", "reactjs", "react", "tailwind", "cva"],
+  "license": "ISC",
   "type": "module",
+  "author": "pshenmic.dev",
   "main": "dist/components/index.cjs.js",
   "module": "dist/components/index.esm.js",
   "types": "dist/components/index.d.ts",
