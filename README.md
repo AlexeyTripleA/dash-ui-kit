@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# dash-ui-react
 
-## Getting Started
+**dash-ui-react** is a UI component library for React with TypeScript, TailwindCSS, and class-variance-authority (CVA) support.
 
-First, run the development server:
+The project is intended for use in the dash platform and is connected as a modular external dependency.
+
+Components are bundled with Rollup while preserving the modular structure. Types are generated separately using `tsc`.
+
+## Features
+
+- ✅ ESM and CJS export support
+- 🎨 Styling with TailwindCSS and CVA
+- 📦 Export via submodules: `dash-ui/button`, `dash-ui/input`, etc.
+- 🧱 Built with Rollup
+- 📄 Generation of `.d.ts` type definitions
+- 📚 Storybook for documentation
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install ./dash-ui-0.1.0.tgz
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```tsx
+import { Button } from 'dash-ui/button';
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Build
 
-## Learn More
+```bash
+npm run build-kit
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Storybook
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run storybook
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
