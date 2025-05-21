@@ -4,8 +4,8 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "dist/components",   // ✅ кладёт .d.ts в ту же структуру
-    "rootDir": "src/components",           // ✅ сохраняет структуру
+    "declarationDir": "dist/components",
+    "rootDir": "src/components",
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Node"
