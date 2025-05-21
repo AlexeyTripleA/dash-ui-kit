@@ -10,9 +10,9 @@
   ],
   "exports": {
     "./*": {
+      "types": "./dist/components/*/index.d.ts",
       "import": "./dist/components/*/index.esm.js",
-      "require": "./dist/components/*/index.cjs.js",
-      "types": "./dist/components/*/index.d.ts"
+      "require": "./dist/components/*/index.cjs.js"
     }
   },
   "scripts": {
@@ -47,23 +47,31 @@
     "@storybook/experimental-nextjs-vite": "^8.6.14",
     "@storybook/react": "^8.6.14",
     "@storybook/test": "^8.6.14",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser": "^3.1.4",
     "@vitest/coverage-v8": "^3.1.4",
+    "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
+    "css-loader": "^7.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "eslint-plugin-storybook": "^0.12.0",
     "playwright": "^1.52.0",
+    "postcss": "^8.5.3",
+    "postcss-import": "^16.1.0",
+    "postcss-loader": "^8.1.1",
+    "postcss-simple-vars": "^7.0.1",
     "rollup": "^4.41.0",
     "rollup-plugin-multi-input": "^1.5.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "storybook": "^8.6.14",
-    "tailwindcss": "^4",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^4.1.7",
     "typescript": "^5",
     "vitest": "^3.1.4"
   },
@@ -74,7 +82,9 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["dist/components/*/index.d.ts"]
+      "*": [
+        "dist/components/*/index.d.ts"
+      ]
     }
   }
 }
