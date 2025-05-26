@@ -31,6 +31,7 @@
     "build": "next build",
     "types": "tsc -p tsconfig.build.json",
     "build-kit": "rollup -c && npm run types",
+    "prepare": "rollup -c && npm run types",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
@@ -40,11 +41,12 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "next": "15.3.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "class-variance-authority": "^0.7.1"
   },
   "devDependencies": {
+    "next": "15.3.2",
+    "react-dom": "^19.0.0",
+    "react": "^19.0.0",
     "@babel/core": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
@@ -72,7 +74,6 @@
     "@vitest/browser": "^3.1.4",
     "@vitest/coverage-v8": "^3.1.4",
     "autoprefixer": "^10.4.21",
-    "class-variance-authority": "^0.7.1",
     "css-loader": "^7.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
