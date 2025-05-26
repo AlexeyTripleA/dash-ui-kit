@@ -24,10 +24,11 @@ const styles = index.cva(`
       solid: '',
       outline: 'border !bg-transparent'
     },
-    color: {
+    colorScheme: {
       brand: 'bg-brand hover:bg-brand/80 text-white',
       mint: 'bg-mint hover:bg-mint/80 text-black',
-      gray: 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+      gray: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
+      red: 'bg-red-200 hover:bg-red-300 text-red-700'
     },
     state: {
       active: 'active:-translate-y-[-1px]',
@@ -46,32 +47,41 @@ const styles = index.cva(`
     class: 'opacity-40'
   }, {
     variant: 'outline',
-    color: 'brand',
+    colorScheme: 'brand',
     class: '!text-brand'
   }, {
     variant: 'outline',
-    color: 'mint',
+    colorScheme: 'mint',
     class: '!text-mint'
   }, {
     variant: 'outline',
-    color: 'gray',
+    colorScheme: 'gray',
     class: '!text-gray-700'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    class: '!text-red-700 hover:!bg-red-300/20'
   },
   // solid variant
   {
     variant: 'solid',
-    color: 'brand',
+    colorScheme: 'brand',
     state: 'disabled',
     class: '!bg-brand/10 !text-brand-dim'
   }, {
     variant: 'solid',
-    color: 'mint',
+    colorScheme: 'mint',
     state: 'disabled',
     class: '!bg-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    class: '!bg-red-300/30 !text-black/60'
   }],
   defaultVariants: {
     variant: 'solid',
-    color: 'brand',
+    colorScheme: 'brand',
     state: 'active',
     size: 'md'
   }
@@ -84,16 +94,16 @@ const Button = _a => {
   var {
       children,
       variant,
-      color,
+      colorScheme,
       size,
       disabled,
       className = ''
     } = _a,
-    props = tslib_es6.__rest(_a, ["children", "variant", "color", "size", "disabled", "className"]);
+    props = tslib_es6.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
   const state = disabled ? 'disabled' : 'active';
   const classes = styles({
     variant,
-    color,
+    colorScheme,
     size,
     state
   }) + (className ? ` ${className}` : '');

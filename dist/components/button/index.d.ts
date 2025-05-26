@@ -3,7 +3,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     /** Solid or outline style */
     variant?: 'solid' | 'outline';
     /** Brand or mint color scheme */
-    color?: 'brand' | 'mint' | 'gray';
+    colorScheme?: 'brand' | 'mint' | 'gray' | 'red';
     /** Size of the button */
     size?: 'sm' | 'md';
 }
