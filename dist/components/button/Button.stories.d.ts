@@ -1,0 +1,11 @@
+import type { Meta, StoryFn } from '@storybook/react';
+import { ButtonProps } from './index';
+declare const meta: Meta<ButtonProps>;
+export default meta;
+export declare const Solid: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, ButtonProps>;
+export declare const Outline: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, ButtonProps>;
+export declare const Disabled: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, ButtonProps>;
+export declare const Sizes: StoryFn<ButtonProps>;
+export declare const Variants: StoryFn<ButtonProps>;
+export declare const Colors: StoryFn<ButtonProps>;
+export declare const All: StoryFn<ButtonProps>;
