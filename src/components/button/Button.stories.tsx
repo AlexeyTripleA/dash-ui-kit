@@ -10,7 +10,7 @@ const meta: Meta<ButtonProps> = {
       control: { type: 'inline-radio' },
       options: ['solid', 'outline'],
     },
-    color: {
+    colorScheme: {
       control: { type: 'inline-radio' },
       options: ['brand', 'mint', 'gray'],
     },
@@ -31,7 +31,7 @@ export const Solid = Template.bind({})
 Solid.args = {
   children: 'Solid Button',
   variant: 'solid',
-  color: 'brand',
+  colorScheme: 'brand',
   size: 'md',
   disabled: false,
 }
@@ -40,7 +40,7 @@ export const Outline = Template.bind({})
 Outline.args = {
   children: 'Outline Button',
   variant: 'outline',
-  color: 'brand',
+  colorScheme: 'brand',
   size: 'md',
   disabled: false,
 }
@@ -49,44 +49,44 @@ export const Disabled = Template.bind({})
 Disabled.args = {
   children: 'Disabled Button',
   variant: 'solid',
-  color: 'brand',
+  colorScheme: 'brand',
   size: 'md',
   disabled: true,
 }
 
 export const Sizes: StoryFn<ButtonProps> = () => (
   <>
-    <Button size="sm">Small Button</Button>
-    <Button size="md">Medium Button</Button>
+    <Button size={'sm'}>Small Button</Button>
+    <Button size={'md'}>Medium Button</Button>
   </>
 )
 
 export const Variants: StoryFn<ButtonProps> = () => (
   <>
-    <Button variant="solid">Solid Button</Button>
-    <Button variant="outline">Outline Button</Button>
+    <Button variant={'solid'}>Solid Button</Button>
+    <Button variant={'outline'}>Outline Button</Button>
   </>
 )
 
 export const Colors: StoryFn<ButtonProps> = () => (
   <>
-    <Button color="brand">Brand Button</Button>
-    <Button color="mint">Mint Button</Button>
-    <Button color="gray">Gray Button</Button>
+    <Button colorScheme={'brand'}>Brand Button</Button>
+    <Button colorScheme={'mint'}>Mint Button</Button>
+    <Button colorScheme={'gray'}>Gray Button</Button>
   </>
 )
 
 export const All: StoryFn<ButtonProps> = () => (
   <>
     {/* Variants */}
-    <Button variant="solid">Solid Button</Button>
-    <Button variant="outline">Outline Button</Button>
+    <Button variant={'solid'}>Solid Button</Button>
+    <Button variant={'outline'}>Outline Button</Button>
     {/* Sizes */}
-    <Button size="sm">Small Button</Button>
-    <Button size="md">Medium Button</Button>
+    <Button size={'sm'}>Small Button</Button>
+    <Button size={'md'}>Medium Button</Button>
     {/* Colors */}
-    <Button color="brand">Brand Button</Button>
-    <Button color="mint">Mint Button</Button>
-    <Button color="gray">Gray Button</Button>
+    <Button colorScheme={'brand'}>Brand Button</Button>
+    <Button colorScheme={'mint'}>Mint Button</Button>
+    <Button colorScheme={'gray'}>Gray Button</Button>
   </>
 )
