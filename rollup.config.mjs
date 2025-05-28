@@ -6,8 +6,8 @@ import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
-const inputFiles = glob.sync('src/components/**/index.@(ts|tsx)')
-const dir = 'dist/components'
+const inputFiles = glob.sync('src/react/components/**/index.@(ts|tsx)')
+const dir = 'dist/react/components'
 
 const sharedPlugins = [
   peerDepsExternal(),
@@ -30,14 +30,14 @@ export default [
       dir: dir,
       format: 'esm',
       preserveModules: true,
-      preserveModulesRoot: 'src/components',
+      preserveModulesRoot: 'src/react/components',
       entryFileNames: '[name].esm.js',
       sourcemap: true
     },
     plugins: [
       typescript({
         tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/components' },
+        compilerOptions: { outDir: 'dist/react/components' },
         noEmit: true,
         outputToFilesystem: false
       }),
@@ -51,7 +51,7 @@ export default [
       dir: dir,
       format: 'cjs',
       preserveModules: true,
-      preserveModulesRoot: 'src/components',
+      preserveModulesRoot: 'src/react/components',
       entryFileNames: '[name].cjs.js',
       exports: 'named',
       sourcemap: true
@@ -59,7 +59,7 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/components' },
+        compilerOptions: { outDir: 'dist/react/components' },
         noEmit: true,
         outputToFilesystem: false
       }),

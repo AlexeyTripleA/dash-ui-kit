@@ -4,11 +4,13 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "dist/components",
-    "rootDir": "src/components",
+    "declarationDir": "dist/react/components",
+    "rootDir": "src/react/components",
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Node"
   },
-  "include": ["src/components"]
+  "include": [
+    "src/react/components"
+  ]
 }
