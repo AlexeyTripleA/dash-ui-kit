@@ -1,8 +1,12 @@
-import { __rest } from '../node_modules/tslib/tslib.es6.esm.js';
-import { j as jsxRuntimeExports } from '../_virtual/jsx-runtime.esm.js';
-import { cva } from '../node_modules/class-variance-authority/dist/index.esm.js';
+'use strict';
 
-const styles = cva(`
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var tslib_es6 = require('../../node_modules/tslib/tslib.es6.cjs.js');
+var jsxRuntime = require('../../_virtual/jsx-runtime.cjs.js');
+var index = require('../../node_modules/class-variance-authority/dist/index.cjs.js');
+
+const styles = index.cva(`
     btn-base
     select-none
     min-h-11
@@ -95,7 +99,7 @@ const Button = _a => {
       disabled,
       className = ''
     } = _a,
-    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+    props = tslib_es6.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
   const state = disabled ? 'disabled' : 'active';
   const classes = styles({
     variant,
@@ -103,7 +107,7 @@ const Button = _a => {
     size,
     state
   }) + (className ? ` ${className}` : '');
-  return jsxRuntimeExports.jsx("button", Object.assign({
+  return jsxRuntime.jsxRuntimeExports.jsx("button", Object.assign({
     className: classes,
     disabled: disabled
   }, props, {
@@ -111,5 +115,6 @@ const Button = _a => {
   }));
 };
 
-export { Button, Button as default };
-//# sourceMappingURL=index.esm.js.map
+exports.Button = Button;
+exports.default = Button;
+//# sourceMappingURL=index.cjs.js.map
