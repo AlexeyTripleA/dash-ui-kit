@@ -20,10 +20,15 @@
     "dist"
   ],
   "exports": {
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.esm.js",
+      "require": "./dist/react/index.cjs.js"
+    },
     "./react/*": {
-      "types": "./dist/react/components/*/index.d.ts",
-      "import": "./dist/react/components/*/index.esm.js",
-      "require": "./dist/react/components/*/index.cjs.js"
+      "types": "./dist/react/*/index.d.ts",
+      "import": "./dist/react/*/index.esm.js",
+      "require": "./dist/react/*/index.cjs.js"
     }
   },
   "scripts": {

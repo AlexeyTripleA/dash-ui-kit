@@ -7,6 +7,7 @@ import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
 const inputFiles = [
+  'src/react/index.ts', // Главный файл
   ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
   ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
 ]
