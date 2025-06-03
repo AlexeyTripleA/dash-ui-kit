@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var tslib_es6 = require('../../node_modules/tslib/tslib.es6.cjs.js');
-var jsxRuntime = require('../../_virtual/jsx-runtime.cjs.js');
+var jsxRuntime = require('react/jsx-runtime');
 var index = require('../../node_modules/class-variance-authority/dist/index.cjs.js');
 
 const styles = index.cva(`
@@ -107,7 +107,7 @@ const Button = _a => {
     size,
     state
   }) + (className ? ` ${className}` : '');
-  return jsxRuntime.jsxRuntimeExports.jsx("button", Object.assign({
+  return jsxRuntime.jsx("button", Object.assign({
     className: classes,
     disabled: disabled
   }, props, {

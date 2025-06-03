@@ -1,5 +1,5 @@
 import { __rest } from '../../node_modules/tslib/tslib.es6.esm.js';
-import { j as jsxRuntimeExports } from '../../_virtual/jsx-runtime.esm.js';
+import { jsx } from 'react/jsx-runtime';
 import { cva } from '../../node_modules/class-variance-authority/dist/index.esm.js';
 
 const styles = cva(`
@@ -103,7 +103,7 @@ const Button = _a => {
     size,
     state
   }) + (className ? ` ${className}` : '');
-  return jsxRuntimeExports.jsx("button", Object.assign({
+  return jsx("button", Object.assign({
     className: classes,
     disabled: disabled
   }, props, {

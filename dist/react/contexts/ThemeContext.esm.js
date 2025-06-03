@@ -1,7 +1,7 @@
-import { j as jsxRuntimeExports } from '../_virtual/jsx-runtime.esm.js';
-import { r as reactExports } from '../_virtual/index.esm.js';
+import { jsx } from 'react/jsx-runtime';
+import { useState, useEffect, createContext, useContext } from 'react';
 
-const ThemeContext = /*#__PURE__*/reactExports.createContext(undefined);
+const ThemeContext = /*#__PURE__*/createContext(undefined);
 /**
  * Provides theme context to its descendants and syncs theme with localStorage
  * and the root HTML element's class list ('light' or 'dark').
@@ -20,12 +20,12 @@ const ThemeProvider = ({
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('theme') || null;
   };
-  const [theme, setThemeState] = reactExports.useState(() => {
+  const [theme, setThemeState] = useState(() => {
     var _a;
     return (_a = initialTheme !== null && initialTheme !== void 0 ? initialTheme : getStoredTheme()) !== null && _a !== void 0 ? _a : 'light';
   });
   // Sync theme changes to document <html> class and localStorage.
-  reactExports.useEffect(() => {
+  useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.classList.toggle('light', theme === 'light');
     try {
@@ -47,7 +47,7 @@ const ThemeProvider = ({
   const toggleTheme = () => {
     setThemeState(current => current === 'light' ? 'dark' : 'light');
   };
-  return jsxRuntimeExports.jsx(ThemeContext.Provider, {
+  return jsx(ThemeContext.Provider, {
     value: {
       theme,
       setTheme,
@@ -62,7 +62,7 @@ const ThemeProvider = ({
  * @throws If used outside of a ThemeProvider.
  */
 function useTheme() {
-  const context = reactExports.useContext(ThemeContext);
+  const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }

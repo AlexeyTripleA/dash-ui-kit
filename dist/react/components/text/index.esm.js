@@ -1,5 +1,5 @@
 import { __rest } from '../../node_modules/tslib/tslib.es6.esm.js';
-import { j as jsxRuntimeExports } from '../../_virtual/jsx-runtime.esm.js';
+import { jsx } from 'react/jsx-runtime';
 import { cva } from '../../node_modules/class-variance-authority/dist/index.esm.js';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 
@@ -100,7 +100,7 @@ const Text = _a => {
     theme
   })) + (className ? ` ${className}` : '');
   const Component = as !== null && as !== void 0 ? as : 'span';
-  return jsxRuntimeExports.jsx(Component, {
+  return jsx(Component, {
     className: classes,
     children: children
   });

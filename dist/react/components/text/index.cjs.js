@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var tslib_es6 = require('../../node_modules/tslib/tslib.es6.cjs.js');
-var jsxRuntime = require('../../_virtual/jsx-runtime.cjs.js');
+var jsxRuntime = require('react/jsx-runtime');
 var index = require('../../node_modules/class-variance-authority/dist/index.cjs.js');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 
@@ -104,7 +104,7 @@ const Text = _a => {
     theme
   })) + (className ? ` ${className}` : '');
   const Component = as !== null && as !== void 0 ? as : 'span';
-  return jsxRuntime.jsxRuntimeExports.jsx(Component, {
+  return jsxRuntime.jsx(Component, {
     className: classes,
     children: children
   });
