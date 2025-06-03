@@ -1,3 +1,3 @@
 node_modules/
-dist/node_modules/
-dist/components/_virtual/
+dist/**/node_modules/
+dist/**/_virtual/
