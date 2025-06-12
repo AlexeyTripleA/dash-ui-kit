@@ -32,7 +32,7 @@ npm install ./dash-ui-0.1.0.tgz
 ## Usage
 
 ```tsx
-import { Button } from 'dash-ui/button';
+import { ThemeProvider, useTheme, Button, Text } from 'dash-ui/react';
 ```
 
 ## Build
