@@ -26,7 +26,7 @@ npm run storybook
 ## Installation
 
 ```bash
-npm install ./dash-ui-0.1.0.tgz
+npm install AlexeyTripleA/dash-ui-kit
 ```
 
 ## Usage
