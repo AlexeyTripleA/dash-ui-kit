@@ -6,6 +6,14 @@ The project is intended for use in the dash platform and is connected as a modul
 
 Components are bundled with Rollup while preserving the modular structure. Types are generated separately using `tsc`.
 
+This ui-kit is in a very early stage of development, and currently supports only ThemeContext and two components:
+![storybook](public/img/screenshots/storybook.png)
+Soon you will be able to see them in the storybook online .
+Now you can clone this repository and run storybook locally with
+```bash
+npm run storybook
+```
+
 ## Features
 
 - ✅ ESM and CJS export support
