@@ -1,87 +1,101 @@
-import typescript from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'
-import postcss from 'rollup-plugin-postcss'
-import babel from '@rollup/plugin-babel'
-import glob from 'fast-glob'
+import typescript from '@rollup/plugin-typescript'
+import fs from 'fs'
+import path from 'path'
 
-const inputFiles = [
-  'src/react/index.ts', // Главный файл
-  ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
-  ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
-]
-const dir = 'dist/react'
-
-const external = [
-  'react',
-  'react-dom', 
-  'react/jsx-runtime',
-  'tslib',
-  'class-variance-authority',
-  'clsx'
-]
-
-const sharedPlugins = [
-  peerDepsExternal(),
-  resolve({
-    preferBuiltins: false,
-    browser: true
-  }),
-  commonjs(),
-  postcss({ extract: true, minimize: true, modules: false }),
-  babel({
-    babelHelpers: 'bundled',
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    presets: ['@babel/preset-typescript','@babel/preset-react'],
-    include: ['src/**/*']
-  })
-]
+// Simple plugin to add 'use client' directive to React components
+const addUseClientDirective = () => {
+  return {
+    name: 'add-use-client',
+    writeBundle(options, bundle) {
+      // Get the output directory
+      const outputDir = options.dir || path.dirname(options.file)
+      
+      // Check if this build is for React components
+      const isReactBuild = outputDir.includes('react')
+      
+      if (isReactBuild) {
+        // For each file in the bundle
+        Object.keys(bundle).forEach(fileName => {
+          if (fileName.endsWith('.js') || fileName.endsWith('.cjs')) {
+            const filePath = path.join(outputDir, fileName)
+            
+            try {
+              // Read the file
+              const content = fs.readFileSync(filePath, 'utf-8')
+              
+              // Add 'use client' directive if not present
+              if (!content.startsWith("'use client'")) {
+                const newContent = `'use client';\n${content}`
+                fs.writeFileSync(filePath, newContent, 'utf-8')
+                console.log(`Added 'use client' directive to ${fileName}`)
+              }
+            } catch (err) {
+              console.warn(`Could not add 'use client' directive to ${fileName}:`, err)
+            }
+          }
+        })
+      }
+    }
+  }
+}
 
 export default [
-  // ESM
+  // React components build
   {
-    input: inputFiles,
-    external,
-    output: {
-      dir: dir,
-      format: 'esm',
-      preserveModules: true,
-      preserveModulesRoot: 'src/react',
-      entryFileNames: '[name].esm.js',
-      sourcemap: true
-    },
+    input: 'src/react/index.ts',
+    output: [
+      {
+        file: 'dist/react/index.js',
+        format: 'es',
+        sourcemap: true,
+      },
+      {
+        file: 'dist/react/index.cjs',
+        format: 'cjs',
+        sourcemap: true,
+      },
+    ],
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
     plugins: [
+      resolve({
+        preferBuiltins: false,
+      }),
+      commonjs(),
       typescript({
         tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        declarationDir: 'dist/react',
       }),
-      ...sharedPlugins
-    ]
+      addUseClientDirective(),
+    ],
   },
-  // CJS
+  // Main index build
   {
-    input: inputFiles,
-    external,
-    output: {
-      dir: dir,
-      format: 'cjs',
-      preserveModules: true,
-      preserveModulesRoot: 'src/react',
-      entryFileNames: '[name].cjs.js',
-      exports: 'named',
-      sourcemap: true
-    },
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'dist/index.js',
+        format: 'es',
+        sourcemap: true,
+      },
+      {
+        file: 'dist/index.cjs',
+        format: 'cjs',
+        sourcemap: true,
+      },
+    ],
+    external: ['react', 'react-dom', 'react/jsx-runtime'],
     plugins: [
+      resolve({
+        preferBuiltins: false,
+      }),
+      commonjs(),
       typescript({
         tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        declarationDir: 'dist',
       }),
-      ...sharedPlugins
-    ]
-  }
+      addUseClientDirective(),
+    ],
+  },
 ]

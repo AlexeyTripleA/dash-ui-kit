@@ -1,27 +1,33 @@
 import React from 'react';
-import { VariantProps } from 'class-variance-authority';
-declare const textStyles: (props?: ({
-    reset?: boolean | null | undefined;
-    theme?: "light" | "dark" | null | undefined;
-    color?: "default" | "red" | "blue" | null | undefined;
-    size?: "sm" | "md" | "lg" | "xl" | null | undefined;
-    weight?: "bold" | "normal" | null | undefined;
-    italic?: boolean | null | undefined;
-    underline?: boolean | null | undefined;
-    lineThrough?: boolean | null | undefined;
-    transform?: "none" | "uppercase" | "capitalize" | null | undefined;
-    opacity?: 0 | 100 | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | null | undefined;
-    monospace?: boolean | null | undefined;
-    dim?: boolean | null | undefined;
-} & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
-type TextVariants = Omit<VariantProps<typeof textStyles>, 'theme'>;
-export interface TextProps extends TextVariants {
+export interface TextProps {
     /** Render as this element or component (e.g. 'h1' or Link). */
     as?: React.ElementType;
     /** Additional CSS classes. */
     className?: string;
     /** Text children. */
     children?: React.ReactNode;
+    /** Text size */
+    size?: 'sm' | 'md' | 'lg' | 'xl';
+    /** Text weight */
+    weight?: 'normal' | 'bold';
+    /** Text color */
+    color?: 'default' | 'blue' | 'red';
+    /** Italic text */
+    italic?: boolean;
+    /** Underline text */
+    underline?: boolean;
+    /** Line through text */
+    lineThrough?: boolean;
+    /** Text transform */
+    transform?: 'none' | 'uppercase' | 'capitalize';
+    /** Opacity */
+    opacity?: number;
+    /** Use monospace font */
+    monospace?: boolean;
+    /** Dim text */
+    dim?: boolean;
+    /** Reset default styling */
+    reset?: boolean;
 }
 /**
  * A versatile text component with size, color, weight, decoration,

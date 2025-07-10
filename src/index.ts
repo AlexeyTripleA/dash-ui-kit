@@ -1,1 +1,1 @@
-export { default as Button } from '@/react/components/button'
+export * from './react'
