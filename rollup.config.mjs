@@ -13,9 +13,21 @@ const inputFiles = [
 ]
 const dir = 'dist/react'
 
+const external = [
+  'react',
+  'react-dom', 
+  'react/jsx-runtime',
+  'tslib',
+  'class-variance-authority',
+  'clsx'
+]
+
 const sharedPlugins = [
   peerDepsExternal(),
-  resolve(),
+  resolve({
+    preferBuiltins: false,
+    browser: true
+  }),
   commonjs(),
   postcss({ extract: true, minimize: true, modules: false }),
   babel({
@@ -30,6 +42,7 @@ export default [
   // ESM
   {
     input: inputFiles,
+    external,
     output: {
       dir: dir,
       format: 'esm',
@@ -51,6 +64,7 @@ export default [
   // CJS
   {
     input: inputFiles,
+    external,
     output: {
       dir: dir,
       format: 'cjs',

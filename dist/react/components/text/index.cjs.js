@@ -2,12 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var tslib_es6 = require('../../node_modules/tslib/tslib.es6.cjs.js');
+var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
-var index = require('../../node_modules/class-variance-authority/dist/index.cjs.js');
+var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 
-const textStyles = index.cva('', {
+const textStyles = classVarianceAuthority.cva('', {
   variants: {
     reset: {
       false: 'inline whitespace-normal',
@@ -96,7 +96,7 @@ const Text = _a => {
       className = '',
       children
     } = _a,
-    variantProps = tslib_es6.__rest(_a, ["as", "className", "children"]);
+    variantProps = tslib.__rest(_a, ["as", "className", "children"]);
   const {
     theme
   } = ThemeContext.useTheme();
