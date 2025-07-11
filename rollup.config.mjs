@@ -66,6 +66,7 @@ export default [
       typescript({
         tsconfig: './tsconfig.build.json',
         declarationDir: 'dist/react',
+        exclude: ['**/*.stories.*', '**/*.test.*', '**/*.spec.*'],
       }),
       addUseClientDirective(),
     ],
@@ -94,6 +95,7 @@ export default [
       typescript({
         tsconfig: './tsconfig.build.json',
         declarationDir: 'dist',
+        exclude: ['**/*.stories.*', '**/*.test.*', '**/*.spec.*'],
       }),
       addUseClientDirective(),
     ],

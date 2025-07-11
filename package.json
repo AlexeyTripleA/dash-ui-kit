@@ -1,7 +1,18 @@
 {
   "name": "dash-ui",
   "version": "0.1.0",
+  "description": "Dash UI Kit for React js",
+  "keywords": [
+    "dash",
+    "ui-kit",
+    "reactjs",
+    "react",
+    "tailwind",
+    "cva"
+  ],
+  "license": "ISC",
   "type": "module",
+  "author": "pshenmic.dev",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,8 +37,14 @@
     "dev": "rollup -c -w",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
+    "prepare": "rollup -c",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
+    "storybook": "echo 'Storybook not configured in this branch'",
     "test": "vitest run",
     "test:watch": "vitest"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
