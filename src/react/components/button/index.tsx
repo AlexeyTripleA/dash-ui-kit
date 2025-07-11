@@ -3,60 +3,85 @@ import React from 'react'
 import { cva } from 'class-variance-authority'
 
 const styles = cva(
-  [
-    'btn-base',
-    'select-none',
-    'min-h-11',
-    'flex',
-    'items-center',
-    'font-bold',
-    'capitalize',
-    'transition-colors',
-    'hover:cursor-pointer',
-    'justify-center',
-    'font-main'
-  ],
+  `
+    btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    font-bold
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-main
+  `,
   {
     variants: {
       variant: {
         solid: '',
-        outline: 'border bg-transparent',
+        outline: 'border !bg-transparent',
       },
       colorScheme: {
-        brand: 'bg-brand hover:bg-brand-dark text-white',
-        mint: 'bg-mint hover:opacity-80 text-black',
+        brand: 'bg-brand hover:bg-brand/80 text-white',
+        mint: 'bg-mint hover:bg-mint/80 text-black',
         gray: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
         red: 'bg-red-200 hover:bg-red-300 text-red-700',
       },
       state: {
-        active: 'active:translate-y-px',
-        disabled: 'hover:cursor-not-allowed opacity-60',
+        active: 'active:-translate-y-[-1px]',
+        disabled: 'hover:!cursor-not-allowed',
       },
       size: {
-        sm: 'px-4 py-2 rounded-lg font-bold text-sm',
-        md: 'px-6 py-2.5 rounded-xl text-lg',
+        sm: 'px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
+        md: 'px-[1.563rem] py-[0.625rem] rounded-[1.25rem] text-lg',
       },
     },
     compoundVariants: [
+      // outline variant
+      {
+        variant: 'outline',
+        state: 'disabled',
+        class: 'opacity-40'
+      },
       {
         variant: 'outline',
         colorScheme: 'brand',
-        class: 'text-brand border-brand'
+        class: '!text-brand'
       },
       {
         variant: 'outline',
         colorScheme: 'mint',
-        class: 'text-mint border-mint'
+        class: '!text-mint'
       },
       {
         variant: 'outline',
         colorScheme: 'gray',
-        class: 'text-gray-700 border-gray-300'
+        class: '!text-gray-700'
       },
       {
         variant: 'outline',
         colorScheme: 'red',
-        class: 'text-red-700 border-red-300 hover:bg-red-50'
+        class: '!text-red-700 hover:!bg-red-300/20'
+      },
+      // solid variant
+      {
+        variant: 'solid',
+        colorScheme: 'brand',
+        state: 'disabled',
+        class: '!bg-brand/10 !text-brand-dim',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'mint',
+        state: 'disabled',
+        class: '!bg-mint/30 !text-black/60',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'red',
+        state: 'disabled',
+        class: '!bg-red-300/30 !text-black/60',
       },
     ],
     defaultVariants: {
