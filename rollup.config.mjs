@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript'
+import postcss from 'rollup-plugin-postcss'
 import fs from 'fs'
 import path from 'path'
 
@@ -59,6 +60,10 @@ export default [
     ],
     external: ['react', 'react-dom', 'react/jsx-runtime'],
     plugins: [
+      postcss({
+        inject: true, // Автоматически инжектирует CSS в DOM
+        minimize: true,
+      }),
       resolve({
         preferBuiltins: false,
       }),
@@ -88,6 +93,10 @@ export default [
     ],
     external: ['react', 'react-dom', 'react/jsx-runtime'],
     plugins: [
+      postcss({
+        inject: true, // Автоматически инжектирует CSS в DOM
+        minimize: true,
+      }),
       resolve({
         preferBuiltins: false,
       }),

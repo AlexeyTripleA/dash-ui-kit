@@ -1,3 +1,10 @@
 node_modules/
 dist/**/node_modules/
 dist/**/_virtual/
+# Temporary files
+.DS_Store
+.idea/
+.rollup.cache/
+*.tgz
+tsconfig.*.tsbuildinfo
+pr.md
