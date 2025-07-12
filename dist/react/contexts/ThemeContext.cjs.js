@@ -1,9 +1,11 @@
+"use client";
+
 'use strict';
 
 var jsxRuntime = require('react/jsx-runtime');
-var react = require('react');
+var React = require('react');
 
-const ThemeContext = /*#__PURE__*/react.createContext(undefined);
+const ThemeContext = /*#__PURE__*/React.createContext(undefined);
 /**
  * Provides theme context to its descendants and syncs theme with localStorage
  * and the root HTML element's class list ('light' or 'dark').
@@ -22,12 +24,12 @@ const ThemeProvider = ({
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('theme') || null;
   };
-  const [theme, setThemeState] = react.useState(() => {
+  const [theme, setThemeState] = React.useState(() => {
     var _a;
     return (_a = initialTheme !== null && initialTheme !== void 0 ? initialTheme : getStoredTheme()) !== null && _a !== void 0 ? _a : 'light';
   });
   // Sync theme changes to document <html> class and localStorage.
-  react.useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.classList.toggle('light', theme === 'light');
     try {
@@ -64,7 +66,7 @@ const ThemeProvider = ({
  * @throws If used outside of a ThemeProvider.
  */
 function useTheme() {
-  const context = react.useContext(ThemeContext);
+  const context = React.useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }

@@ -1,3 +1,5 @@
+"use client";
+
 'use strict';
 
 var index = require('./components/button/index.cjs.js');

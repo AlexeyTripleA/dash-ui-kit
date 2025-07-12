@@ -17,14 +17,23 @@ const sharedPlugins = [
   peerDepsExternal(),
   resolve(),
   commonjs(),
-  postcss({ extract: true, minimize: true, modules: false }),
   babel({
     babelHelpers: 'bundled',
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    presets: ['@babel/preset-typescript','@babel/preset-react'],
+    presets: [
+      '@babel/preset-typescript',
+      [
+        '@babel/preset-react',
+        {
+          runtime: 'automatic'
+        }
+      ]
+    ],
     include: ['src/**/*']
   })
 ]
+
+const banner = `"use client";\n`
 
 export default [
   // ESM
@@ -36,7 +45,8 @@ export default [
       preserveModules: true,
       preserveModulesRoot: 'src/react',
       entryFileNames: '[name].esm.js',
-      sourcemap: true
+      sourcemap: true,
+      banner: banner
     },
     plugins: [
       typescript({
@@ -58,7 +68,8 @@ export default [
       preserveModulesRoot: 'src/react',
       entryFileNames: '[name].cjs.js',
       exports: 'named',
-      sourcemap: true
+      sourcemap: true,
+      banner: banner
     },
     plugins: [
       typescript({
@@ -68,6 +79,26 @@ export default [
         outputToFilesystem: false
       }),
       ...sharedPlugins
+    ]
+  },
+  
+  // Tailwind v4 theme
+  {
+    input: 'src/styles/app.pcss',
+    output: {
+      file: 'dist/theme.css',
+      format: 'es'
+    },
+    plugins: [
+      postcss({
+        extract: true,
+        minimize: true,
+        modules: false,
+        inject: false,
+        config: {
+          path: './postcss.config.cjs'
+        }
+      })
     ]
   }
 ]

@@ -13,32 +13,30 @@
   "license": "ISC",
   "type": "module",
   "author": "pshenmic.dev",
-  "main": "dist/components/index.cjs.js",
-  "module": "dist/components/index.esm.js",
-  "types": "dist/components/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     "./react": {
       "types": "./dist/react/index.d.ts",
+      "browser": "./dist/react/index.esm.js",
       "import": "./dist/react/index.esm.js",
-      "require": "./dist/react/index.cjs.js"
+      "require": "./dist/react/index.cjs.js",
+      "default": "./dist/react/index.cjs.js"
     },
+    "./theme": "./dist/theme.css",
     "./react/*": {
       "types": "./dist/react/*/index.d.ts",
+      "browser": "./dist/react/*/index.esm.js",
       "import": "./dist/react/*/index.esm.js",
-      "require": "./dist/react/*/index.cjs.js"
+      "require": "./dist/react/*/index.cjs.js",
+      "default": "./dist/react/*/index.cjs.js"
     }
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
     "types": "tsc -p tsconfig.build.json",
-    "build-kit": "rollup -c && npm run types",
+    "build": "rollup -c && npm run types",
     "prepare": "rollup -c && npm run types",
-    "start": "next start",
-    "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest run",
@@ -49,7 +47,6 @@
     "class-variance-authority": "^0.7.1"
   },
   "devDependencies": {
-    "next": "15.3.2",
     "@babel/core": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
@@ -109,10 +106,8 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "dist/components/*/index.d.ts"
-      ]
+      "react": ["dist/react/index.d.ts"],
+      "*": ["dist/react/*/index.d.ts"]
     }
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

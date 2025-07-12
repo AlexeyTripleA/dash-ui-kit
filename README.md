@@ -1,50 +1,85 @@
-# dash-ui-react
+# dash-ui-kit
 
-**dash-ui-react** is a UI component library for React with TypeScript, TailwindCSS, and class-variance-authority (CVA) support.
+Dash ui kit is a UI component library with TypeScript, TailwindCSS v4, and class-variance-authority (CVA) support.
 
-The project is intended for use in the dash platform and is connected as a modular external dependency.
+## ⚡ Quick Start
 
-Components are bundled with Rollup while preserving the modular structure. Types are generated separately using `tsc`.
-
-This ui-kit is in a very early stage of development, and currently supports only ThemeContext and two components:
-![storybook](public/img/screenshots/storybook.png)
-Soon you will be able to see them in the storybook online .
-Now you can clone this repository and run storybook locally with
-```bash
-npm run storybook
-```
-
-## Features
-
-- ✅ ESM and CJS export support
-- 🎨 Styling with TailwindCSS and CVA
-- 📦 Export via submodules: `dash-ui/button`, `dash-ui/input`, etc.
-- 🧱 Built with Rollup
-- 📄 Generation of `.d.ts` type definitions
-- 📚 Storybook for documentation
-
-## Installation
+### Installation
 
 ```bash
 npm install AlexeyTripleA/dash-ui-kit
 ```
 
-## Usage
+### Setup with Tailwind CSS v4
 
-```tsx
-import { ThemeProvider, useTheme, Button, Text } from 'dash-ui/react';
+```css
+/* main.css */
+@import "tailwindcss";
+@import "dash-ui/theme";
 ```
 
-## Build
+```jsx
+import { Button } from 'dash-ui/react';
 
-```bash
-npm run build-kit
+<Button colorScheme="brand">Button</Button>
 ```
 
-## Storybook
+## 📦 Components
+
+- **Button** - Flexible buttons with multiple variants and color schemes
+- **Text** - Typography component with theming support
+- **ThemeProvider** - Theme context for dark/light mode
+
+## 🎨 Features
+
+- ✅ **Single source of truth**: All styles from one `app.pcss` file
+- ✅ **Tailwind v4**: Modern CSS-first architecture with `@theme` and `@layer`
+- ✅ **Auto-generated**: Theme CSS automatically built from source
+- ✅ **TypeScript**: Full type safety and IntelliSense support
+- ✅ **Lightweight**: Minimal bundle size impact
+
+## 🚀 Usage Examples
+
+### Button Component
+
+```jsx
+import { Button } from 'dash-ui/react';
+
+// Color schemes
+<Button colorScheme="brand">Brand Button</Button>
+<Button colorScheme="mint">Mint Button</Button>
+<Button colorScheme="gray">Gray Button</Button>
+<Button colorScheme="red">Red Button</Button>
+
+// Variants
+<Button variant="solid">Solid Button</Button>
+<Button variant="outline">Outline Button</Button>
+
+// Sizes
+<Button size="sm">Small Button</Button>
+<Button size="md">Medium Button</Button>
+```
+
+### Text Component
+
+```jsx
+import { Text } from 'dash-ui/react';
+
+<Text size="xl" weight="bold" color="blue">
+  Styled Text
+</Text>
+```
+
+## 📚 Documentation
+
+For detailed integration guides and examples, see [INTEGRATION.md](./INTEGRATION.md)
+
+## 🔧 Development
 
 ```bash
-npm run storybook
+npm run build        # Build library
+npm run test         # Run tests
+npm run storybook    # Start Storybook
 ```
 
 ## License
