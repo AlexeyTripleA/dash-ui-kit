@@ -5,7 +5,7 @@ import { jsx } from 'react/jsx-runtime';
 import { cva } from '../../node_modules/class-variance-authority/dist/index.esm.js';
 
 const styles = cva(`
-    btn-base
+    dash-btn-base
     select-none
     min-h-11
     flex
@@ -20,20 +20,20 @@ const styles = cva(`
   variants: {
     variant: {
       solid: '',
-      outline: 'border !bg-transparent'
+      outline: 'dash-btn-outline border !bg-transparent'
     },
     colorScheme: {
-      brand: 'bg-brand hover:bg-brand/80 text-white',
-      mint: 'bg-mint hover:bg-mint/80 text-black',
-      gray: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
-      red: 'bg-red-200 hover:bg-red-300 text-red-700'
+      brand: 'dash-btn-brand',
+      mint: 'dash-btn-mint',
+      gray: 'dash-btn-gray',
+      red: 'dash-btn-red'
     },
     state: {
       active: 'active:-translate-y-[-1px]',
       disabled: 'hover:!cursor-not-allowed'
     },
     size: {
-      sm: 'px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
+      sm: 'dash-btn-sm px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
       md: 'px-[1.563rem] py-[0.625rem] rounded-[1.25rem] text-lg'
     }
   },

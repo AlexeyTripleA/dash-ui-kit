@@ -17,7 +17,6 @@ const sharedPlugins = [
   peerDepsExternal(),
   resolve(),
   commonjs(),
-  postcss({ extract: true, minimize: true, modules: false }),
   babel({
     babelHelpers: 'bundled',
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -80,6 +79,26 @@ export default [
         outputToFilesystem: false
       }),
       ...sharedPlugins
+    ]
+  },
+  
+  // Tailwind v4 theme
+  {
+    input: 'src/styles/app.pcss',
+    output: {
+      file: 'dist/theme.css',
+      format: 'es'
+    },
+    plugins: [
+      postcss({
+        extract: true,
+        minimize: true,
+        modules: false,
+        inject: false,
+        config: {
+          path: './postcss.config.cjs'
+        }
+      })
     ]
   }
 ]

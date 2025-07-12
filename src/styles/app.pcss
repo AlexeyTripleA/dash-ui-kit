@@ -7,17 +7,50 @@
   --color-brand-darkness: #13172A;
 
   --color-mint: #60F6D2;
+  --color-mint-hover: #4DD4B1;
 
   --font-main: "Manrope", sans-serif;
   --font-grotesque: "Space Grotesk", sans-serif;
+  
+  --spacing-11: 2.75rem;
 }
 
 @layer components {
-  .btn-base {
+  .dash-btn-base {
     @apply inline-flex items-center justify-center rounded-md;
     @apply text-sm font-medium transition-colors;
-    @apply focus-visible:outline-none focus-visible:ring-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     @apply disabled:pointer-events-none disabled:opacity-50;
+    @apply border border-transparent min-h-11 px-4 py-2;
+    @apply cursor-pointer font-main;
+  }
+  
+  .dash-btn-brand {
+    @apply bg-brand text-white;
+    @apply hover:bg-brand-dim;
+  }
+  
+  .dash-btn-mint {
+    @apply bg-mint text-black;
+    @apply hover:bg-mint-hover;
+  }
+  
+  .dash-btn-gray {
+    @apply bg-gray-100 text-gray-900;
+    @apply hover:bg-gray-200;
+  }
+  
+  .dash-btn-red {
+    @apply bg-red-600 text-white;
+    @apply hover:bg-red-700;
+  }
+  
+  .dash-btn-outline {
+    @apply bg-transparent border-current;
+  }
+  
+  .dash-btn-sm {
+    @apply px-3 py-1 text-xs min-h-9;
   }
   
   .h1-title {
