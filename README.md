@@ -1,6 +1,6 @@
-# Dash UI
+# dash-ui-kit
 
-Modern React UI library with full Tailwind CSS v4 support.
+Dash ui kit is a UI component library with TypeScript, TailwindCSS v4, and class-variance-authority (CVA) support.
 
 ## ⚡ Quick Start
 
