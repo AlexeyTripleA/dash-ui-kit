@@ -1,3 +1,5 @@
+"use client";
+
 'use strict';
 
 var ThemeContext = require('./ThemeContext.cjs.js');

@@ -21,10 +21,20 @@ const sharedPlugins = [
   babel({
     babelHelpers: 'bundled',
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    presets: ['@babel/preset-typescript','@babel/preset-react'],
+    presets: [
+      '@babel/preset-typescript',
+      [
+        '@babel/preset-react',
+        {
+          runtime: 'automatic'
+        }
+      ]
+    ],
     include: ['src/**/*']
   })
 ]
+
+const banner = `"use client";\n`
 
 export default [
   // ESM
@@ -36,7 +46,8 @@ export default [
       preserveModules: true,
       preserveModulesRoot: 'src/react',
       entryFileNames: '[name].esm.js',
-      sourcemap: true
+      sourcemap: true,
+      banner: banner
     },
     plugins: [
       typescript({
@@ -58,7 +69,8 @@ export default [
       preserveModulesRoot: 'src/react',
       entryFileNames: '[name].cjs.js',
       exports: 'named',
-      sourcemap: true
+      sourcemap: true,
+      banner: banner
     },
     plugins: [
       typescript({
