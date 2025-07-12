@@ -11,3 +11,44 @@
   --font-main: "Manrope", sans-serif;
   --font-grotesque: "Space Grotesk", sans-serif;
 }
+
+@layer components {
+  .btn-base {
+    @apply inline-flex items-center justify-center rounded-md;
+    @apply text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .h1-title {
+    @apply text-[2.375rem] font-extrabold leading-[1.3] tracking-[-0.3px] text-black;
+  }
+
+  .screen-content {
+    @apply flex flex-col gap-4;
+  }
+}
+
+body {
+  @apply m-0 flex font-normal font-main text-lg text-brand-dark;
+  font-optical-sizing: auto;
+  background-color: #e9e9e9;
+}
+
+.main_container {
+  background-color: #fff;
+  width: 420px;
+  max-width: 800px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+select {
+  border: 1px solid var(--color-gray-400);
+  border-radius: 0.75rem;
+  margin-top: 4px;
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem;
+  background-color: #fff;
+}
