@@ -20,7 +20,8 @@ const ThemeProvider = ({
    */
   const getStoredTheme = () => {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('theme') || null;
+    const stored = localStorage.getItem('theme');
+    return stored != null && (stored === 'light' || stored === 'dark') ? stored : null;
   };
   const [theme, setThemeState] = React.useState(() => {
     var _a;
@@ -65,7 +66,7 @@ const ThemeProvider = ({
  */
 function useTheme() {
   const context = React.useContext(ThemeContext);
-  if (!context) {
+  if (context == null) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;

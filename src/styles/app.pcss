@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #4C7EFF;
-  --color-brand-dim: #96A7FF;
-  --color-brand-dark: #4D5895;
-  --color-brand-darkness: #13172A;
+  --color-dash-brand: #4C7EFF;
+  --color-dash-brand-dim: #96A7FF;
+  --color-dash-brand-dark: #4D5895;
+  --color-dash-brand-darkness: #13172A;
 
-  --color-mint: #60F6D2;
-  --color-mint-hover: #4DD4B1;
+  --color-dash-mint: #60F6D2;
+  --color-dash-mint-hover: #4DD4B1;
 
-  --font-main: "Manrope", sans-serif;
-  --font-grotesque: "Space Grotesk", sans-serif;
+  --font-dash-main: "Manrope", sans-serif;
+  --font-dash-grotesque: "Space Grotesk", sans-serif;
   
   --spacing-11: 2.75rem;
 }
@@ -22,17 +22,17 @@
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
     @apply disabled:pointer-events-none disabled:opacity-50;
     @apply border border-transparent min-h-11 px-4 py-2;
-    @apply cursor-pointer font-main;
+    @apply cursor-pointer font-dash-main;
   }
   
   .dash-btn-brand {
-    @apply bg-brand text-white;
-    @apply hover:bg-brand/80;
+    @apply bg-dash-brand text-white;
+    @apply hover:bg-dash-brand/80;
   }
   
   .dash-btn-mint {
-    @apply bg-mint text-black;
-    @apply hover:bg-mint/80;
+    @apply bg-dash-mint text-black;
+    @apply hover:bg-dash-mint/80;
   }
   
   .dash-btn-gray {

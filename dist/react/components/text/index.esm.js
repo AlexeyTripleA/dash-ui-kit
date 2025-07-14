@@ -100,7 +100,7 @@ const Text = _a => {
   } = useTheme();
   const classes = textStyles(Object.assign(Object.assign({}, variantProps), {
     theme
-  })) + (className ? ` ${className}` : '');
+  })) + (className !== '' ? ` ${className}` : '');
   const Component = as !== null && as !== void 0 ? as : 'span';
   return jsx(Component, {
     className: classes,
