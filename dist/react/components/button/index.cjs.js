@@ -19,7 +19,7 @@ const styles = index.cva(`
     transition-colors
     hover:cursor-pointer
     justify-center
-    font-main
+    font-dash-main
   `, {
   variants: {
     variant: {
@@ -50,11 +50,11 @@ const styles = index.cva(`
   }, {
     variant: 'outline',
     colorScheme: 'brand',
-    class: '!text-brand'
+    class: '!text-dash-brand'
   }, {
     variant: 'outline',
     colorScheme: 'mint',
-    class: '!text-mint'
+    class: '!text-dash-mint'
   }, {
     variant: 'outline',
     colorScheme: 'gray',
@@ -69,12 +69,12 @@ const styles = index.cva(`
     variant: 'solid',
     colorScheme: 'brand',
     state: 'disabled',
-    class: '!bg-brand/10 !text-brand-dim'
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
   }, {
     variant: 'solid',
     colorScheme: 'mint',
     state: 'disabled',
-    class: '!bg-mint/30 !text-black/60'
+    class: '!bg-dash-mint/30 !text-black/60'
   }, {
     variant: 'solid',
     colorScheme: 'red',
@@ -98,7 +98,7 @@ const Button = _a => {
       variant,
       colorScheme,
       size,
-      disabled,
+      disabled = false,
       className = ''
     } = _a,
     props = tslib_es6.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
@@ -108,7 +108,7 @@ const Button = _a => {
     colorScheme,
     size,
     state
-  }) + (className ? ` ${className}` : '');
+  }) + (className !== '' ? ` ${className}` : '');
   return jsxRuntime.jsx("button", Object.assign({
     className: classes,
     disabled: disabled
