@@ -13,6 +13,14 @@ const inputFiles = [
 ]
 const dir = 'dist/react'
 
+// Внешние зависимости - не должны включаться в бандл
+const external = [
+  'react',
+  'react-dom',
+  'tslib',
+  'class-variance-authority'
+]
+
 const sharedPlugins = [
   peerDepsExternal(),
   resolve(),
@@ -39,6 +47,7 @@ export default [
   // ESM
   {
     input: inputFiles,
+    external: external,
     output: {
       dir: dir,
       format: 'esm',
@@ -61,6 +70,7 @@ export default [
   // CJS
   {
     input: inputFiles,
+    external: external,
     output: {
       dir: dir,
       format: 'cjs',

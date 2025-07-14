@@ -1,8 +1,8 @@
 "use client";
 
-import { __rest } from '../../node_modules/tslib/tslib.es6.esm.js';
+import { __rest } from 'tslib';
 import { jsx } from 'react/jsx-runtime';
-import { cva } from '../../node_modules/class-variance-authority/dist/index.esm.js';
+import { cva } from 'class-variance-authority';
 
 const styles = cva(`
     dash-btn-base

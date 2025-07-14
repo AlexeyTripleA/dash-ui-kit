@@ -4,11 +4,11 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var tslib_es6 = require('../../node_modules/tslib/tslib.es6.cjs.js');
+var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
-var index = require('../../node_modules/class-variance-authority/dist/index.cjs.js');
+var classVarianceAuthority = require('class-variance-authority');
 
-const styles = index.cva(`
+const styles = classVarianceAuthority.cva(`
     dash-btn-base
     select-none
     min-h-11
@@ -101,7 +101,7 @@ const Button = _a => {
       disabled = false,
       className = ''
     } = _a,
-    props = tslib_es6.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
   const state = disabled ? 'disabled' : 'active';
   const classes = styles({
     variant,
