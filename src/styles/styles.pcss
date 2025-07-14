@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@import "theme.pcss";
+
+@layer components {
+  .dash-btn-base {
+    @apply inline-flex items-center justify-center rounded-md;
+    @apply text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    @apply border border-transparent min-h-11 px-4 py-2;
+    @apply cursor-pointer font-dash-main;
+  }
+  
+  .dash-btn-brand {
+    @apply bg-dash-brand text-white;
+    @apply hover:bg-dash-brand/80;
+  }
+  
+  .dash-btn-mint {
+    @apply bg-dash-mint text-black;
+    @apply hover:bg-dash-mint/80;
+  }
+  
+  .dash-btn-gray {
+    @apply bg-gray-200 text-gray-700;
+    @apply hover:bg-gray-300;
+  }
+  
+  .dash-btn-red {
+    @apply bg-red-200 text-red-700;
+    @apply hover:bg-red-300;
+  }
+  
+  .dash-btn-outline {
+    @apply bg-transparent border-current;
+  }
+  
+  .dash-btn-sm {
+    @apply px-3 py-1 text-xs min-h-9;
+  }
+}
