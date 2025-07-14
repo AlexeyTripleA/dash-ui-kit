@@ -16,6 +16,7 @@ npm install AlexeyTripleA/dash-ui-kit
 /* main.css */
 @import "tailwindcss";
 @import "dash-ui/theme";
+@import "dash-ui/styles";
 ```
 
 ```jsx
@@ -32,7 +33,7 @@ import { Button } from 'dash-ui/react';
 
 ## 🎨 Features
 
-- ✅ **Single source of truth**: All styles from one `app.pcss` file
+- ✅ **Single source of truth**: All styles from one `styles.pcss` file
 - ✅ **Tailwind v4**: Modern CSS-first architecture with `@theme` and `@layer`
 - ✅ **Auto-generated**: Theme CSS automatically built from source
 - ✅ **TypeScript**: Full type safety and IntelliSense support

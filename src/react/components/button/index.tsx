@@ -1,4 +1,5 @@
 "use client"
+
 import React from 'react'
 import { cva } from 'class-variance-authority'
 
@@ -14,7 +15,7 @@ const styles = cva(
     transition-colors
     hover:cursor-pointer
     justify-center
-    font-main
+    font-dash-main
   `,
   {
     variants: {
@@ -30,7 +31,7 @@ const styles = cva(
       },
       state: {
         active: 'active:-translate-y-[-1px]',
-        disabled: 'hover:!cursor-not-allowed',
+        disabled: 'hover:!cursor-not-allowed'
       },
       size: {
         sm: 'dash-btn-sm px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
@@ -47,12 +48,12 @@ const styles = cva(
       {
         variant: 'outline',
         colorScheme: 'brand',
-        class: '!text-brand'
+        class: '!text-dash-brand'
       },
       {
         variant: 'outline',
         colorScheme: 'mint',
-        class: '!text-mint'
+        class: '!text-dash-mint'
       },
       {
         variant: 'outline',
@@ -69,34 +70,34 @@ const styles = cva(
         variant: 'solid',
         colorScheme: 'brand',
         state: 'disabled',
-        class: '!bg-brand/10 !text-brand-dim',
+        class: '!bg-dash-brand/10 !text-dash-brand-dim'
       },
       {
         variant: 'solid',
         colorScheme: 'mint',
         state: 'disabled',
-        class: '!bg-mint/30 !text-black/60',
+        class: '!bg-dash-mint/30 !text-black/60'
       },
       {
         variant: 'solid',
         colorScheme: 'red',
         state: 'disabled',
-        class: '!bg-red-300/30 !text-black/60',
-      },
+        class: '!bg-red-300/30 !text-black/60'
+      }
     ],
     defaultVariants: {
       variant: 'solid',
       colorScheme: 'brand',
       state: 'active',
-      size: 'md',
-    },
+      size: 'md'
+    }
   }
 )
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Solid or outline style */
   variant?: 'solid' | 'outline'
-  /** Brand, mint, gray or red color scheme */
+  /** Brand or mint color scheme */
   colorScheme?: 'brand' | 'mint' | 'gray' | 'red'
   /** Size of the button */
   size?: 'sm' | 'md'
@@ -111,14 +112,14 @@ export const Button: React.FC<ButtonProps> = ({
   variant,
   colorScheme,
   size,
-  disabled,
+  disabled = false,
   className = '',
   ...props
 }) => {
   const state = disabled ? 'disabled' : 'active'
   const classes =
     styles({ variant, colorScheme, size, state }) +
-    (className ? ` ${className}` : '')
+    (className !== '' ? ` ${className}` : '')
 
   return (
     <button className={classes} disabled={disabled} {...props}>
