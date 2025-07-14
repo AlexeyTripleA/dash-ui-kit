@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
+import postcssImport from 'postcss-import'
 import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
@@ -100,9 +101,9 @@ export default [
   
   // Tailwind v4 theme
   {
-    input: 'src/styles/app.pcss',
+    input: 'src/styles/styles.pcss',
     output: {
-      file: 'dist/theme.css',
+      file: 'dist/styles.css',
       format: 'es'
     },
     plugins: [
@@ -114,6 +115,25 @@ export default [
         config: {
           path: './postcss.config.cjs'
         }
+      })
+    ]
+  },
+  // Raw theme
+  {
+    input: 'src/styles/theme.pcss',
+    output: {
+      file: 'dist/theme.css',
+      format: 'es'
+    },
+    plugins: [
+      postcss({
+        extract: true,
+        minimize: true,
+        modules: false,
+        inject: false,
+        plugins: [
+          postcssImport()
+        ]
       })
     ]
   }
