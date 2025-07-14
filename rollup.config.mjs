@@ -7,15 +7,29 @@ import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
 const inputFiles = [
-  'src/react/index.ts', // Главный файл
+  'src/react/index.ts',
   ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
   ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
 ]
 const dir = 'dist/react'
 
+const external = [
+  'react',
+  'react-dom',
+  'tslib',
+  'class-variance-authority'
+]
+
+const isExternal = (id) => {
+  return external.some(dep => id === dep || id.startsWith(`${dep}/`))
+}
+
 const sharedPlugins = [
   peerDepsExternal(),
-  resolve(),
+  resolve({
+    preferBuiltins: false,
+    browser: true
+  }),
   commonjs(),
   babel({
     babelHelpers: 'bundled',
@@ -39,6 +53,7 @@ export default [
   // ESM
   {
     input: inputFiles,
+    external: isExternal,
     output: {
       dir: dir,
       format: 'esm',
@@ -61,6 +76,7 @@ export default [
   // CJS
   {
     input: inputFiles,
+    external: isExternal,
     output: {
       dir: dir,
       format: 'cjs',
