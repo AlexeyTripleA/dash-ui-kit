@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import '../src/styles/app.pcss'
+import '../src/styles/styles.pcss'
 
 const preview: Preview = {
   parameters: {
