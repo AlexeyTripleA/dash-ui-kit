@@ -14,7 +14,6 @@ const styles = classVarianceAuthority.cva(`
     min-h-11
     flex
     items-center
-    font-bold
     capitalize
     transition-colors
     hover:cursor-pointer
@@ -30,7 +29,8 @@ const styles = classVarianceAuthority.cva(`
       brand: 'dash-btn-brand',
       mint: 'dash-btn-mint',
       gray: 'dash-btn-gray',
-      red: 'dash-btn-red'
+      red: 'dash-btn-red',
+      lightBlue: 'dash-btn-lightBlue'
     },
     state: {
       active: 'active:-translate-y-[-1px]',
@@ -63,6 +63,10 @@ const styles = classVarianceAuthority.cva(`
     variant: 'outline',
     colorScheme: 'red',
     class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    class: '!text-dash-brand/60'
   },
   // solid variant
   {
@@ -80,6 +84,11 @@ const styles = classVarianceAuthority.cva(`
     colorScheme: 'red',
     state: 'disabled',
     class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
   }],
   defaultVariants: {
     variant: 'solid',

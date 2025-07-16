@@ -2,8 +2,8 @@ import React from 'react';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /** Solid or outline style */
     variant?: 'solid' | 'outline';
-    /** Brand or mint color scheme */
-    colorScheme?: 'brand' | 'mint' | 'gray' | 'red';
+    /** Color scheme for the button */
+    colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue';
     /** Size of the button */
     size?: 'sm' | 'md';
 }
