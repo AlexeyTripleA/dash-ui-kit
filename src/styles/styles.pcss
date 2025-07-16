@@ -31,11 +31,29 @@
     @apply hover:bg-red-300;
   }
   
+  .dash-btn-lightBlue {
+    @apply bg-dash-brand/10 text-dash-brand;
+    @apply hover:bg-dash-brand/20;
+  }
+  
   .dash-btn-outline {
     @apply bg-transparent border-current;
   }
   
   .dash-btn-sm {
     @apply px-3 py-1 text-xs min-h-9;
+  }
+
+  /* Unified Dash Block System */
+  .dash-block-sm {
+    @apply px-3 py-2 text-sm rounded-[0.625rem];
+  }
+
+  .dash-block-md {
+    @apply px-[1.125rem] py-3 text-base rounded-[0.875rem];
+  }
+
+  .dash-block-xl {
+    @apply px-[1.5625rem] py-[1.25rem] rounded-[1rem];
   }
 }

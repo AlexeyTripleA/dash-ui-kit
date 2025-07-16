@@ -12,7 +12,7 @@ const meta: Meta<ButtonProps> = {
     },
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['brand', 'mint', 'gray'],
+      options: ['brand', 'mint', 'gray', 'red', 'lightBlue'],
     },
     size: {
       control: { type: 'inline-radio' },
