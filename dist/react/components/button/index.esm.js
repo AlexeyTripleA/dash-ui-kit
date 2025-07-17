@@ -33,8 +33,9 @@ const styles = cva(`
       disabled: 'hover:!cursor-not-allowed'
     },
     size: {
-      sm: 'dash-btn-sm px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
-      md: 'px-[1.563rem] py-[0.625rem] rounded-[1.25rem] text-lg'
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
     }
   },
   compoundVariants: [

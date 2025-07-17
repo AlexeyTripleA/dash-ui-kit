@@ -5,7 +5,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     /** Color scheme for the button */
     colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue';
     /** Size of the button */
-    size?: 'sm' | 'md';
+    size?: 'sm' | 'md' | 'xl';
 }
 /**
  * Button with solid or outline style, color schemes, disabled state,
