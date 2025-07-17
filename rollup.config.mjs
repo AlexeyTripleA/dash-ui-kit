@@ -7,11 +7,9 @@ import postcssImport from 'postcss-import'
 import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
-const inputFiles = [
-  'src/react/index.ts',
-  ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
-  ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
-]
+const inputFiles = {
+  index: 'src/react/index.ts'  // Только один главный entry point
+}
 const dir = 'dist/react'
 
 const external = [
@@ -62,9 +60,9 @@ export default [
     output: {
       dir: dir,
       format: 'esm',
-      preserveModules: true,
-      preserveModulesRoot: 'src/react',
+      preserveModules: false, // ← include all in bundle
       entryFileNames: '[name].esm.js',
+      inlineDynamicImports: true,
       sourcemap: true,
       banner: banner
     },
@@ -85,9 +83,9 @@ export default [
     output: {
       dir: dir,
       format: 'cjs',
-      preserveModules: true,
-      preserveModulesRoot: 'src/react',
+      preserveModules: false,  // ← Встраиваем все в bundle
       entryFileNames: '[name].cjs.js',
+      inlineDynamicImports: true,  // ← Встраиваем всё в один файл
       exports: 'named',
       sourcemap: true,
       banner: banner
