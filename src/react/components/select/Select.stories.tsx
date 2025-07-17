@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
 import { ThemeProvider } from '../../contexts/ThemeContext'
-import { DashSelect, SelectProps } from './index'
+import { Select, SelectProps } from './index'
 
 const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ThemeProvider>
@@ -68,7 +68,7 @@ const htmlOptions = [
 
 const meta: Meta<SelectProps> = {
   title: 'Components/Select',
-  component: DashSelect,
+  component: Select,
   decorators: [
     (Story) => (
       <Wrapper>
@@ -96,7 +96,7 @@ const meta: Meta<SelectProps> = {
 
 export default meta
 
-const Template: StoryFn<SelectProps> = args => <DashSelect {...args} />
+const Template: StoryFn<SelectProps> = args => <Select {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
@@ -171,7 +171,7 @@ export const Sizes: StoryFn<SelectProps> = () => (
   <div className="space-y-4">
     <div>
       <label className="block text-sm font-medium mb-1">Small</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Small select..." 
         size="sm" 
@@ -179,7 +179,7 @@ export const Sizes: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Medium</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Medium select..." 
         size="md" 
@@ -187,7 +187,7 @@ export const Sizes: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Extra Large</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Extra large select..." 
         size="xl" 
@@ -200,7 +200,7 @@ export const ColorSchemes: StoryFn<SelectProps> = () => (
   <div className="space-y-4">
     <div>
       <label className="block text-sm font-medium mb-1">Default</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Default color scheme..." 
         colorScheme="default"
@@ -208,7 +208,7 @@ export const ColorSchemes: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Brand</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Brand color scheme..." 
         colorScheme="brand"
@@ -216,7 +216,7 @@ export const ColorSchemes: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Error</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Error color scheme..." 
         colorScheme="error"
@@ -224,7 +224,7 @@ export const ColorSchemes: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Success</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Success color scheme..." 
         colorScheme="success"
@@ -237,14 +237,14 @@ export const States: StoryFn<SelectProps> = () => (
   <div className="space-y-4">
     <div>
       <label className="block text-sm font-medium mb-1">Normal</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Normal state..." 
       />
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Error</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Error state..." 
         error
@@ -252,7 +252,7 @@ export const States: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Success</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Success state..." 
         success
@@ -260,7 +260,7 @@ export const States: StoryFn<SelectProps> = () => (
     </div>
     <div>
       <label className="block text-sm font-medium mb-1">Disabled</label>
-      <DashSelect 
+      <Select 
         options={basicOptions} 
         placeholder="Disabled state..." 
         disabled
@@ -278,7 +278,7 @@ export const ComplexExample: StoryFn<SelectProps> = () => {
         <label className="block text-sm font-medium mb-2">
           Assign to User
         </label>
-        <DashSelect
+        <Select
           options={htmlOptions}
           value={selectedUser}
           onValueChange={setSelectedUser}

@@ -12,5 +12,5 @@ var index$3 = require('./select/index.cjs.js');
 exports.Button = index.Button;
 exports.Text = index$1.Text;
 exports.ValueCard = index$2.ValueCard;
-exports.DashSelect = index$3.DashSelect;
+exports.Select = index$3.Select;
 //# sourceMappingURL=index.cjs.js.map

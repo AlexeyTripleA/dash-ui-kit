@@ -3,10 +3,10 @@
 import React from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
-import * as Select from '@radix-ui/react-select'
+import * as RadixSelect from '@radix-ui/react-select'
 
 const selectTrigger = cva(
-  'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between',
+  'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between outline-none',
   {
     variants: {
       theme: {
@@ -156,7 +156,7 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
  * supports various color schemes, sizes, variants, states, and HTML content in options.
  *
  * @example
- * <DashSelect
+ * <Select
  *   options={[
  *     {value: 'id1', label: 'Option 1'}, 
  *     {value: 'id2', label: 'Option 2', content: <div><strong>Option 2</strong><br/>Description</div>}
@@ -166,7 +166,7 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
  *   border={true}
  * />
  */
-export const DashSelect: React.FC<SelectProps> = ({
+export const Select: React.FC<SelectProps> = ({
   className = '',
   colorScheme,
   size,
@@ -203,42 +203,42 @@ export const DashSelect: React.FC<SelectProps> = ({
   const iconClasses = selectIcon({ size })
 
   return (
-    <Select.Root 
+    <RadixSelect.Root 
       value={value} 
       defaultValue={defaultValue} 
       onValueChange={onValueChange}
       disabled={disabled}
       name={name}
     >
-      <Select.Trigger className={triggerClasses}>
-        <Select.Value placeholder={placeholder} />
+      <RadixSelect.Trigger className={triggerClasses}>
+        <RadixSelect.Value placeholder={placeholder} />
         {showArrow && (
-          <Select.Icon asChild>
+          <RadixSelect.Icon asChild>
             <ChevronDownIcon className={iconClasses} />
-          </Select.Icon>
+          </RadixSelect.Icon>
         )}
-      </Select.Trigger>
+      </RadixSelect.Trigger>
 
-      <Select.Portal>
-        <Select.Content className={contentClasses} position="popper" sideOffset={5}>
-          <Select.Viewport>
+      <RadixSelect.Portal>
+        <RadixSelect.Content className={contentClasses} position="popper" sideOffset={5}>
+          <RadixSelect.Viewport>
             {options.map((option) => (
-              <Select.Item 
+              <RadixSelect.Item 
                 key={option.value} 
                 value={option.value} 
                 className={itemClasses}
                 disabled={option.disabled}
               >
-                <Select.ItemText>
+                <RadixSelect.ItemText>
                   {option.content || option.label}
-                </Select.ItemText>
-              </Select.Item>
+                </RadixSelect.ItemText>
+              </RadixSelect.Item>
             ))}
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
-    </Select.Root>
+          </RadixSelect.Viewport>
+        </RadixSelect.Content>
+      </RadixSelect.Portal>
+    </RadixSelect.Root>
   )
 }
 
-export default DashSelect 
+export default Select 

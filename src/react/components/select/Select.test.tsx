@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ThemeProvider } from '../../contexts/ThemeContext'
-import { DashSelect } from './index'
+import { Select } from './index'
 
 const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <ThemeProvider>
@@ -17,11 +17,11 @@ const testOptions = [
   { value: 'option3', label: 'Option 3', disabled: true },
 ]
 
-describe('DashSelect', () => {
+describe('Select', () => {
   it('renders with placeholder', () => {
     render(
       <Wrapper>
-        <DashSelect placeholder="Choose option" options={testOptions} />
+        <Select placeholder="Choose option" options={testOptions} />
       </Wrapper>
     )
     expect(screen.getByText('Choose option')).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('DashSelect', () => {
     const user = userEvent.setup()
     render(
       <Wrapper>
-        <DashSelect options={testOptions} />
+        <Select options={testOptions} />
       </Wrapper>
     )
     
@@ -50,7 +50,7 @@ describe('DashSelect', () => {
     
     render(
       <Wrapper>
-        <DashSelect options={testOptions} onValueChange={onValueChange} />
+        <Select options={testOptions} onValueChange={onValueChange} />
       </Wrapper>
     )
     
@@ -85,7 +85,7 @@ describe('DashSelect', () => {
     
     render(
       <Wrapper>
-        <DashSelect options={htmlOptions} />
+        <Select options={htmlOptions} />
       </Wrapper>
     )
     
@@ -104,7 +104,7 @@ describe('DashSelect', () => {
     
     render(
       <Wrapper>
-        <DashSelect options={testOptions} onValueChange={onValueChange} />
+        <Select options={testOptions} onValueChange={onValueChange} />
       </Wrapper>
     )
     
@@ -125,7 +125,7 @@ describe('DashSelect', () => {
   it('respects disabled prop on entire select', () => {
     render(
       <Wrapper>
-        <DashSelect options={testOptions} disabled />
+        <Select options={testOptions} disabled />
       </Wrapper>
     )
     
@@ -136,7 +136,7 @@ describe('DashSelect', () => {
   it('renders with controlled value', () => {
     render(
       <Wrapper>
-        <DashSelect options={testOptions} value="option2" />
+        <Select options={testOptions} value="option2" />
       </Wrapper>
     )
     
@@ -148,7 +148,7 @@ describe('DashSelect', () => {
   it('hides arrow when showArrow is false', () => {
     const { container } = render(
       <Wrapper>
-        <DashSelect options={testOptions} showArrow={false} />
+        <Select options={testOptions} showArrow={false} />
       </Wrapper>
     )
     
@@ -159,7 +159,7 @@ describe('DashSelect', () => {
   it('applies error styling when error prop is true', () => {
     render(
       <Wrapper>
-        <DashSelect options={testOptions} error />
+        <Select options={testOptions} error />
       </Wrapper>
     )
     
@@ -170,7 +170,7 @@ describe('DashSelect', () => {
   it('applies success styling when success prop is true', () => {
     render(
       <Wrapper>
-        <DashSelect options={testOptions} success />
+        <Select options={testOptions} success />
       </Wrapper>
     )
     
