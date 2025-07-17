@@ -5970,7 +5970,7 @@ const Select = _a => {
     children: [jsxRuntime.jsxs(Trigger, {
       className: triggerClasses,
       children: [jsxRuntime.jsx("div", {
-        className: 'w-full flex-1',
+        className: 'w-full flex-1 text-left',
         children: jsxRuntime.jsx(Value, {
           placeholder: placeholder
         })
@@ -5986,18 +5986,18 @@ const Select = _a => {
         position: 'popper',
         sideOffset: 5,
         children: jsxRuntime.jsx(Viewport, {
-          children: options.map(option => jsxRuntime.jsx("div", {
-            className: 'w-full flex-1',
-            children: jsxRuntime.jsx(Item, {
-              value: option.value,
-              className: itemClasses,
-              disabled: option.disabled,
+          children: options.map(option => jsxRuntime.jsx(Item, {
+            value: option.value,
+            className: itemClasses,
+            disabled: option.disabled,
+            children: jsxRuntime.jsx("div", {
+              className: 'w-full flex-1 text-left',
               children: jsxRuntime.jsx(ItemText, {
                 className: 'w-full',
                 children: option.content || option.label
               })
-            }, option.value)
-          }))
+            })
+          }, option.value))
         })
       })
     })]

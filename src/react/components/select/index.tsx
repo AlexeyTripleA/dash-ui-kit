@@ -211,7 +211,7 @@ export const Select: React.FC<SelectProps> = ({
       name={name}
     >
       <RadixSelect.Trigger className={triggerClasses}>
-        <div className='w-full flex-1'>
+        <div className='w-full flex-1 text-left'>
           <RadixSelect.Value placeholder={placeholder} />
         </div>
         {showArrow && (
@@ -225,19 +225,19 @@ export const Select: React.FC<SelectProps> = ({
         <RadixSelect.Content className={contentClasses} position='popper' sideOffset={5}>
           <RadixSelect.Viewport>
             {options.map((option) => (
-              <div className='w-full flex-1'>
-                <RadixSelect.Item
-                  key={option.value}
-                  value={option.value}
-                  className={itemClasses}
-                  disabled={option.disabled}
-                >
+              <RadixSelect.Item
+                key={option.value}
+                value={option.value}
+                className={itemClasses}
+                disabled={option.disabled}
+              >
+                <div className='w-full flex-1 text-left'>
                   <RadixSelect.ItemText className='w-full'>
                     {option.content || option.label}
                   </RadixSelect.ItemText>
-                </RadixSelect.Item>
-              </div>
-            ))}
+                </div>
+              </RadixSelect.Item>
+              ))}
           </RadixSelect.Viewport>
         </RadixSelect.Content>
       </RadixSelect.Portal>

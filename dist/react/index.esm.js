@@ -5950,7 +5950,7 @@ const Select = _a => {
     children: [jsxs(Trigger, {
       className: triggerClasses,
       children: [jsx("div", {
-        className: 'w-full flex-1',
+        className: 'w-full flex-1 text-left',
         children: jsx(Value, {
           placeholder: placeholder
         })
@@ -5966,18 +5966,18 @@ const Select = _a => {
         position: 'popper',
         sideOffset: 5,
         children: jsx(Viewport, {
-          children: options.map(option => jsx("div", {
-            className: 'w-full flex-1',
-            children: jsx(Item, {
-              value: option.value,
-              className: itemClasses,
-              disabled: option.disabled,
+          children: options.map(option => jsx(Item, {
+            value: option.value,
+            className: itemClasses,
+            disabled: option.disabled,
+            children: jsx("div", {
+              className: 'w-full flex-1 text-left',
               children: jsx(ItemText, {
                 className: 'w-full',
                 children: option.content || option.label
               })
-            }, option.value)
-          }))
+            })
+          }, option.value))
         })
       })
     })]
