@@ -47,6 +47,7 @@
   "dependencies": {
     "@radix-ui/react-select": "^2.2.5",
     "class-variance-authority": "^0.7.1",
+    "minidenticons": "^4.2.1",
     "radix-ui": "^1.4.2"
   },
   "devDependencies": {
