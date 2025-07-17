@@ -5805,7 +5805,7 @@ var Viewport = SelectViewport;
 var Item = SelectItem;
 var ItemText = SelectItemText;
 
-const selectTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between outline-none', {
+const selectTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
   variants: {
     theme: {
       light: 'text-[#0C1C33] bg-white',
@@ -5969,8 +5969,11 @@ const Select = _a => {
     name: name,
     children: [jsxRuntime.jsxs(Trigger, {
       className: triggerClasses,
-      children: [jsxRuntime.jsx(Value, {
-        placeholder: placeholder
+      children: [jsxRuntime.jsx("div", {
+        className: 'w-full flex-1',
+        children: jsxRuntime.jsx(Value, {
+          placeholder: placeholder
+        })
       }), showArrow && jsxRuntime.jsx(Icon, {
         asChild: true,
         children: jsxRuntime.jsx(ChevronDownIcon, {
@@ -5980,17 +5983,21 @@ const Select = _a => {
     }), jsxRuntime.jsx(Portal, {
       children: jsxRuntime.jsx(Content2, {
         className: contentClasses,
-        position: "popper",
+        position: 'popper',
         sideOffset: 5,
         children: jsxRuntime.jsx(Viewport, {
-          children: options.map(option => jsxRuntime.jsx(Item, {
-            value: option.value,
-            className: itemClasses,
-            disabled: option.disabled,
-            children: jsxRuntime.jsx(ItemText, {
-              children: option.content || option.label
-            })
-          }, option.value))
+          children: options.map(option => jsxRuntime.jsx("div", {
+            className: 'w-full flex-1',
+            children: jsxRuntime.jsx(Item, {
+              value: option.value,
+              className: itemClasses,
+              disabled: option.disabled,
+              children: jsxRuntime.jsx(ItemText, {
+                className: 'w-full',
+                children: option.content || option.label
+              })
+            }, option.value)
+          }))
         })
       })
     })]

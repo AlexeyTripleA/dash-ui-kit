@@ -6,7 +6,7 @@ import { useTheme } from '../../contexts/ThemeContext'
 import * as RadixSelect from '@radix-ui/react-select'
 
 const selectTrigger = cva(
-  'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between outline-none',
+  'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between',
   {
     variants: {
       theme: {
@@ -203,15 +203,17 @@ export const Select: React.FC<SelectProps> = ({
   const iconClasses = selectIcon({ size })
 
   return (
-    <RadixSelect.Root 
-      value={value} 
-      defaultValue={defaultValue} 
+    <RadixSelect.Root
+      value={value}
+      defaultValue={defaultValue}
       onValueChange={onValueChange}
       disabled={disabled}
       name={name}
     >
       <RadixSelect.Trigger className={triggerClasses}>
-        <RadixSelect.Value placeholder={placeholder} />
+        <div className='w-full flex-1'>
+          <RadixSelect.Value placeholder={placeholder} />
+        </div>
         {showArrow && (
           <RadixSelect.Icon asChild>
             <ChevronDownIcon className={iconClasses} />
@@ -220,19 +222,21 @@ export const Select: React.FC<SelectProps> = ({
       </RadixSelect.Trigger>
 
       <RadixSelect.Portal>
-        <RadixSelect.Content className={contentClasses} position="popper" sideOffset={5}>
+        <RadixSelect.Content className={contentClasses} position='popper' sideOffset={5}>
           <RadixSelect.Viewport>
             {options.map((option) => (
-              <RadixSelect.Item 
-                key={option.value} 
-                value={option.value} 
-                className={itemClasses}
-                disabled={option.disabled}
-              >
-                <RadixSelect.ItemText>
-                  {option.content || option.label}
-                </RadixSelect.ItemText>
-              </RadixSelect.Item>
+              <div className='w-full flex-1'>
+                <RadixSelect.Item
+                  key={option.value}
+                  value={option.value}
+                  className={itemClasses}
+                  disabled={option.disabled}
+                >
+                  <RadixSelect.ItemText className='w-full'>
+                    {option.content || option.label}
+                  </RadixSelect.ItemText>
+                </RadixSelect.Item>
+              </div>
             ))}
           </RadixSelect.Viewport>
         </RadixSelect.Content>

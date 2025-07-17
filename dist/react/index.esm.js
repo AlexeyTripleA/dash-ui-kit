@@ -5785,7 +5785,7 @@ var Viewport = SelectViewport;
 var Item = SelectItem;
 var ItemText = SelectItemText;
 
-const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between outline-none', {
+const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
   variants: {
     theme: {
       light: 'text-[#0C1C33] bg-white',
@@ -5949,8 +5949,11 @@ const Select = _a => {
     name: name,
     children: [jsxs(Trigger, {
       className: triggerClasses,
-      children: [jsx(Value, {
-        placeholder: placeholder
+      children: [jsx("div", {
+        className: 'w-full flex-1',
+        children: jsx(Value, {
+          placeholder: placeholder
+        })
       }), showArrow && jsx(Icon, {
         asChild: true,
         children: jsx(ChevronDownIcon, {
@@ -5960,17 +5963,21 @@ const Select = _a => {
     }), jsx(Portal, {
       children: jsx(Content2, {
         className: contentClasses,
-        position: "popper",
+        position: 'popper',
         sideOffset: 5,
         children: jsx(Viewport, {
-          children: options.map(option => jsx(Item, {
-            value: option.value,
-            className: itemClasses,
-            disabled: option.disabled,
-            children: jsx(ItemText, {
-              children: option.content || option.label
-            })
-          }, option.value))
+          children: options.map(option => jsx("div", {
+            className: 'w-full flex-1',
+            children: jsx(Item, {
+              value: option.value,
+              className: itemClasses,
+              disabled: option.disabled,
+              children: jsx(ItemText, {
+                className: 'w-full',
+                children: option.content || option.label
+              })
+            }, option.value)
+          }))
         })
       })
     })]
