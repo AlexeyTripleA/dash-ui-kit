@@ -5846,16 +5846,16 @@ const selectContent = cva('overflow-hidden z-50 rounded-md shadow-lg min-w-[var(
     }
   }
 });
-const selectItem = cva('relative flex cursor-pointer select-none items-center rounded-sm py-1.5 text-sm outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', {
+const selectItem = cva('relative flex cursor-pointer select-none items-center outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', {
   variants: {
     theme: {
       light: 'text-gray-900 focus:bg-gray-100',
       dark: 'text-gray-100 focus:bg-gray-700'
     },
     size: {
-      sm: 'px-2 py-1',
-      md: 'px-3 py-1.5',
-      xl: 'px-4 py-2'
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
     }
   }
 });
