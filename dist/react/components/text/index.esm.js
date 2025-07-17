@@ -21,6 +21,7 @@ const textStyles = cva('', {
       red: 'text-red-700'
     },
     size: {
+      xs: 'text-[0.625rem]',
       sm: 'text-sm',
       md: 'text-base',
       lg: 'text-lg',

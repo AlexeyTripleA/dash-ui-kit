@@ -4,7 +4,7 @@ declare const textStyles: (props?: ({
     reset?: boolean | null | undefined;
     theme?: "light" | "dark" | null | undefined;
     color?: "default" | "blue" | "red" | null | undefined;
-    size?: "sm" | "md" | "lg" | "xl" | null | undefined;
+    size?: "xs" | "sm" | "md" | "lg" | "xl" | null | undefined;
     weight?: "normal" | "bold" | 500 | null | undefined;
     italic?: boolean | null | undefined;
     underline?: boolean | null | undefined;
