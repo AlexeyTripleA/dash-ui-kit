@@ -1,0 +1,16 @@
+import type { Meta, StoryFn } from '@storybook/react';
+import { SelectProps } from './index';
+declare const meta: Meta<SelectProps>;
+export default meta;
+export declare const Default: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const WithValue: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const WithHTMLContent: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const Disabled: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const ErrorState: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const SuccessState: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const WithoutBorder: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const WithoutArrow: import("@storybook/core/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, SelectProps>;
+export declare const Sizes: StoryFn<SelectProps>;
+export declare const ColorSchemes: StoryFn<SelectProps>;
+export declare const States: StoryFn<SelectProps>;
+export declare const ComplexExample: StoryFn<SelectProps>;
