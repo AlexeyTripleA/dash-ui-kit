@@ -28,6 +28,7 @@ const textStyles = cva('', {
     },
     weight: {
       normal: 'font-normal',
+      500: 'font-medium',
       bold: 'font-bold'
     },
     italic: {
