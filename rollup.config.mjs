@@ -26,12 +26,15 @@ const isExternal = (id) => {
 }
 
 const sharedPlugins = [
-  peerDepsExternal(),
+  // peerDepsExternal(),
   resolve({
     preferBuiltins: false,
-    browser: true
+    browser: true,
+    exportConditions: ['browser', 'module', 'import', 'default'],
   }),
-  commonjs(),
+  commonjs({
+    include: /node_modules/
+  }),
   babel({
     babelHelpers: 'bundled',
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -44,7 +47,8 @@ const sharedPlugins = [
         }
       ]
     ],
-    include: ['src/**/*']
+    include: ['src/**/*'],
+    exclude: /node_modules/
   })
 ]
 
