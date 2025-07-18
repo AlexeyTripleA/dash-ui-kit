@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ "feat/github-pages" ]
+  pull_request:
+    branches: [ "feat/github-pages" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Generate GRPC client
+        run: yarn build:grpc
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Build library
+        run: yarn build
+
+      - name: Build Storybook
+        run: yarn build-storybook
