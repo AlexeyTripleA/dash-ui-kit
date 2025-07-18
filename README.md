@@ -76,10 +76,6 @@ import { Text } from 'dash-ui/react';
 </Text>
 ```
 
-## 📚 Documentation
-
-For detailed integration guides and examples, see [INTEGRATION.md](./INTEGRATION.md)
-
 ## 🔧 Development
 
 ```bash
