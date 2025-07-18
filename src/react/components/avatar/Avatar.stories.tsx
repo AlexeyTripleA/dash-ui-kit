@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ImageGenerator } from './index'
+import { Avatar } from './index'
 
-const meta: Meta<typeof ImageGenerator> = {
-  title: 'Components/ImageGenerator',
-  component: ImageGenerator,
+const meta: Meta<typeof Avatar> = {
+  title: 'Components/Avatar',
+  component: Avatar,
   parameters: {
     layout: 'centered',
   },
@@ -90,7 +90,7 @@ export const DifferentUsernames: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
       {['alice', 'bob', 'charlie', 'diana', 'eve', 'frank'].map(username => (
-        <ImageGenerator
+        <Avatar
           key={username}
           username={username}
           width={48}
@@ -105,9 +105,9 @@ export const DifferentUsernames: Story = {
 export const VariousColors: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-      <ImageGenerator username="user1" saturation={20} lightness={80} width={64} height={64} />
-      <ImageGenerator username="user2" saturation={60} lightness={50} width={64} height={64} />
-      <ImageGenerator username="user3" saturation={90} lightness={30} width={64} height={64} />
+      <Avatar username="user1" saturation={20} lightness={80} width={64} height={64} />
+      <Avatar username="user2" saturation={60} lightness={50} width={64} height={64} />
+      <Avatar username="user3" saturation={90} lightness={30} width={64} height={64} />
     </div>
   ),
 } 

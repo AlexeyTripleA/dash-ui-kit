@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react'
 import { minidenticon } from 'minidenticons'
 
-export interface ImageGeneratorProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
+export interface AvatarProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
   /** Username to generate identicon for */
   username: string
   /** Additional CSS class name */
@@ -15,10 +15,10 @@ export interface ImageGeneratorProps extends Omit<React.ImgHTMLAttributes<HTMLIm
 }
 
 /**
- * ImageGenerator component that creates unique identicons from usernames
+ * Avatar component that creates unique identicons from usernames
  * with customizable appearance.
  */
-export const ImageGenerator: React.FC<ImageGeneratorProps> = ({
+export const Avatar: React.FC<AvatarProps> = ({
   username,
   className = '',
   saturation = 50,
@@ -35,14 +35,14 @@ export const ImageGenerator: React.FC<ImageGeneratorProps> = ({
 
   return (
     <div className={containerClasses}>
-      <img 
-        src={svgURI} 
-        alt={username || ''} 
-        className={imageClasses} 
+      <img
+        src={svgURI}
+        alt={username || ''}
+        className={imageClasses}
         {...props}
       />
     </div>
   )
 }
 
-export default ImageGenerator 
+export default Avatar
