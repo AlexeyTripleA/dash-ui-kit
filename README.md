@@ -2,6 +2,8 @@
 
 Dash ui kit is a UI component library with TypeScript, TailwindCSS v4, and class-variance-authority (CVA) support.
 
+At the moment the library is in its initial stage and is actively developed. More components will be added soon and more detailed documentation will be written.
+
 ## ⚡ Quick Start
 
 ### Installation
@@ -27,9 +29,13 @@ import { Button } from 'dash-ui/react';
 
 ## 📦 Components
 
-- **Button** - Flexible buttons with multiple variants and color schemes
-- **Text** - Typography component with theming support
 - **ThemeProvider** - Theme context for dark/light mode
+- **Avatar** - Avatar component that creates unique identicons from usernames with customizable appearance. To create avatars for identities, documents, and other entities, you should use their identifiers.
+- **Button** - Flexible buttons with multiple variants and color schemes
+- **Select** - The component of the form for choosing one element from the set.
+- **Text** - Typography component for text.
+- **ValueCard** - A flexibly customized container.
+
 
 ## 🎨 Features
 
