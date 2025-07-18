@@ -6055,8 +6055,8 @@ const ImageGenerator = _a => {
   var {
       username,
       className = '',
-      saturation,
-      lightness
+      saturation = 50,
+      lightness = 50
     } = _a,
     props = __rest(_a, ["username", "className", "saturation", "lightness"]);
   const svgURI = useMemo(() => 'data:image/svg+xml;utf8,' + encodeURIComponent(minidenticon(username, saturation, lightness)), [username, saturation, lightness]);

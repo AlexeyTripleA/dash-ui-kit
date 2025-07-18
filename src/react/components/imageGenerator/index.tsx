@@ -21,8 +21,8 @@ export interface ImageGeneratorProps extends Omit<React.ImgHTMLAttributes<HTMLIm
 export const ImageGenerator: React.FC<ImageGeneratorProps> = ({
   username,
   className = '',
-  saturation,
-  lightness,
+  saturation = 50,
+  lightness = 50,
   ...props
 }) => {
   const svgURI = useMemo(
