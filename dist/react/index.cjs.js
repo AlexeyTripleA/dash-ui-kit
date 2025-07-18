@@ -6068,10 +6068,10 @@ function minidenticon(seed="", saturation=DEFAULT_SATURATION, lightness=DEFAULT_
         );
 
 /**
- * ImageGenerator component that creates unique identicons from usernames
+ * Avatar component that creates unique identicons from usernames
  * with customizable appearance.
  */
-const ImageGenerator = _a => {
+const Avatar = _a => {
   var {
       username,
       className = '',
@@ -6092,8 +6092,8 @@ const ImageGenerator = _a => {
   });
 };
 
+exports.Avatar = Avatar;
 exports.Button = Button;
-exports.ImageGenerator = ImageGenerator;
 exports.Select = Select;
 exports.Text = Text;
 exports.ThemeProvider = ThemeProvider;

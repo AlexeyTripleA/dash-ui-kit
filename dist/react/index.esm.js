@@ -6048,10 +6048,10 @@ function minidenticon(seed="", saturation=DEFAULT_SATURATION, lightness=DEFAULT_
         );
 
 /**
- * ImageGenerator component that creates unique identicons from usernames
+ * Avatar component that creates unique identicons from usernames
  * with customizable appearance.
  */
-const ImageGenerator = _a => {
+const Avatar = _a => {
   var {
       username,
       className = '',
@@ -6072,5 +6072,5 @@ const ImageGenerator = _a => {
   });
 };
 
-export { Button, ImageGenerator, Select, Text, ThemeProvider, ValueCard, useTheme };
+export { Avatar, Button, Select, Text, ThemeProvider, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map

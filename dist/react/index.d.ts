@@ -2,5 +2,5 @@ export { Button, type ButtonProps } from './components/button';
 export { Text, type TextProps } from './components/text';
 export { ValueCard, type ValueCardProps } from './components/valueCard';
 export { Select, type SelectProps, type SelectOption } from './components/select';
-export { ImageGenerator, type ImageGeneratorProps } from './components/imageGenerator';
+export { Avatar, type AvatarProps } from './components/avatar';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
