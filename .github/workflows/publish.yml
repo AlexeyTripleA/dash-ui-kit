@@ -6,8 +6,8 @@ permissions:
   id-token: write
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ "feat/github-pages" ]
 
 jobs:
   deploy:
