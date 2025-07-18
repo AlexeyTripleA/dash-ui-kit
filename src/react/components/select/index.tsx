@@ -114,7 +114,7 @@ export interface SelectOption {
   value: string
   label: string
   disabled?: boolean
-  content?: React.ReactNode // Для HTML элементов
+  content?: React.ReactNode
 }
 
 export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> {
@@ -245,4 +245,4 @@ export const Select: React.FC<SelectProps> = ({
   )
 }
 
-export default Select 
+export default Select
