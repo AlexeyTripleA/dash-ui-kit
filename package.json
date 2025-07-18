@@ -45,7 +45,10 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "class-variance-authority": "^0.7.1"
+    "@radix-ui/react-select": "^2.2.5",
+    "class-variance-authority": "^0.7.1",
+    "minidenticons": "^4.2.1",
+    "radix-ui": "^1.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
@@ -68,6 +71,7 @@
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -107,8 +111,12 @@
   },
   "typesVersions": {
     "*": {
-      "react": ["dist/react/index.d.ts"],
-      "*": ["dist/react/*/index.d.ts"]
+      "react": [
+        "dist/react/index.d.ts"
+      ],
+      "*": [
+        "dist/react/*/index.d.ts"
+      ]
     }
   }
 }

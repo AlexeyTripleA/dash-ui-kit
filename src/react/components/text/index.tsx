@@ -19,6 +19,7 @@ const textStyles = cva(
         red: 'text-red-700'
       },
       size: {
+        xs: 'text-[0.625rem]',
         sm: 'text-sm',
         md: 'text-base',
         lg: 'text-lg',
@@ -26,6 +27,7 @@ const textStyles = cva(
       },
       weight: {
         normal: 'font-normal',
+        500: 'font-medium',
         bold: 'font-bold'
       },
       italic: {

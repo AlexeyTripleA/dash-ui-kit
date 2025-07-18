@@ -10,7 +10,6 @@ const styles = cva(
     min-h-11
     flex
     items-center
-    font-bold
     capitalize
     transition-colors
     hover:cursor-pointer
@@ -28,14 +27,16 @@ const styles = cva(
         mint: 'dash-btn-mint',
         gray: 'dash-btn-gray',
         red: 'dash-btn-red',
+        lightBlue: 'dash-btn-lightBlue',
       },
       state: {
         active: 'active:-translate-y-[-1px]',
         disabled: 'hover:!cursor-not-allowed'
       },
       size: {
-        sm: 'dash-btn-sm px-[1rem] py-[0.5rem] rounded-[0.625rem] !font-bold text-sm',
-        md: 'px-[1.563rem] py-[0.625rem] rounded-[1.25rem] text-lg',
+        sm: 'dash-block-sm',
+        md: 'dash-block-md',
+        xl: 'dash-block-xl',
       },
     },
     compoundVariants: [
@@ -65,6 +66,11 @@ const styles = cva(
         colorScheme: 'red',
         class: '!text-red-700 hover:!bg-red-300/20'
       },
+      {
+        variant: 'outline',
+        colorScheme: 'lightBlue',
+        class: '!text-dash-brand/60'
+      },
       // solid variant
       {
         variant: 'solid',
@@ -83,6 +89,12 @@ const styles = cva(
         colorScheme: 'red',
         state: 'disabled',
         class: '!bg-red-300/30 !text-black/60'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'lightBlue',
+        state: 'disabled',
+        class: '!bg-dash-brand/5 !text-dash-brand/40'
       }
     ],
     defaultVariants: {
@@ -97,10 +109,10 @@ const styles = cva(
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Solid or outline style */
   variant?: 'solid' | 'outline'
-  /** Brand or mint color scheme */
-  colorScheme?: 'brand' | 'mint' | 'gray' | 'red'
+  /** Color scheme for the button */
+  colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue'
   /** Size of the button */
-  size?: 'sm' | 'md'
+  size?: 'sm' | 'md' | 'xl'
 }
 
 /**
