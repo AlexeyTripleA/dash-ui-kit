@@ -7,7 +7,7 @@ permissions:
 
 on:
   push:
-    branches: [ "feat/github-pages" ]
+    branches: [ "master" ]
 
 jobs:
   deploy:

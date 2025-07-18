@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ "feat/github-pages" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "feat/github-pages" ]
+    branches: [ "master" ]
 
 jobs:
   build:
