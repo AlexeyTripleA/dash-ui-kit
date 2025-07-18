@@ -25,9 +25,6 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Generate GRPC client
-        run: npm run build:grpc
-
       - name: Run tests
         run: npm run test
 
