@@ -23,10 +23,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn
+        run: npm i
 
       - name: Build Storybook
-        run: yarn build-storybook
+        run: npm run build-storybook
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
