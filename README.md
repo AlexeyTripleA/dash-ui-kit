@@ -4,6 +4,8 @@ Dash ui kit is a UI component library with TypeScript, TailwindCSS v4, and class
 
 At the moment the library is in its initial stage and is actively developed. More components will be added soon and more detailed documentation will be written.
 
+You can see all the created components in the storybook - https://alexeytriplea.github.io/dash-ui-kit/
+
 ## ⚡ Quick Start
 
 ### Installation
