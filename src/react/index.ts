@@ -5,10 +5,13 @@ export { ValueCard, type ValueCardProps } from './components/valueCard'
 export { Select, type SelectProps, type SelectOption } from './components/select'
 export { Avatar, type AvatarProps } from './components/avatar'
 export { List, type ListProps, type ListItem } from './components/list'
+export { BigNumber, type BigNumberProps, type BigNumberVariant } from './components/bigNumber'
 export { default as Identifier, type IdentifierProps } from './components/identifier'
 export { Heading, type HeadingProps } from './components/heading'
 export { CopyButton, type CopyButtonProps } from './components/copyButton'
 export { NotActive, type NotActiveProps } from './components/notActive'
+export { TimeDelta, type TimeDeltaProps } from './components/timeDelta'
+export type { TimeDeltaFormat } from './utils/datetime'
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext'
 export {
   ArrowIcon,

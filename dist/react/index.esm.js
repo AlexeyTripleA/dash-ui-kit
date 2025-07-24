@@ -6552,6 +6552,67 @@ const List = ({
   });
 };
 
+const bigNumberStyles = cva('inline-flex whitespace-nowrap');
+const spaceStyles = cva('inline-block w-[3px]');
+/**
+ * Splits a numeric string into groups of three characters for display.
+ * Supports two variants:
+ * - `space`: groups separated by a fixed 3px block
+ * - `comma`: groups separated by commas, with decimal part after `.`
+ */
+const BigNumber = ({
+  children,
+  variant = 'space',
+  className = ''
+}) => {
+  if (children === undefined || children === null) return null;
+  const str = children.toString();
+  if (variant === 'space') {
+    // group digits every 3, right to left
+    const groups = str.split('').reverse().reduce((acc, char, idx) => {
+      if (idx % 3 === 0) acc.unshift('');
+      acc[0] = char + acc[0];
+      return acc;
+    }, []);
+    return jsx("span", {
+      className: `${bigNumberStyles()} ${className}`,
+      children: groups.map((grp, i) => jsxs("span", {
+        children: [jsx("span", {
+          children: grp
+        }), i < groups.length - 1 && jsx("span", {
+          className: spaceStyles()
+        })]
+      }, i))
+    });
+  } else {
+    // comma variant
+    const [intPart, fracPart] = str.split('.');
+    const groups = intPart.split('').reverse().reduce((acc, char, idx) => {
+      if (idx % 3 === 0) acc.unshift('');
+      acc[0] = char + acc[0];
+      return acc;
+    }, []);
+    return jsxs("span", {
+      className: `${bigNumberStyles()} ${className}`,
+      children: [groups.map((grp, i) => jsxs("span", {
+        children: [jsx("span", {
+          children: grp
+        }), i < groups.length - 1 && jsx("span", {
+          className: 'px-[0.125ch]',
+          children: ","
+        })]
+      }, i)), fracPart != null && jsxs(Fragment, {
+        children: [jsx("span", {
+          className: 'px-[0.125ch]',
+          children: "."
+        }), jsx("span", {
+          children: fracPart
+        })]
+      })]
+    });
+  }
+};
+
 const usePassiveLayoutEffect = React__default[typeof document !== 'undefined' && document.createElement !== void 0 ? 'useLayoutEffect' : 'useEffect'];
 
 const useLatest = current => {
@@ -7082,5 +7143,119 @@ const Heading = ({
   });
 };
 
-export { ArrowIcon, Avatar, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, ValueCard, useTheme };
+/**
+ * Returns the number of whole days between two dates.
+ * Rounds up any partial day.
+ *
+ * @param startDate - The start date (Date | ISO string | timestamp)
+ * @param endDate   - The end date (Date | ISO string | timestamp)
+ * @returns Number of days difference, or 0 if either date is missing/invalid
+ */
+/**
+ * Returns a human-readable difference between two dates.
+ *
+ * - `default`: largest unit with suffix (`"2d ago"`, `"5h left"`, etc.)
+ * - `detailed`: full breakdown as `"Xd:Yh:Zm"`
+ *
+ * If inputs are invalid, returns `"n/a"` or `"Invalid format"`.
+ *
+ * @param startDate - The start date (Date | ISO string | timestamp)
+ * @param endDate   - The end date (Date | ISO string | timestamp)
+ * @param format    - `'default'` or `'detailed'`
+ * @returns A string describing the time delta
+ */
+function getTimeDelta(startDate, endDate, format = 'default') {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    return 'n/a';
+  }
+  const diffMs = end.getTime() - start.getTime();
+  const isFuture = diffMs > 0;
+  const absMs = Math.abs(diffMs);
+  const days = Math.floor(absMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(absMs % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+  const minutes = Math.floor(absMs % (1000 * 60 * 60) / (1000 * 60));
+  const seconds = Math.floor(absMs % (1000 * 60) / 1000);
+  if (format === 'default') {
+    const suffix = isFuture ? 'left' : 'ago';
+    if (days > 0) {
+      return `${days}d ${suffix}`;
+    }
+    if (hours > 0) {
+      return `${hours}h ${suffix}`;
+    }
+    if (minutes > 0) {
+      return `${minutes} min. ${suffix}`;
+    }
+    return `${seconds} sec. ${suffix}`;
+  }
+  if (format === 'detailed') {
+    return `${days}d:${hours}h:${minutes}m`;
+  }
+  return 'Invalid format';
+}
+
+const wrapperStyles = cva('inline');
+/**
+ * TimeDelta component renews a human-readable delta string periodically,
+ * and optionally wraps it in a tooltip showing the exact date/time.
+ */
+const TimeDelta = ({
+  startDate,
+  endDate,
+  // showTimestampTooltip = true,
+  // tooltipDate,
+  format = 'default'
+}) => {
+  const [timeDelta, setTimeDelta] = useState(null);
+  // const tooltipDateObj = new Date(tooltipDate ?? endDate)
+  useEffect(() => {
+    if (endDate == null) {
+      setTimeDelta(null);
+      return;
+    }
+    let timeoutId;
+    const updateDelta = () => {
+      const start = startDate != null ? new Date(startDate) : new Date();
+      const end = new Date(endDate);
+      setTimeDelta(getTimeDelta(start, end, format));
+      const now = new Date();
+      const diffMs = Math.abs(end.getTime() - now.getTime());
+      if (diffMs > 60000) {
+        const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+        timeoutId = setTimeout(updateDelta, msToNextMinute);
+      } else {
+        timeoutId = setTimeout(updateDelta, 1000);
+      }
+    };
+    updateDelta();
+    return () => clearTimeout(timeoutId);
+  }, [startDate, endDate, format]);
+  if (timeDelta == null || timeDelta === '') {
+    return jsx(NotActive, {});
+  }
+  // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
+  const content = jsx("span", {
+    className: wrapperStyles(),
+    children: timeDelta
+  });
+  // if (showTooltip) {
+  //   return (
+  //     <Tooltip
+  //       placement="top"
+  //       content={
+  //         <span className={tooltipContentStyles()}>
+  //           {tooltipDateObj.toLocaleDateString()}{' '}{tooltipDateObj.toLocaleTimeString()}
+  //         </span>
+  //       }
+  //     >
+  //       {content}
+  //     </Tooltip>
+  //   )
+  // }
+  return content;
+};
+
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, TimeDelta, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map
