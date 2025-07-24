@@ -12,6 +12,7 @@ export { CopyButton, type CopyButtonProps } from './copyButton'
 export { NotActive, type NotActiveProps } from './notActive'
 export { TimeDelta, type TimeDeltaProps } from './timeDelta'
 export { DateBlock, type DateBlockProps, type DateBlockFormat } from './dateBlock'
+export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './transactionStatusIcon'
 export type { TimeDeltaFormat } from '../utils/datetime'
 export {
   ArrowIcon,

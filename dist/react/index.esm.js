@@ -7332,5 +7332,25 @@ const DateBlock = ({
   // )
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, TimeDelta, ValueCard, useTheme };
+/**
+ * Renders an icon corresponding to the given `status`.
+ * If `status` is not recognized, returns null.
+ */
+const TransactionStatusIcon = _a => {
+  var {
+      status
+    } = _a,
+    props = __rest(_a, ["status"]);
+  const map = {
+    SUCCESS: SuccessIcon,
+    FAIL: ErrorIcon,
+    QUEUED: QueuedIcon,
+    POOLED: PooledIcon,
+    BROADCASTED: BroadcastedIcon
+  };
+  const IconComponent = map[status];
+  return IconComponent != null ? jsx(IconComponent, Object.assign({}, props)) : null;
+};
+
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map

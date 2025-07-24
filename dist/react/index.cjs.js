@@ -7352,6 +7352,26 @@ const DateBlock = ({
   // )
 };
 
+/**
+ * Renders an icon corresponding to the given `status`.
+ * If `status` is not recognized, returns null.
+ */
+const TransactionStatusIcon = _a => {
+  var {
+      status
+    } = _a,
+    props = tslib.__rest(_a, ["status"]);
+  const map = {
+    SUCCESS: SuccessIcon,
+    FAIL: ErrorIcon,
+    QUEUED: QueuedIcon,
+    POOLED: PooledIcon,
+    BROADCASTED: BroadcastedIcon
+  };
+  const IconComponent = map[status];
+  return IconComponent != null ? jsxRuntime.jsx(IconComponent, Object.assign({}, props)) : null;
+};
+
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.BigNumber = BigNumber;
@@ -7377,6 +7397,7 @@ exports.SuccessIcon = SuccessIcon;
 exports.Text = Text;
 exports.ThemeProvider = ThemeProvider;
 exports.TimeDelta = TimeDelta;
+exports.TransactionStatusIcon = TransactionStatusIcon;
 exports.ValueCard = ValueCard;
 exports.useTheme = useTheme;
 //# sourceMappingURL=index.cjs.js.map
