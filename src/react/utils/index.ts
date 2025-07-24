@@ -5,4 +5,4 @@ export {
   getTimeDelta,
   type DateInput,
   type TimeDeltaFormat
-} from './datetime' 
+} from './datetime'
