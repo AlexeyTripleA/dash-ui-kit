@@ -876,7 +876,7 @@ const Textarea = _a => {
       colorScheme: 'brand',
       size: 'sm',
       onClick: handlePaste,
-      className: `absolute top-1/2 -translate-y-1/2 ${size === 'sm' ? 'right-3' : size === 'md' ? 'right-[1.125rem]' : 'right-[1.5625rem]'}`,
+      className: `absolute top-1/2 !-translate-y-1/2 ${size === 'sm' ? 'right-3' : size === 'md' ? 'right-[1.125rem]' : 'right-[1.5625rem]'}`,
       children: "PASTE"
     })]
   });
