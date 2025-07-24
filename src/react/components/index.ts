@@ -6,6 +6,8 @@ export { Avatar, type AvatarProps } from './avatar'
 export { List, type ListProps, type ListItem } from './list'
 export { default as Identifier, type IdentifierProps } from './identifier'
 export { Heading, type HeadingProps } from './heading'
+export { CopyButton, type CopyButtonProps } from './copyButton'
+export { NotActive, type NotActiveProps } from './notActive'
 export {
   ArrowIcon,
   CopyIcon,

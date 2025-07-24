@@ -1,0 +1,10 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { CopyButton } from './index';
+declare const meta: Meta<typeof CopyButton>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+export declare const Default: Story;
+export declare const LongText: Story;
+export declare const WithCustomClass: Story;
+export declare const DarkTheme: Story;
+export declare const Disabled: Story;

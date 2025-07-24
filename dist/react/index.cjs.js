@@ -5888,7 +5888,7 @@ const selectIcon = classVarianceAuthority.cva('pointer-events-none flex items-ce
     }
   }
 });
-// Иконка стрелки
+// Arrow icon
 const ChevronDownIcon = ({
   className
 }) => jsxRuntime.jsx("svg", {
@@ -6442,6 +6442,536 @@ const List = ({
   });
 };
 
+const usePassiveLayoutEffect = React[typeof document !== 'undefined' && document.createElement !== void 0 ? 'useLayoutEffect' : 'useEffect'];
+
+const useLatest = current => {
+  const storedValue = React__namespace.useRef(current);
+  React__namespace.useEffect(() => {
+    storedValue.current = current;
+  });
+  return storedValue;
+};
+
+/* eslint-disable no-return-assign */
+/* eslint-disable no-underscore-dangle */
+
+
+/**
+ * A React hook that fires a callback whenever ResizeObserver detects a change to its size
+ *
+ * @param target A React ref created by `useRef()` or an HTML element
+ * @param callback Invoked with a single `ResizeObserverEntry` any time
+ *   the `target` resizes
+ */
+
+function _ref() {}
+function useResizeObserver(target, callback, options = {}) {
+  const resizeObserver = getResizeObserver(options.polyfill);
+  const storedCallback = useLatest(callback);
+  usePassiveLayoutEffect(() => {
+    let didUnsubscribe = false;
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return _ref;
+    function cb(entry, observer) {
+      if (didUnsubscribe) return;
+      storedCallback.current(entry, observer);
+    }
+    resizeObserver.subscribe(targetEl, cb);
+    return () => {
+      didUnsubscribe = true;
+      resizeObserver.unsubscribe(targetEl, cb);
+    };
+  }, [target, resizeObserver, storedCallback]);
+  return resizeObserver.observer;
+}
+function createResizeObserver(polyfill) {
+  let ticking = false;
+  let allEntries = [];
+  const callbacks = new Map();
+  const observer = new (polyfill || window.ResizeObserver)((entries, obs) => {
+    allEntries = allEntries.concat(entries);
+    function _ref2() {
+      const triggered = new Set();
+      for (let i = 0; i < allEntries.length; i++) {
+        if (triggered.has(allEntries[i].target)) continue;
+        triggered.add(allEntries[i].target);
+        const cbs = callbacks.get(allEntries[i].target);
+        cbs === null || cbs === void 0 ? void 0 : cbs.forEach(cb => cb(allEntries[i], obs));
+      }
+      allEntries = [];
+      ticking = false;
+    }
+    if (!ticking) {
+      window.requestAnimationFrame(_ref2);
+    }
+    ticking = true;
+  });
+  return {
+    observer,
+    subscribe(target, callback) {
+      var _callbacks$get;
+      observer.observe(target);
+      const cbs = (_callbacks$get = callbacks.get(target)) !== null && _callbacks$get !== void 0 ? _callbacks$get : [];
+      cbs.push(callback);
+      callbacks.set(target, cbs);
+    },
+    unsubscribe(target, callback) {
+      var _callbacks$get2;
+      const cbs = (_callbacks$get2 = callbacks.get(target)) !== null && _callbacks$get2 !== void 0 ? _callbacks$get2 : [];
+      if (cbs.length === 1) {
+        observer.unobserve(target);
+        callbacks.delete(target);
+        return;
+      }
+      const cbIndex = cbs.indexOf(callback);
+      if (cbIndex !== -1) cbs.splice(cbIndex, 1);
+      callbacks.set(target, cbs);
+    }
+  };
+}
+let _resizeObserver;
+const getResizeObserver = polyfill => !_resizeObserver ? _resizeObserver = createResizeObserver(polyfill) : _resizeObserver;
+
+/**
+ * Hook for debouncing values with extended functionality
+ *
+ * @param value - Value to debounce
+ * @param options - Configuration options
+ * @returns Object with debounced value and control methods
+ */
+const useDebounce = (value, options) => {
+  // Backward compatibility support - if number is passed, it's delay
+  const config = typeof options === 'number' ? {
+    delay: options
+  } : options;
+  const {
+    delay,
+    callback,
+    immediate = false
+  } = config;
+  const [debouncedValue, setDebouncedValue] = React.useState(value);
+  const [isPending, setIsPending] = React.useState(false);
+  const timeoutRef = React.useRef(null);
+  const isFirstRun = React.useRef(true);
+  const cancel = React.useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+      setIsPending(false);
+    }
+  }, []);
+  const flush = React.useCallback(() => {
+    cancel();
+    setDebouncedValue(value);
+    callback === null || callback === void 0 ? void 0 : callback(value);
+    setIsPending(false);
+  }, [value, callback, cancel]);
+  React.useEffect(() => {
+    // If immediate === true and this is first run, set value immediately
+    if (immediate && isFirstRun.current) {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      isFirstRun.current = false;
+      return;
+    }
+    isFirstRun.current = false;
+    setIsPending(true);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      setIsPending(false);
+      timeoutRef.current = null;
+    }, delay);
+    timeoutRef.current = handler;
+    return () => {
+      clearTimeout(handler);
+      setIsPending(false);
+    };
+  }, [value, delay, callback, immediate]);
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+  return {
+    debouncedValue,
+    flush,
+    cancel,
+    isPending
+  };
+};
+
+const notActiveStyles = classVarianceAuthority.cva('text-sm text-gray-400');
+function NotActive(_a) {
+  var {
+      children,
+      className
+    } = _a,
+    props = tslib.__rest(_a, ["children", "className"]);
+  return jsxRuntime.jsx("span", Object.assign({
+    className: `${notActiveStyles()} ${className !== null && className !== void 0 ? className : ''}`
+  }, props, {
+    children: children !== null && children !== void 0 ? children : 'n/a'
+  }));
+}
+
+/**
+ * Copy a string to the clipboard and invoke a callback with the result.
+ *
+ * @param copyText  The text to copy. Defaults to empty string.
+ * @param callback  Optional callback that will be called with { status: true } on success,
+ *                  or { status: false, message: error } on failure.
+ */
+function copyToClipboard(copyText = '', callback) {
+  navigator.clipboard.writeText(copyText).then(() => {
+    const result = {
+      status: true
+    };
+    callback === null || callback === void 0 ? void 0 : callback(result);
+  }).catch(err => {
+    const result = {
+      status: false,
+      message: err
+    };
+    callback === null || callback === void 0 ? void 0 : callback(result);
+  });
+}
+
+const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors');
+const CopyButton = _a => {
+  var {
+      text,
+      className,
+      onCopy
+    } = _a,
+    props = tslib.__rest(_a, ["text", "className", "onCopy"]);
+  const {
+    theme
+  } = useTheme();
+  return jsxRuntime.jsx("button", Object.assign({
+    type: 'button',
+    className: `${copyBtn()} ${className !== null && className !== void 0 ? className : ''} hover:text-gray-100 hover:cursor-pointer active:text-white`,
+    onClick: e => {
+      e.stopPropagation();
+      e.preventDefault();
+      copyToClipboard(text, onCopy);
+    }
+  }, props, {
+    children: jsxRuntime.jsx(CopyIcon, {
+      className: `${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`
+    })
+  }));
+};
+
+/** CVA for the root container, now with light/dark theme */
+const identifier = classVarianceAuthority.cva('flex items-center font-mono text-sm font-normal break-all', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-white'
+    },
+    ellipsis: {
+      false: '',
+      true: 'overflow-hidden'
+    },
+    highlight: {
+      default: '',
+      dim: '',
+      highlight: '',
+      first: '',
+      last: '',
+      both: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    ellipsis: false,
+    highlight: 'default'
+  }
+});
+/** CVA for each symbol span: inherits root color or dims */
+const symbol = classVarianceAuthority.cva('flex-1', {
+  variants: {
+    dim: {
+      false: 'text-inherit',
+      true: 'text-gray-500'
+    }
+  },
+  defaultVariants: {
+    dim: false
+  }
+});
+/** Highlight‐modes config */
+const highlightModes = {
+  default: {
+    first: true,
+    middle: false,
+    last: true
+  },
+  dim: {
+    first: false,
+    middle: false,
+    last: false
+  },
+  highlight: {
+    first: true,
+    middle: true,
+    last: true
+  },
+  first: {
+    first: true,
+    middle: false,
+    last: false
+  },
+  last: {
+    first: false,
+    middle: false,
+    last: true
+  },
+  both: {
+    first: true,
+    middle: false,
+    last: true
+  }
+};
+const HighlightedID = ({
+  children,
+  mode
+}) => {
+  if (children == null || children === '') return jsxRuntime.jsx(NotActive, {});
+  const text = String(children);
+  const count = 5;
+  const first = text.slice(0, count);
+  const middle = text.slice(count, text.length - count);
+  const last = text.slice(-5);
+  const cfg = highlightModes[mode];
+  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [jsxRuntime.jsx("span", {
+      className: symbol({
+        dim: !cfg.first
+      }),
+      children: first
+    }), jsxRuntime.jsx("span", {
+      className: symbol({
+        dim: !cfg.middle
+      }),
+      children: middle
+    }), jsxRuntime.jsx("span", {
+      className: symbol({
+        dim: !cfg.last
+      }),
+      children: last
+    })]
+  });
+};
+const MiddleEllipsisText = ({
+  children,
+  edgeChars
+}) => {
+  if (children == null || children === '') return jsxRuntime.jsx(NotActive, {});
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsxRuntime.jsx(jsxRuntime.Fragment, {
+      children: text
+    });
+  }
+  const first = text.slice(0, edgeChars);
+  const last = text.slice(-edgeChars);
+  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [jsxRuntime.jsx("span", {
+      children: first
+    }), jsxRuntime.jsx("span", {
+      children: "..."
+    }), jsxRuntime.jsx("span", {
+      children: last
+    })]
+  });
+};
+/**
+ * Identifier component shows an ID string with optional highlighting, avatar,
+ * copy button, dynamic line adjustment, and multi-line clamp.
+ */
+const Identifier = ({
+  children,
+  ellipsis = false,
+  highlight = undefined,
+  avatar = false,
+  copyButton = false,
+  linesAdjustment = true,
+  maxLines = 0,
+  className,
+  middleEllipsis = false,
+  edgeChars = 4
+}) => {
+  const {
+    theme
+  } = useTheme();
+  const symbolsRef = React.useRef(null);
+  const [containerWidth, setContainerWidth] = React.useState(0);
+  const [charWidth, setCharWidth] = React.useState(0);
+  const [linesMaxWidth, setLinesMaxWidth] = React.useState('none');
+  const [widthCounted, setWidthCounted] = React.useState(false);
+  const prevWinRef = React.useRef(null);
+  const [winWidth, setWinWidth] = React.useState(0);
+  const {
+    debouncedValue: debouncedWin,
+    cancel: cancelDebounce
+  } = useDebounce(winWidth, {
+    delay: 500,
+    callback: newWidth => {
+      // Log window width changes for debugging (optional)
+      // console.log('Window width debounced to:', newWidth)
+    }
+  });
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0) linesAdjustment = false;
+  useResizeObserver(symbolsRef, entry => {
+    setContainerWidth(entry.contentRect.width);
+  });
+  const measureChar = React.useCallback(() => {
+    if (symbolsRef.current == null || !linesAdjustment) return 0;
+    const temp = document.createElement('span');
+    const styles = getComputedStyle(symbolsRef.current);
+    temp.style.position = 'absolute';
+    temp.style.visibility = 'hidden';
+    temp.style.fontFamily = styles.fontFamily;
+    temp.style.fontSize = styles.fontSize;
+    temp.style.fontWeight = styles.fontWeight;
+    temp.textContent = 'A';
+    document.body.appendChild(temp);
+    const w = temp.getBoundingClientRect().width;
+    document.body.removeChild(temp);
+    return w > 0 ? w : 0;
+  }, [linesAdjustment]);
+  React.useEffect(() => {
+    if (symbolsRef.current == null || !linesAdjustment) return;
+    const measuredWidth = measureChar();
+    setCharWidth(measuredWidth > 0 ? measuredWidth : 0);
+  }, [measureChar]);
+  const updateSize = () => {
+    var _a;
+    if (widthCounted) return;
+    const len = (_a = children === null || children === void 0 ? void 0 : children.length) !== null && _a !== void 0 ? _a : 0;
+    if (charWidth === 0 || containerWidth === 0 || len === 0) {
+      setLinesMaxWidth('none');
+      return;
+    }
+    const spacingF = 0.1625;
+    const perLine = Math.floor(containerWidth / charWidth + spacingF);
+    if (perLine <= len / 8 || perLine > len) {
+      setLinesMaxWidth('none');
+      return;
+    }
+    const lines = Math.max(Math.ceil(len / perLine), 1);
+    const adjust = 0.7;
+    const width = charWidth * (len / lines + adjust);
+    setLinesMaxWidth(`${width}px`);
+    setWidthCounted(true);
+  };
+  React.useEffect(() => {
+    if (!linesAdjustment) return;
+    if (debouncedWin !== prevWinRef.current || !widthCounted || prevWinRef.current === null) {
+      updateSize();
+    }
+    prevWinRef.current = debouncedWin;
+  }, [charWidth, containerWidth, debouncedWin]);
+  React.useEffect(() => {
+    if (!linesAdjustment) return;
+    let prev = window.innerWidth;
+    const handler = () => {
+      const cur = window.innerWidth;
+      if (cur !== prev) {
+        setWinWidth(cur);
+        setWidthCounted(false);
+        prev = cur;
+      }
+    };
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('resize', handler);
+      // Cancel pending debounce on unmount
+      cancelDebounce();
+    };
+  }, [cancelDebounce]);
+  const rootClass = identifier({
+    theme,
+    ellipsis,
+    highlight
+  }) + (className != null && className !== '' ? ` ${className}` : '');
+  const clampStyles = maxLines > 0 ? {
+    display: '-webkit-box',
+    WebkitLineClamp: maxLines,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  } : {};
+  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis' : 'flex-1 leading-[1rem]';
+  return jsxRuntime.jsxs("div", {
+    className: rootClass,
+    children: [(avatar !== null && avatar !== void 0 ? avatar : false) && children != null && children !== '' && jsxRuntime.jsx(Avatar, {
+      username: children,
+      className: 'w-6 h-6 mr-2 flex-shrink-0'
+    }), jsxRuntime.jsx("div", {
+      ref: symbolsRef,
+      className: symbolContainerClass,
+      style: Object.assign(Object.assign({}, widthCounted && maxLines === 0 ? {
+        maxWidth: linesMaxWidth
+      } : {}), clampStyles),
+      children: children != null && children !== '' && middleEllipsis ? jsxRuntime.jsx(MiddleEllipsisText, {
+        edgeChars: edgeChars,
+        children: children
+      }) : children != null && children !== '' && highlight != null ? jsxRuntime.jsx(HighlightedID, {
+        mode: highlight,
+        children: children
+      }) : children !== null && children !== void 0 ? children : jsxRuntime.jsx(NotActive, {})
+    }), (copyButton !== null && copyButton !== void 0 ? copyButton : false) && children != null && children !== '' && jsxRuntime.jsx(CopyButton, {
+      className: 'ml-3',
+      text: children
+    })]
+  });
+};
+
+const sizeClasses = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
+  '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
+};
+const weightClasses = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold',
+  extrabold: 'font-extrabold'
+};
+const colorClasses = {
+  black: 'text-black',
+  gray: 'text-gray-600',
+  blue: 'text-blue-600',
+  red: 'text-red-600',
+  green: 'text-green-600'
+};
+const Heading = ({
+  as = 'h1',
+  size = '2xl',
+  weight = 'extrabold',
+  color = 'black',
+  className = '',
+  children
+}) => {
+  const Component = as;
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[color], className].filter(Boolean).join(' ');
+  return jsxRuntime.jsx(Component, {
+    className: classes,
+    children: children
+  });
+};
+
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.BroadcastedIcon = BroadcastedIcon;
@@ -6452,6 +6982,8 @@ exports.CopyIcon = CopyIcon;
 exports.ErrorIcon = ErrorIcon;
 exports.EyeClosedIcon = EyeClosedIcon;
 exports.EyeOpenIcon = EyeOpenIcon;
+exports.Heading = Heading;
+exports.Identifier = Identifier;
 exports.List = List;
 exports.PooledIcon = PooledIcon;
 exports.QueuedIcon = QueuedIcon;
