@@ -12,5 +12,10 @@
   },
   "include": [
     "src/react"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.stories.tsx"
   ]
 }

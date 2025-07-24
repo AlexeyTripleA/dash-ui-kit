@@ -1,5 +1,6 @@
 export { Button, type ButtonProps } from './components/button';
 export { Input, type InputProps } from './components/input';
+export { Textarea, type TextareaProps } from './components/textarea';
 export { Text, type TextProps } from './components/text';
 export { ValueCard, type ValueCardProps } from './components/valueCard';
 export { Select, type SelectProps, type SelectOption } from './components/select';
