@@ -1,5 +1,5 @@
 import React from 'react';
-export interface ImageGeneratorProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
+export interface AvatarProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> {
     /** Username to generate identicon for */
     username: string;
     /** Additional CSS class name */
@@ -10,8 +10,8 @@ export interface ImageGeneratorProps extends Omit<React.ImgHTMLAttributes<HTMLIm
     lightness?: number;
 }
 /**
- * ImageGenerator component that creates unique identicons from usernames
+ * Avatar component that creates unique identicons from usernames
  * with customizable appearance.
  */
-export declare const ImageGenerator: React.FC<ImageGeneratorProps>;
-export default ImageGenerator;
+export declare const Avatar: React.FC<AvatarProps>;
+export default Avatar;

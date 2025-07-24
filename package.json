@@ -36,7 +36,7 @@
   },
   "scripts": {
     "types": "tsc -p tsconfig.build.json",
-    "build": "rollup -c && npm run types",
+    "build": "rm -rf dist && rollup -c && npm run types",
     "prepare": "rollup -c && npm run types",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
+    "@react-hook/resize-observer": "^2.0.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@chromatic-com/storybook": "^3.2.6",

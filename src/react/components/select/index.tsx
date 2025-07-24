@@ -132,7 +132,7 @@ export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> 
   name?: string
 }
 
-// Иконка стрелки
+  // Arrow icon
 const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     width="15"

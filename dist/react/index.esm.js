@@ -4,7 +4,7 @@ import { __rest, __assign, __spreadArray } from 'tslib';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import * as React from 'react';
-import React__default, { useLayoutEffect, useState, useMemo } from 'react';
+import React__default, { useState, useRef, useLayoutEffect, useMemo, useCallback, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
 
@@ -195,6 +195,692 @@ function useTheme() {
   }
   return context;
 }
+
+const ArrowIcon = ({
+  color = 'white',
+  size = 14,
+  className = '',
+  onClick
+}) => {
+  return jsx("svg", {
+    width: size,
+    height: size,
+    viewBox: '0 0 9 14',
+    fill: 'none',
+    xmlns: 'http://www.w3.org/2000/svg',
+    className: className,
+    onClick: onClick,
+    color: color,
+    children: jsx("path", {
+      d: 'M7.29297 0.292893C7.68349 -0.0976311 8.31651 -0.0976311 8.70703 0.292893C9.09756 0.683418 9.09756 1.31643 8.70703 1.70696L3.41406 6.99992L8.70703 12.2929L8.77539 12.3691C9.09574 12.7618 9.07315 13.3408 8.70703 13.707C8.34092 14.0731 7.76191 14.0957 7.36914 13.7753L7.29297 13.707L0.585938 6.99992L7.29297 0.292893Z',
+      fill: 'currentColor'
+    })
+  });
+};
+const CopyIcon = ({
+  color = 'white',
+  size = 16,
+  className = '',
+  onClick
+}) => {
+  return jsxs("svg", {
+    width: size,
+    height: size,
+    viewBox: '0 0 16 16',
+    fill: 'none',
+    xmlns: 'http://www.w3.org/2000/svg',
+    className: className,
+    onClick: onClick,
+    color: color,
+    children: [jsx("g", {
+      clipPath: 'url(#clip0_3876_6767)',
+      children: jsx("g", {
+        clipPath: 'url(#clip1_3876_6767)',
+        children: jsx("g", {
+          clipPath: 'url(#clip2_3876_6767)',
+          children: jsx("path", {
+            d: 'M11.4512 10.5645H5.28516V1.75586H9.32335L11.4512 3.88369V10.5645ZM12.332 3.51758L9.68945 0.875H5.28516H4.4043V1.75586V10.5645V11.4453H5.28516H11.4512H12.332V10.5645V3.51758ZM0.880859 4.39844H0V5.2793V14.0879V14.9688H0.880859H7.04688H7.92773V14.0879V12.3262H7.04688V14.0879H0.880859V5.2793H3.52344V4.39844H0.880859Z',
+            fill: 'currentColor'
+          })
+        })
+      })
+    }), jsxs("defs", {
+      children: [jsx("clipPath", {
+        id: 'clip0_3876_6767',
+        children: jsx("rect", {
+          width: '16',
+          height: '16',
+          fill: 'white'
+        })
+      }), jsx("clipPath", {
+        id: 'clip1_3876_6767',
+        children: jsx("rect", {
+          width: '16',
+          height: '14.25',
+          fill: 'white',
+          transform: 'translate(0 0.875)'
+        })
+      }), jsx("clipPath", {
+        id: 'clip2_3876_6767',
+        children: jsx("rect", {
+          width: '12.332',
+          height: '14.0938',
+          fill: 'white',
+          transform: 'translate(0 0.875)'
+        })
+      })]
+    })]
+  });
+};
+const SuccessIcon = ({
+  color = '#1CC400',
+  size = 18,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("circle", {
+    cx: '9',
+    cy: '9',
+    r: '9',
+    fill: 'currentColor',
+    fillOpacity: '.2'
+  }), jsx("path", {
+    d: 'M5 8.5L8 11.5L13.5 6',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  })]
+});
+const ErrorIcon = ({
+  color = '#F45858',
+  size = 18,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("rect", {
+    width: '18',
+    height: '18',
+    rx: '4',
+    fill: 'currentColor',
+    fillOpacity: '.2'
+  }), jsx("path", {
+    d: 'M9.06951 10L9.0695 4.86092',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  }), jsx("path", {
+    d: 'M9.06951 13L9.06951 13.0102',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  })]
+});
+const QueuedIcon = ({
+  color = '#F4A358',
+  size = 18,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("rect", {
+    width: '18',
+    height: '18',
+    rx: '4',
+    fill: 'currentColor',
+    fillOpacity: '.2'
+  }), jsx("path", {
+    d: 'M11.6756 12.6482C11.8311 12.8601 12.1306 12.9075 12.3268 12.7326C13.1311 12.0158 13.6857 11.055 13.9009 9.99071C14.1476 8.77034 13.9301 7.50182 13.2909 6.43333C12.6518 5.36484 11.637 4.57324 10.4451 4.2134C9.25315 3.85356 7.96985 3.95136 6.84622 4.48768C5.72259 5.024 4.83949 5.96024 4.36966 7.11325C3.89983 8.26626 3.87708 9.55308 4.30587 10.722C4.73466 11.8909 5.58412 12.8577 6.6881 13.4334C7.65084 13.9355 8.74673 14.1085 9.80981 13.934C10.0691 13.8914 10.2207 13.6287 10.1537 13.3746C10.0867 13.1205 9.82636 12.9718 9.56614 13.0086C8.7336 13.1262 7.88063 12.982 7.12813 12.5896C6.23429 12.1235 5.5465 11.3406 5.19933 10.3942C4.85216 9.44781 4.87057 8.40592 5.25098 7.47237C5.63138 6.53882 6.3464 5.78078 7.25616 5.34654C8.16592 4.91231 9.20497 4.83312 10.17 5.12447C11.1351 5.41582 11.9567 6.05674 12.4742 6.92186C12.9917 7.78698 13.1678 8.81405 12.9681 9.80215C12.7999 10.634 12.3756 11.3878 11.7605 11.9612C11.5683 12.1404 11.5202 12.4362 11.6756 12.6482Z',
+    fill: 'currentColor'
+  })]
+});
+const PooledIcon = ({
+  color = '#008DE4',
+  size = 18,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("rect", {
+    width: '18',
+    height: '18',
+    rx: '4',
+    fill: 'currentColor',
+    fillOpacity: '.2'
+  }), jsx("path", {
+    d: 'M14 7L12.4328 6.01491C11.4484 5.39611 10.1941 5.40565 9.21918 6.03935V6.03935C8.30752 6.63193 7.14565 6.6816 6.18674 6.16899L4 5',
+    stroke: 'currentColor',
+    strokeLinecap: 'round'
+  }), jsx("path", {
+    d: 'M14 10L12.4328 9.01491C11.4484 8.39611 10.1941 8.40565 9.21918 9.03935V9.03935C8.30752 9.63193 7.14565 9.6816 6.18674 9.16899L4 8',
+    stroke: 'currentColor',
+    strokeLinecap: 'round'
+  }), jsx("path", {
+    d: 'M14 13L12.4328 12.0149C11.4484 11.3961 10.1941 11.4057 9.21918 12.0393V12.0393C8.30752 12.6319 7.14565 12.6816 6.18674 12.169L4 11',
+    stroke: 'currentColor',
+    strokeLinecap: 'round'
+  })]
+});
+const BroadcastedIcon = ({
+  color = '#008DE4',
+  size = 18,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("rect", {
+    width: '18',
+    height: '18',
+    rx: '4',
+    fill: 'currentColor',
+    fillOpacity: '.2'
+  }), jsx("path", {
+    d: 'M4.86093 8.74967L12.5 8.74993M12.5 8.74993L9.5 5.74993M12.5 8.74993L9.5 11.7499',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })]
+});
+const CalendarIcon = ({
+  color = 'currentColor',
+  size = 14,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 14 / 12,
+  viewBox: '0 0 12 14',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    fill: 'currentColor',
+    d: 'M3.42857 0.143066V0.571638V1.85735H8.57143V0.571638V0.143066H9.42857V0.571638V1.85735H11.1429H12V2.71449V4.42878V5.28592V13.0002V13.8574H11.1429H0.857143H0V13.0002V5.28592V4.42878V2.71449V1.85735H0.857143H2.57143V0.571638V0.143066H3.42857ZM11.1429 5.28592H0.857143V13.0002H11.1429V5.28592ZM11.1429 2.71449H0.857143V4.42878H11.1429V2.71449Z'
+  })
+});
+const EyeOpenIcon = ({
+  color = 'currentColor',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 10 / 16,
+  viewBox: '0 0 16 10',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M7.89888 0C6.24409 0.000806406 4.62351 0.471042 3.22533 1.35609C1.82715 2.24114 0.708743 3.50469 0 5C0.708092 6.49578 1.82635 7.75974 3.22468 8.64489C4.623 9.53004 6.24392 9.99999 7.89888 9.99999C9.55378 9.99999 11.1747 9.53004 12.573 8.64489C13.9713 7.75974 15.0896 6.49578 15.7977 5C15.089 3.50469 13.9706 2.24114 12.5724 1.35609C11.1742 0.471042 9.55364 0.000806406 7.89888 0ZM7.89888 8.98344C6.52084 8.97755 5.16914 8.60565 3.98212 7.90571C2.79509 7.20576 1.81538 6.20297 1.14327 5C1.81083 3.7931 2.78951 2.78709 3.97757 2.08654C5.16561 1.38601 6.51964 1.01653 7.89888 1.01653C9.27804 1.01653 10.6321 1.38601 11.8201 2.08654C13.0082 2.78709 13.9868 3.7931 14.6545 5C13.9823 6.20297 13.0026 7.20576 11.8156 7.90571C10.6285 8.60565 9.27689 8.97755 7.89888 8.98344ZM7.89888 2.51693C7.40772 2.51693 6.92767 2.66256 6.51934 2.93541C6.11101 3.20825 5.79274 3.59605 5.60481 4.0498C5.41687 4.50349 5.3677 5.00271 5.46351 5.48439C5.55932 5.96606 5.7958 6.4085 6.14306 6.7558C6.49033 7.10303 6.93275 7.33953 7.41443 7.43535C7.8961 7.53117 8.39533 7.48197 8.84909 7.29406C9.30277 7.10608 9.69059 6.78785 9.96342 6.3795C10.2362 5.97114 10.3819 5.4911 10.3819 5C10.3819 4.34146 10.1203 3.70989 9.65461 3.24421C9.189 2.77854 8.55742 2.51693 7.89888 2.51693ZM7.89888 6.46658C7.60878 6.46658 7.32525 6.38058 7.08407 6.21937C6.8429 6.05822 6.65492 5.82918 6.54392 5.56123C6.43291 5.29322 6.40387 4.99837 6.46045 4.7139C6.51704 4.42942 6.65675 4.16805 6.8618 3.96299C7.06693 3.75786 7.32823 3.61818 7.61271 3.5616C7.89726 3.50501 8.1921 3.53405 8.46011 3.64504C8.72806 3.75603 8.9571 3.94402 9.11825 4.18519C9.27939 4.42637 9.36546 4.7099 9.36546 5C9.36498 5.38884 9.21034 5.76161 8.93542 6.03654C8.66043 6.31146 8.28765 6.4661 7.89888 6.46658Z',
+    fill: 'currentColor'
+  })
+});
+const EyeClosedIcon = ({
+  color = 'currentColor',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("path", {
+    d: 'M7.89888 3C6.24409 3.00081 4.62351 3.47104 3.22533 4.35609C1.82715 5.24114 0.708743 6.50469 0 8C0.708092 9.49578 1.82635 10.7597 3.22468 11.6449C4.623 12.53 6.24392 13 7.89888 13C9.55378 13 11.1747 12.53 12.573 11.6449C13.9713 10.7597 15.0896 9.49578 15.7977 8C15.089 6.50469 13.9706 5.24114 12.5724 4.35609C11.1742 3.47104 9.55364 3.00081 7.89888 3ZM7.89888 11.9834C6.52084 11.9776 5.16914 11.6056 3.98212 10.9057C2.79509 10.2058 1.81538 9.20297 1.14327 8C1.81083 6.7931 2.78951 5.78709 3.97757 5.08654C5.16561 4.38601 6.51964 4.01653 7.89888 4.01653C9.27804 4.01653 10.6321 4.38601 11.8201 5.08654C13.0082 5.78709 13.9868 6.7931 14.6545 8C13.9823 9.20297 13.0026 10.2058 11.8156 10.9057C10.6285 11.6056 9.27689 11.9776 7.89888 11.9834Z',
+    fill: 'currentColor'
+  }), jsx("line", {
+    x1: '1',
+    y1: '15',
+    x2: '15',
+    y2: '1',
+    stroke: 'currentColor',
+    strokeWidth: '1.5',
+    strokeLinecap: 'round'
+  })]
+});
+const CheckIcon = ({
+  color = '#4C7EFF',
+  size = 20,
+  className = '',
+  onClick
+}) => {
+  return jsxs("svg", {
+    width: size,
+    height: size,
+    viewBox: '0 0 20 20',
+    fill: 'none',
+    xmlns: 'http://www.w3.org/2000/svg',
+    className: className,
+    onClick: onClick,
+    children: [jsx("circle", {
+      cx: "10",
+      cy: "10",
+      r: "10",
+      fill: "rgba(12, 28, 51, 0.05)"
+    }), jsx("path", {
+      d: 'M6.33 10L8.83 12.5L13.67 7.67',
+      stroke: color,
+      strokeWidth: '1.5',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    })]
+  });
+};
+
+const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
+  variants: {
+    theme: {
+      light: 'text-[#111111] placeholder:text-[rgba(17,17,17,0.6)] bg-white',
+      dark: 'text-white placeholder:text-gray-400 bg-gray-800'
+    },
+    colorScheme: {
+      default: 'focus:ring-blue-500/20',
+      brand: 'focus:ring-dash-brand/20',
+      error: 'focus:ring-red-500/20',
+      success: 'focus:ring-green-500/20'
+    },
+    size: {
+      sm: 'dash-block-sm font-light',
+      md: 'dash-block-md font-light',
+      xl: 'dash-block-xl font-light'
+    },
+    variant: {
+      outlined: 'outline outline-1 outline-offset-[-1px]'
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [
+  // Outlined variant colors
+  {
+    variant: 'outlined',
+    colorScheme: 'default',
+    class: 'outline-[rgba(17,17,17,0.32)] focus:outline-[rgba(17,17,17,0.6)]'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'brand',
+    class: 'outline-dash-brand/30 focus:outline-dash-brand'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'error',
+    class: 'outline-red-500 focus:outline-red-500'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'success',
+    class: 'outline-green-500 focus:outline-green-500'
+  },
+  // Outlined variant with focus ring
+  {
+    variant: 'outlined',
+    class: 'focus:ring-2'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'xl',
+    variant: 'outlined',
+    disabled: false
+  }
+});
+/**
+ * A versatile input component that adapts to light/dark theme,
+ * supports various color schemes, sizes, variants, and states.
+ * For password inputs, includes a toggleable eye icon.
+ *
+ * @example
+ * <Input
+ *   type='password'
+ *   placeholder='Enter password'
+ *   colorScheme='brand'
+ *   size='xl'
+ * />
+ */
+const Input = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      variant,
+      error = false,
+      success = false,
+      disabled = false,
+      type
+    } = _a,
+    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type"]);
+  const {
+    theme
+  } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const classes = input({
+    theme,
+    colorScheme: finalColorScheme,
+    size,
+    variant,
+    disabled
+  }) + ' ' + className;
+  const isPassword = type === 'password';
+  const inputType = isPassword && showPassword ? 'text' : type;
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  if (isPassword) {
+    return jsxs("div", {
+      className: 'relative',
+      children: [jsx("input", Object.assign({
+        className: classes + (isPassword ? ' pr-12' : ''),
+        disabled: disabled,
+        type: inputType
+      }, props)), jsx("button", {
+        type: 'button',
+        className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
+        onClick: togglePasswordVisibility,
+        tabIndex: -1,
+        children: showPassword ? jsx(EyeClosedIcon, {
+          size: 16,
+          color: '#0C1C33'
+        }) : jsx(EyeOpenIcon, {
+          size: 16,
+          color: '#0C1C33'
+        })
+      })]
+    });
+  }
+  return jsx("input", Object.assign({
+    className: classes,
+    disabled: disabled,
+    type: inputType
+  }, props));
+};
+
+const textareaContainer = cva('relative flex items-baseline transition-all w-full', {
+  variants: {
+    theme: {
+      light: 'bg-white',
+      dark: 'bg-gray-800'
+    },
+    hasValue: {
+      true: '',
+      false: ''
+    },
+    colorScheme: {
+      default: 'focus-within:ring-blue-500/20',
+      brand: 'focus-within:ring-dash-brand/20',
+      error: 'focus-within:ring-red-500/20',
+      success: 'focus-within:ring-green-500/20'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    },
+    variant: {
+      outlined: 'outline outline-1 outline-offset-[-1px]'
+    },
+    isValid: {
+      true: '',
+      false: '',
+      null: ''
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [
+  // Outlined variant colors
+  {
+    variant: 'outlined',
+    colorScheme: 'default',
+    class: 'outline-[rgba(17,17,17,0.32)] focus-within:outline-[rgba(17,17,17,0.6)]'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'brand',
+    class: 'outline-dash-brand/30 focus-within:outline-dash-brand'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'error',
+    isValid: false,
+    class: 'outline-red-500 focus-within:outline-red-500'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'success',
+    isValid: true,
+    class: 'outline-green-500 focus-within:outline-green-500'
+  },
+  // Outlined variant with focus ring
+  {
+    variant: 'outlined',
+    class: 'focus-within:ring-2'
+  },
+  // Add extra padding for PASTE button when no value
+  {
+    hasValue: false,
+    size: 'sm',
+    class: 'pr-[70px]'
+  }, {
+    hasValue: false,
+    size: 'md',
+    class: 'pr-[70px]'
+  }, {
+    hasValue: false,
+    size: 'xl',
+    class: 'pr-[70px]'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    hasValue: false,
+    colorScheme: 'default',
+    size: 'xl',
+    variant: 'outlined',
+    isValid: null,
+    disabled: false
+  }
+});
+const textarea = cva('w-full bg-transparent outline-none resize-none transition-all text-[0.875rem] leading-[1.0625rem] placeholder:text-opacity-60', {
+  variants: {
+    theme: {
+      light: 'text-[#111111] placeholder:text-[rgba(17,17,17,0.6)]',
+      dark: 'text-white placeholder:text-gray-400'
+    },
+    font: {
+      main: 'font-dash-main',
+      grotesque: 'font-dash-grotesque'
+    },
+    weight: {
+      light: 'font-light',
+      normal: 'font-normal',
+      medium: 'font-medium',
+      semibold: 'font-semibold',
+      bold: 'font-bold'
+    },
+    size: {
+      sm: '',
+      md: '',
+      xl: ''
+    },
+    disabled: {
+      false: '',
+      true: 'cursor-not-allowed'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    font: 'main',
+    weight: 'light',
+    size: 'xl',
+    disabled: false
+  }
+});
+/**
+ * A versatile textarea component that adapts to light/dark theme,
+ * supports various color schemes, sizes, variants, and states.
+ * Includes optional paste functionality and validation.
+ *
+ * @example
+ * <Textarea
+ *   placeholder='Enter your message'
+ *   colorScheme='brand'
+ *   size='xl'
+ *   font='grotesque'
+ *   weight='medium'
+ *   rows={4}
+ *   showPasteButton={true}
+ * />
+ */
+const Textarea = _a => {
+  var _b, _c;
+  var {
+      className = '',
+      onChange,
+      showPasteButton = true,
+      validator = null,
+      rows = 3,
+      size = 'xl',
+      variant = 'outlined',
+      colorScheme = 'default',
+      font = 'main',
+      weight = 'light',
+      error = false,
+      success = false,
+      disabled = false
+    } = _a,
+    props = __rest(_a, ["className", "onChange", "showPasteButton", "validator", "rows", "size", "variant", "colorScheme", "font", "weight", "error", "success", "disabled"]);
+  const {
+    theme
+  } = useTheme();
+  const [value, setValue] = useState((_c = (_b = props.value) !== null && _b !== void 0 ? _b : props.defaultValue) !== null && _c !== void 0 ? _c : '');
+  const [isValid, setIsValid] = useState(null);
+  const textareaRef = useRef(null);
+  const handleChange = e => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    if (typeof onChange === 'function') {
+      onChange(newValue);
+    }
+    validateInput(newValue);
+  };
+  const validateInput = input => {
+    if (validator === null) {
+      setIsValid(null);
+      return;
+    }
+    if (typeof validator === 'function') {
+      setIsValid(validator(input));
+    } else {
+      setIsValid(Boolean(validator));
+    }
+  };
+  const handlePaste = () => {
+    navigator.clipboard.readText().then(text => {
+      if (text !== '') {
+        setValue(text);
+        if (textareaRef.current != null) {
+          textareaRef.current.value = text;
+        }
+        if (onChange != null) {
+          onChange(text);
+        }
+        validateInput(text);
+      }
+    }).catch(err => {
+      console.error('Failed to read clipboard contents: ', err);
+    });
+  };
+  const hasValue = value !== '';
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  let finalIsValid = isValid;
+  if (error) {
+    finalColorScheme = 'error';
+    finalIsValid = false;
+  } else if (success) {
+    finalColorScheme = 'success';
+    finalIsValid = true;
+  }
+  const containerClasses = textareaContainer({
+    theme,
+    hasValue,
+    colorScheme: finalColorScheme,
+    size,
+    variant,
+    isValid: finalIsValid,
+    disabled
+  });
+  const textareaClasses = textarea({
+    theme,
+    font,
+    weight,
+    size,
+    disabled
+  }) + ' ' + className;
+  return jsxs("div", {
+    className: containerClasses,
+    children: [jsx("textarea", Object.assign({
+      ref: textareaRef,
+      value: value,
+      onChange: handleChange,
+      rows: rows,
+      className: textareaClasses,
+      disabled: disabled
+    }, props)), showPasteButton && !hasValue && !disabled && jsx(Button, {
+      colorScheme: 'brand',
+      size: 'sm',
+      onClick: handlePaste,
+      className: `absolute top-1/2 !-translate-y-1/2 ${size === 'sm' ? 'right-3' : size === 'md' ? 'right-[1.125rem]' : 'right-[1.5625rem]'}`,
+      children: "PASTE"
+    })]
+  });
+};
 
 const textStyles = cva('', {
   variants: {
@@ -5868,7 +6554,7 @@ const selectIcon = cva('pointer-events-none flex items-center justify-center tra
     }
   }
 });
-// Иконка стрелки
+// Arrow icon
 const ChevronDownIcon = ({
   className
 }) => jsx("svg", {
@@ -6072,321 +6758,839 @@ const Avatar = _a => {
   });
 };
 
-const ArrowIcon = ({
-  color = 'white',
-  size = 14,
+const iconComponents = {
+  check: CheckIcon
+};
+const List = ({
+  items,
+  iconType = 'check',
   className = '',
-  onClick
+  size = 'sm'
 }) => {
-  return jsx("svg", {
-    width: size,
-    height: size,
-    viewBox: '0 0 9 14',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg',
-    className: className,
-    onClick: onClick,
-    color: color,
-    children: jsx("path", {
-      d: 'M7.29297 0.292893C7.68349 -0.0976311 8.31651 -0.0976311 8.70703 0.292893C9.09756 0.683418 9.09756 1.31643 8.70703 1.70696L3.41406 6.99992L8.70703 12.2929L8.77539 12.3691C9.09574 12.7618 9.07315 13.3408 8.70703 13.707C8.34092 14.0731 7.76191 14.0957 7.36914 13.7753L7.29297 13.707L0.585938 6.99992L7.29297 0.292893Z',
-      fill: 'currentColor'
-    })
+  const IconComponent = iconComponents[iconType];
+  return jsx("ul", {
+    className: `space-y-5 w-full ${className}`,
+    children: items.map((item, index) => jsxs("li", {
+      className: 'flex items-start gap-4',
+      children: [jsx(IconComponent, {
+        size: 20,
+        className: 'flex-shrink-0'
+      }), jsxs("div", {
+        className: 'flex flex-col gap-1',
+        children: [jsx(Text, {
+          size: size,
+          weight: 500,
+          children: item.text
+        }), item.description && jsx(Text, {
+          size: 'xs',
+          dim: true,
+          className: 'opacity-75',
+          children: item.description
+        })]
+      })]
+    }, index))
   });
 };
-const CopyIcon = ({
-  color = 'white',
-  size = 16,
-  className = '',
-  onClick
+
+const bigNumberStyles = cva('inline-flex whitespace-nowrap');
+const spaceStyles = cva('inline-block w-[3px]');
+/**
+ * Splits a numeric string into groups of three characters for display.
+ * Supports two variants:
+ * - `space`: groups separated by a fixed 3px block
+ * - `comma`: groups separated by commas, with decimal part after `.`
+ */
+const BigNumber = ({
+  children,
+  variant = 'space',
+  className = ''
 }) => {
-  return jsxs("svg", {
-    width: size,
-    height: size,
-    viewBox: '0 0 16 16',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg',
-    className: className,
-    onClick: onClick,
-    color: color,
-    children: [jsx("g", {
-      clipPath: 'url(#clip0_3876_6767)',
-      children: jsx("g", {
-        clipPath: 'url(#clip1_3876_6767)',
-        children: jsx("g", {
-          clipPath: 'url(#clip2_3876_6767)',
-          children: jsx("path", {
-            d: 'M11.4512 10.5645H5.28516V1.75586H9.32335L11.4512 3.88369V10.5645ZM12.332 3.51758L9.68945 0.875H5.28516H4.4043V1.75586V10.5645V11.4453H5.28516H11.4512H12.332V10.5645V3.51758ZM0.880859 4.39844H0V5.2793V14.0879V14.9688H0.880859H7.04688H7.92773V14.0879V12.3262H7.04688V14.0879H0.880859V5.2793H3.52344V4.39844H0.880859Z',
-            fill: 'currentColor'
-          })
-        })
-      })
-    }), jsxs("defs", {
-      children: [jsx("clipPath", {
-        id: 'clip0_3876_6767',
-        children: jsx("rect", {
-          width: '16',
-          height: '16',
-          fill: 'white'
-        })
-      }), jsx("clipPath", {
-        id: 'clip1_3876_6767',
-        children: jsx("rect", {
-          width: '16',
-          height: '14.25',
-          fill: 'white',
-          transform: 'translate(0 0.875)'
-        })
-      }), jsx("clipPath", {
-        id: 'clip2_3876_6767',
-        children: jsx("rect", {
-          width: '12.332',
-          height: '14.0938',
-          fill: 'white',
-          transform: 'translate(0 0.875)'
-        })
+  if (children === undefined || children === null) return null;
+  const str = children.toString();
+  if (variant === 'space') {
+    // group digits every 3, right to left
+    const groups = str.split('').reverse().reduce((acc, char, idx) => {
+      if (idx % 3 === 0) acc.unshift('');
+      acc[0] = char + acc[0];
+      return acc;
+    }, []);
+    return jsx("span", {
+      className: `${bigNumberStyles()} ${className}`,
+      children: groups.map((grp, i) => jsxs("span", {
+        children: [jsx("span", {
+          children: grp
+        }), i < groups.length - 1 && jsx("span", {
+          className: spaceStyles()
+        })]
+      }, i))
+    });
+  } else {
+    // comma variant
+    const [intPart, fracPart] = str.split('.');
+    const groups = intPart.split('').reverse().reduce((acc, char, idx) => {
+      if (idx % 3 === 0) acc.unshift('');
+      acc[0] = char + acc[0];
+      return acc;
+    }, []);
+    return jsxs("span", {
+      className: `${bigNumberStyles()} ${className}`,
+      children: [groups.map((grp, i) => jsxs("span", {
+        children: [jsx("span", {
+          children: grp
+        }), i < groups.length - 1 && jsx("span", {
+          className: 'px-[0.125ch]',
+          children: ","
+        })]
+      }, i)), fracPart != null && jsxs(Fragment, {
+        children: [jsx("span", {
+          className: 'px-[0.125ch]',
+          children: "."
+        }), jsx("span", {
+          children: fracPart
+        })]
       })]
+    });
+  }
+};
+
+const usePassiveLayoutEffect = React__default[typeof document !== 'undefined' && document.createElement !== void 0 ? 'useLayoutEffect' : 'useEffect'];
+
+const useLatest = current => {
+  const storedValue = React.useRef(current);
+  React.useEffect(() => {
+    storedValue.current = current;
+  });
+  return storedValue;
+};
+
+/* eslint-disable no-return-assign */
+/* eslint-disable no-underscore-dangle */
+
+
+/**
+ * A React hook that fires a callback whenever ResizeObserver detects a change to its size
+ *
+ * @param target A React ref created by `useRef()` or an HTML element
+ * @param callback Invoked with a single `ResizeObserverEntry` any time
+ *   the `target` resizes
+ */
+
+function _ref() {}
+function useResizeObserver(target, callback, options = {}) {
+  const resizeObserver = getResizeObserver(options.polyfill);
+  const storedCallback = useLatest(callback);
+  usePassiveLayoutEffect(() => {
+    let didUnsubscribe = false;
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return _ref;
+    function cb(entry, observer) {
+      if (didUnsubscribe) return;
+      storedCallback.current(entry, observer);
+    }
+    resizeObserver.subscribe(targetEl, cb);
+    return () => {
+      didUnsubscribe = true;
+      resizeObserver.unsubscribe(targetEl, cb);
+    };
+  }, [target, resizeObserver, storedCallback]);
+  return resizeObserver.observer;
+}
+function createResizeObserver(polyfill) {
+  let ticking = false;
+  let allEntries = [];
+  const callbacks = new Map();
+  const observer = new (polyfill || window.ResizeObserver)((entries, obs) => {
+    allEntries = allEntries.concat(entries);
+    function _ref2() {
+      const triggered = new Set();
+      for (let i = 0; i < allEntries.length; i++) {
+        if (triggered.has(allEntries[i].target)) continue;
+        triggered.add(allEntries[i].target);
+        const cbs = callbacks.get(allEntries[i].target);
+        cbs === null || cbs === void 0 ? void 0 : cbs.forEach(cb => cb(allEntries[i], obs));
+      }
+      allEntries = [];
+      ticking = false;
+    }
+    if (!ticking) {
+      window.requestAnimationFrame(_ref2);
+    }
+    ticking = true;
+  });
+  return {
+    observer,
+    subscribe(target, callback) {
+      var _callbacks$get;
+      observer.observe(target);
+      const cbs = (_callbacks$get = callbacks.get(target)) !== null && _callbacks$get !== void 0 ? _callbacks$get : [];
+      cbs.push(callback);
+      callbacks.set(target, cbs);
+    },
+    unsubscribe(target, callback) {
+      var _callbacks$get2;
+      const cbs = (_callbacks$get2 = callbacks.get(target)) !== null && _callbacks$get2 !== void 0 ? _callbacks$get2 : [];
+      if (cbs.length === 1) {
+        observer.unobserve(target);
+        callbacks.delete(target);
+        return;
+      }
+      const cbIndex = cbs.indexOf(callback);
+      if (cbIndex !== -1) cbs.splice(cbIndex, 1);
+      callbacks.set(target, cbs);
+    }
+  };
+}
+let _resizeObserver;
+const getResizeObserver = polyfill => !_resizeObserver ? _resizeObserver = createResizeObserver(polyfill) : _resizeObserver;
+
+/**
+ * Hook for debouncing values with extended functionality
+ *
+ * @param value - Value to debounce
+ * @param options - Configuration options
+ * @returns Object with debounced value and control methods
+ */
+const useDebounce = (value, options) => {
+  // Backward compatibility support - if number is passed, it's delay
+  const config = typeof options === 'number' ? {
+    delay: options
+  } : options;
+  const {
+    delay,
+    callback,
+    immediate = false
+  } = config;
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [isPending, setIsPending] = useState(false);
+  const timeoutRef = useRef(null);
+  const isFirstRun = useRef(true);
+  const cancel = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+      setIsPending(false);
+    }
+  }, []);
+  const flush = useCallback(() => {
+    cancel();
+    setDebouncedValue(value);
+    callback === null || callback === void 0 ? void 0 : callback(value);
+    setIsPending(false);
+  }, [value, callback, cancel]);
+  useEffect(() => {
+    // If immediate === true and this is first run, set value immediately
+    if (immediate && isFirstRun.current) {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      isFirstRun.current = false;
+      return;
+    }
+    isFirstRun.current = false;
+    setIsPending(true);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      setIsPending(false);
+      timeoutRef.current = null;
+    }, delay);
+    timeoutRef.current = handler;
+    return () => {
+      clearTimeout(handler);
+      setIsPending(false);
+    };
+  }, [value, delay, callback, immediate]);
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+  return {
+    debouncedValue,
+    flush,
+    cancel,
+    isPending
+  };
+};
+
+const notActiveStyles = cva('text-sm text-gray-400');
+function NotActive(_a) {
+  var {
+      children,
+      className
+    } = _a,
+    props = __rest(_a, ["children", "className"]);
+  return jsx("span", Object.assign({
+    className: `${notActiveStyles()} ${className !== null && className !== void 0 ? className : ''}`
+  }, props, {
+    children: children !== null && children !== void 0 ? children : 'n/a'
+  }));
+}
+
+/**
+ * Copy a string to the clipboard and invoke a callback with the result.
+ *
+ * @param copyText  The text to copy. Defaults to empty string.
+ * @param callback  Optional callback that will be called with { status: true } on success,
+ *                  or { status: false, message: error } on failure.
+ */
+function copyToClipboard(copyText = '', callback) {
+  navigator.clipboard.writeText(copyText).then(() => {
+    const result = {
+      status: true
+    };
+    callback === null || callback === void 0 ? void 0 : callback(result);
+  }).catch(err => {
+    const result = {
+      status: false,
+      message: err
+    };
+    callback === null || callback === void 0 ? void 0 : callback(result);
+  });
+}
+
+const copyBtn = cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors');
+const CopyButton = _a => {
+  var {
+      text,
+      className,
+      onCopy
+    } = _a,
+    props = __rest(_a, ["text", "className", "onCopy"]);
+  const {
+    theme
+  } = useTheme();
+  return jsx("button", Object.assign({
+    type: 'button',
+    className: `${copyBtn()} ${className !== null && className !== void 0 ? className : ''} hover:text-gray-100 hover:cursor-pointer active:text-white`,
+    onClick: e => {
+      e.stopPropagation();
+      e.preventDefault();
+      copyToClipboard(text, onCopy);
+    }
+  }, props, {
+    children: jsx(CopyIcon, {
+      className: `${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`
+    })
+  }));
+};
+
+/** CVA for the root container, now with light/dark theme */
+const identifier = cva('flex items-center font-mono text-sm font-normal break-all', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-white'
+    },
+    ellipsis: {
+      false: '',
+      true: 'overflow-hidden'
+    },
+    highlight: {
+      default: '',
+      dim: '',
+      highlight: '',
+      first: '',
+      last: '',
+      both: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    ellipsis: false,
+    highlight: 'default'
+  }
+});
+/** CVA for each symbol span: inherits root color or dims */
+const symbol = cva('flex-1', {
+  variants: {
+    dim: {
+      false: 'text-inherit',
+      true: 'text-gray-500'
+    }
+  },
+  defaultVariants: {
+    dim: false
+  }
+});
+/** Highlight‐modes config */
+const highlightModes = {
+  default: {
+    first: true,
+    middle: false,
+    last: true
+  },
+  dim: {
+    first: false,
+    middle: false,
+    last: false
+  },
+  highlight: {
+    first: true,
+    middle: true,
+    last: true
+  },
+  first: {
+    first: true,
+    middle: false,
+    last: false
+  },
+  last: {
+    first: false,
+    middle: false,
+    last: true
+  },
+  both: {
+    first: true,
+    middle: false,
+    last: true
+  }
+};
+const HighlightedID = ({
+  children,
+  mode
+}) => {
+  if (children == null || children === '') return jsx(NotActive, {});
+  const text = String(children);
+  const count = 5;
+  const first = text.slice(0, count);
+  const middle = text.slice(count, text.length - count);
+  const last = text.slice(-5);
+  const cfg = highlightModes[mode];
+  return jsxs(Fragment, {
+    children: [jsx("span", {
+      className: symbol({
+        dim: !cfg.first
+      }),
+      children: first
+    }), jsx("span", {
+      className: symbol({
+        dim: !cfg.middle
+      }),
+      children: middle
+    }), jsx("span", {
+      className: symbol({
+        dim: !cfg.last
+      }),
+      children: last
     })]
   });
 };
-const SuccessIcon = ({
-  color = '#1CC400',
-  size = 18,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 18 18',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("circle", {
-    cx: '9',
-    cy: '9',
-    r: '9',
-    fill: 'currentColor',
-    fillOpacity: '.2'
-  }), jsx("path", {
-    d: 'M5 8.5L8 11.5L13.5 6',
-    stroke: 'currentColor',
-    strokeWidth: '2',
-    strokeLinecap: 'round'
-  })]
-});
-const ErrorIcon = ({
-  color = '#F45858',
-  size = 18,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 18 18',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("rect", {
-    width: '18',
-    height: '18',
-    rx: '4',
-    fill: 'currentColor',
-    fillOpacity: '.2'
-  }), jsx("path", {
-    d: 'M9.06951 10L9.0695 4.86092',
-    stroke: 'currentColor',
-    strokeWidth: '2',
-    strokeLinecap: 'round'
-  }), jsx("path", {
-    d: 'M9.06951 13L9.06951 13.0102',
-    stroke: 'currentColor',
-    strokeWidth: '2',
-    strokeLinecap: 'round'
-  })]
-});
-const QueuedIcon = ({
-  color = '#F4A358',
-  size = 18,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 18 18',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("rect", {
-    width: '18',
-    height: '18',
-    rx: '4',
-    fill: 'currentColor',
-    fillOpacity: '.2'
-  }), jsx("path", {
-    d: 'M11.6756 12.6482C11.8311 12.8601 12.1306 12.9075 12.3268 12.7326C13.1311 12.0158 13.6857 11.055 13.9009 9.99071C14.1476 8.77034 13.9301 7.50182 13.2909 6.43333C12.6518 5.36484 11.637 4.57324 10.4451 4.2134C9.25315 3.85356 7.96985 3.95136 6.84622 4.48768C5.72259 5.024 4.83949 5.96024 4.36966 7.11325C3.89983 8.26626 3.87708 9.55308 4.30587 10.722C4.73466 11.8909 5.58412 12.8577 6.6881 13.4334C7.65084 13.9355 8.74673 14.1085 9.80981 13.934C10.0691 13.8914 10.2207 13.6287 10.1537 13.3746C10.0867 13.1205 9.82636 12.9718 9.56614 13.0086C8.7336 13.1262 7.88063 12.982 7.12813 12.5896C6.23429 12.1235 5.5465 11.3406 5.19933 10.3942C4.85216 9.44781 4.87057 8.40592 5.25098 7.47237C5.63138 6.53882 6.3464 5.78078 7.25616 5.34654C8.16592 4.91231 9.20497 4.83312 10.17 5.12447C11.1351 5.41582 11.9567 6.05674 12.4742 6.92186C12.9917 7.78698 13.1678 8.81405 12.9681 9.80215C12.7999 10.634 12.3756 11.3878 11.7605 11.9612C11.5683 12.1404 11.5202 12.4362 11.6756 12.6482Z',
-    fill: 'currentColor'
-  })]
-});
-const PooledIcon = ({
-  color = '#008DE4',
-  size = 18,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 18 18',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("rect", {
-    width: '18',
-    height: '18',
-    rx: '4',
-    fill: 'currentColor',
-    fillOpacity: '.2'
-  }), jsx("path", {
-    d: 'M14 7L12.4328 6.01491C11.4484 5.39611 10.1941 5.40565 9.21918 6.03935V6.03935C8.30752 6.63193 7.14565 6.6816 6.18674 6.16899L4 5',
-    stroke: 'currentColor',
-    strokeLinecap: 'round'
-  }), jsx("path", {
-    d: 'M14 10L12.4328 9.01491C11.4484 8.39611 10.1941 8.40565 9.21918 9.03935V9.03935C8.30752 9.63193 7.14565 9.6816 6.18674 9.16899L4 8',
-    stroke: 'currentColor',
-    strokeLinecap: 'round'
-  }), jsx("path", {
-    d: 'M14 13L12.4328 12.0149C11.4484 11.3961 10.1941 11.4057 9.21918 12.0393V12.0393C8.30752 12.6319 7.14565 12.6816 6.18674 12.169L4 11',
-    stroke: 'currentColor',
-    strokeLinecap: 'round'
-  })]
-});
-const BroadcastedIcon = ({
-  color = '#008DE4',
-  size = 18,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 18 18',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("rect", {
-    width: '18',
-    height: '18',
-    rx: '4',
-    fill: 'currentColor',
-    fillOpacity: '.2'
-  }), jsx("path", {
-    d: 'M4.86093 8.74967L12.5 8.74993M12.5 8.74993L9.5 5.74993M12.5 8.74993L9.5 11.7499',
-    stroke: 'currentColor',
-    strokeWidth: '2',
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round'
-  })]
-});
-const CalendarIcon = ({
-  color = 'currentColor',
-  size = 14,
-  className = '',
-  onClick
-}) => jsx("svg", {
-  width: size,
-  height: size * 14 / 12,
-  viewBox: '0 0 12 14',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: jsx("path", {
-    fill: 'currentColor',
-    d: 'M3.42857 0.143066V0.571638V1.85735H8.57143V0.571638V0.143066H9.42857V0.571638V1.85735H11.1429H12V2.71449V4.42878V5.28592V13.0002V13.8574H11.1429H0.857143H0V13.0002V5.28592V4.42878V2.71449V1.85735H0.857143H2.57143V0.571638V0.143066H3.42857ZM11.1429 5.28592H0.857143V13.0002H11.1429V5.28592ZM11.1429 2.71449H0.857143V4.42878H11.1429V2.71449Z'
-  })
-});
-const EyeOpenIcon = ({
-  color = 'currentColor',
-  size = 16,
-  className = '',
-  onClick
-}) => jsx("svg", {
-  width: size,
-  height: size * 10 / 16,
-  viewBox: '0 0 16 10',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: jsx("path", {
-    d: 'M7.89888 0C6.24409 0.000806406 4.62351 0.471042 3.22533 1.35609C1.82715 2.24114 0.708743 3.50469 0 5C0.708092 6.49578 1.82635 7.75974 3.22468 8.64489C4.623 9.53004 6.24392 9.99999 7.89888 9.99999C9.55378 9.99999 11.1747 9.53004 12.573 8.64489C13.9713 7.75974 15.0896 6.49578 15.7977 5C15.089 3.50469 13.9706 2.24114 12.5724 1.35609C11.1742 0.471042 9.55364 0.000806406 7.89888 0ZM7.89888 8.98344C6.52084 8.97755 5.16914 8.60565 3.98212 7.90571C2.79509 7.20576 1.81538 6.20297 1.14327 5C1.81083 3.7931 2.78951 2.78709 3.97757 2.08654C5.16561 1.38601 6.51964 1.01653 7.89888 1.01653C9.27804 1.01653 10.6321 1.38601 11.8201 2.08654C13.0082 2.78709 13.9868 3.7931 14.6545 5C13.9823 6.20297 13.0026 7.20576 11.8156 7.90571C10.6285 8.60565 9.27689 8.97755 7.89888 8.98344ZM7.89888 2.51693C7.40772 2.51693 6.92767 2.66256 6.51934 2.93541C6.11101 3.20825 5.79274 3.59605 5.60481 4.0498C5.41687 4.50349 5.3677 5.00271 5.46351 5.48439C5.55932 5.96606 5.7958 6.4085 6.14306 6.7558C6.49033 7.10303 6.93275 7.33953 7.41443 7.43535C7.8961 7.53117 8.39533 7.48197 8.84909 7.29406C9.30277 7.10608 9.69059 6.78785 9.96342 6.3795C10.2362 5.97114 10.3819 5.4911 10.3819 5C10.3819 4.34146 10.1203 3.70989 9.65461 3.24421C9.189 2.77854 8.55742 2.51693 7.89888 2.51693ZM7.89888 6.46658C7.60878 6.46658 7.32525 6.38058 7.08407 6.21937C6.8429 6.05822 6.65492 5.82918 6.54392 5.56123C6.43291 5.29322 6.40387 4.99837 6.46045 4.7139C6.51704 4.42942 6.65675 4.16805 6.8618 3.96299C7.06693 3.75786 7.32823 3.61818 7.61271 3.5616C7.89726 3.50501 8.1921 3.53405 8.46011 3.64504C8.72806 3.75603 8.9571 3.94402 9.11825 4.18519C9.27939 4.42637 9.36546 4.7099 9.36546 5C9.36498 5.38884 9.21034 5.76161 8.93542 6.03654C8.66043 6.31146 8.28765 6.4661 7.89888 6.46658Z',
-    fill: 'currentColor'
-  })
-});
-const EyeClosedIcon = ({
-  color = 'currentColor',
-  size = 16,
-  className = '',
-  onClick
-}) => jsxs("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 16 16',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: [jsx("path", {
-    d: 'M7.89888 3C6.24409 3.00081 4.62351 3.47104 3.22533 4.35609C1.82715 5.24114 0.708743 6.50469 0 8C0.708092 9.49578 1.82635 10.7597 3.22468 11.6449C4.623 12.53 6.24392 13 7.89888 13C9.55378 13 11.1747 12.53 12.573 11.6449C13.9713 10.7597 15.0896 9.49578 15.7977 8C15.089 6.50469 13.9706 5.24114 12.5724 4.35609C11.1742 3.47104 9.55364 3.00081 7.89888 3ZM7.89888 11.9834C6.52084 11.9776 5.16914 11.6056 3.98212 10.9057C2.79509 10.2058 1.81538 9.20297 1.14327 8C1.81083 6.7931 2.78951 5.78709 3.97757 5.08654C5.16561 4.38601 6.51964 4.01653 7.89888 4.01653C9.27804 4.01653 10.6321 4.38601 11.8201 5.08654C13.0082 5.78709 13.9868 6.7931 14.6545 8C13.9823 9.20297 13.0026 10.2058 11.8156 10.9057C10.6285 11.6056 9.27689 11.9776 7.89888 11.9834Z',
-    fill: 'currentColor'
-  }), jsx("line", {
-    x1: '1',
-    y1: '15',
-    x2: '15',
-    y2: '1',
-    stroke: 'currentColor',
-    strokeWidth: '1.5',
-    strokeLinecap: 'round'
-  })]
-});
-const CheckIcon = ({
-  color = '#4C7EFF',
-  size = 20,
-  className = '',
-  onClick
+const MiddleEllipsisText = ({
+  children,
+  edgeChars
 }) => {
-  return jsxs("svg", {
-    width: size,
-    height: size,
-    viewBox: '0 0 20 20',
-    fill: 'none',
-    xmlns: 'http://www.w3.org/2000/svg',
-    className: className,
-    onClick: onClick,
-    children: [jsx("circle", {
-      cx: "10",
-      cy: "10",
-      r: "10",
-      fill: "rgba(12, 28, 51, 0.05)"
-    }), jsx("path", {
-      d: 'M6.33 10L8.83 12.5L13.67 7.67',
-      stroke: color,
-      strokeWidth: '1.5',
-      strokeLinecap: 'round',
-      strokeLinejoin: 'round'
+  if (children == null || children === '') return jsx(NotActive, {});
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsx(Fragment, {
+      children: text
+    });
+  }
+  const first = text.slice(0, edgeChars);
+  const last = text.slice(-edgeChars);
+  return jsxs(Fragment, {
+    children: [jsx("span", {
+      children: first
+    }), jsx("span", {
+      children: "..."
+    }), jsx("span", {
+      children: last
+    })]
+  });
+};
+/**
+ * Identifier component shows an ID string with optional highlighting, avatar,
+ * copy button, dynamic line adjustment, and multi-line clamp.
+ */
+const Identifier = ({
+  children,
+  ellipsis = false,
+  highlight = undefined,
+  avatar = false,
+  copyButton = false,
+  linesAdjustment = true,
+  maxLines = 0,
+  className,
+  middleEllipsis = false,
+  edgeChars = 4
+}) => {
+  const {
+    theme
+  } = useTheme();
+  const symbolsRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [charWidth, setCharWidth] = useState(0);
+  const [linesMaxWidth, setLinesMaxWidth] = useState('none');
+  const [widthCounted, setWidthCounted] = useState(false);
+  const prevWinRef = useRef(null);
+  const [winWidth, setWinWidth] = useState(0);
+  const {
+    debouncedValue: debouncedWin,
+    cancel: cancelDebounce
+  } = useDebounce(winWidth, {
+    delay: 500,
+    callback: newWidth => {
+      // Log window width changes for debugging (optional)
+      // console.log('Window width debounced to:', newWidth)
+    }
+  });
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0) linesAdjustment = false;
+  useResizeObserver(symbolsRef, entry => {
+    setContainerWidth(entry.contentRect.width);
+  });
+  const measureChar = useCallback(() => {
+    if (symbolsRef.current == null || !linesAdjustment) return 0;
+    const temp = document.createElement('span');
+    const styles = getComputedStyle(symbolsRef.current);
+    temp.style.position = 'absolute';
+    temp.style.visibility = 'hidden';
+    temp.style.fontFamily = styles.fontFamily;
+    temp.style.fontSize = styles.fontSize;
+    temp.style.fontWeight = styles.fontWeight;
+    temp.textContent = 'A';
+    document.body.appendChild(temp);
+    const w = temp.getBoundingClientRect().width;
+    document.body.removeChild(temp);
+    return w > 0 ? w : 0;
+  }, [linesAdjustment]);
+  useEffect(() => {
+    if (symbolsRef.current == null || !linesAdjustment) return;
+    const measuredWidth = measureChar();
+    setCharWidth(measuredWidth > 0 ? measuredWidth : 0);
+  }, [measureChar]);
+  const updateSize = () => {
+    var _a;
+    if (widthCounted) return;
+    const len = (_a = children === null || children === void 0 ? void 0 : children.length) !== null && _a !== void 0 ? _a : 0;
+    if (charWidth === 0 || containerWidth === 0 || len === 0) {
+      setLinesMaxWidth('none');
+      return;
+    }
+    const spacingF = 0.1625;
+    const perLine = Math.floor(containerWidth / charWidth + spacingF);
+    if (perLine <= len / 8 || perLine > len) {
+      setLinesMaxWidth('none');
+      return;
+    }
+    const lines = Math.max(Math.ceil(len / perLine), 1);
+    const adjust = 0.7;
+    const width = charWidth * (len / lines + adjust);
+    setLinesMaxWidth(`${width}px`);
+    setWidthCounted(true);
+  };
+  useEffect(() => {
+    if (!linesAdjustment) return;
+    if (debouncedWin !== prevWinRef.current || !widthCounted || prevWinRef.current === null) {
+      updateSize();
+    }
+    prevWinRef.current = debouncedWin;
+  }, [charWidth, containerWidth, debouncedWin]);
+  useEffect(() => {
+    if (!linesAdjustment) return;
+    let prev = window.innerWidth;
+    const handler = () => {
+      const cur = window.innerWidth;
+      if (cur !== prev) {
+        setWinWidth(cur);
+        setWidthCounted(false);
+        prev = cur;
+      }
+    };
+    window.addEventListener('resize', handler);
+    return () => {
+      window.removeEventListener('resize', handler);
+      // Cancel pending debounce on unmount
+      cancelDebounce();
+    };
+  }, [cancelDebounce]);
+  const rootClass = identifier({
+    theme,
+    ellipsis,
+    highlight
+  }) + (className != null && className !== '' ? ` ${className}` : '');
+  const clampStyles = maxLines > 0 ? {
+    display: '-webkit-box',
+    WebkitLineClamp: maxLines,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  } : {};
+  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis' : 'flex-1 leading-[1rem]';
+  return jsxs("div", {
+    className: rootClass,
+    children: [(avatar !== null && avatar !== void 0 ? avatar : false) && children != null && children !== '' && jsx(Avatar, {
+      username: children,
+      className: 'w-6 h-6 mr-2 flex-shrink-0'
+    }), jsx("div", {
+      ref: symbolsRef,
+      className: symbolContainerClass,
+      style: Object.assign(Object.assign({}, widthCounted && maxLines === 0 ? {
+        maxWidth: linesMaxWidth
+      } : {}), clampStyles),
+      children: children != null && children !== '' && middleEllipsis ? jsx(MiddleEllipsisText, {
+        edgeChars: edgeChars,
+        children: children
+      }) : children != null && children !== '' && highlight != null ? jsx(HighlightedID, {
+        mode: highlight,
+        children: children
+      }) : children !== null && children !== void 0 ? children : jsx(NotActive, {})
+    }), (copyButton !== null && copyButton !== void 0 ? copyButton : false) && children != null && children !== '' && jsx(CopyButton, {
+      className: 'ml-3',
+      text: children
     })]
   });
 };
 
-export { ArrowIcon, Avatar, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, ValueCard, useTheme };
+const sizeClasses = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
+  '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
+};
+const weightClasses = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold',
+  extrabold: 'font-extrabold'
+};
+const colorClasses = {
+  black: 'text-black',
+  gray: 'text-gray-600',
+  blue: 'text-blue-600',
+  red: 'text-red-600',
+  green: 'text-green-600'
+};
+const Heading = ({
+  as = 'h1',
+  size = '2xl',
+  weight = 'extrabold',
+  color = 'black',
+  className = '',
+  children
+}) => {
+  const Component = as;
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[color], className].filter(Boolean).join(' ');
+  return jsx(Component, {
+    className: classes,
+    children: children
+  });
+};
+
+/**
+ * Returns the number of whole days between two dates.
+ * Rounds up any partial day.
+ *
+ * @param startDate - The start date (Date | ISO string | timestamp)
+ * @param endDate   - The end date (Date | ISO string | timestamp)
+ * @returns Number of days difference, or 0 if either date is missing/invalid
+ */
+/**
+ * Returns a human-readable difference between two dates.
+ *
+ * - `default`: largest unit with suffix (`"2d ago"`, `"5h left"`, etc.)
+ * - `detailed`: full breakdown as `"Xd:Yh:Zm"`
+ *
+ * If inputs are invalid, returns `"n/a"` or `"Invalid format"`.
+ *
+ * @param startDate - The start date (Date | ISO string | timestamp)
+ * @param endDate   - The end date (Date | ISO string | timestamp)
+ * @param format    - `'default'` or `'detailed'`
+ * @returns A string describing the time delta
+ */
+function getTimeDelta(startDate, endDate, format = 'default') {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    return 'n/a';
+  }
+  const diffMs = end.getTime() - start.getTime();
+  const isFuture = diffMs > 0;
+  const absMs = Math.abs(diffMs);
+  const days = Math.floor(absMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(absMs % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+  const minutes = Math.floor(absMs % (1000 * 60 * 60) / (1000 * 60));
+  const seconds = Math.floor(absMs % (1000 * 60) / 1000);
+  if (format === 'default') {
+    const suffix = isFuture ? 'left' : 'ago';
+    if (days > 0) {
+      return `${days}d ${suffix}`;
+    }
+    if (hours > 0) {
+      return `${hours}h ${suffix}`;
+    }
+    if (minutes > 0) {
+      return `${minutes} min. ${suffix}`;
+    }
+    return `${seconds} sec. ${suffix}`;
+  }
+  if (format === 'detailed') {
+    return `${days}d:${hours}h:${minutes}m`;
+  }
+  return 'Invalid format';
+}
+
+const wrapperStyles$1 = cva('inline');
+/**
+ * TimeDelta component renews a human-readable delta string periodically,
+ * and optionally wraps it in a tooltip showing the exact date/time.
+ */
+const TimeDelta = ({
+  startDate,
+  endDate,
+  // showTimestampTooltip = true,
+  // tooltipDate,
+  format = 'default'
+}) => {
+  const [timeDelta, setTimeDelta] = useState(null);
+  // const tooltipDateObj = new Date(tooltipDate ?? endDate)
+  useEffect(() => {
+    if (endDate == null) {
+      setTimeDelta(null);
+      return;
+    }
+    let timeoutId;
+    const updateDelta = () => {
+      const start = startDate != null ? new Date(startDate) : new Date();
+      const end = new Date(endDate);
+      setTimeDelta(getTimeDelta(start, end, format));
+      const now = new Date();
+      const diffMs = Math.abs(end.getTime() - now.getTime());
+      if (diffMs > 60000) {
+        const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+        timeoutId = setTimeout(updateDelta, msToNextMinute);
+      } else {
+        timeoutId = setTimeout(updateDelta, 1000);
+      }
+    };
+    updateDelta();
+    return () => clearTimeout(timeoutId);
+  }, [startDate, endDate, format]);
+  if (timeDelta == null || timeDelta === '') {
+    return jsx(NotActive, {});
+  }
+  // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
+  const content = jsx("span", {
+    className: wrapperStyles$1(),
+    children: timeDelta
+  });
+  // if (showTooltip) {
+  //   return (
+  //     <Tooltip
+  //       placement="top"
+  //       content={
+  //         <span className={tooltipContentStyles()}>
+  //           {tooltipDateObj.toLocaleDateString()}{' '}{tooltipDateObj.toLocaleTimeString()}
+  //         </span>
+  //       }
+  //     >
+  //       {content}
+  //     </Tooltip>
+  //   )
+  // }
+  return content;
+};
+
+const wrapperStyles = cva('');
+const infoContainer = cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
+const itemStyles = cva('mt-1 mb-1 mr-2 last:mr-0');
+/**
+ * DateBlock component displays a date, optional calendar icon,
+ * and relative time via TimeDelta. It can also show an optional
+ * tooltip with the relative time when hovered.
+ */
+const DateBlock = ({
+  timestamp,
+  format = 'all',
+  showTime = false,
+  // showRelativeTooltip = false,
+  className = ''
+}) => {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return null;
+  const modes = {
+    all: {
+      calendarIcon: true,
+      date: true,
+      delta: true
+    },
+    deltaOnly: {
+      calendarIcon: false,
+      date: false,
+      delta: true
+    },
+    dateOnly: {
+      calendarIcon: false,
+      date: true,
+      delta: false
+    }
+  };
+  const options = Object.assign({
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }, showTime ? {
+    hour: '2-digit',
+    minute: '2-digit'
+  } : {});
+  const formattedDate = date.toLocaleDateString('en-GB', options);
+  // const tooltipContent = showRelativeTooltip
+  //   ? <TimeDelta endDate={timestamp} showTimestampTooltip={false} />
+  //   : null
+  const content = jsxs("div", {
+    className: infoContainer(),
+    children: [modes[format].calendarIcon && jsx(CalendarIcon, {
+      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+    }), modes[format].date && jsx("div", {
+      className: `${itemStyles()} text-[0.813rem]`,
+      children: formattedDate
+    }), modes[format].delta && jsx("div", {
+      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      children: jsx(TimeDelta, {
+        endDate: date,
+        showTimestampTooltip: format !== 'all'
+      })
+    })]
+  });
+  const wrapperClass = `${wrapperStyles()} ${className !== '' ? ` ${className}` : ''}`;
+  return jsx("div", {
+    className: wrapperClass,
+    children: content
+  });
+  // return tooltipContent ? (
+  //   <Tooltip placement="top" content={tooltipContent}>
+  //     <div className={wrapperClass}>{content}</div>
+  //   </Tooltip>
+  // ) : (
+  //   <div className={wrapperClass}>{content}</div>
+  // )
+};
+
+/**
+ * Renders an icon corresponding to the given `status`.
+ * If `status` is not recognized, returns null.
+ */
+const TransactionStatusIcon = _a => {
+  var {
+      status
+    } = _a,
+    props = __rest(_a, ["status"]);
+  const map = {
+    SUCCESS: SuccessIcon,
+    FAIL: ErrorIcon,
+    QUEUED: QueuedIcon,
+    POOLED: PooledIcon,
+    BROADCASTED: BroadcastedIcon
+  };
+  const IconComponent = map[status];
+  return IconComponent != null ? jsx(IconComponent, Object.assign({}, props)) : null;
+};
+
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map
