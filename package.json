@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
+    "@react-hook/resize-observer": "^2.0.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@chromatic-com/storybook": "^3.2.6",
