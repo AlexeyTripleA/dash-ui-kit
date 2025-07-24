@@ -6408,6 +6408,40 @@ const CheckIcon = ({
   });
 };
 
+const iconComponents = {
+  check: CheckIcon
+};
+const List = ({
+  items,
+  iconType = 'check',
+  className = '',
+  size = 'sm'
+}) => {
+  const IconComponent = iconComponents[iconType];
+  return jsxRuntime.jsx("ul", {
+    className: `space-y-5 w-full ${className}`,
+    children: items.map((item, index) => jsxRuntime.jsxs("li", {
+      className: 'flex items-start gap-4',
+      children: [jsxRuntime.jsx(IconComponent, {
+        size: 20,
+        className: 'flex-shrink-0'
+      }), jsxRuntime.jsxs("div", {
+        className: 'flex flex-col gap-1',
+        children: [jsxRuntime.jsx(Text, {
+          size: size,
+          weight: 500,
+          children: item.text
+        }), item.description && jsxRuntime.jsx(Text, {
+          size: 'xs',
+          dim: true,
+          className: 'opacity-75',
+          children: item.description
+        })]
+      })]
+    }, index))
+  });
+};
+
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.BroadcastedIcon = BroadcastedIcon;
@@ -6418,6 +6452,7 @@ exports.CopyIcon = CopyIcon;
 exports.ErrorIcon = ErrorIcon;
 exports.EyeClosedIcon = EyeClosedIcon;
 exports.EyeOpenIcon = EyeOpenIcon;
+exports.List = List;
 exports.PooledIcon = PooledIcon;
 exports.QueuedIcon = QueuedIcon;
 exports.Select = Select;

@@ -3,4 +3,5 @@ export { Text, type TextProps } from './text';
 export { ValueCard, type ValueCardProps } from './valueCard';
 export { Select, type SelectProps, type SelectOption } from './select';
 export { Avatar, type AvatarProps } from './avatar';
+export { List, type ListProps, type ListItem } from './list';
 export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon } from './icons';
