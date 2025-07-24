@@ -15,7 +15,7 @@ const sizeClasses = {
   md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
-  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]', // Current h1-title style
+  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
   '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
 }
 
