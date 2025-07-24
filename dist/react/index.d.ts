@@ -11,6 +11,7 @@ export { Heading, type HeadingProps } from './components/heading';
 export { CopyButton, type CopyButtonProps } from './components/copyButton';
 export { NotActive, type NotActiveProps } from './components/notActive';
 export { TimeDelta, type TimeDeltaProps } from './components/timeDelta';
+export { DateBlock, type DateBlockProps, type DateBlockFormat } from './components/dateBlock';
 export type { TimeDeltaFormat } from './utils/datetime';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
 export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon } from './components/icons';

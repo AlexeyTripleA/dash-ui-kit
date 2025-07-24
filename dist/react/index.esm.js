@@ -7196,7 +7196,7 @@ function getTimeDelta(startDate, endDate, format = 'default') {
   return 'Invalid format';
 }
 
-const wrapperStyles = cva('inline');
+const wrapperStyles$1 = cva('inline');
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
@@ -7237,7 +7237,7 @@ const TimeDelta = ({
   }
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
   const content = jsx("span", {
-    className: wrapperStyles(),
+    className: wrapperStyles$1(),
     children: timeDelta
   });
   // if (showTooltip) {
@@ -7257,5 +7257,80 @@ const TimeDelta = ({
   return content;
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, TimeDelta, ValueCard, useTheme };
+const wrapperStyles = cva('');
+const infoContainer = cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
+const itemStyles = cva('mt-1 mb-1 mr-2 last:mr-0');
+/**
+ * DateBlock component displays a date, optional calendar icon,
+ * and relative time via TimeDelta. It can also show an optional
+ * tooltip with the relative time when hovered.
+ */
+const DateBlock = ({
+  timestamp,
+  format = 'all',
+  showTime = false,
+  // showRelativeTooltip = false,
+  className = ''
+}) => {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return null;
+  const modes = {
+    all: {
+      calendarIcon: true,
+      date: true,
+      delta: true
+    },
+    deltaOnly: {
+      calendarIcon: false,
+      date: false,
+      delta: true
+    },
+    dateOnly: {
+      calendarIcon: false,
+      date: true,
+      delta: false
+    }
+  };
+  const options = Object.assign({
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }, showTime ? {
+    hour: '2-digit',
+    minute: '2-digit'
+  } : {});
+  const formattedDate = date.toLocaleDateString('en-GB', options);
+  // const tooltipContent = showRelativeTooltip
+  //   ? <TimeDelta endDate={timestamp} showTimestampTooltip={false} />
+  //   : null
+  const content = jsxs("div", {
+    className: infoContainer(),
+    children: [modes[format].calendarIcon && jsx(CalendarIcon, {
+      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+    }), modes[format].date && jsx("div", {
+      className: `${itemStyles()} text-[0.813rem]`,
+      children: formattedDate
+    }), modes[format].delta && jsx("div", {
+      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      children: jsx(TimeDelta, {
+        endDate: date,
+        showTimestampTooltip: format !== 'all'
+      })
+    })]
+  });
+  const wrapperClass = `${wrapperStyles()} ${className !== '' ? ` ${className}` : ''}`;
+  return jsx("div", {
+    className: wrapperClass,
+    children: content
+  });
+  // return tooltipContent ? (
+  //   <Tooltip placement="top" content={tooltipContent}>
+  //     <div className={wrapperClass}>{content}</div>
+  //   </Tooltip>
+  // ) : (
+  //   <div className={wrapperClass}>{content}</div>
+  // )
+};
+
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, ThemeProvider, TimeDelta, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map

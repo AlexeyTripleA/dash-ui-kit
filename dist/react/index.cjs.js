@@ -7216,7 +7216,7 @@ function getTimeDelta(startDate, endDate, format = 'default') {
   return 'Invalid format';
 }
 
-const wrapperStyles = classVarianceAuthority.cva('inline');
+const wrapperStyles$1 = classVarianceAuthority.cva('inline');
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
@@ -7257,7 +7257,7 @@ const TimeDelta = ({
   }
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
   const content = jsxRuntime.jsx("span", {
-    className: wrapperStyles(),
+    className: wrapperStyles$1(),
     children: timeDelta
   });
   // if (showTooltip) {
@@ -7277,6 +7277,81 @@ const TimeDelta = ({
   return content;
 };
 
+const wrapperStyles = classVarianceAuthority.cva('');
+const infoContainer = classVarianceAuthority.cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
+const itemStyles = classVarianceAuthority.cva('mt-1 mb-1 mr-2 last:mr-0');
+/**
+ * DateBlock component displays a date, optional calendar icon,
+ * and relative time via TimeDelta. It can also show an optional
+ * tooltip with the relative time when hovered.
+ */
+const DateBlock = ({
+  timestamp,
+  format = 'all',
+  showTime = false,
+  // showRelativeTooltip = false,
+  className = ''
+}) => {
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return null;
+  const modes = {
+    all: {
+      calendarIcon: true,
+      date: true,
+      delta: true
+    },
+    deltaOnly: {
+      calendarIcon: false,
+      date: false,
+      delta: true
+    },
+    dateOnly: {
+      calendarIcon: false,
+      date: true,
+      delta: false
+    }
+  };
+  const options = Object.assign({
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }, showTime ? {
+    hour: '2-digit',
+    minute: '2-digit'
+  } : {});
+  const formattedDate = date.toLocaleDateString('en-GB', options);
+  // const tooltipContent = showRelativeTooltip
+  //   ? <TimeDelta endDate={timestamp} showTimestampTooltip={false} />
+  //   : null
+  const content = jsxRuntime.jsxs("div", {
+    className: infoContainer(),
+    children: [modes[format].calendarIcon && jsxRuntime.jsx(CalendarIcon, {
+      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+    }), modes[format].date && jsxRuntime.jsx("div", {
+      className: `${itemStyles()} text-[0.813rem]`,
+      children: formattedDate
+    }), modes[format].delta && jsxRuntime.jsx("div", {
+      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      children: jsxRuntime.jsx(TimeDelta, {
+        endDate: date,
+        showTimestampTooltip: format !== 'all'
+      })
+    })]
+  });
+  const wrapperClass = `${wrapperStyles()} ${className !== '' ? ` ${className}` : ''}`;
+  return jsxRuntime.jsx("div", {
+    className: wrapperClass,
+    children: content
+  });
+  // return tooltipContent ? (
+  //   <Tooltip placement="top" content={tooltipContent}>
+  //     <div className={wrapperClass}>{content}</div>
+  //   </Tooltip>
+  // ) : (
+  //   <div className={wrapperClass}>{content}</div>
+  // )
+};
+
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.BigNumber = BigNumber;
@@ -7286,6 +7361,7 @@ exports.CalendarIcon = CalendarIcon;
 exports.CheckIcon = CheckIcon;
 exports.CopyButton = CopyButton;
 exports.CopyIcon = CopyIcon;
+exports.DateBlock = DateBlock;
 exports.ErrorIcon = ErrorIcon;
 exports.EyeClosedIcon = EyeClosedIcon;
 exports.EyeOpenIcon = EyeOpenIcon;
