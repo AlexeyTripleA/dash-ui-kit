@@ -4,6 +4,8 @@ export { ValueCard, type ValueCardProps } from './valueCard'
 export { Select, type SelectProps, type SelectOption } from './select'
 export { Avatar, type AvatarProps } from './avatar'
 export { List, type ListProps, type ListItem } from './list'
+export { default as Identifier, type IdentifierProps } from './identifier'
+export { Heading, type HeadingProps } from './heading'
 export {
   ArrowIcon,
   CopyIcon,
