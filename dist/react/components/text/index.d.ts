@@ -10,7 +10,7 @@ declare const textStyles: (props?: ({
     underline?: boolean | null | undefined;
     lineThrough?: boolean | null | undefined;
     transform?: "none" | "uppercase" | "capitalize" | null | undefined;
-    opacity?: 0 | 100 | 10 | 20 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | null | undefined;
+    opacity?: 0 | 20 | 10 | 100 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | null | undefined;
     monospace?: boolean | null | undefined;
     dim?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;

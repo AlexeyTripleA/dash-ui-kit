@@ -4,7 +4,7 @@ import { VariantProps } from 'class-variance-authority';
 declare const identifier: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     ellipsis?: boolean | null | undefined;
-    highlight?: "default" | "highlight" | "dim" | "first" | "last" | "both" | null | undefined;
+    highlight?: "default" | "both" | "dim" | "highlight" | "first" | "last" | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type IdentifierVariants = VariantProps<typeof identifier>;
 export interface IdentifierProps extends IdentifierVariants {
