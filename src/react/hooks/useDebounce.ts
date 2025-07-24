@@ -2,50 +2,50 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 
 interface UseDebounceOptions<T> {
   /**
-   * Задержка в миллисекундах
+   * Delay in milliseconds
    */
   delay: number
   /**
-   * Колбэк, вызываемый при изменении debounced значения
+   * Callback called when debounced value changes
    */
   callback?: (value: T) => void
   /**
-   * Если true, то значение будет установлено немедленно при первом вызове
+   * If true, the value will be set immediately on first call
    */
   immediate?: boolean
 }
 
 interface UseDebounceReturn<T> {
   /**
-   * Текущее debounced значение
+   * Current debounced value
    */
   debouncedValue: T
   /**
-   * Функция для принудительного сброса debounce и немедленного обновления значения
+   * Function to force flush debounce and immediately update value
    */
   flush: () => void
   /**
-   * Функция для отмены текущего pending debounce
+   * Function to cancel current pending debounce
    */
   cancel: () => void
   /**
-   * Есть ли pending изменение
+   * Whether there's a pending change
    */
   isPending: boolean
 }
 
 /**
- * Хук для debouncing значений с расширенной функциональностью
+ * Hook for debouncing values with extended functionality
  * 
- * @param value - Значение для debounce
- * @param options - Опции конфигурации
- * @returns Объект с debounced значением и методами управления
+ * @param value - Value to debounce
+ * @param options - Configuration options
+ * @returns Object with debounced value and control methods
  */
 const useDebounce = <T>(
   value: T, 
   options: UseDebounceOptions<T> | number
 ): UseDebounceReturn<T> => {
-  // Поддержка обратной совместимости - если передали число, то это delay
+  // Backward compatibility support - if number is passed, it's delay
   const config: UseDebounceOptions<T> = typeof options === 'number' 
     ? { delay: options }
     : options
@@ -73,7 +73,7 @@ const useDebounce = <T>(
   }, [value, callback, cancel])
 
   useEffect(() => {
-    // Если immediate === true и это первый запуск, устанавливаем значение сразу
+    // If immediate === true and this is first run, set value immediately
     if (immediate && isFirstRun.current) {
       setDebouncedValue(value)
       callback?.(value)
@@ -99,7 +99,7 @@ const useDebounce = <T>(
     }
   }, [value, delay, callback, immediate])
 
-  // Cleanup на размонтирование
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -116,8 +116,8 @@ const useDebounce = <T>(
   }
 }
 
-// Экспорт для обратной совместимости
+// Export for backward compatibility
 export default useDebounce
 
-// Именованный экспорт для нового API
+// Named export for new API
 export { useDebounce } 

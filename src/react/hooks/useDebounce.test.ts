@@ -17,20 +17,20 @@ describe('useDebounce', () => {
       { initialProps: { value: 'initial', delay: 500 } }
     )
 
-    // При первоначальной загрузке значение устанавливается, но нет pending состояния
+    // Initially the value is set, but there's no pending state
     act(() => {
-      vi.advanceTimersByTime(500) // Дожидаемся завершения первого debounce
+      vi.advanceTimersByTime(500) // Wait for the first debounce to complete
     })
 
     expect(result.current.debouncedValue).toBe('initial')
     expect(result.current.isPending).toBe(false)
 
-    // Изменяем значение
+    // Change the value
     rerender({ value: 'updated', delay: 500 })
-    expect(result.current.debouncedValue).toBe('initial') // Еще не обновилось
+    expect(result.current.debouncedValue).toBe('initial') // Not updated yet
     expect(result.current.isPending).toBe(true)
 
-    // Прокручиваем время
+    // Advance time
     act(() => {
       vi.advanceTimersByTime(500)
     })
