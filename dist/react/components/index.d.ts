@@ -4,6 +4,7 @@ export { Textarea, type TextareaProps } from './textarea';
 export { Text, type TextProps } from './text';
 export { ValueCard, type ValueCardProps } from './valueCard';
 export { Select, type SelectProps, type SelectOption } from './select';
+export { Switch, type SwitchProps, type SwitchOption } from './switch';
 export { Avatar, type AvatarProps } from './avatar';
 export { List, type ListProps, type ListItem } from './list';
 export { BigNumber, type BigNumberProps, type BigNumberVariant } from './bigNumber';
