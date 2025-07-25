@@ -646,6 +646,7 @@ const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 
  * A versatile input component that adapts to light/dark theme,
  * supports various color schemes, sizes, variants, and states.
  * For password inputs, includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
  *
  * @example
  * <Input
@@ -653,6 +654,7 @@ const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 
  *   placeholder='Enter password'
  *   colorScheme='brand'
  *   size='xl'
+ *   prefix="https://"
  * />
  */
 const Input = _a => {
@@ -664,9 +666,10 @@ const Input = _a => {
       error = false,
       success = false,
       disabled = false,
-      type
+      type,
+      prefix
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix"]);
   const {
     theme
   } = useTheme();
@@ -683,14 +686,53 @@ const Input = _a => {
   }) + ' ' + className;
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
+  const hasPrefix = Boolean(prefix);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  // Calculate padding based on prefix length
+  const getPrefixPadding = () => {
+    if (!prefix) return 0;
+    const prefixLength = typeof prefix === 'string' ? prefix.length : 4; // default for React nodes
+    // Base padding (1rem) + prefix width estimation (0.6rem per character) + extra space (0.5rem)
+    return prefixLength * 0.6 + 1.5;
+  };
+  // Render with prefix
+  if (hasPrefix) {
+    const leftPadding = getPrefixPadding();
+    return jsxs("div", {
+      className: 'relative',
+      children: [jsx("div", {
+        className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
+        children: prefix
+      }), jsx("input", Object.assign({
+        className: `${classes}${isPassword ? ' pr-12' : ''}`,
+        style: {
+          paddingLeft: `${leftPadding}rem`
+        },
+        disabled: disabled,
+        type: inputType
+      }, props)), isPassword && jsx("button", {
+        type: 'button',
+        className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
+        onClick: togglePasswordVisibility,
+        tabIndex: -1,
+        children: showPassword ? jsx(EyeClosedIcon, {
+          size: 16,
+          color: '#0C1C33'
+        }) : jsx(EyeOpenIcon, {
+          size: 16,
+          color: '#0C1C33'
+        })
+      })]
+    });
+  }
+  // Render password input without prefix
   if (isPassword) {
     return jsxs("div", {
       className: 'relative',
       children: [jsx("input", Object.assign({
-        className: classes + (isPassword ? ' pr-12' : ''),
+        className: classes + ' pr-12',
         disabled: disabled,
         type: inputType
       }, props)), jsx("button", {
@@ -708,6 +750,7 @@ const Input = _a => {
       })]
     });
   }
+  // Regular input without prefix
   return jsx("input", Object.assign({
     className: classes,
     disabled: disabled,
@@ -7982,7 +8025,7 @@ function ProgressStepBar({
     children: Array.from({
       length: totalSteps
     }, (_, index) => jsx("div", {
-      className: `h-1.5 rounded-2xl flex-1 transition-colors ${index < currentStep ? 'bg-dash-brand' : theme === 'dark' ? 'bg-gray-700' : 'bg-dash-brand-inactive'}`
+      className: `h-1.5 rounded-2xl flex-1 transition-colors ${index < currentStep ? theme === 'dark' ? 'bg-[var(--color-dash-brand-dim)]' : 'bg-[var(--color-dash-brand)]' : theme === 'dark' ? 'bg-gray-700' : 'bg-[rgba(76,126,255,0.16)]'}`
     }, index))
   });
 }
