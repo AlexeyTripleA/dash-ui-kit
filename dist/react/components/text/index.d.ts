@@ -9,7 +9,7 @@ declare const textStyles: (props?: ({
     italic?: boolean | null | undefined;
     underline?: boolean | null | undefined;
     lineThrough?: boolean | null | undefined;
-    transform?: "none" | "uppercase" | "capitalize" | null | undefined;
+    transform?: "none" | "capitalize" | "uppercase" | null | undefined;
     opacity?: 0 | 20 | 10 | 100 | 30 | 40 | 50 | 60 | 70 | 80 | 90 | null | undefined;
     monospace?: boolean | null | undefined;
     dim?: boolean | null | undefined;

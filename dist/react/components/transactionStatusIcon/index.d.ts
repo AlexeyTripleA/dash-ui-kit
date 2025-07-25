@@ -20,6 +20,7 @@ export interface TransactionStatusIconProps extends Omit<React.ComponentProps<ty
 /**
  * Renders an icon corresponding to the given `status`.
  * If `status` is not recognized, returns null.
+ * Colors adapt to light/dark theme unless overridden.
  */
 export declare const TransactionStatusIcon: React.FC<TransactionStatusIconProps>;
 export default TransactionStatusIcon;

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text } from '../text'
 import { CheckIcon } from '../icons'
+import { useTheme } from '../../contexts/ThemeContext'
 
 interface ListItem {
   text: string
@@ -24,13 +25,18 @@ export const List: React.FC<ListProps> = ({
   className = '',
   size = 'sm'
 }) => {
+  const { theme } = useTheme()
   const IconComponent = iconComponents[iconType]
 
   return (
     <ul className={`space-y-5 w-full ${className}`}>
       {items.map((item, index) => (
         <li key={index} className='flex items-start gap-4'>
-          <IconComponent size={20} className='flex-shrink-0' />
+          <IconComponent 
+            size={20} 
+            className='flex-shrink-0' 
+            color={theme === 'dark' ? '#4C7EFF' : '#4C7EFF'}
+          />
           <div className='flex flex-col gap-1'>
             <Text size={size} weight={500}>
               {item.text}

@@ -15,6 +15,7 @@ export interface TimeDeltaProps {
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
+ * Supports light/dark theme.
  */
 export declare const TimeDelta: React.FC<TimeDeltaProps>;
 export default TimeDelta;

@@ -69,6 +69,105 @@ describe('Input', () => {
     expect(input).toHaveClass('custom-class')
   })
 
+  describe('Prefix functionality', () => {
+    it('renders with string prefix', () => {
+      renderWithTheme(<Input prefix="https://" placeholder="Enter URL" />)
+      
+      expect(screen.getByText('https://')).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('Enter URL')).toBeInTheDocument()
+    })
+
+    it('renders with React element prefix', () => {
+      const prefix = <span data-testid="custom-prefix">$</span>
+      renderWithTheme(<Input prefix={prefix} placeholder="Enter amount" />)
+      
+      expect(screen.getByTestId('custom-prefix')).toBeInTheDocument()
+      expect(screen.getByText('$')).toBeInTheDocument()
+    })
+
+    it('applies correct padding when prefix is present', () => {
+      renderWithTheme(<Input prefix="https://" placeholder="Enter URL" />)
+      const input = screen.getByPlaceholderText('Enter URL')
+      
+      // Should have left padding to accommodate prefix
+      expect(input.className).toMatch(/pl-\[/)
+    })
+
+    it('positions prefix correctly inside input', () => {
+      renderWithTheme(<Input prefix="https://" placeholder="Enter URL" />)
+      const prefix = screen.getByText('https://')
+      
+      expect(prefix).toHaveClass('absolute', 'left-4', 'top-1/2', '-translate-y-1/2')
+      expect(prefix).toHaveClass('pointer-events-none', 'select-none')
+    })
+
+    it('works with password input and prefix', async () => {
+      const user = userEvent.setup()
+      renderWithTheme(<Input type="password" prefix="PIN:" placeholder="Enter PIN" />)
+      
+      const prefix = screen.getByText('PIN:')
+      const input = screen.getByPlaceholderText('Enter PIN')
+      const toggleButton = screen.getByRole('button')
+      
+      expect(prefix).toBeInTheDocument()
+      expect(input).toHaveAttribute('type', 'password')
+      expect(toggleButton).toBeInTheDocument()
+      
+      // Should have both left padding for prefix and right padding for icon
+      expect(input.className).toMatch(/pl-\[/)
+      expect(input.className).toMatch(/pr-12/)
+      
+      // Toggle should still work
+      await user.click(toggleButton)
+      expect(input).toHaveAttribute('type', 'text')
+    })
+
+    it('accepts user input with prefix present', async () => {
+      const user = userEvent.setup()
+      renderWithTheme(<Input prefix="https://" placeholder="Enter URL" />)
+      
+      const input = screen.getByPlaceholderText('Enter URL')
+      await user.type(input, 'example.com')
+      
+      expect(input).toHaveValue('example.com')
+      expect(screen.getByText('https://')).toBeInTheDocument()
+    })
+
+    it('does not interfere with form submission', () => {
+      const onSubmit = vi.fn()
+      render(
+        <ThemeProvider>
+          <form onSubmit={onSubmit}>
+            <Input prefix="https://" name="url" defaultValue="example.com" />
+            <button type="submit">Submit</button>
+          </form>
+        </ThemeProvider>
+      )
+      
+      const form = screen.getByRole('form')
+      fireEvent.submit(form)
+      
+      // Form should submit with actual input value, not prefix
+      expect(onSubmit).toHaveBeenCalled()
+    })
+
+    it('works with different color schemes and prefix', () => {
+      renderWithTheme(<Input prefix="$" colorScheme="brand" placeholder="Amount" />)
+      
+      const input = screen.getByPlaceholderText('Amount')
+      expect(input).toHaveClass('focus:ring-dash-brand/20')
+      expect(screen.getByText('$')).toBeInTheDocument()
+    })
+
+    it('works with error state and prefix', () => {
+      renderWithTheme(<Input prefix="@" error placeholder="Username" />)
+      
+      const input = screen.getByPlaceholderText('Username')
+      expect(input).toHaveClass('focus:ring-red-500/20')
+      expect(screen.getByText('@')).toBeInTheDocument()
+    })
+  })
+
   describe('Password input', () => {
     it('renders password type input with eye icon', () => {
       renderWithTheme(<Input type="password" placeholder="Enter password" />)

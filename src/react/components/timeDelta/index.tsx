@@ -2,8 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { cva } from 'class-variance-authority'
 import { NotActive } from '../notActive'
 import { getTimeDelta, type TimeDeltaFormat } from '../../utils/datetime'
+import { useTheme } from '../../contexts/ThemeContext'
 
-const wrapperStyles = cva('inline')
+const wrapperStyles = cva(
+  'inline',
+  {
+    variants: {
+      theme: {
+        light: 'text-gray-900',
+        dark: 'text-gray-100'
+      }
+    },
+    defaultVariants: {
+      theme: 'light'
+    }
+  }
+)
 
 export interface TimeDeltaProps {
   /** Start date for delta calculation, defaults to now */
@@ -21,6 +35,7 @@ export interface TimeDeltaProps {
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
+ * Supports light/dark theme.
  */
 export const TimeDelta: React.FC<TimeDeltaProps> = ({
   startDate,
@@ -29,6 +44,7 @@ export const TimeDelta: React.FC<TimeDeltaProps> = ({
   // tooltipDate,
   format = 'default'
 }) => {
+  const { theme } = useTheme()
   const [timeDelta, setTimeDelta] = useState<string | null>(null)
   // const tooltipDateObj = new Date(tooltipDate ?? endDate)
 
@@ -65,7 +81,7 @@ export const TimeDelta: React.FC<TimeDeltaProps> = ({
   }
 
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
-  const content = <span className={wrapperStyles()}>{timeDelta}</span>
+  const content = <span className={wrapperStyles({ theme })}>{timeDelta}</span>
 
   // if (showTooltip) {
   //   return (

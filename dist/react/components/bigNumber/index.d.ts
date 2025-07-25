@@ -13,6 +13,7 @@ export interface BigNumberProps {
  * Supports two variants:
  * - `space`: groups separated by a fixed 3px block
  * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme.
  */
 export declare const BigNumber: React.FC<BigNumberProps>;
 export default BigNumber;

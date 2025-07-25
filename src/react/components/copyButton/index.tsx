@@ -5,7 +5,18 @@ import { useTheme } from '../../contexts/ThemeContext'
 import copyToClipboard, { CopyResult } from '../../utils/copyToClipboard'
 
 const copyBtn = cva(
-  'p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors'
+  'p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors',
+  {
+    variants: {
+      theme: {
+        light: 'hover:text-gray-600 active:text-gray-800',
+        dark: 'hover:text-gray-300 active:text-gray-100'
+      }
+    },
+    defaultVariants: {
+      theme: 'light'
+    }
+  }
 )
 
 export interface CopyButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onCopy'> {
@@ -21,7 +32,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className, onCopy,
   return (
     <button
       type='button'
-      className={`${copyBtn()} ${className ?? ''} hover:text-gray-100 hover:cursor-pointer active:text-white`}
+      className={`${copyBtn({ theme })} ${className ?? ''} hover:cursor-pointer`}
       onClick={e => {
         e.stopPropagation()
         e.preventDefault()
@@ -29,7 +40,10 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className, onCopy,
       }}
       {...props}
     >
-      <CopyIcon className={`${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`} />
+      <CopyIcon 
+        className='w-4 h-4 transition' 
+        color={theme === 'light' ? '#000000' : '#ffffff'} 
+      />
     </button>
   )
 }

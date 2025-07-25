@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { cva } from 'class-variance-authority'
+import { useTheme } from '../../contexts/ThemeContext'
 
 const styles = cva(
   `
@@ -18,6 +19,10 @@ const styles = cva(
   `,
   {
     variants: {
+      theme: {
+        light: '',
+        dark: ''
+      },
       variant: {
         solid: '',
         outline: 'dash-btn-outline border !bg-transparent',
@@ -40,64 +45,139 @@ const styles = cva(
       },
     },
     compoundVariants: [
-      // outline variant
+      // outline variant - light theme
       {
         variant: 'outline',
         state: 'disabled',
+        theme: 'light',
         class: 'opacity-40'
       },
       {
         variant: 'outline',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'opacity-50'
+      },
+      {
+        variant: 'outline',
         colorScheme: 'brand',
+        theme: 'light',
+        class: '!text-dash-brand'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'brand',
+        theme: 'dark',
         class: '!text-dash-brand'
       },
       {
         variant: 'outline',
         colorScheme: 'mint',
+        theme: 'light',
+        class: '!text-dash-mint'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'mint',
+        theme: 'dark',
         class: '!text-dash-mint'
       },
       {
         variant: 'outline',
         colorScheme: 'gray',
+        theme: 'light',
         class: '!text-gray-700'
       },
       {
         variant: 'outline',
+        colorScheme: 'gray',
+        theme: 'dark',
+        class: '!text-gray-300'
+      },
+      {
+        variant: 'outline',
         colorScheme: 'red',
+        theme: 'light',
         class: '!text-red-700 hover:!bg-red-300/20'
       },
       {
         variant: 'outline',
+        colorScheme: 'red',
+        theme: 'dark',
+        class: '!text-red-400 hover:!bg-red-500/20'
+      },
+      {
+        variant: 'outline',
         colorScheme: 'lightBlue',
+        theme: 'light',
         class: '!text-dash-brand/60'
       },
-      // solid variant
+      {
+        variant: 'outline',
+        colorScheme: 'lightBlue',
+        theme: 'dark',
+        class: '!text-dash-brand/80'
+      },
+      // solid variant - light theme
       {
         variant: 'solid',
         colorScheme: 'brand',
         state: 'disabled',
+        theme: 'light',
         class: '!bg-dash-brand/10 !text-dash-brand-dim'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'brand',
+        state: 'disabled',
+        theme: 'dark',
+        class: '!bg-dash-brand/20 !text-dash-brand/60'
       },
       {
         variant: 'solid',
         colorScheme: 'mint',
         state: 'disabled',
+        theme: 'light',
         class: '!bg-dash-mint/30 !text-black/60'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'mint',
+        state: 'disabled',
+        theme: 'dark',
+        class: '!bg-dash-mint/20 !text-gray-400'
       },
       {
         variant: 'solid',
         colorScheme: 'red',
         state: 'disabled',
+        theme: 'light',
         class: '!bg-red-300/30 !text-black/60'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'red',
+        state: 'disabled',
+        theme: 'dark',
+        class: '!bg-red-500/20 !text-gray-400'
       },
       {
         variant: 'solid',
         colorScheme: 'lightBlue',
         state: 'disabled',
+        theme: 'light',
         class: '!bg-dash-brand/5 !text-dash-brand/40'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'lightBlue',
+        state: 'disabled',
+        theme: 'dark',
+        class: '!bg-dash-brand/10 !text-dash-brand/50'
       }
     ],
     defaultVariants: {
+      theme: 'light',
       variant: 'solid',
       colorScheme: 'brand',
       state: 'active',
@@ -117,7 +197,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 /**
  * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size.
+ * press animation, and customizable size. Supports light/dark theme.
  */
 export const Button: React.FC<ButtonProps> = ({
   children,
@@ -128,9 +208,10 @@ export const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
+  const { theme } = useTheme()
   const state = disabled ? 'disabled' : 'active'
   const classes =
-    styles({ variant, colorScheme, size, state }) +
+    styles({ theme, variant, colorScheme, size, state }) +
     (className !== '' ? ` ${className}` : '')
 
   return (

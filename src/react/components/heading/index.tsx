@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTheme } from '../../contexts/ThemeContext'
 
 interface HeadingProps {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
@@ -28,11 +29,20 @@ const weightClasses = {
 }
 
 const colorClasses = {
-  black: 'text-black',
-  gray: 'text-gray-600',
-  blue: 'text-blue-600', 
-  red: 'text-red-600',
-  green: 'text-green-600'
+  light: {
+    black: 'text-black',
+    gray: 'text-gray-600',
+    blue: 'text-blue-600', 
+    red: 'text-red-600',
+    green: 'text-green-600'
+  },
+  dark: {
+    black: 'text-white',
+    gray: 'text-gray-300',
+    blue: 'text-blue-400', 
+    red: 'text-red-400',
+    green: 'text-green-400'
+  }
 }
 
 export const Heading: React.FC<HeadingProps> = ({ 
@@ -43,12 +53,13 @@ export const Heading: React.FC<HeadingProps> = ({
   className = '',
   children
 }) => {
+  const { theme } = useTheme()
   const Component = as
   
   const classes = [
     sizeClasses[size],
     weightClasses[weight],
-    colorClasses[color],
+    colorClasses[theme][color],
     className
   ].filter(Boolean).join(' ')
 

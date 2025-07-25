@@ -8,15 +8,17 @@ declare const input: (props?: ({
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type InputVariants = VariantProps<typeof input>;
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, Omit<InputVariants, 'theme' | 'disabled'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'>, Omit<InputVariants, 'theme' | 'disabled'> {
     className?: string;
     error?: boolean;
     success?: boolean;
+    prefix?: string | React.ReactNode;
 }
 /**
  * A versatile input component that adapts to light/dark theme,
  * supports various color schemes, sizes, variants, and states.
  * For password inputs, includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
  *
  * @example
  * <Input
@@ -24,6 +26,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
  *   placeholder='Enter password'
  *   colorScheme='brand'
  *   size='xl'
+ *   prefix="https://"
  * />
  */
 export declare const Input: React.FC<InputProps>;

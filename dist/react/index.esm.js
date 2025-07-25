@@ -8,125 +8,6 @@ import React__default, { useState, useRef, useLayoutEffect, useMemo, useCallback
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
 
-const styles = cva(`
-    dash-btn-base
-    select-none
-    min-h-11
-    flex
-    items-center
-    capitalize
-    transition-colors
-    hover:cursor-pointer
-    justify-center
-    font-dash-main
-  `, {
-  variants: {
-    variant: {
-      solid: '',
-      outline: 'dash-btn-outline border !bg-transparent'
-    },
-    colorScheme: {
-      brand: 'dash-btn-brand',
-      mint: 'dash-btn-mint',
-      gray: 'dash-btn-gray',
-      red: 'dash-btn-red',
-      lightBlue: 'dash-btn-lightBlue'
-    },
-    state: {
-      active: 'active:-translate-y-[-1px]',
-      disabled: 'hover:!cursor-not-allowed'
-    },
-    size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
-    }
-  },
-  compoundVariants: [
-  // outline variant
-  {
-    variant: 'outline',
-    state: 'disabled',
-    class: 'opacity-40'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    class: '!text-dash-brand'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    class: '!text-dash-mint'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    class: '!text-gray-700'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    class: '!text-red-700 hover:!bg-red-300/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    class: '!text-dash-brand/60'
-  },
-  // solid variant
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    class: '!bg-dash-brand/10 !text-dash-brand-dim'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    class: '!bg-dash-mint/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    class: '!bg-red-300/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    class: '!bg-dash-brand/5 !text-dash-brand/40'
-  }],
-  defaultVariants: {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'active',
-    size: 'md'
-  }
-});
-/**
- * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size.
- */
-const Button = _a => {
-  var {
-      children,
-      variant,
-      colorScheme,
-      size,
-      disabled = false,
-      className = ''
-    } = _a,
-    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
-  const state = disabled ? 'disabled' : 'active';
-  const classes = styles({
-    variant,
-    colorScheme,
-    size,
-    state
-  }) + (className !== '' ? ` ${className}` : '');
-  return jsx("button", Object.assign({
-    className: classes,
-    disabled: disabled
-  }, props, {
-    children: children
-  }));
-};
-
 const ThemeContext = /*#__PURE__*/React__default.createContext(undefined);
 /**
  * Provides theme context to its descendants and syncs theme with localStorage
@@ -195,6 +76,198 @@ function useTheme() {
   }
   return context;
 }
+
+const styles = cva(`
+    dash-btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    variant: {
+      solid: '',
+      outline: 'dash-btn-outline border !bg-transparent'
+    },
+    colorScheme: {
+      brand: 'dash-btn-brand',
+      mint: 'dash-btn-mint',
+      gray: 'dash-btn-gray',
+      red: 'dash-btn-red',
+      lightBlue: 'dash-btn-lightBlue'
+    },
+    state: {
+      active: 'active:-translate-y-[-1px]',
+      disabled: 'hover:!cursor-not-allowed'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  compoundVariants: [
+  // outline variant - light theme
+  {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'light',
+    class: 'opacity-40'
+  }, {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'dark',
+    class: 'opacity-50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!text-dash-brand'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!text-dash-brand'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!text-dash-mint'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!text-dash-mint'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!text-gray-700'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!text-gray-300'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!text-red-400 hover:!bg-red-500/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!text-dash-brand/60'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!text-dash-brand/80'
+  },
+  // solid variant - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
+  }, {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-mint/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-red-500/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/10 !text-dash-brand/50'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'active',
+    size: 'md'
+  }
+});
+/**
+ * Button with solid or outline style, color schemes, disabled state,
+ * press animation, and customizable size. Supports light/dark theme.
+ */
+const Button = _a => {
+  var {
+      children,
+      variant,
+      colorScheme,
+      size,
+      disabled = false,
+      className = ''
+    } = _a,
+    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+  const {
+    theme
+  } = useTheme();
+  const state = disabled ? 'disabled' : 'active';
+  const classes = styles({
+    theme,
+    variant,
+    colorScheme,
+    size,
+    state
+  }) + (className !== '' ? ` ${className}` : '');
+  return jsx("button", Object.assign({
+    className: classes,
+    disabled: disabled
+  }, props, {
+    children: children
+  }));
+};
 
 const ArrowIcon = ({
   color = 'white',
@@ -573,6 +646,7 @@ const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 
  * A versatile input component that adapts to light/dark theme,
  * supports various color schemes, sizes, variants, and states.
  * For password inputs, includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
  *
  * @example
  * <Input
@@ -580,6 +654,7 @@ const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 
  *   placeholder='Enter password'
  *   colorScheme='brand'
  *   size='xl'
+ *   prefix="https://"
  * />
  */
 const Input = _a => {
@@ -591,9 +666,10 @@ const Input = _a => {
       error = false,
       success = false,
       disabled = false,
-      type
+      type,
+      prefix
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix"]);
   const {
     theme
   } = useTheme();
@@ -610,14 +686,53 @@ const Input = _a => {
   }) + ' ' + className;
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
+  const hasPrefix = Boolean(prefix);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  // Calculate padding based on prefix length
+  const getPrefixPadding = () => {
+    if (!prefix) return 0;
+    const prefixLength = typeof prefix === 'string' ? prefix.length : 4; // default for React nodes
+    // Base padding (1rem) + prefix width estimation (0.6rem per character) + extra space (0.5rem)
+    return prefixLength * 0.6 + 1.5;
+  };
+  // Render with prefix
+  if (hasPrefix) {
+    const leftPadding = getPrefixPadding();
+    return jsxs("div", {
+      className: 'relative',
+      children: [jsx("div", {
+        className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
+        children: prefix
+      }), jsx("input", Object.assign({
+        className: `${classes}${isPassword ? ' pr-12' : ''}`,
+        style: {
+          paddingLeft: `${leftPadding}rem`
+        },
+        disabled: disabled,
+        type: inputType
+      }, props)), isPassword && jsx("button", {
+        type: 'button',
+        className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
+        onClick: togglePasswordVisibility,
+        tabIndex: -1,
+        children: showPassword ? jsx(EyeClosedIcon, {
+          size: 16,
+          color: '#0C1C33'
+        }) : jsx(EyeOpenIcon, {
+          size: 16,
+          color: '#0C1C33'
+        })
+      })]
+    });
+  }
+  // Render password input without prefix
   if (isPassword) {
     return jsxs("div", {
       className: 'relative',
       children: [jsx("input", Object.assign({
-        className: classes + (isPassword ? ' pr-12' : ''),
+        className: classes + ' pr-12',
         disabled: disabled,
         type: inputType
       }, props)), jsx("button", {
@@ -635,6 +750,7 @@ const Input = _a => {
       })]
     });
   }
+  // Regular input without prefix
   return jsx("input", Object.assign({
     className: classes,
     disabled: disabled,
@@ -6670,6 +6786,177 @@ const Select = _a => {
   });
 };
 
+const switchContainer = cva('flex transition-all duration-200 font-inter gap-2', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-gray-100',
+      dark: 'bg-dash-primary-dark-blue/10 outline outline-1 outline-white/15 outline-offset-[-1px]'
+    },
+    size: {
+      sm: 'p-1 rounded-xl',
+      md: 'p-2 rounded-2xl',
+      xl: 'p-3 rounded-3xl'
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [
+  // Light theme shadows
+  {
+    theme: 'light',
+    size: 'sm',
+    class: 'shadow-sm'
+  }, {
+    theme: 'light',
+    size: 'md',
+    class: 'shadow-lg'
+  }, {
+    theme: 'light',
+    size: 'xl',
+    class: 'shadow-xl'
+  },
+  // Dark theme shadows with brand color
+  {
+    theme: 'dark',
+    size: 'sm',
+    class: 'shadow-sm shadow-dash-brand/10'
+  }, {
+    theme: 'dark',
+    size: 'md',
+    class: 'shadow-lg shadow-dash-brand/10'
+  }, {
+    theme: 'dark',
+    size: 'xl',
+    class: 'shadow-xl shadow-dash-brand/10'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    size: 'md',
+    disabled: false
+  }
+});
+const switchButton = cva('flex-1 text-center transition-all duration-200 font-medium whitespace-nowrap cursor-pointer font-dash-main', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    size: {
+      sm: 'py-1 px-2 rounded-lg text-sm',
+      md: 'py-2 px-3 rounded-[0.625rem] text-[1rem]',
+      xl: 'py-3 px-6 rounded-2xl text-lg font-semibold'
+    },
+    selected: {
+      true: '',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'cursor-not-allowed opacity-50'
+    }
+  },
+  compoundVariants: [
+  // Selected state - light theme
+  {
+    theme: 'light',
+    selected: true,
+    class: 'bg-dash-brand text-white'
+  },
+  // Selected state - dark theme
+  {
+    theme: 'dark',
+    selected: true,
+    class: 'bg-dash-brand text-white'
+  },
+  // Unselected state - light theme
+  {
+    theme: 'light',
+    selected: false,
+    disabled: false,
+    class: 'text-dash-brand hover:bg-dash-brand/10 active:bg-dash-brand/20'
+  },
+  // Unselected state - dark theme
+  {
+    theme: 'dark',
+    selected: false,
+    disabled: false,
+    class: 'text-dash-brand hover:bg-dash-brand/10 active:bg-dash-brand/20'
+  },
+  // Disabled state - light theme
+  {
+    theme: 'light',
+    selected: false,
+    disabled: true,
+    class: 'text-gray-400'
+  },
+  // Disabled state - dark theme
+  {
+    theme: 'dark',
+    selected: false,
+    disabled: true,
+    class: 'text-gray-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    size: 'md',
+    selected: false,
+    disabled: false
+  }
+});
+/**
+ * A switch component for selecting between multiple options.
+ * Supports individual option disabling, hover states, and responsive sizing.
+ * Uses dash design system sizing and theming with automatic light/dark mode.
+ * @example
+ * // With disabled options
+ * <Switch
+ *   options={[
+ *     { label: 'Basic', value: 'basic' },
+ *     { label: 'Pro', value: 'pro', disabled: true },
+ *     { label: 'Free', value: 'free' }
+ *   ]}
+ *   value="basic"
+ *   onChange={(value) => console.log(value)}
+ * />
+ */
+function Switch({
+  options,
+  value,
+  onChange,
+  size = 'md',
+  className = '',
+  disabled = false
+}) {
+  const {
+    theme
+  } = useTheme();
+  const containerClasses = switchContainer({
+    theme,
+    size,
+    disabled
+  }) + ' ' + className;
+  return jsx("div", {
+    className: containerClasses,
+    children: options.map((option, index) => {
+      const isSelected = option.value === value;
+      const isOptionDisabled = disabled || option.disabled;
+      return jsx("button", {
+        onClick: () => !isOptionDisabled && onChange(option.value),
+        disabled: isOptionDisabled,
+        className: switchButton({
+          theme,
+          size,
+          selected: isSelected,
+          disabled: isOptionDisabled
+        }),
+        children: option.label
+      }, index);
+    })
+  });
+}
+
 // 9 different colors only for easy distinction (also a sweet spot for collisions)
 const COLORS_NB = 9;
 const DEFAULT_SATURATION = 95;
@@ -6767,6 +7054,9 @@ const List = ({
   className = '',
   size = 'sm'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const IconComponent = iconComponents[iconType];
   return jsx("ul", {
     className: `space-y-5 w-full ${className}`,
@@ -6774,7 +7064,8 @@ const List = ({
       className: 'flex items-start gap-4',
       children: [jsx(IconComponent, {
         size: 20,
-        className: 'flex-shrink-0'
+        className: 'flex-shrink-0',
+        color: theme === 'dark' ? '#4C7EFF' : '#4C7EFF'
       }), jsxs("div", {
         className: 'flex flex-col gap-1',
         children: [jsx(Text, {
@@ -6792,19 +7083,33 @@ const List = ({
   });
 };
 
-const bigNumberStyles = cva('inline-flex whitespace-nowrap');
+const bigNumberStyles = cva('inline-flex whitespace-nowrap', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const spaceStyles = cva('inline-block w-[3px]');
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
  * - `space`: groups separated by a fixed 3px block
  * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme.
  */
 const BigNumber = ({
   children,
   variant = 'space',
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   if (children === undefined || children === null) return null;
   const str = children.toString();
   if (variant === 'space') {
@@ -6815,7 +7120,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsx("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: groups.map((grp, i) => jsxs("span", {
         children: [jsx("span", {
           children: grp
@@ -6833,7 +7140,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsxs("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: [groups.map((grp, i) => jsxs("span", {
         children: [jsx("span", {
           children: grp
@@ -7015,15 +7324,30 @@ const useDebounce = (value, options) => {
   };
 };
 
-const notActiveStyles = cva('text-sm text-gray-400');
+const notActiveStyles = cva('text-sm', {
+  variants: {
+    theme: {
+      light: 'text-gray-400',
+      dark: 'text-gray-500'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 function NotActive(_a) {
   var {
       children,
       className
     } = _a,
     props = __rest(_a, ["children", "className"]);
+  const {
+    theme
+  } = useTheme();
   return jsx("span", Object.assign({
-    className: `${notActiveStyles()} ${className !== null && className !== void 0 ? className : ''}`
+    className: `${notActiveStyles({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''}`
   }, props, {
     children: children !== null && children !== void 0 ? children : 'n/a'
   }));
@@ -7051,7 +7375,17 @@ function copyToClipboard(copyText = '', callback) {
   });
 }
 
-const copyBtn = cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors');
+const copyBtn = cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
+  variants: {
+    theme: {
+      light: 'hover:text-gray-600 active:text-gray-800',
+      dark: 'hover:text-gray-300 active:text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const CopyButton = _a => {
   var {
       text,
@@ -7064,7 +7398,9 @@ const CopyButton = _a => {
   } = useTheme();
   return jsx("button", Object.assign({
     type: 'button',
-    className: `${copyBtn()} ${className !== null && className !== void 0 ? className : ''} hover:text-gray-100 hover:cursor-pointer active:text-white`,
+    className: `${copyBtn({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''} hover:cursor-pointer`,
     onClick: e => {
       e.stopPropagation();
       e.preventDefault();
@@ -7072,7 +7408,8 @@ const CopyButton = _a => {
     }
   }, props, {
     children: jsx(CopyIcon, {
-      className: `${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`
+      className: 'w-4 h-4 transition',
+      color: theme === 'light' ? '#000000' : '#ffffff'
     })
   }));
 };
@@ -7361,11 +7698,20 @@ const weightClasses = {
   extrabold: 'font-extrabold'
 };
 const colorClasses = {
-  black: 'text-black',
-  gray: 'text-gray-600',
-  blue: 'text-blue-600',
-  red: 'text-red-600',
-  green: 'text-green-600'
+  light: {
+    black: 'text-black',
+    gray: 'text-gray-600',
+    blue: 'text-blue-600',
+    red: 'text-red-600',
+    green: 'text-green-600'
+  },
+  dark: {
+    black: 'text-white',
+    gray: 'text-gray-300',
+    blue: 'text-blue-400',
+    red: 'text-red-400',
+    green: 'text-green-400'
+  }
 };
 const Heading = ({
   as = 'h1',
@@ -7375,8 +7721,11 @@ const Heading = ({
   className = '',
   children
 }) => {
+  const {
+    theme
+  } = useTheme();
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[color], className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], className].filter(Boolean).join(' ');
   return jsx(Component, {
     className: classes,
     children: children
@@ -7436,10 +7785,21 @@ function getTimeDelta(startDate, endDate, format = 'default') {
   return 'Invalid format';
 }
 
-const wrapperStyles$1 = cva('inline');
+const wrapperStyles$1 = cva('inline', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
+ * Supports light/dark theme.
  */
 const TimeDelta = ({
   startDate,
@@ -7448,6 +7808,9 @@ const TimeDelta = ({
   // tooltipDate,
   format = 'default'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const [timeDelta, setTimeDelta] = useState(null);
   // const tooltipDateObj = new Date(tooltipDate ?? endDate)
   useEffect(() => {
@@ -7477,7 +7840,9 @@ const TimeDelta = ({
   }
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
   const content = jsx("span", {
-    className: wrapperStyles$1(),
+    className: wrapperStyles$1({
+      theme
+    }),
     children: timeDelta
   });
   // if (showTooltip) {
@@ -7500,10 +7865,32 @@ const TimeDelta = ({
 const wrapperStyles = cva('');
 const infoContainer = cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
 const itemStyles = cva('mt-1 mb-1 mr-2 last:mr-0');
+const dateTextStyles = cva('text-[0.813rem]', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const deltaContainerStyles = cva('inline-block px-[10px] py-[3px] border rounded-[4px] text-[0.688rem]', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(147,170,178,0.4)] text-[var(--chakra-colors-gray-250)]',
+      dark: 'border-gray-600 text-gray-400'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * DateBlock component displays a date, optional calendar icon,
  * and relative time via TimeDelta. It can also show an optional
- * tooltip with the relative time when hovered.
+ * tooltip with the relative time when hovered. Supports light/dark theme.
  */
 const DateBlock = ({
   timestamp,
@@ -7512,6 +7899,9 @@ const DateBlock = ({
   // showRelativeTooltip = false,
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return null;
   const modes = {
@@ -7546,12 +7936,17 @@ const DateBlock = ({
   const content = jsxs("div", {
     className: infoContainer(),
     children: [modes[format].calendarIcon && jsx(CalendarIcon, {
-      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+      className: `${itemStyles()} w-[12px] h-[14px]`,
+      color: theme === 'dark' ? '#9CA3AF' : '#93AAB2'
     }), modes[format].date && jsx("div", {
-      className: `${itemStyles()} text-[0.813rem]`,
+      className: `${itemStyles()} ${dateTextStyles({
+        theme
+      })}`,
       children: formattedDate
     }), modes[format].delta && jsx("div", {
-      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      className: `${itemStyles()} ${deltaContainerStyles({
+        theme
+      })}`,
       children: jsx(TimeDelta, {
         endDate: date,
         showTimestampTooltip: format !== 'all'
@@ -7575,12 +7970,17 @@ const DateBlock = ({
 /**
  * Renders an icon corresponding to the given `status`.
  * If `status` is not recognized, returns null.
+ * Colors adapt to light/dark theme unless overridden.
  */
 const TransactionStatusIcon = _a => {
   var {
-      status
+      status,
+      color
     } = _a,
-    props = __rest(_a, ["status"]);
+    props = __rest(_a, ["status", "color"]);
+  const {
+    theme
+  } = useTheme();
   const map = {
     SUCCESS: SuccessIcon,
     FAIL: ErrorIcon,
@@ -7589,8 +7989,46 @@ const TransactionStatusIcon = _a => {
     BROADCASTED: BroadcastedIcon
   };
   const IconComponent = map[status];
-  return IconComponent != null ? jsx(IconComponent, Object.assign({}, props)) : null;
+  // Default colors based on theme, if no color override provided
+  const defaultColors = {
+    light: {
+      SUCCESS: '#1CC400',
+      FAIL: '#F45858',
+      QUEUED: '#F4A358',
+      POOLED: '#008DE4',
+      BROADCASTED: '#008DE4'
+    },
+    dark: {
+      SUCCESS: '#22D32E',
+      FAIL: '#FF6B6B',
+      QUEUED: '#FFB366',
+      POOLED: '#42A5F5',
+      BROADCASTED: '#42A5F5'
+    }
+  };
+  const iconColor = color !== null && color !== void 0 ? color : defaultColors[theme][status];
+  return IconComponent != null ? jsx(IconComponent, Object.assign({
+    color: iconColor
+  }, props)) : null;
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, QueuedIcon, Select, SuccessIcon, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, useTheme };
+function ProgressStepBar({
+  currentStep,
+  totalSteps,
+  className = ''
+}) {
+  const {
+    theme
+  } = useTheme();
+  return jsx("div", {
+    className: `flex gap-2 w-full ${className}`,
+    children: Array.from({
+      length: totalSteps
+    }, (_, index) => jsx("div", {
+      className: `h-1.5 rounded-2xl flex-1 transition-colors ${index < currentStep ? theme === 'dark' ? 'bg-[var(--color-dash-brand-dim)]' : 'bg-[var(--color-dash-brand)]' : theme === 'dark' ? 'bg-gray-700' : 'bg-[rgba(76,126,255,0.16)]'}`
+    }, index))
+  });
+}
+
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, List, NotActive, PooledIcon, ProgressStepBar, QueuedIcon, Select, SuccessIcon, Switch, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, useTheme };
 //# sourceMappingURL=index.esm.js.map
