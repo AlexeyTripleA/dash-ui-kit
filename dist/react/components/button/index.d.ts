@@ -9,7 +9,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 /**
  * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size.
+ * press animation, and customizable size. Supports light/dark theme.
  */
 export declare const Button: React.FC<ButtonProps>;
 export default Button;

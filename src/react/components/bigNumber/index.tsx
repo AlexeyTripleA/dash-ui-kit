@@ -1,5 +1,6 @@
 import React from 'react'
 import { cva } from 'class-variance-authority'
+import { useTheme } from '../../contexts/ThemeContext'
 
 export type BigNumberVariant = 'space' | 'comma'
 
@@ -12,7 +13,21 @@ export interface BigNumberProps {
   className?: string
 }
 
-const bigNumberStyles = cva('inline-flex whitespace-nowrap')
+const bigNumberStyles = cva(
+  'inline-flex whitespace-nowrap',
+  {
+    variants: {
+      theme: {
+        light: 'text-gray-900',
+        dark: 'text-gray-100'
+      }
+    },
+    defaultVariants: {
+      theme: 'light'
+    }
+  }
+)
+
 const spaceStyles = cva('inline-block w-[3px]')
 
 /**
@@ -20,8 +35,11 @@ const spaceStyles = cva('inline-block w-[3px]')
  * Supports two variants:
  * - `space`: groups separated by a fixed 3px block
  * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme.
  */
 export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '' }) => {
+  const { theme } = useTheme()
+  
   if (children === undefined || children === null) return null
   const str = children.toString()
 
@@ -37,7 +55,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
     }, [])
 
     return (
-      <span className={`${bigNumberStyles()} ${className}`}>
+      <span className={`${bigNumberStyles({ theme })} ${className}`}>
         {groups.map((grp, i) => (
           <span key={i}>
             <span>{grp}</span>
@@ -59,7 +77,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
     }, [])
 
     return (
-      <span className={`${bigNumberStyles()} ${className}`}>
+      <span className={`${bigNumberStyles({ theme })} ${className}`}>
         {groups.map((grp, i) => (
           <span key={i}>
             <span>{grp}</span>

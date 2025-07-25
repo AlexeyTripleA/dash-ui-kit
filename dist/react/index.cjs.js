@@ -9,143 +9,24 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 function _interopNamespaceDefault(e) {
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () { return e[k]; }
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
         });
-      }
-    });
-  }
-  n.default = e;
-  return Object.freeze(n);
+    }
+    n.default = e;
+    return Object.freeze(n);
 }
 
 var React__namespace = /*#__PURE__*/_interopNamespaceDefault(React);
 var ReactDOM__namespace = /*#__PURE__*/_interopNamespaceDefault(ReactDOM);
-
-const styles = classVarianceAuthority.cva(`
-    dash-btn-base
-    select-none
-    min-h-11
-    flex
-    items-center
-    capitalize
-    transition-colors
-    hover:cursor-pointer
-    justify-center
-    font-dash-main
-  `, {
-  variants: {
-    variant: {
-      solid: '',
-      outline: 'dash-btn-outline border !bg-transparent'
-    },
-    colorScheme: {
-      brand: 'dash-btn-brand',
-      mint: 'dash-btn-mint',
-      gray: 'dash-btn-gray',
-      red: 'dash-btn-red',
-      lightBlue: 'dash-btn-lightBlue'
-    },
-    state: {
-      active: 'active:-translate-y-[-1px]',
-      disabled: 'hover:!cursor-not-allowed'
-    },
-    size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
-    }
-  },
-  compoundVariants: [
-  // outline variant
-  {
-    variant: 'outline',
-    state: 'disabled',
-    class: 'opacity-40'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    class: '!text-dash-brand'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    class: '!text-dash-mint'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    class: '!text-gray-700'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    class: '!text-red-700 hover:!bg-red-300/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    class: '!text-dash-brand/60'
-  },
-  // solid variant
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    class: '!bg-dash-brand/10 !text-dash-brand-dim'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    class: '!bg-dash-mint/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    class: '!bg-red-300/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    class: '!bg-dash-brand/5 !text-dash-brand/40'
-  }],
-  defaultVariants: {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'active',
-    size: 'md'
-  }
-});
-/**
- * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size.
- */
-const Button = _a => {
-  var {
-      children,
-      variant,
-      colorScheme,
-      size,
-      disabled = false,
-      className = ''
-    } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
-  const state = disabled ? 'disabled' : 'active';
-  const classes = styles({
-    variant,
-    colorScheme,
-    size,
-    state
-  }) + (className !== '' ? ` ${className}` : '');
-  return jsxRuntime.jsx("button", Object.assign({
-    className: classes,
-    disabled: disabled
-  }, props, {
-    children: children
-  }));
-};
 
 const ThemeContext = /*#__PURE__*/React.createContext(undefined);
 /**
@@ -215,6 +96,198 @@ function useTheme() {
   }
   return context;
 }
+
+const styles = classVarianceAuthority.cva(`
+    dash-btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    variant: {
+      solid: '',
+      outline: 'dash-btn-outline border !bg-transparent'
+    },
+    colorScheme: {
+      brand: 'dash-btn-brand',
+      mint: 'dash-btn-mint',
+      gray: 'dash-btn-gray',
+      red: 'dash-btn-red',
+      lightBlue: 'dash-btn-lightBlue'
+    },
+    state: {
+      active: 'active:-translate-y-[-1px]',
+      disabled: 'hover:!cursor-not-allowed'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  compoundVariants: [
+  // outline variant - light theme
+  {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'light',
+    class: 'opacity-40'
+  }, {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'dark',
+    class: 'opacity-50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!text-dash-brand'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!text-dash-brand'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!text-dash-mint'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!text-dash-mint'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!text-gray-700'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!text-gray-300'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!text-red-400 hover:!bg-red-500/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!text-dash-brand/60'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!text-dash-brand/80'
+  },
+  // solid variant - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
+  }, {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-mint/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-red-500/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/10 !text-dash-brand/50'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'active',
+    size: 'md'
+  }
+});
+/**
+ * Button with solid or outline style, color schemes, disabled state,
+ * press animation, and customizable size. Supports light/dark theme.
+ */
+const Button = _a => {
+  var {
+      children,
+      variant,
+      colorScheme,
+      size,
+      disabled = false,
+      className = ''
+    } = _a,
+    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+  const {
+    theme
+  } = useTheme();
+  const state = disabled ? 'disabled' : 'active';
+  const classes = styles({
+    theme,
+    variant,
+    colorScheme,
+    size,
+    state
+  }) + (className !== '' ? ` ${className}` : '');
+  return jsxRuntime.jsx("button", Object.assign({
+    className: classes,
+    disabled: disabled
+  }, props, {
+    children: children
+  }));
+};
 
 const ArrowIcon = ({
   color = 'white',
@@ -6958,6 +7031,9 @@ const List = ({
   className = '',
   size = 'sm'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const IconComponent = iconComponents[iconType];
   return jsxRuntime.jsx("ul", {
     className: `space-y-5 w-full ${className}`,
@@ -6965,7 +7041,8 @@ const List = ({
       className: 'flex items-start gap-4',
       children: [jsxRuntime.jsx(IconComponent, {
         size: 20,
-        className: 'flex-shrink-0'
+        className: 'flex-shrink-0',
+        color: theme === 'dark' ? '#4C7EFF' : '#4C7EFF'
       }), jsxRuntime.jsxs("div", {
         className: 'flex flex-col gap-1',
         children: [jsxRuntime.jsx(Text, {
@@ -6983,19 +7060,33 @@ const List = ({
   });
 };
 
-const bigNumberStyles = classVarianceAuthority.cva('inline-flex whitespace-nowrap');
+const bigNumberStyles = classVarianceAuthority.cva('inline-flex whitespace-nowrap', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const spaceStyles = classVarianceAuthority.cva('inline-block w-[3px]');
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
  * - `space`: groups separated by a fixed 3px block
  * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme.
  */
 const BigNumber = ({
   children,
   variant = 'space',
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   if (children === undefined || children === null) return null;
   const str = children.toString();
   if (variant === 'space') {
@@ -7006,7 +7097,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsxRuntime.jsx("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: groups.map((grp, i) => jsxRuntime.jsxs("span", {
         children: [jsxRuntime.jsx("span", {
           children: grp
@@ -7024,7 +7117,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsxRuntime.jsxs("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: [groups.map((grp, i) => jsxRuntime.jsxs("span", {
         children: [jsxRuntime.jsx("span", {
           children: grp
@@ -7206,15 +7301,30 @@ const useDebounce = (value, options) => {
   };
 };
 
-const notActiveStyles = classVarianceAuthority.cva('text-sm text-gray-400');
+const notActiveStyles = classVarianceAuthority.cva('text-sm', {
+  variants: {
+    theme: {
+      light: 'text-gray-400',
+      dark: 'text-gray-500'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 function NotActive(_a) {
   var {
       children,
       className
     } = _a,
     props = tslib.__rest(_a, ["children", "className"]);
+  const {
+    theme
+  } = useTheme();
   return jsxRuntime.jsx("span", Object.assign({
-    className: `${notActiveStyles()} ${className !== null && className !== void 0 ? className : ''}`
+    className: `${notActiveStyles({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''}`
   }, props, {
     children: children !== null && children !== void 0 ? children : 'n/a'
   }));
@@ -7242,7 +7352,17 @@ function copyToClipboard(copyText = '', callback) {
   });
 }
 
-const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors');
+const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
+  variants: {
+    theme: {
+      light: 'hover:text-gray-600 active:text-gray-800',
+      dark: 'hover:text-gray-300 active:text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const CopyButton = _a => {
   var {
       text,
@@ -7255,7 +7375,9 @@ const CopyButton = _a => {
   } = useTheme();
   return jsxRuntime.jsx("button", Object.assign({
     type: 'button',
-    className: `${copyBtn()} ${className !== null && className !== void 0 ? className : ''} hover:text-gray-100 hover:cursor-pointer active:text-white`,
+    className: `${copyBtn({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''} hover:cursor-pointer`,
     onClick: e => {
       e.stopPropagation();
       e.preventDefault();
@@ -7263,7 +7385,8 @@ const CopyButton = _a => {
     }
   }, props, {
     children: jsxRuntime.jsx(CopyIcon, {
-      className: `${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`
+      className: 'w-4 h-4 transition',
+      color: theme === 'light' ? '#000000' : '#ffffff'
     })
   }));
 };
@@ -7552,11 +7675,20 @@ const weightClasses = {
   extrabold: 'font-extrabold'
 };
 const colorClasses = {
-  black: 'text-black',
-  gray: 'text-gray-600',
-  blue: 'text-blue-600',
-  red: 'text-red-600',
-  green: 'text-green-600'
+  light: {
+    black: 'text-black',
+    gray: 'text-gray-600',
+    blue: 'text-blue-600',
+    red: 'text-red-600',
+    green: 'text-green-600'
+  },
+  dark: {
+    black: 'text-white',
+    gray: 'text-gray-300',
+    blue: 'text-blue-400',
+    red: 'text-red-400',
+    green: 'text-green-400'
+  }
 };
 const Heading = ({
   as = 'h1',
@@ -7566,8 +7698,11 @@ const Heading = ({
   className = '',
   children
 }) => {
+  const {
+    theme
+  } = useTheme();
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[color], className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], className].filter(Boolean).join(' ');
   return jsxRuntime.jsx(Component, {
     className: classes,
     children: children
@@ -7627,10 +7762,21 @@ function getTimeDelta(startDate, endDate, format = 'default') {
   return 'Invalid format';
 }
 
-const wrapperStyles$1 = classVarianceAuthority.cva('inline');
+const wrapperStyles$1 = classVarianceAuthority.cva('inline', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
+ * Supports light/dark theme.
  */
 const TimeDelta = ({
   startDate,
@@ -7639,6 +7785,9 @@ const TimeDelta = ({
   // tooltipDate,
   format = 'default'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const [timeDelta, setTimeDelta] = React.useState(null);
   // const tooltipDateObj = new Date(tooltipDate ?? endDate)
   React.useEffect(() => {
@@ -7668,7 +7817,9 @@ const TimeDelta = ({
   }
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
   const content = jsxRuntime.jsx("span", {
-    className: wrapperStyles$1(),
+    className: wrapperStyles$1({
+      theme
+    }),
     children: timeDelta
   });
   // if (showTooltip) {
@@ -7691,10 +7842,32 @@ const TimeDelta = ({
 const wrapperStyles = classVarianceAuthority.cva('');
 const infoContainer = classVarianceAuthority.cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
 const itemStyles = classVarianceAuthority.cva('mt-1 mb-1 mr-2 last:mr-0');
+const dateTextStyles = classVarianceAuthority.cva('text-[0.813rem]', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const deltaContainerStyles = classVarianceAuthority.cva('inline-block px-[10px] py-[3px] border rounded-[4px] text-[0.688rem]', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(147,170,178,0.4)] text-[var(--chakra-colors-gray-250)]',
+      dark: 'border-gray-600 text-gray-400'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * DateBlock component displays a date, optional calendar icon,
  * and relative time via TimeDelta. It can also show an optional
- * tooltip with the relative time when hovered.
+ * tooltip with the relative time when hovered. Supports light/dark theme.
  */
 const DateBlock = ({
   timestamp,
@@ -7703,6 +7876,9 @@ const DateBlock = ({
   // showRelativeTooltip = false,
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return null;
   const modes = {
@@ -7737,12 +7913,17 @@ const DateBlock = ({
   const content = jsxRuntime.jsxs("div", {
     className: infoContainer(),
     children: [modes[format].calendarIcon && jsxRuntime.jsx(CalendarIcon, {
-      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+      className: `${itemStyles()} w-[12px] h-[14px]`,
+      color: theme === 'dark' ? '#9CA3AF' : '#93AAB2'
     }), modes[format].date && jsxRuntime.jsx("div", {
-      className: `${itemStyles()} text-[0.813rem]`,
+      className: `${itemStyles()} ${dateTextStyles({
+        theme
+      })}`,
       children: formattedDate
     }), modes[format].delta && jsxRuntime.jsx("div", {
-      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      className: `${itemStyles()} ${deltaContainerStyles({
+        theme
+      })}`,
       children: jsxRuntime.jsx(TimeDelta, {
         endDate: date,
         showTimestampTooltip: format !== 'all'
@@ -7766,12 +7947,17 @@ const DateBlock = ({
 /**
  * Renders an icon corresponding to the given `status`.
  * If `status` is not recognized, returns null.
+ * Colors adapt to light/dark theme unless overridden.
  */
 const TransactionStatusIcon = _a => {
   var {
-      status
+      status,
+      color
     } = _a,
-    props = tslib.__rest(_a, ["status"]);
+    props = tslib.__rest(_a, ["status", "color"]);
+  const {
+    theme
+  } = useTheme();
   const map = {
     SUCCESS: SuccessIcon,
     FAIL: ErrorIcon,
@@ -7780,8 +7966,46 @@ const TransactionStatusIcon = _a => {
     BROADCASTED: BroadcastedIcon
   };
   const IconComponent = map[status];
-  return IconComponent != null ? jsxRuntime.jsx(IconComponent, Object.assign({}, props)) : null;
+  // Default colors based on theme, if no color override provided
+  const defaultColors = {
+    light: {
+      SUCCESS: '#1CC400',
+      FAIL: '#F45858',
+      QUEUED: '#F4A358',
+      POOLED: '#008DE4',
+      BROADCASTED: '#008DE4'
+    },
+    dark: {
+      SUCCESS: '#22D32E',
+      FAIL: '#FF6B6B',
+      QUEUED: '#FFB366',
+      POOLED: '#42A5F5',
+      BROADCASTED: '#42A5F5'
+    }
+  };
+  const iconColor = color !== null && color !== void 0 ? color : defaultColors[theme][status];
+  return IconComponent != null ? jsxRuntime.jsx(IconComponent, Object.assign({
+    color: iconColor
+  }, props)) : null;
 };
+
+function ProgressStepBar({
+  currentStep,
+  totalSteps,
+  className = ''
+}) {
+  const {
+    theme
+  } = useTheme();
+  return jsxRuntime.jsx("div", {
+    className: `flex gap-2 w-full ${className}`,
+    children: Array.from({
+      length: totalSteps
+    }, (_, index) => jsxRuntime.jsx("div", {
+      className: `h-1.5 rounded-2xl flex-1 transition-colors ${index < currentStep ? 'bg-dash-brand' : theme === 'dark' ? 'bg-gray-700' : 'bg-dash-brand-inactive'}`
+    }, index))
+  });
+}
 
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
@@ -7802,6 +8026,7 @@ exports.Input = Input;
 exports.List = List;
 exports.NotActive = NotActive;
 exports.PooledIcon = PooledIcon;
+exports.ProgressStepBar = ProgressStepBar;
 exports.QueuedIcon = QueuedIcon;
 exports.Select = Select;
 exports.SuccessIcon = SuccessIcon;
