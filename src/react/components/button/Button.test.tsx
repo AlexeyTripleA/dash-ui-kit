@@ -22,4 +22,22 @@ describe('Button', () => {
     fireEvent.click(screen.getByText('Nope'))
     expect(onClick).not.toHaveBeenCalled()
   })
+
+  it('renders with lightGray color scheme', () => {
+    render(<Button colorScheme="lightGray">Light Gray Button</Button>)
+    const button = screen.getByText('Light Gray Button')
+    expect(button).toBeInTheDocument()
+    expect(button).toHaveAttribute('type', 'button')
+  })
+
+  it('renders with outline variant and lightGray color scheme', () => {
+    render(
+      <Button variant="outline" colorScheme="lightGray">
+        Outline Light Gray
+      </Button>
+    )
+    const button = screen.getByText('Outline Light Gray')
+    expect(button).toBeInTheDocument()
+    expect(button).toHaveClass('dash-btn-outline')
+  })
 })
