@@ -51,7 +51,7 @@ const styles = cva(
         variant: 'solid',
         colorScheme: 'brand',
         theme: 'light',
-        class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
+        class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
       },
       {
         variant: 'solid',
