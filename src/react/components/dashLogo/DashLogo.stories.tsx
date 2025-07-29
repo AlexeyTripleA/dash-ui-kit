@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react'
 import { DashLogo, DashLogoProps } from './index'
 
 const meta: Meta<DashLogoProps> = {
-  title: 'Components/dashLogo',
+  title: 'Components/DashLogo',
   component: DashLogo,
   argTypes: {
     color: {
