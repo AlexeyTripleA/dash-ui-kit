@@ -1117,7 +1117,7 @@ const textStyles = classVarianceAuthority.cva('', {
     },
     color: {
       default: '',
-      blue: '!text-brand-dark dark:text-brand-dim',
+      blue: '!text-dash-brand-dark dark:text-dash-brand-dim',
       red: 'text-red-700'
     },
     size: {
