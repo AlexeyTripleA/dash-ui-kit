@@ -7794,8 +7794,8 @@ const sizeClasses = {
   md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
-  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
-  '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
+  '2xl': 'text-[2.375rem] leading-[1.3]',
+  '3xl': 'text-[3rem] leading-[1.2]'
 };
 const weightClasses = {
   normal: 'font-normal',
@@ -7832,7 +7832,7 @@ const Heading = ({
     theme
   } = useTheme();
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
   return jsxRuntime.jsx(Component, {
     className: classes,
     children: children

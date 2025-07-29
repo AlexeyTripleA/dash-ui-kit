@@ -16,8 +16,8 @@ const sizeClasses = {
   md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
-  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
-  '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
+  '2xl': 'text-[2.375rem] leading-[1.3]',
+  '3xl': 'text-[3rem] leading-[1.2]'
 }
 
 const weightClasses = {
@@ -60,6 +60,7 @@ export const Heading: React.FC<HeadingProps> = ({
     sizeClasses[size],
     weightClasses[weight],
     colorClasses[theme][color],
+    'tracking-[-0.4px]',
     className
   ].filter(Boolean).join(' ')
 
