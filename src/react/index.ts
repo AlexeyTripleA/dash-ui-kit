@@ -16,6 +16,7 @@ export { TimeDelta, type TimeDeltaProps } from './components/timeDelta'
 export { DateBlock, type DateBlockProps, type DateBlockFormat } from './components/dateBlock'
 export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './components/transactionStatusIcon'
 export { ProgressStepBar, type ProgressStepBarProps } from './components/progressStepBar'
+export { DashLogo, type DashLogoProps } from './components/dashLogo'
 export type { TimeDeltaFormat } from './utils/datetime'
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext'
 export {
