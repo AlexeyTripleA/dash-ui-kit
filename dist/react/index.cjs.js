@@ -8158,7 +8158,6 @@ const DashLogo = ({
   containerSize,
   containerClassName = ''
 }) => {
-  // Calculate dimensions - priority: width/height props > size prop > defaults
   const logoWidth = width || size || 30;
   const logoHeight = height || (size ? size * 25 / 30 : 25);
   const containerStyle = {

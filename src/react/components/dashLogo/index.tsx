@@ -33,7 +33,6 @@ export const DashLogo: React.FC<DashLogoProps> = ({
   containerSize,
   containerClassName = ''
 }) => {
-  // Calculate dimensions - priority: width/height props > size prop > defaults
   const logoWidth = width || size || 30
   const logoHeight = height || (size ? (size * 25) / 30 : 25)
 
@@ -44,7 +43,7 @@ export const DashLogo: React.FC<DashLogoProps> = ({
     minWidth: 'min-content',
     minHeight: 'min-content',
     padding: typeof containerPadding === 'number' ? `${containerPadding}px` : containerPadding,
-      width: typeof containerSize === 'number' ? `${containerSize}px` : containerSize,
+    width: typeof containerSize === 'number' ? `${containerSize}px` : containerSize,
     height: typeof containerSize === 'number' ? `${containerSize}px` : containerSize,
     cursor: onClick ? 'pointer' : 'default'
   }
