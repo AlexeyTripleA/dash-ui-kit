@@ -15,7 +15,7 @@ export interface DateBlockProps {
 /**
  * DateBlock component displays a date, optional calendar icon,
  * and relative time via TimeDelta. It can also show an optional
- * tooltip with the relative time when hovered.
+ * tooltip with the relative time when hovered. Supports light/dark theme.
  */
 export declare const DateBlock: React.FC<DateBlockProps>;
 export default DateBlock;

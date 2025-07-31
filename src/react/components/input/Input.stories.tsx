@@ -30,6 +30,10 @@ const meta: Meta<typeof Input> = {
       control: 'text',
       description: 'Placeholder text'
     },
+    prefix: {
+      control: 'text',
+      description: 'Text or element displayed before input content'
+    },
     disabled: { control: 'boolean' },
     error: { control: 'boolean' },
     success: { control: 'boolean' },
@@ -57,11 +61,30 @@ export const Default: Story = {
   },
 }
 
+export const WithPrefix: Story = {
+  args: {
+    prefix: 'https://',
+    placeholder: 'example.com',
+    colorScheme: 'default',
+    size: 'xl',
+  },
+}
+
 export const Password: Story = {
   args: {
     type: 'password',
     placeholder: 'Enter password...',
     colorScheme: 'default',
+    size: 'xl',
+  },
+}
+
+export const PasswordWithPrefix: Story = {
+  args: {
+    type: 'password',
+    prefix: 'PIN:',
+    placeholder: 'Enter PIN...',
+    colorScheme: 'brand',
     size: 'xl',
   },
 }
@@ -98,12 +121,46 @@ export const Disabled: Story = {
   },
 }
 
+export const PrefixExamples: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input prefix="https://" placeholder="Website URL" />
+      <Input prefix="@" placeholder="Username" />
+      <Input prefix="$" placeholder="Price" type="number" />
+      <Input prefix="+1" placeholder="Phone number" type="tel" />
+      <Input prefix="mailto:" placeholder="Email address" type="email" />
+    </div>
+  ),
+}
+
+export const PrefixWithStates: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input prefix="https://" placeholder="Normal state" />
+      <Input prefix="https://" placeholder="Brand color" colorScheme="brand" />
+      <Input prefix="https://" placeholder="Error state" error />
+      <Input prefix="https://" placeholder="Success state" success />
+      <Input prefix="https://" placeholder="Disabled state" disabled />
+    </div>
+  ),
+}
+
 export const Sizes: Story = {
   render: () => (
     <div className="space-y-4">
       <Input size="sm" placeholder="Small input" />
       <Input size="md" placeholder="Medium input" />
       <Input size="xl" placeholder="Extra large input" />
+    </div>
+  ),
+}
+
+export const SizesWithPrefix: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input prefix="$" size="sm" placeholder="Small with prefix" />
+      <Input prefix="$" size="md" placeholder="Medium with prefix" />
+      <Input prefix="$" size="xl" placeholder="Extra large with prefix" />
     </div>
   ),
 }
@@ -143,9 +200,39 @@ export const Types: Story = {
   ),
 }
 
+export const TypesWithPrefix: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input type="text" prefix="@" placeholder="Username" />
+      <Input type="password" prefix="PIN:" placeholder="Security code" />
+      <Input type="email" prefix="To:" placeholder="recipient@example.com" />
+      <Input type="number" prefix="$" placeholder="0.00" />
+      <Input type="tel" prefix="+1" placeholder="Phone number" />
+      <Input type="url" prefix="https://" placeholder="website.com" />
+    </div>
+  ),
+}
+
 export const DarkTheme: Story = {
   args: {
     placeholder: 'Dark theme input',
+    colorScheme: 'brand',
+  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider initialTheme="dark">
+        <div className="bg-gray-900 p-6 w-80">
+          <Story />
+        </div>
+      </ThemeProvider>
+    ),
+  ],
+}
+
+export const DarkThemeWithPrefix: Story = {
+  args: {
+    prefix: 'https://',
+    placeholder: 'Dark theme with prefix',
     colorScheme: 'brand',
   },
   decorators: [

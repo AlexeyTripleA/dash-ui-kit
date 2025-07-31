@@ -16,3 +16,6 @@ export declare const CalendarIcon: React.FC<IconProps>;
 export declare const EyeOpenIcon: React.FC<IconProps>;
 export declare const EyeClosedIcon: React.FC<IconProps>;
 export declare const CheckIcon: React.FC<IconProps>;
+export declare const KeyIcon: React.FC<IconProps>;
+export declare const ProtectedMessageIcon: React.FC<IconProps>;
+export declare const SmartphoneIcon: React.FC<IconProps>;

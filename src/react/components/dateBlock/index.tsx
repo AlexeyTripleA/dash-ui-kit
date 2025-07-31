@@ -2,6 +2,7 @@ import React from 'react'
 import { cva } from 'class-variance-authority'
 import { CalendarIcon } from '../icons'
 import { TimeDelta } from '../timeDelta'
+import { useTheme } from '../../contexts/ThemeContext'
 
 const wrapperStyles = cva('')
 
@@ -11,6 +12,36 @@ const infoContainer = cva(
 
 const itemStyles = cva(
   'mt-1 mb-1 mr-2 last:mr-0'
+)
+
+const dateTextStyles = cva(
+  'text-[0.813rem]',
+  {
+    variants: {
+      theme: {
+        light: 'text-gray-900',
+        dark: 'text-gray-100'
+      }
+    },
+    defaultVariants: {
+      theme: 'light'
+    }
+  }
+)
+
+const deltaContainerStyles = cva(
+  'inline-block px-[10px] py-[3px] border rounded-[4px] text-[0.688rem]',
+  {
+    variants: {
+      theme: {
+        light: 'border-[rgba(147,170,178,0.4)] text-[var(--chakra-colors-gray-250)]',
+        dark: 'border-gray-600 text-gray-400'
+      }
+    },
+    defaultVariants: {
+      theme: 'light'
+    }
+  }
 )
 
 export type DateBlockFormat = 'all' | 'deltaOnly' | 'dateOnly'
@@ -31,7 +62,7 @@ export interface DateBlockProps {
 /**
  * DateBlock component displays a date, optional calendar icon,
  * and relative time via TimeDelta. It can also show an optional
- * tooltip with the relative time when hovered.
+ * tooltip with the relative time when hovered. Supports light/dark theme.
  */
 export const DateBlock: React.FC<DateBlockProps> = ({
   timestamp,
@@ -40,6 +71,7 @@ export const DateBlock: React.FC<DateBlockProps> = ({
   // showRelativeTooltip = false,
   className = ''
 }) => {
+  const { theme } = useTheme()
   const date = new Date(timestamp)
   if (isNaN(date.getTime())) return null
 
@@ -66,16 +98,15 @@ export const DateBlock: React.FC<DateBlockProps> = ({
     <div className={infoContainer()}>
       {modes[format].calendarIcon && (
         <CalendarIcon
-          className={`${itemStyles()} w-[12px] h-[14px] text-gray-250`}
+          className={`${itemStyles()} w-[12px] h-[14px]`}
+          color={theme === 'dark' ? '#9CA3AF' : '#93AAB2'}
         />
       )}
       {modes[format].date && (
-        <div className={`${itemStyles()} text-[0.813rem]`}>{formattedDate}</div>
+        <div className={`${itemStyles()} ${dateTextStyles({ theme })}`}>{formattedDate}</div>
       )}
       {modes[format].delta && (
-        <div
-          className={`${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`}
-        >
+        <div className={`${itemStyles()} ${deltaContainerStyles({ theme })}`}>
           <TimeDelta
             endDate={date}
             showTimestampTooltip={format !== 'all'}

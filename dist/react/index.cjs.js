@@ -9,143 +9,24 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 function _interopNamespaceDefault(e) {
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () { return e[k]; }
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
         });
-      }
-    });
-  }
-  n.default = e;
-  return Object.freeze(n);
+    }
+    n.default = e;
+    return Object.freeze(n);
 }
 
 var React__namespace = /*#__PURE__*/_interopNamespaceDefault(React);
 var ReactDOM__namespace = /*#__PURE__*/_interopNamespaceDefault(ReactDOM);
-
-const styles = classVarianceAuthority.cva(`
-    dash-btn-base
-    select-none
-    min-h-11
-    flex
-    items-center
-    capitalize
-    transition-colors
-    hover:cursor-pointer
-    justify-center
-    font-dash-main
-  `, {
-  variants: {
-    variant: {
-      solid: '',
-      outline: 'dash-btn-outline border !bg-transparent'
-    },
-    colorScheme: {
-      brand: 'dash-btn-brand',
-      mint: 'dash-btn-mint',
-      gray: 'dash-btn-gray',
-      red: 'dash-btn-red',
-      lightBlue: 'dash-btn-lightBlue'
-    },
-    state: {
-      active: 'active:-translate-y-[-1px]',
-      disabled: 'hover:!cursor-not-allowed'
-    },
-    size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
-    }
-  },
-  compoundVariants: [
-  // outline variant
-  {
-    variant: 'outline',
-    state: 'disabled',
-    class: 'opacity-40'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    class: '!text-dash-brand'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    class: '!text-dash-mint'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    class: '!text-gray-700'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    class: '!text-red-700 hover:!bg-red-300/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    class: '!text-dash-brand/60'
-  },
-  // solid variant
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    class: '!bg-dash-brand/10 !text-dash-brand-dim'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    class: '!bg-dash-mint/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    class: '!bg-red-300/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    class: '!bg-dash-brand/5 !text-dash-brand/40'
-  }],
-  defaultVariants: {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'active',
-    size: 'md'
-  }
-});
-/**
- * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size.
- */
-const Button = _a => {
-  var {
-      children,
-      variant,
-      colorScheme,
-      size,
-      disabled = false,
-      className = ''
-    } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
-  const state = disabled ? 'disabled' : 'active';
-  const classes = styles({
-    variant,
-    colorScheme,
-    size,
-    state
-  }) + (className !== '' ? ` ${className}` : '');
-  return jsxRuntime.jsx("button", Object.assign({
-    className: classes,
-    disabled: disabled
-  }, props, {
-    children: children
-  }));
-};
 
 const ThemeContext = /*#__PURE__*/React.createContext(undefined);
 /**
@@ -215,6 +96,285 @@ function useTheme() {
   }
   return context;
 }
+
+const styles = classVarianceAuthority.cva(`
+    dash-btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    variant: {
+      solid: '',
+      outline: 'dash-btn-outline border !bg-transparent'
+    },
+    colorScheme: {
+      brand: '',
+      mint: '',
+      gray: '',
+      red: '',
+      lightBlue: '',
+      lightGray: ''
+    },
+    state: {
+      active: 'active:-translate-y-[-1px]',
+      disabled: 'hover:!cursor-not-allowed'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  compoundVariants: [
+  // solid variant color schemes - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!bg-gray-200 !text-gray-700 hover:!bg-gray-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!bg-red-200 !text-red-700 hover:!bg-red-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!bg-[rgba(12,28,51,0.03)] !text-[#0C1C33] hover:!bg-[rgba(12,28,51,0.06)]'
+  },
+  // solid variant color schemes - dark theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!bg-gray-600 !text-gray-100 hover:!bg-gray-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!bg-red-600 !text-red-100 hover:!bg-red-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand hover:!bg-dash-brand/30'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-300 hover:!bg-gray-600/30'
+  },
+  // outline variant - light theme
+  {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'light',
+    class: 'opacity-40'
+  }, {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'dark',
+    class: 'opacity-50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!text-gray-700 !border-gray-700 hover:!bg-gray-200/50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-300 hover:!bg-gray-600/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!text-red-400 hover:!bg-red-500/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!text-dash-brand/60 !border-dash-brand/60 hover:!bg-dash-brand/5'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!text-dash-brand/80 !border-dash-brand/80 hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!text-[#0C1C33] !border-[#0C1C33]/20 hover:!bg-[rgba(12,28,51,0.03)]'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-600/50 hover:!bg-gray-700/10'
+  },
+  // solid variant - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
+  }, {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-mint/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-red-500/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/10 !text-dash-brand/50'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-[#0C1C33]/5 !text-[#0C1C33]/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'active',
+    size: 'md'
+  }
+});
+/**
+ * Button with solid or outline style, color schemes, disabled state,
+ * press animation, and customizable size. Supports light/dark theme.
+ */
+const Button = _a => {
+  var {
+      children,
+      variant,
+      colorScheme,
+      size,
+      disabled = false,
+      className = ''
+    } = _a,
+    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+  const {
+    theme
+  } = useTheme();
+  const state = disabled ? 'disabled' : 'active';
+  const classes = styles({
+    theme,
+    variant,
+    colorScheme,
+    size,
+    state
+  }) + (className !== '' ? ` ${className}` : '');
+  return jsxRuntime.jsx("button", Object.assign({
+    className: classes,
+    disabled: disabled
+  }, props, {
+    children: children
+  }));
+};
 
 const ArrowIcon = ({
   color = 'white',
@@ -531,6 +691,63 @@ const CheckIcon = ({
     })]
   });
 };
+const KeyIcon = ({
+  color = '#4C7EFF',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M14.0002 5.41699C14.0002 3.25388 12.2463 1.5 10.0832 1.5C7.9202 1.50018 6.16715 3.25399 6.16715 5.41699C6.16716 5.59622 6.17916 5.7722 6.2023 5.94434C6.22418 6.10708 6.24295 6.25021 6.25406 6.36523C6.26445 6.47287 6.27504 6.6168 6.25406 6.76367C6.22507 6.96632 6.17504 7.11454 6.07535 7.29297C5.95896 7.50119 5.76828 7.68206 5.62027 7.83008L1.64469 11.8047C1.57287 11.8765 1.53632 11.9136 1.5109 11.9414C1.49222 11.9619 1.49456 11.9619 1.50211 11.9502C1.50495 11.9368 1.50339 11.9359 1.50211 11.9639C1.5004 12.0015 1.50015 12.0531 1.50015 12.1543V13.5059C1.50016 13.7356 1.50047 13.8631 1.50797 13.9551C1.50902 13.968 1.51085 13.9788 1.51187 13.9873C1.52057 13.9884 1.5316 13.9911 1.54508 13.9922C1.63709 13.9997 1.76453 14 1.9943 14H3.34586C3.44746 14 3.49953 13.9998 3.53726 13.998C3.54201 13.9978 3.54587 13.9973 3.54898 13.9971C3.55141 13.9949 3.55495 13.9927 3.55875 13.9893C3.58663 13.9638 3.62368 13.9272 3.69547 13.8555L7.67008 9.88086C7.81809 9.73284 7.999 9.54119 8.20719 9.4248C8.38512 9.32541 8.53299 9.27507 8.73551 9.24609C8.88263 9.22498 9.02721 9.23569 9.13492 9.24609C9.24997 9.25721 9.39308 9.27596 9.55582 9.29785C9.72785 9.32099 9.90386 9.33299 10.0832 9.33301C12.2462 9.33301 14 7.57995 14.0002 5.41699ZM10.091 4.66699C10.5052 4.66699 10.841 5.00278 10.841 5.41699C10.8408 5.83106 10.5051 6.16699 10.091 6.16699H10.0832C9.66921 6.16682 9.33334 5.83095 9.33316 5.41699C9.33316 5.00289 9.6691 4.66717 10.0832 4.66699H10.091ZM15.5002 5.41699C15.5 8.40838 13.0746 10.833 10.0832 10.833C9.83693 10.833 9.59389 10.8172 9.35562 10.7852C9.18091 10.7617 9.07081 10.747 8.99039 10.7393C8.96929 10.7372 8.95363 10.736 8.94254 10.7354C8.93816 10.7391 8.93249 10.744 8.92594 10.75C8.88376 10.7884 8.82825 10.8438 8.73062 10.9414L4.75601 14.916C4.64689 15.0251 4.50896 15.1701 4.33707 15.2754C4.23454 15.3382 4.12482 15.3878 4.0109 15.4248L3.89566 15.458C3.69989 15.505 3.50042 15.5 3.34586 15.5H1.9943C1.78913 15.5 1.59017 15.5009 1.42301 15.4873C1.24693 15.4729 1.04068 15.4383 0.834139 15.333C0.546975 15.1866 0.312669 14.9536 0.16617 14.666C0.0609559 14.4595 0.0272345 14.2532 0.01285 14.0771C-0.00078215 13.91 0.000154127 13.711 0.000154698 13.5059V12.1543C0.000154157 11.9998 -0.00485276 11.8004 0.0421469 11.6045L0.07535 11.4893C0.112444 11.375 0.162926 11.2656 0.225741 11.1631C0.330953 10.9914 0.474786 10.8535 0.584139 10.7441L4.55875 6.76953C4.65638 6.67189 4.71173 6.6164 4.75015 6.57422C4.75616 6.56762 4.76002 6.56104 4.76383 6.55664C4.76313 6.54561 4.76287 6.5302 4.7609 6.50977C4.75313 6.42933 4.73848 6.3192 4.715 6.14453C4.68297 5.90629 4.66716 5.66325 4.66715 5.41699C4.66715 2.42556 7.09178 0.000176003 10.0832 0C13.0747 0 15.5002 2.42545 15.5002 5.41699Z',
+    fill: 'currentColor'
+  })
+});
+const ProtectedMessageIcon = ({
+  color = '#4C7EFF',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size * 15 / 16,
+  viewBox: '0 0 16 15',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M14.25 3.59962C14.25 3.13294 14.2498 2.8257 14.2314 2.59083C14.2137 2.36397 14.1823 2.26919 14.1563 2.21583C14.0746 2.04851 13.947 1.91824 13.7979 1.83887C13.7575 1.8175 13.6783 1.78743 13.4688 1.76954C13.2487 1.75077 12.9591 1.75001 12.5107 1.75001H3.48926C3.04091 1.75001 2.75133 1.75077 2.53125 1.76954C2.32167 1.78743 2.24247 1.81749 2.20215 1.83887C2.05308 1.91822 1.92543 2.04846 1.84375 2.21583C1.81772 2.2692 1.78632 2.36397 1.76856 2.59083C1.75019 2.8257 1.75 3.13294 1.75 3.59962V9.7754C1.75 10.2421 1.75019 10.5493 1.76856 10.7842C1.78632 11.0111 1.81773 11.1058 1.84375 11.1592C1.92545 11.3266 2.05315 11.4569 2.20215 11.5361C2.24247 11.5575 2.32166 11.5876 2.53125 11.6055C2.75132 11.6242 3.04091 11.625 3.48926 11.625H11.3018C11.4998 11.625 11.6723 11.6231 11.8457 11.6484C11.9885 11.6694 12.1304 11.7041 12.2666 11.752C12.4318 11.81 12.5843 11.8917 12.7617 11.9844L14.25 12.7607V3.59962ZM9.58301 5.50977C8.99673 5.43171 8.46424 5.20517 8 4.85645C7.53578 5.20517 7.0033 5.43171 6.41699 5.50977C6.41699 5.61046 6.41699 5.70806 6.41699 5.792C6.41699 7.2248 7.1403 8.31967 8 8.72462C8.8597 8.31967 9.58301 7.2248 9.58301 5.792V5.50977ZM11.083 5.792C11.083 7.83144 9.95571 9.69432 8.22852 10.2461C8.08008 10.2935 7.91992 10.2935 7.77149 10.2461C6.04429 9.69432 4.91699 7.83144 4.91699 5.792V4.792C4.91701 4.3778 5.25279 4.042 5.66699 4.042H5.95801C6.52078 4.042 7.01918 3.8118 7.44238 3.3418C7.58461 3.18384 7.78744 3.09376 8 3.09376C8.21256 3.09376 8.41539 3.18383 8.55762 3.3418C8.9808 3.8118 9.47924 4.042 10.042 4.042H10.333C10.7472 4.042 11.083 4.37779 11.083 4.792V5.792ZM15.75 14C15.75 14.2623 15.613 14.5057 15.3887 14.6416C15.1643 14.7775 14.8848 14.7865 14.6523 14.665L12.0674 13.3145C11.8531 13.2026 11.8096 13.1811 11.7695 13.167L11.6289 13.1328C11.5879 13.1268 11.5413 13.125 11.3018 13.125H3.48926C3.06658 13.125 2.702 13.1261 2.40332 13.1006C2.09499 13.0743 1.78953 13.016 1.49707 12.8604C1.06073 12.6282 0.711683 12.2604 0.495118 11.8164C0.351702 11.5223 0.298056 11.2151 0.273439 10.9004C0.249466 10.5935 0.250001 10.2182 0.250001 9.7754V3.59962C0.250001 3.15678 0.249465 2.78146 0.273439 2.47462C0.298057 2.15985 0.3517 1.85274 0.495118 1.5586C0.711701 1.11453 1.06081 0.746854 1.49707 0.514655C1.78953 0.359048 2.09499 0.300742 2.40332 0.274421C2.702 0.248928 3.06659 0.250007 3.48926 0.250007H12.5107C12.9334 0.250007 13.298 0.248928 13.5967 0.274421C13.905 0.30074 14.2105 0.359048 14.5029 0.514655C14.9391 0.746836 15.2883 1.11446 15.5049 1.5586C15.6483 1.85274 15.7019 2.15986 15.7266 2.47462C15.7505 2.78146 15.75 3.15679 15.75 3.59962V14Z',
+    fill: 'currentColor'
+  })
+});
+const SmartphoneIcon = ({
+  color = '#4C7EFF',
+  size = 12,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size * 16 / 12,
+  viewBox: '0 0 12 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M9.58301 3.48926C9.58301 3.04131 9.58257 2.75009 9.56446 2.52832C9.54705 2.31531 9.51704 2.23247 9.49512 2.18946C9.41795 2.03817 9.29498 1.91507 9.14356 1.83789C9.10056 1.81598 9.01772 1.78596 8.80469 1.76856C8.58301 1.75047 8.29228 1.75 7.84473 1.75H3.48926C3.04133 1.75 2.75008 1.75044 2.52832 1.76856C2.31531 1.78596 2.23248 1.81597 2.18946 1.83789C2.03815 1.91507 1.91507 2.03815 1.83789 2.18946C1.81597 2.23248 1.78596 2.31531 1.76856 2.52832C1.75044 2.75008 1.75 3.04132 1.75 3.48926V12.5107C1.75 12.9587 1.75044 13.2499 1.76856 13.4717C1.78596 13.6847 1.81598 13.7675 1.83789 13.8105C1.9151 13.9619 2.0382 14.085 2.18946 14.1621C2.23248 14.184 2.31532 14.214 2.52832 14.2314C2.75008 14.2496 3.04132 14.25 3.48926 14.25H7.84473C8.29228 14.25 8.58301 14.2495 8.80469 14.2314C9.01771 14.214 9.10056 14.184 9.14356 14.1621L9.25196 14.0957C9.35389 14.0215 9.4373 13.9239 9.49512 13.8105C9.51703 13.7676 9.54705 13.6847 9.56446 13.4717C9.58257 13.2499 9.58301 12.9587 9.58301 12.5107V3.48926ZM5.67481 11.917C6.08886 11.9172 6.42481 12.2529 6.42481 12.667C6.42463 13.0809 6.08875 13.4168 5.67481 13.417H5.667C5.25289 13.417 4.91717 13.0811 4.917 12.667C4.917 12.2528 5.25278 11.917 5.667 11.917H5.67481ZM6.44434 2.58301C6.85844 2.58301 7.19416 2.91895 7.19434 3.33301C7.19434 3.74722 6.85855 4.08301 6.44434 4.08301H4.88868C4.47456 4.08289 4.13868 3.74715 4.13868 3.33301C4.13885 2.91902 4.47467 2.58313 4.88868 2.58301H6.44434ZM11.083 12.5107C11.083 12.9339 11.0838 13.2968 11.0596 13.5938C11.0377 13.8613 10.9926 14.1258 10.8828 14.3818L10.832 14.4912C10.611 14.925 10.258 15.278 9.82422 15.499C9.5346 15.6465 9.2324 15.7016 8.92676 15.7266C8.62989 15.7508 8.2676 15.75 7.84473 15.75H3.48926C3.06611 15.75 2.70325 15.7508 2.40625 15.7266C2.10051 15.7016 1.79849 15.6466 1.50879 15.499C1.07488 15.278 0.721999 14.925 0.50098 14.4912C0.353385 14.2015 0.29842 13.8995 0.273441 13.5938C0.249186 13.2968 0.250003 12.9339 0.250003 12.5107V3.48926C0.250003 3.06611 0.249185 2.70324 0.273441 2.40625C0.298421 2.10051 0.353384 1.79849 0.50098 1.50879C0.722018 1.07496 1.07496 0.722018 1.50879 0.50098C1.7985 0.353384 2.10051 0.298421 2.40625 0.273441C2.70325 0.249185 3.06611 0.250003 3.48926 0.250003H7.84473C8.2676 0.250003 8.62989 0.249218 8.92676 0.273441C9.2324 0.298413 9.5346 0.353484 9.82422 0.50098C10.2579 0.721978 10.611 1.07494 10.832 1.50879L10.8828 1.61817C10.9926 1.87421 11.0377 2.13869 11.0596 2.40625C11.0838 2.70325 11.083 3.0661 11.083 3.48926V12.5107Z',
+    fill: 'currentColor'
+  })
+});
 
 const input = classVarianceAuthority.cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
@@ -593,6 +810,7 @@ const input = classVarianceAuthority.cva('w-full transition-all font-inter place
  * A versatile input component that adapts to light/dark theme,
  * supports various color schemes, sizes, variants, and states.
  * For password inputs, includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
  *
  * @example
  * <Input
@@ -600,6 +818,7 @@ const input = classVarianceAuthority.cva('w-full transition-all font-inter place
  *   placeholder='Enter password'
  *   colorScheme='brand'
  *   size='xl'
+ *   prefix="https://"
  * />
  */
 const Input = _a => {
@@ -611,9 +830,10 @@ const Input = _a => {
       error = false,
       success = false,
       disabled = false,
-      type
+      type,
+      prefix
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type"]);
+    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix"]);
   const {
     theme
   } = useTheme();
@@ -630,14 +850,53 @@ const Input = _a => {
   }) + ' ' + className;
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
+  const hasPrefix = Boolean(prefix);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  // Calculate padding based on prefix length
+  const getPrefixPadding = () => {
+    if (!prefix) return 0;
+    const prefixLength = typeof prefix === 'string' ? prefix.length : 4; // default for React nodes
+    // Base padding (1rem) + prefix width estimation (0.6rem per character) + extra space (0.5rem)
+    return prefixLength * 0.6 + 1.5;
+  };
+  // Render with prefix
+  if (hasPrefix) {
+    const leftPadding = getPrefixPadding();
+    return jsxRuntime.jsxs("div", {
+      className: 'relative',
+      children: [jsxRuntime.jsx("div", {
+        className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
+        children: prefix
+      }), jsxRuntime.jsx("input", Object.assign({
+        className: `${classes}${isPassword ? ' pr-12' : ''}`,
+        style: {
+          paddingLeft: `${leftPadding}rem`
+        },
+        disabled: disabled,
+        type: inputType
+      }, props)), isPassword && jsxRuntime.jsx("button", {
+        type: 'button',
+        className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
+        onClick: togglePasswordVisibility,
+        tabIndex: -1,
+        children: showPassword ? jsxRuntime.jsx(EyeClosedIcon, {
+          size: 16,
+          color: '#0C1C33'
+        }) : jsxRuntime.jsx(EyeOpenIcon, {
+          size: 16,
+          color: '#0C1C33'
+        })
+      })]
+    });
+  }
+  // Render password input without prefix
   if (isPassword) {
     return jsxRuntime.jsxs("div", {
       className: 'relative',
       children: [jsxRuntime.jsx("input", Object.assign({
-        className: classes + (isPassword ? ' pr-12' : ''),
+        className: classes + ' pr-12',
         disabled: disabled,
         type: inputType
       }, props)), jsxRuntime.jsx("button", {
@@ -655,6 +914,7 @@ const Input = _a => {
       })]
     });
   }
+  // Regular input without prefix
   return jsxRuntime.jsx("input", Object.assign({
     className: classes,
     disabled: disabled,
@@ -914,7 +1174,7 @@ const textStyles = classVarianceAuthority.cva('', {
     },
     color: {
       default: '',
-      blue: '!text-brand-dark dark:text-brand-dim',
+      blue: '!text-dash-brand-dark dark:text-dash-brand-dim',
       red: 'text-red-700'
     },
     size: {
@@ -1089,6 +1349,23 @@ const valueCard = classVarianceAuthority.cva('flex items-center transition-all o
     colorScheme: 'white',
     clickable: true,
     class: 'hover:bg-gray-100'
+  }, {
+    theme: 'dark',
+    colorScheme: 'white',
+    clickable: true,
+    class: 'hover:bg-gray-100'
+  },
+  // lightGray scheme hover
+  {
+    theme: 'light',
+    colorScheme: 'lightGray',
+    clickable: true,
+    class: 'hover:bg-dash-primary-die'
+  }, {
+    theme: 'dark',
+    colorScheme: 'lightGray',
+    clickable: true,
+    class: 'hover:bg-gray-600'
   },
   // yellow scheme hover
   {
@@ -6690,6 +6967,177 @@ const Select = _a => {
   });
 };
 
+const switchContainer = classVarianceAuthority.cva('flex transition-all duration-200 font-inter gap-2', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-gray-100',
+      dark: 'bg-dash-primary-dark-blue/10 outline outline-1 outline-white/15 outline-offset-[-1px]'
+    },
+    size: {
+      sm: 'p-1 rounded-xl',
+      md: 'p-2 rounded-2xl',
+      xl: 'p-3 rounded-3xl'
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [
+  // Light theme shadows
+  {
+    theme: 'light',
+    size: 'sm',
+    class: 'shadow-sm'
+  }, {
+    theme: 'light',
+    size: 'md',
+    class: 'shadow-lg'
+  }, {
+    theme: 'light',
+    size: 'xl',
+    class: 'shadow-xl'
+  },
+  // Dark theme shadows with brand color
+  {
+    theme: 'dark',
+    size: 'sm',
+    class: 'shadow-sm shadow-dash-brand/10'
+  }, {
+    theme: 'dark',
+    size: 'md',
+    class: 'shadow-lg shadow-dash-brand/10'
+  }, {
+    theme: 'dark',
+    size: 'xl',
+    class: 'shadow-xl shadow-dash-brand/10'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    size: 'md',
+    disabled: false
+  }
+});
+const switchButton = classVarianceAuthority.cva('flex-1 text-center transition-all duration-200 font-medium whitespace-nowrap cursor-pointer font-dash-main', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    size: {
+      sm: 'py-1 px-2 rounded-lg text-sm',
+      md: 'py-2 px-3 rounded-[0.625rem] text-[1rem]',
+      xl: 'py-3 px-6 rounded-2xl text-lg font-semibold'
+    },
+    selected: {
+      true: '',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'cursor-not-allowed opacity-50'
+    }
+  },
+  compoundVariants: [
+  // Selected state - light theme
+  {
+    theme: 'light',
+    selected: true,
+    class: 'bg-dash-brand text-white'
+  },
+  // Selected state - dark theme
+  {
+    theme: 'dark',
+    selected: true,
+    class: 'bg-dash-brand text-white'
+  },
+  // Unselected state - light theme
+  {
+    theme: 'light',
+    selected: false,
+    disabled: false,
+    class: 'text-dash-brand hover:bg-dash-brand/10 active:bg-dash-brand/20'
+  },
+  // Unselected state - dark theme
+  {
+    theme: 'dark',
+    selected: false,
+    disabled: false,
+    class: 'text-dash-brand hover:bg-dash-brand/10 active:bg-dash-brand/20'
+  },
+  // Disabled state - light theme
+  {
+    theme: 'light',
+    selected: false,
+    disabled: true,
+    class: 'text-gray-400'
+  },
+  // Disabled state - dark theme
+  {
+    theme: 'dark',
+    selected: false,
+    disabled: true,
+    class: 'text-gray-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    size: 'md',
+    selected: false,
+    disabled: false
+  }
+});
+/**
+ * A switch component for selecting between multiple options.
+ * Supports individual option disabling, hover states, and responsive sizing.
+ * Uses dash design system sizing and theming with automatic light/dark mode.
+ * @example
+ * // With disabled options
+ * <Switch
+ *   options={[
+ *     { label: 'Basic', value: 'basic' },
+ *     { label: 'Pro', value: 'pro', disabled: true },
+ *     { label: 'Free', value: 'free' }
+ *   ]}
+ *   value="basic"
+ *   onChange={(value) => console.log(value)}
+ * />
+ */
+function Switch({
+  options,
+  value,
+  onChange,
+  size = 'md',
+  className = '',
+  disabled = false
+}) {
+  const {
+    theme
+  } = useTheme();
+  const containerClasses = switchContainer({
+    theme,
+    size,
+    disabled
+  }) + ' ' + className;
+  return jsxRuntime.jsx("div", {
+    className: containerClasses,
+    children: options.map((option, index) => {
+      const isSelected = option.value === value;
+      const isOptionDisabled = disabled || option.disabled;
+      return jsxRuntime.jsx("button", {
+        onClick: () => !isOptionDisabled && onChange(option.value),
+        disabled: isOptionDisabled,
+        className: switchButton({
+          theme,
+          size,
+          selected: isSelected,
+          disabled: isOptionDisabled
+        }),
+        children: option.label
+      }, index);
+    })
+  });
+}
+
 // 9 different colors only for easy distinction (also a sweet spot for collisions)
 const COLORS_NB = 9;
 const DEFAULT_SATURATION = 95;
@@ -6787,6 +7235,9 @@ const List = ({
   className = '',
   size = 'sm'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const IconComponent = iconComponents[iconType];
   return jsxRuntime.jsx("ul", {
     className: `space-y-5 w-full ${className}`,
@@ -6794,7 +7245,8 @@ const List = ({
       className: 'flex items-start gap-4',
       children: [jsxRuntime.jsx(IconComponent, {
         size: 20,
-        className: 'flex-shrink-0'
+        className: 'flex-shrink-0',
+        color: theme === 'dark' ? '#4C7EFF' : '#4C7EFF'
       }), jsxRuntime.jsxs("div", {
         className: 'flex flex-col gap-1',
         children: [jsxRuntime.jsx(Text, {
@@ -6812,19 +7264,33 @@ const List = ({
   });
 };
 
-const bigNumberStyles = classVarianceAuthority.cva('inline-flex whitespace-nowrap');
+const bigNumberStyles = classVarianceAuthority.cva('inline-flex whitespace-nowrap', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const spaceStyles = classVarianceAuthority.cva('inline-block w-[3px]');
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
  * - `space`: groups separated by a fixed 3px block
  * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme.
  */
 const BigNumber = ({
   children,
   variant = 'space',
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   if (children === undefined || children === null) return null;
   const str = children.toString();
   if (variant === 'space') {
@@ -6835,7 +7301,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsxRuntime.jsx("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: groups.map((grp, i) => jsxRuntime.jsxs("span", {
         children: [jsxRuntime.jsx("span", {
           children: grp
@@ -6853,7 +7321,9 @@ const BigNumber = ({
       return acc;
     }, []);
     return jsxRuntime.jsxs("span", {
-      className: `${bigNumberStyles()} ${className}`,
+      className: `${bigNumberStyles({
+        theme
+      })} ${className}`,
       children: [groups.map((grp, i) => jsxRuntime.jsxs("span", {
         children: [jsxRuntime.jsx("span", {
           children: grp
@@ -7035,15 +7505,30 @@ const useDebounce = (value, options) => {
   };
 };
 
-const notActiveStyles = classVarianceAuthority.cva('text-sm text-gray-400');
+const notActiveStyles = classVarianceAuthority.cva('text-sm', {
+  variants: {
+    theme: {
+      light: 'text-gray-400',
+      dark: 'text-gray-500'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 function NotActive(_a) {
   var {
       children,
       className
     } = _a,
     props = tslib.__rest(_a, ["children", "className"]);
+  const {
+    theme
+  } = useTheme();
   return jsxRuntime.jsx("span", Object.assign({
-    className: `${notActiveStyles()} ${className !== null && className !== void 0 ? className : ''}`
+    className: `${notActiveStyles({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''}`
   }, props, {
     children: children !== null && children !== void 0 ? children : 'n/a'
   }));
@@ -7071,7 +7556,17 @@ function copyToClipboard(copyText = '', callback) {
   });
 }
 
-const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors');
+const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
+  variants: {
+    theme: {
+      light: 'hover:text-gray-600 active:text-gray-800',
+      dark: 'hover:text-gray-300 active:text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const CopyButton = _a => {
   var {
       text,
@@ -7084,7 +7579,9 @@ const CopyButton = _a => {
   } = useTheme();
   return jsxRuntime.jsx("button", Object.assign({
     type: 'button',
-    className: `${copyBtn()} ${className !== null && className !== void 0 ? className : ''} hover:text-gray-100 hover:cursor-pointer active:text-white`,
+    className: `${copyBtn({
+      theme
+    })} ${className !== null && className !== void 0 ? className : ''} hover:cursor-pointer`,
     onClick: e => {
       e.stopPropagation();
       e.preventDefault();
@@ -7092,7 +7589,8 @@ const CopyButton = _a => {
     }
   }, props, {
     children: jsxRuntime.jsx(CopyIcon, {
-      className: `${theme === 'light' ? 'text-black' : 'text-white'} w-4 h-4 active:text-gray-100 transition`
+      className: 'w-4 h-4 transition',
+      color: theme === 'light' ? '#000000' : '#ffffff'
     })
   }));
 };
@@ -7370,8 +7868,8 @@ const sizeClasses = {
   md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
-  '2xl': 'text-[2.375rem] leading-[1.3] tracking-[-0.3px]',
-  '3xl': 'text-[3rem] leading-[1.2] tracking-[-0.4px]'
+  '2xl': 'text-[2.375rem] leading-[1.3]',
+  '3xl': 'text-[3rem] leading-[1.2]'
 };
 const weightClasses = {
   normal: 'font-normal',
@@ -7381,11 +7879,20 @@ const weightClasses = {
   extrabold: 'font-extrabold'
 };
 const colorClasses = {
-  black: 'text-black',
-  gray: 'text-gray-600',
-  blue: 'text-blue-600',
-  red: 'text-red-600',
-  green: 'text-green-600'
+  light: {
+    black: 'text-black',
+    gray: 'text-gray-600',
+    blue: 'text-blue-600',
+    red: 'text-red-600',
+    green: 'text-green-600'
+  },
+  dark: {
+    black: 'text-white',
+    gray: 'text-gray-300',
+    blue: 'text-blue-400',
+    red: 'text-red-400',
+    green: 'text-green-400'
+  }
 };
 const Heading = ({
   as = 'h1',
@@ -7395,8 +7902,11 @@ const Heading = ({
   className = '',
   children
 }) => {
+  const {
+    theme
+  } = useTheme();
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[color], className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
   return jsxRuntime.jsx(Component, {
     className: classes,
     children: children
@@ -7456,10 +7966,21 @@ function getTimeDelta(startDate, endDate, format = 'default') {
   return 'Invalid format';
 }
 
-const wrapperStyles$1 = classVarianceAuthority.cva('inline');
+const wrapperStyles$1 = classVarianceAuthority.cva('inline', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * TimeDelta component renews a human-readable delta string periodically,
  * and optionally wraps it in a tooltip showing the exact date/time.
+ * Supports light/dark theme.
  */
 const TimeDelta = ({
   startDate,
@@ -7468,6 +7989,9 @@ const TimeDelta = ({
   // tooltipDate,
   format = 'default'
 }) => {
+  const {
+    theme
+  } = useTheme();
   const [timeDelta, setTimeDelta] = React.useState(null);
   // const tooltipDateObj = new Date(tooltipDate ?? endDate)
   React.useEffect(() => {
@@ -7497,7 +8021,9 @@ const TimeDelta = ({
   }
   // const showTooltip = showTimestampTooltip && format !== 'detailed' && !isNaN(tooltipDateObj.getTime())
   const content = jsxRuntime.jsx("span", {
-    className: wrapperStyles$1(),
+    className: wrapperStyles$1({
+      theme
+    }),
     children: timeDelta
   });
   // if (showTooltip) {
@@ -7520,10 +8046,32 @@ const TimeDelta = ({
 const wrapperStyles = classVarianceAuthority.cva('');
 const infoContainer = classVarianceAuthority.cva('flex flex-wrap items-center whitespace-nowrap -mt-1 -mb-1');
 const itemStyles = classVarianceAuthority.cva('mt-1 mb-1 mr-2 last:mr-0');
+const dateTextStyles = classVarianceAuthority.cva('text-[0.813rem]', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-gray-100'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const deltaContainerStyles = classVarianceAuthority.cva('inline-block px-[10px] py-[3px] border rounded-[4px] text-[0.688rem]', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(147,170,178,0.4)] text-[var(--chakra-colors-gray-250)]',
+      dark: 'border-gray-600 text-gray-400'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 /**
  * DateBlock component displays a date, optional calendar icon,
  * and relative time via TimeDelta. It can also show an optional
- * tooltip with the relative time when hovered.
+ * tooltip with the relative time when hovered. Supports light/dark theme.
  */
 const DateBlock = ({
   timestamp,
@@ -7532,6 +8080,9 @@ const DateBlock = ({
   // showRelativeTooltip = false,
   className = ''
 }) => {
+  const {
+    theme
+  } = useTheme();
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return null;
   const modes = {
@@ -7566,12 +8117,17 @@ const DateBlock = ({
   const content = jsxRuntime.jsxs("div", {
     className: infoContainer(),
     children: [modes[format].calendarIcon && jsxRuntime.jsx(CalendarIcon, {
-      className: `${itemStyles()} w-[12px] h-[14px] text-gray-250`
+      className: `${itemStyles()} w-[12px] h-[14px]`,
+      color: theme === 'dark' ? '#9CA3AF' : '#93AAB2'
     }), modes[format].date && jsxRuntime.jsx("div", {
-      className: `${itemStyles()} text-[0.813rem]`,
+      className: `${itemStyles()} ${dateTextStyles({
+        theme
+      })}`,
       children: formattedDate
     }), modes[format].delta && jsxRuntime.jsx("div", {
-      className: `${itemStyles()} inline-block px-[10px] py-[3px] border border-[rgba(147,170,178,0.4)] rounded-[4px] text-[var(--chakra-colors-gray-250)] text-[0.688rem]`,
+      className: `${itemStyles()} ${deltaContainerStyles({
+        theme
+      })}`,
       children: jsxRuntime.jsx(TimeDelta, {
         endDate: date,
         showTimestampTooltip: format !== 'all'
@@ -7595,12 +8151,17 @@ const DateBlock = ({
 /**
  * Renders an icon corresponding to the given `status`.
  * If `status` is not recognized, returns null.
+ * Colors adapt to light/dark theme unless overridden.
  */
 const TransactionStatusIcon = _a => {
   var {
-      status
+      status,
+      color
     } = _a,
-    props = tslib.__rest(_a, ["status"]);
+    props = tslib.__rest(_a, ["status", "color"]);
+  const {
+    theme
+  } = useTheme();
   const map = {
     SUCCESS: SuccessIcon,
     FAIL: ErrorIcon,
@@ -7609,7 +8170,101 @@ const TransactionStatusIcon = _a => {
     BROADCASTED: BroadcastedIcon
   };
   const IconComponent = map[status];
-  return IconComponent != null ? jsxRuntime.jsx(IconComponent, Object.assign({}, props)) : null;
+  // Default colors based on theme, if no color override provided
+  const defaultColors = {
+    light: {
+      SUCCESS: '#1CC400',
+      FAIL: '#F45858',
+      QUEUED: '#F4A358',
+      POOLED: '#008DE4',
+      BROADCASTED: '#008DE4'
+    },
+    dark: {
+      SUCCESS: '#22D32E',
+      FAIL: '#FF6B6B',
+      QUEUED: '#FFB366',
+      POOLED: '#42A5F5',
+      BROADCASTED: '#42A5F5'
+    }
+  };
+  const iconColor = color !== null && color !== void 0 ? color : defaultColors[theme][status];
+  return IconComponent != null ? jsxRuntime.jsx(IconComponent, Object.assign({
+    color: iconColor
+  }, props)) : null;
+};
+
+function ProgressStepBar({
+  currentStep,
+  totalSteps,
+  className = ''
+}) {
+  const {
+    theme
+  } = useTheme();
+  return jsxRuntime.jsx("div", {
+    className: `flex gap-2 w-full ${className}`,
+    children: Array.from({
+      length: totalSteps
+    }, (_, index) => jsxRuntime.jsx("div", {
+      className: `h-1.5 rounded-2xl flex-1 transition-colors ${index < currentStep ? theme === 'dark' ? 'bg-[var(--color-dash-brand-dim)]' : 'bg-[var(--color-dash-brand)]' : theme === 'dark' ? 'bg-gray-700' : 'bg-[rgba(76,126,255,0.16)]'}`
+    }, index))
+  });
+}
+
+/**
+ * Dash Logo component with customizable size and color
+ * Original aspect ratio: 30:25 (1.2:1)
+ *
+ * SVG is wrapped in a container that centers the logo and supports:
+ * - containerPadding: padding around the logo
+ * - containerSize: width/height of the container
+ * - containerClassName: CSS class for the container
+ * - minWidth/minHeight: min-content (adapts to logo size)
+ */
+const DashLogo = ({
+  color = '#4C7EFF',
+  size,
+  width,
+  height,
+  className = '',
+  onClick,
+  containerPadding,
+  containerSize,
+  containerClassName = ''
+}) => {
+  const logoWidth = width || size || 30;
+  const logoHeight = height || (size ? size * 25 / 30 : 25);
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 'min-content',
+    minHeight: 'min-content',
+    padding: typeof containerPadding === 'number' ? `${containerPadding}px` : containerPadding,
+    width: typeof containerSize === 'number' ? `${containerSize}px` : containerSize,
+    height: typeof containerSize === 'number' ? `${containerSize}px` : containerSize,
+    cursor: onClick ? 'pointer' : 'default'
+  };
+  return jsxRuntime.jsx("div", {
+    className: containerClassName,
+    style: containerStyle,
+    onClick: onClick,
+    children: jsxRuntime.jsxs("svg", {
+      width: logoWidth,
+      height: logoHeight,
+      viewBox: '0 0 30 25',
+      fill: 'none',
+      xmlns: 'http://www.w3.org/2000/svg',
+      className: className,
+      children: [jsxRuntime.jsx("path", {
+        d: 'M19.6465 0C29.2466 2.13767e-05 30.9542 5.2464 29.585 12.6006C28.6773 17.5547 26.3845 21.3391 22.5537 23.1084C20.8153 23.9084 19.1848 24.3555 15.3389 24.3555H4.44629L5.33887 19.293H14.9229C20.6921 19.3084 22.2159 16.8009 22.9697 14.6162C23.2467 13.8008 23.9084 11.2619 23.9238 9.76953C23.9699 6.84642 22.5383 5.07715 17.6768 5.07715L7.81543 5.06152L8.72363 0H19.6465Z',
+        fill: color
+      }), jsxRuntime.jsx("path", {
+        d: 'M15.2002 9.63184C15.2002 9.63184 15.0775 10.232 14.7236 11.709C14.4621 12.8321 14.0462 14.6934 11.1846 14.6934H0C0.00327153 14.6775 0.12745 14.0734 0.476562 12.6162C0.73811 11.493 1.15435 9.63184 4.01562 9.63184H15.2002Z',
+        fill: color
+      })]
+    })
+  });
 };
 
 exports.ArrowIcon = ArrowIcon;
@@ -7621,6 +8276,7 @@ exports.CalendarIcon = CalendarIcon;
 exports.CheckIcon = CheckIcon;
 exports.CopyButton = CopyButton;
 exports.CopyIcon = CopyIcon;
+exports.DashLogo = DashLogo;
 exports.DateBlock = DateBlock;
 exports.ErrorIcon = ErrorIcon;
 exports.EyeClosedIcon = EyeClosedIcon;
@@ -7628,12 +8284,17 @@ exports.EyeOpenIcon = EyeOpenIcon;
 exports.Heading = Heading;
 exports.Identifier = Identifier;
 exports.Input = Input;
+exports.KeyIcon = KeyIcon;
 exports.List = List;
 exports.NotActive = NotActive;
 exports.PooledIcon = PooledIcon;
+exports.ProgressStepBar = ProgressStepBar;
+exports.ProtectedMessageIcon = ProtectedMessageIcon;
 exports.QueuedIcon = QueuedIcon;
 exports.Select = Select;
+exports.SmartphoneIcon = SmartphoneIcon;
 exports.SuccessIcon = SuccessIcon;
+exports.Switch = Switch;
 exports.Text = Text;
 exports.Textarea = Textarea;
 exports.ThemeProvider = ThemeProvider;

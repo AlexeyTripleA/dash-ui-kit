@@ -10,7 +10,10 @@ import {
   CalendarIcon,
   EyeOpenIcon,
   EyeClosedIcon,
-  CheckIcon
+  CheckIcon,
+  KeyIcon,
+  ProtectedMessageIcon,
+  SmartphoneIcon
 } from './index'
 
 const meta: Meta = {
@@ -88,6 +91,18 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <CheckIcon />
         <span className="text-sm">CheckIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <KeyIcon />
+        <span className="text-sm">KeyIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ProtectedMessageIcon />
+        <span className="text-sm">ProtectedMessageIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SmartphoneIcon />
+        <span className="text-sm">SmartphoneIcon</span>
       </div>
     </div>
   ),
@@ -286,6 +301,36 @@ export const ColorVariations: StoryObj = {
   }
 }
 
+// Key Icon
+export const Key: StoryObj = {
+  render: (args) => <KeyIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Protected Message Icon
+export const ProtectedMessage: StoryObj = {
+  render: (args) => <ProtectedMessageIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Smartphone Icon
+export const Smartphone: StoryObj = {
+  render: (args) => <SmartphoneIcon {...args} />,
+  args: {
+    size: 12,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -312,6 +357,13 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Check clicked!')}
         />
         <span className="text-xs">Mark as done</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <KeyIcon 
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Key clicked!')}
+        />
+        <span className="text-xs">Security key</span>
       </div>
     </div>
   ),

@@ -12,7 +12,7 @@ const meta: Meta<ButtonProps> = {
     },
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['brand', 'mint', 'gray', 'red', 'lightBlue'],
+      options: ['brand', 'mint', 'gray', 'lightGray', 'red', 'lightBlue'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -73,6 +73,7 @@ export const Colors: StoryFn<ButtonProps> = () => (
     <Button colorScheme={'brand'}>Brand Button</Button>
     <Button colorScheme={'mint'}>Mint Button</Button>
     <Button colorScheme={'gray'}>Gray Button</Button>
+    <Button colorScheme={'lightGray'}>Light Gray Button</Button>
   </>
 )
 
@@ -88,5 +89,6 @@ export const All: StoryFn<ButtonProps> = () => (
     <Button colorScheme={'brand'}>Brand Button</Button>
     <Button colorScheme={'mint'}>Mint Button</Button>
     <Button colorScheme={'gray'}>Gray Button</Button>
+    <Button colorScheme={'lightGray'}>Light Gray Button</Button>
   </>
 )

@@ -70,16 +70,18 @@ const input = cva(
 
 type InputVariants = VariantProps<typeof input>
 
-export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, Omit<InputVariants, 'theme' | 'disabled'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'>, Omit<InputVariants, 'theme' | 'disabled'> {
   className?: string
   error?: boolean
   success?: boolean
+  prefix?: string | React.ReactNode
 }
 
 /**
  * A versatile input component that adapts to light/dark theme,
  * supports various color schemes, sizes, variants, and states.
  * For password inputs, includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
  *
  * @example
  * <Input
@@ -87,6 +89,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
  *   placeholder='Enter password'
  *   colorScheme='brand'
  *   size='xl'
+ *   prefix="https://"
  * />
  */
 export const Input: React.FC<InputProps> = ({
@@ -98,6 +101,7 @@ export const Input: React.FC<InputProps> = ({
   success = false,
   disabled = false,
   type,
+  prefix,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -118,16 +122,57 @@ export const Input: React.FC<InputProps> = ({
 
   const isPassword = type === 'password'
   const inputType = isPassword && showPassword ? 'text' : type
+  const hasPrefix = Boolean(prefix)
 
   const togglePasswordVisibility = (): void => {
     setShowPassword(!showPassword)
   }
 
+  // Calculate padding based on prefix length
+  const getPrefixPadding = () => {
+    if (!prefix) return 0
+    const prefixLength = typeof prefix === 'string' ? prefix.length : 4 // default for React nodes
+    // Base padding (1rem) + prefix width estimation (0.6rem per character) + extra space (0.5rem)
+    return prefixLength * 0.6 + 1.5
+  }
+
+  // Render with prefix
+  if (hasPrefix) {
+    const leftPadding = getPrefixPadding()
+    return (
+      <div className='relative'>
+        <div className='absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none'>
+          {prefix}
+        </div>
+        <input
+          className={`${classes}${isPassword ? ' pr-12' : ''}`}
+          style={{ paddingLeft: `${leftPadding}rem` }}
+          disabled={disabled}
+          type={inputType}
+          {...props}
+        />
+        {isPassword && (
+          <button
+            type='button'
+            className='absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none'
+            onClick={togglePasswordVisibility}
+            tabIndex={-1}
+          >
+            {showPassword
+              ? <EyeClosedIcon size={16} color='#0C1C33' />
+              : <EyeOpenIcon size={16} color='#0C1C33' />}
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  // Render password input without prefix
   if (isPassword) {
     return (
       <div className='relative'>
         <input
-          className={classes + (isPassword ? ' pr-12' : '')}
+          className={classes + ' pr-12'}
           disabled={disabled}
           type={inputType}
           {...props}
@@ -146,6 +191,7 @@ export const Input: React.FC<InputProps> = ({
     )
   }
 
+  // Regular input without prefix
   return (
     <input
       className={classes}
