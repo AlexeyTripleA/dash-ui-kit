@@ -18,4 +18,4 @@ export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey 
 export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar';
 export { DashLogo, type DashLogoProps } from './dashLogo';
 export type { TimeDeltaFormat } from '../utils/datetime';
-export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon } from './icons';
+export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon } from './icons';

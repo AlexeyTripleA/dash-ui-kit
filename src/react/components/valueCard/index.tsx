@@ -53,6 +53,10 @@ const valueCard = cva(
       { colorScheme: 'lightBlue', clickable: true, class: 'hover:bg-dash-brand/15' },
       // white
       { theme: 'light', colorScheme: 'white', clickable: true, class: 'hover:bg-gray-100' },
+      { theme: 'dark', colorScheme: 'white', clickable: true, class: 'hover:bg-gray-100' },
+      // lightGray scheme hover
+      { theme: 'light', colorScheme: 'lightGray', clickable: true, class: 'hover:bg-dash-primary-die' },
+      { theme: 'dark', colorScheme: 'lightGray', clickable: true, class: 'hover:bg-gray-600' },
       // yellow scheme hover
       { colorScheme: 'yellow', clickable: true, class: 'hover:bg-dash-yellow' }
     ],

@@ -11,7 +11,10 @@ import {
   CalendarIcon,
   EyeOpenIcon,
   EyeClosedIcon,
-  CheckIcon
+  CheckIcon,
+  KeyIcon,
+  ProtectedMessageIcon,
+  SmartphoneIcon
 } from './index'
 
 // Test suite for all icons
@@ -26,7 +29,10 @@ const icons = [
   { Component: CalendarIcon, name: 'CalendarIcon', defaultSize: 14, defaultColor: 'currentColor' },
   { Component: EyeOpenIcon, name: 'EyeOpenIcon', defaultSize: 16, defaultColor: 'currentColor' },
   { Component: EyeClosedIcon, name: 'EyeClosedIcon', defaultSize: 16, defaultColor: 'currentColor' },
-  { Component: CheckIcon, name: 'CheckIcon', defaultSize: 20, defaultColor: '#4C7EFF' }
+  { Component: CheckIcon, name: 'CheckIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
+  { Component: KeyIcon, name: 'KeyIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: ProtectedMessageIcon, name: 'ProtectedMessageIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' }
 ]
 
 describe('Icons', () => {
@@ -155,6 +161,34 @@ describe('Icons', () => {
       expect(line).toHaveAttribute('y1', '15')
       expect(line).toHaveAttribute('x2', '15')
       expect(line).toHaveAttribute('y2', '1')
+    })
+
+    it('KeyIcon has correct aspect ratio and renders correctly', () => {
+      render(<KeyIcon size={32} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '32')
+      expect(svg).toHaveAttribute('height', '32')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ProtectedMessageIcon has correct aspect ratio', () => {
+      render(<ProtectedMessageIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '15') // 16 * 15 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 15')
+    })
+
+    it('SmartphoneIcon has correct aspect ratio', () => {
+      render(<SmartphoneIcon size={12} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '12')
+      expect(svg).toHaveAttribute('height', '16') // 12 * 16 / 12
+      expect(svg).toHaveAttribute('viewBox', '0 0 12 16')
     })
   })
 

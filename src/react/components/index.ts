@@ -29,5 +29,8 @@ export {
   CalendarIcon,
   EyeOpenIcon,
   EyeClosedIcon,
-  CheckIcon
+  CheckIcon,
+  KeyIcon,
+  ProtectedMessageIcon,
+  SmartphoneIcon
 } from './icons'

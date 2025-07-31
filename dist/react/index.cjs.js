@@ -1292,6 +1292,23 @@ const valueCard = classVarianceAuthority.cva('flex items-center transition-all o
     colorScheme: 'white',
     clickable: true,
     class: 'hover:bg-gray-100'
+  }, {
+    theme: 'dark',
+    colorScheme: 'white',
+    clickable: true,
+    class: 'hover:bg-gray-100'
+  },
+  // lightGray scheme hover
+  {
+    theme: 'light',
+    colorScheme: 'lightGray',
+    clickable: true,
+    class: 'hover:bg-dash-primary-die'
+  }, {
+    theme: 'dark',
+    colorScheme: 'lightGray',
+    clickable: true,
+    class: 'hover:bg-gray-600'
   },
   // yellow scheme hover
   {
