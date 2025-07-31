@@ -30,6 +30,9 @@ export {
   CalendarIcon,
   EyeOpenIcon,
   EyeClosedIcon,
-  CheckIcon
+  CheckIcon,
+  KeyIcon,
+  ProtectedMessageIcon,
+  SmartphoneIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'
