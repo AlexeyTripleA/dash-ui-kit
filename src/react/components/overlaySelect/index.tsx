@@ -70,15 +70,20 @@ const overlayContent = cva(
   {
     variants: {
       theme: {
-        light: 'bg-white border border-[rgba(12,28,51,0.05)] rounded-[15px]',
-        dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] rounded-[15px] backdrop-blur-[256px]'
+        light: 'bg-white border border-[rgba(12,28,51,0.05)]',
+        dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] backdrop-blur-[256px]'
+      },
+      size: {
+        sm: 'rounded-[0.625rem]',
+        md: 'rounded-[0.875rem]',
+        xl: 'rounded-[1rem]'
       }
     }
   }
 )
 
 const overlayItem = cva(
-  'relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+  'relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none',
   {
     variants: {
       theme: {
@@ -94,22 +99,7 @@ const overlayItem = cva(
   }
 )
 
-const addButton = cva(
-  'w-full flex items-center justify-center border-t transition-colors',
-  {
-    variants: {
-      theme: {
-        light: 'border-[rgba(12,28,51,0.05)] text-[#0C1C33] hover:bg-gray-50',
-        dark: 'border-[rgba(255,255,255,0.15)] text-white hover:bg-[rgba(255,255,255,0.1)]'
-      },
-      size: {
-        sm: 'dash-block-sm',
-        md: 'dash-block-md', 
-        xl: 'dash-block-xl'
-      }
-    }
-  }
-)
+
 
 type OverlaySelectVariants = VariantProps<typeof overlaySelectTrigger>
 
@@ -118,11 +108,6 @@ export interface OverlaySelectOption {
   label: string
   disabled?: boolean
   content?: React.ReactNode
-  buttons?: {
-    label: string
-    onClick: (optionValue: string) => void
-    variant?: 'default' | 'danger'
-  }[]
 }
 
 export interface OverlaySelectProps extends Omit<OverlaySelectVariants, 'theme' | 'disabled'> {
@@ -139,9 +124,7 @@ export interface OverlaySelectProps extends Omit<OverlaySelectVariants, 'theme' 
   disabled?: boolean
   name?: string
   overlayLabel?: string
-  showAddButton?: boolean
-  onAddClick?: () => void
-  addButtonLabel?: string
+
   maxHeight?: string
 }
 
@@ -164,27 +147,13 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 )
 
-const PlusIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg
-    width='15'
-    height='15'
-    viewBox='0 0 15 15'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-    className={className}
-  >
-    <path
-      d='M8 2.75a0.5 0.5 0 0 0-1 0V7H2.75a0.5 0.5 0 0 0 0 1H7v4.25a0.5 0.5 0 0 0 1 0V8h4.25a0.5 0.5 0 0 0 0-1H8V2.75Z'
-      fill='currentColor'
-      fillRule='evenodd'
-      clipRule='evenodd'
-    />
-  </svg>
-)
+
+
+
 
 /**
  * Overlay select component that opens above the trigger with overlay positioning.
- * Supports buttons in options and add functionality.
+ * Simple select component without additional button functionality.
  */
 export const OverlaySelect: React.FC<OverlaySelectProps> = ({
   className = '',
@@ -202,9 +171,6 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
   placeholder = 'Select an option...',
   name,
   overlayLabel,
-  showAddButton = false,
-  onAddClick,
-  addButtonLabel = 'Add new',
   maxHeight = '200px',
   ...props
 }) => {
@@ -225,9 +191,9 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
     disabled
   }) + ' ' + className
 
-  const contentClasses = overlayContent({ theme })
+  const contentClasses = overlayContent({ theme, size })
   const itemClasses = overlayItem({ theme, size })
-  const addButtonClasses = addButton({ theme, size })
+
 
   const selectedOption = options.find(opt => opt.value === value)
 
@@ -236,10 +202,7 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
     setIsOpen(false)
   }
 
-  const handleAddClick = () => {
-    onAddClick?.()
-    setIsOpen(false)
-  }
+
 
   return (
     <div className='relative'>
@@ -284,7 +247,7 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
           >
             {/* Overlay label */}
             {overlayLabel && (
-              <div className={`${itemClasses} font-medium pointer-events-none border-b ${
+              <div className={`${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${
                 theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
               }`}>
                 {overlayLabel}
@@ -292,67 +255,25 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
             )}
             
             {/* Options */}
-            <div className='overflow-y-auto' style={{ maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'} - ${showAddButton ? '50px' : '0px'})` }}>
+            <div className='overflow-y-auto' style={{ maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})` }}>
               {options.map((option, index) => (
-                <div key={option.value}>
-                  <div
-                    className={`${itemClasses} ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
-                      index < options.length - 1 ? `border-b ${
-                        theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
-                      }` : ''
-                    }`}
-                    onClick={() => !option.disabled && handleOptionClick(option.value)}
-                  >
-                    <div className='w-full flex-1 text-left'>
-                      {option.content || option.label}
-                    </div>
+                <div
+                  key={option.value}
+                  className={`${itemClasses} ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
+                    index < options.length - 1 
+                      ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`
+                      : ''
+                  }`}
+                  onClick={() => !option.disabled && handleOptionClick(option.value)}
+                >
+                  <div className='w-full flex-1 text-left'>
+                    {option.content || option.label}
                   </div>
-                  
-                  {/* Option buttons */}
-                  {option.buttons && option.buttons.length > 0 && (
-                    <div className={`flex gap-2 px-3 pb-2 ${
-                      index < options.length - 1 ? `border-b ${
-                        theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
-                      }` : ''
-                    }`}>
-                      {option.buttons.map((button, idx) => (
-                        <button
-                          key={idx}
-                          type='button'
-                          className={`px-3 py-1 text-xs rounded transition-colors ${
-                            button.variant === 'danger'
-                              ? theme === 'dark' 
-                                ? 'bg-red-900 text-red-200 hover:bg-red-800'
-                                : 'bg-red-100 text-red-700 hover:bg-red-200'
-                              : theme === 'dark'
-                                ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            button.onClick(option.value)
-                          }}
-                        >
-                          {button.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
             
-            {/* Add button */}
-            {showAddButton && (
-              <button
-                type='button'
-                className={addButtonClasses}
-                onClick={handleAddClick}
-              >
-                <PlusIcon className='w-4 h-4 mr-2' />
-                {addButtonLabel}
-              </button>
-            )}
+
           </div>
         </>
       )}

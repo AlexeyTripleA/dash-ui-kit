@@ -17,7 +17,7 @@ const basicOptions = [
   { value: 'wallet3', label: 'Trading Wallet' },
 ]
 
-const walletsWithButtons = [
+const walletsWithContent = [
   {
     value: 'wallet1',
     label: 'Main Wallet',
@@ -31,11 +31,7 @@ const walletsWithButtons = [
           <div className='text-xs text-gray-500'>0x1234...5678</div>
         </div>
       </div>
-    ),
-    buttons: [
-      { label: 'Edit', onClick: (value: string) => console.log('Edit', value) },
-      { label: 'Delete', onClick: (value: string) => console.log('Delete', value), variant: 'danger' as const }
-    ]
+    )
   },
   {
     value: 'wallet2', 
@@ -50,11 +46,7 @@ const walletsWithButtons = [
           <div className='text-xs text-gray-500'>0x9876...5432</div>
         </div>
       </div>
-    ),
-    buttons: [
-      { label: 'Edit', onClick: (value: string) => console.log('Edit', value) },
-      { label: 'Delete', onClick: (value: string) => console.log('Delete', value), variant: 'danger' as const }
-    ]
+    )
   },
   {
     value: 'wallet3',
@@ -69,11 +61,7 @@ const walletsWithButtons = [
           <div className='text-xs text-gray-500'>0xabcd...efgh</div>
         </div>
       </div>
-    ),
-    buttons: [
-      { label: 'Edit', onClick: (value: string) => console.log('Edit', value) },
-      { label: 'Delete', onClick: (value: string) => console.log('Delete', value), variant: 'danger' as const }
-    ]
+    )
   },
 ]
 
@@ -101,15 +89,26 @@ const meta: Meta<OverlaySelectProps> = {
     success: { control: 'boolean' },
     border: { control: 'boolean' },
     showArrow: { control: 'boolean' },
-    showAddButton: { control: 'boolean' },
     onValueChange: { action: 'value-changed' },
-    onAddClick: { action: 'add-clicked' },
   },
 }
 
 export default meta
 
-const Template: StoryFn<OverlaySelectProps> = args => <OverlaySelect {...args} />
+const Template: StoryFn<OverlaySelectProps> = (args) => {
+  const [value, setValue] = React.useState<string>(args.value || '')
+  
+  return (
+    <OverlaySelect 
+      {...args} 
+      value={value}
+      onValueChange={(newValue) => {
+        setValue(newValue)
+        args.onValueChange?.(newValue)
+      }}
+    />
+  )
+}
 
 export const Default = Template.bind({})
 Default.args = {
@@ -130,48 +129,19 @@ WithValue.args = {
   border: true,
 }
 
-export const WithButtons = Template.bind({})
-WithButtons.args = {
-  options: walletsWithButtons,
+export const WithContent = Template.bind({})
+WithContent.args = {
+  options: walletsWithContent,
   placeholder: 'Select wallet...',
   overlayLabel: 'Your wallet',
   size: 'xl',
   border: true,
 }
 
-export const WithAddButton = Template.bind({})
-WithAddButton.args = {
-  options: walletsWithButtons,
-  placeholder: 'Select wallet...',
-  overlayLabel: 'Your wallet',
-  showAddButton: true,
-  addButtonLabel: 'Add new wallet',
-  size: 'xl',
-  border: true,
-}
+
 
 export const FullExample: StoryFn<OverlaySelectProps> = () => {
   const [selectedWallet, setSelectedWallet] = React.useState<string>('')
-  
-  const handleEdit = (value: string) => {
-    console.log('Editing wallet:', value)
-  }
-  
-  const handleDelete = (value: string) => {
-    console.log('Deleting wallet:', value)
-  }
-  
-  const handleAdd = () => {
-    console.log('Adding new wallet')
-  }
-  
-  const optionsWithHandlers = walletsWithButtons.map(option => ({
-    ...option,
-    buttons: [
-      { label: 'Edit', onClick: handleEdit },
-      { label: 'Delete', onClick: handleDelete, variant: 'danger' as const }
-    ]
-  }))
   
   return (
     <div className='max-w-md space-y-4'>
@@ -180,14 +150,11 @@ export const FullExample: StoryFn<OverlaySelectProps> = () => {
           Choose Wallet
         </label>
         <OverlaySelect
-          options={optionsWithHandlers}
+          options={walletsWithContent}
           value={selectedWallet}
           onValueChange={setSelectedWallet}
           placeholder='Select wallet...'
           overlayLabel='Your wallet'
-          showAddButton={true}
-          addButtonLabel='Add wallet'
-          onAddClick={handleAdd}
           size='xl'
           colorScheme='brand'
         />
@@ -205,75 +172,102 @@ export const FullExample: StoryFn<OverlaySelectProps> = () => {
 
 
 
-export const Sizes: StoryFn<OverlaySelectProps> = () => (
-  <div className='space-y-8'>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Small</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Small overlay select...' 
-        overlayLabel='Your wallet'
-        size='sm' 
-      />
-    </div>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Medium</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Medium overlay select...' 
-        overlayLabel='Your wallet'
-        size='md' 
-      />
-    </div>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Extra Large</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Extra large overlay select...' 
-        overlayLabel='Your wallet'
-        size='xl' 
-      />
-    </div>
-  </div>
-)
+export const Sizes: StoryFn<OverlaySelectProps> = () => {
+  const [smallValue, setSmallValue] = React.useState<string>('')
+  const [mediumValue, setMediumValue] = React.useState<string>('')
+  const [largeValue, setLargeValue] = React.useState<string>('')
 
-export const ColorSchemes: StoryFn<OverlaySelectProps> = () => (
-  <div className='space-y-8'>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Default</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Default color scheme...' 
-        overlayLabel='Your wallet'
-        colorScheme='default'
-      />
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Small</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Small overlay select...' 
+          overlayLabel='Your wallet'
+          size='sm'
+          value={smallValue}
+          onValueChange={setSmallValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Medium</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Medium overlay select...' 
+          overlayLabel='Your wallet'
+          size='md'
+          value={mediumValue}
+          onValueChange={setMediumValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Extra Large</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Extra large overlay select...' 
+          overlayLabel='Your wallet'
+          size='xl'
+          value={largeValue}
+          onValueChange={setLargeValue}
+        />
+      </div>
     </div>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Brand</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Brand color scheme...' 
-        overlayLabel='Your wallet'
-        colorScheme='brand'
-      />
+  )
+}
+
+export const ColorSchemes: StoryFn<OverlaySelectProps> = () => {
+  const [defaultValue, setDefaultValue] = React.useState<string>('')
+  const [brandValue, setBrandValue] = React.useState<string>('')
+  const [errorValue, setErrorValue] = React.useState<string>('')
+  const [successValue, setSuccessValue] = React.useState<string>('')
+
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Default</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Default color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='default'
+          value={defaultValue}
+          onValueChange={setDefaultValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Brand</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Brand color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='brand'
+          value={brandValue}
+          onValueChange={setBrandValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Error</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Error color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='error'
+          value={errorValue}
+          onValueChange={setErrorValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Success</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Success color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='success'
+          value={successValue}
+          onValueChange={setSuccessValue}
+        />
+      </div>
     </div>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Error</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Error color scheme...' 
-        overlayLabel='Your wallet'
-        colorScheme='error'
-      />
-    </div>
-    <div>
-      <label className='block text-sm font-medium mb-1'>Success</label>
-      <OverlaySelect 
-        options={basicOptions} 
-        placeholder='Success color scheme...' 
-        overlayLabel='Your wallet'
-        colorScheme='success'
-      />
-    </div>
-  </div>
-)
+  )
+}
