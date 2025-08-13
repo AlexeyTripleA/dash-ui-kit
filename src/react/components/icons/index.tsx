@@ -375,4 +375,27 @@ export const SmartphoneIcon: React.FC<IconProps> = ({
       fill='currentColor'
     />
   </svg>
+)
+
+export const CrossIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={(size * 17) / 16}
+    viewBox='0 0 16 17'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M13.5693 3.40266L13.0973 2.93066L8 8.02866L2.90266 2.93066L2.43066 3.40266L7.52866 8.5L2.43066 13.5973L2.90266 14.0693L8 8.97133L13.0973 14.0693L13.5693 13.5973L8.47133 8.5L13.5693 3.40266Z'
+      fill='currentColor'
+    />
+  </svg>
 ) 
