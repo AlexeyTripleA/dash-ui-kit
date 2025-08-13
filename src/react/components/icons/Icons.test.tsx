@@ -14,7 +14,8 @@ import {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon
 } from './index'
 
 // Test suite for all icons
@@ -32,7 +33,8 @@ const icons = [
   { Component: CheckIcon, name: 'CheckIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
   { Component: KeyIcon, name: 'KeyIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
   { Component: ProtectedMessageIcon, name: 'ProtectedMessageIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
-  { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' }
+  { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' },
+  { Component: CrossIcon, name: 'CrossIcon', defaultSize: 16, defaultColor: '#0C1C33' }
 ]
 
 describe('Icons', () => {
@@ -189,6 +191,16 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('width', '12')
       expect(svg).toHaveAttribute('height', '16') // 12 * 16 / 12
       expect(svg).toHaveAttribute('viewBox', '0 0 12 16')
+    })
+
+    it('CrossIcon has correct aspect ratio', () => {
+      render(<CrossIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '17') // 16 * 17 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })
 

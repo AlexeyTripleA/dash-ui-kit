@@ -13,7 +13,8 @@ import {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon
 } from './index'
 
 const meta: Meta = {
@@ -103,6 +104,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <SmartphoneIcon />
         <span className="text-sm">SmartphoneIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CrossIcon />
+        <span className="text-sm">CrossIcon</span>
       </div>
     </div>
   ),
@@ -331,6 +336,16 @@ export const Smartphone: StoryObj = {
   }
 }
 
+// Cross Icon
+export const Cross: StoryObj = {
+  render: (args) => <CrossIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -364,6 +379,13 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Key clicked!')}
         />
         <span className="text-xs">Security key</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CrossIcon 
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Cross clicked!')}
+        />
+        <span className="text-xs">Close dialog</span>
       </div>
     </div>
   ),
