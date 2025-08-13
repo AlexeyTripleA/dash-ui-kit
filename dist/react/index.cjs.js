@@ -6887,7 +6887,7 @@ const selectIcon = classVarianceAuthority.cva('pointer-events-none flex items-ce
   }
 });
 // Arrow icon
-const ChevronDownIcon = ({
+const ChevronDownIcon$2 = ({
   className
 }) => jsxRuntime.jsx("svg", {
   width: "15",
@@ -6974,7 +6974,7 @@ const Select = _a => {
         })
       }), showArrow && jsxRuntime.jsx(Icon, {
         asChild: true,
-        children: jsxRuntime.jsx(ChevronDownIcon, {
+        children: jsxRuntime.jsx(ChevronDownIcon$2, {
           className: iconClasses
         })
       })]
@@ -6998,6 +6998,396 @@ const Select = _a => {
           }, option.value))
         })
       })
+    })]
+  });
+};
+
+const overlaySelectTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] bg-white',
+      dark: 'text-white bg-gray-800'
+    },
+    colorScheme: {
+      default: '',
+      brand: '',
+      error: '',
+      success: ''
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    },
+    border: {
+      true: 'outline outline-1 outline-offset-[-1px]',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [{
+    colorScheme: 'default',
+    border: true,
+    class: 'outline-[rgba(12,28,51,0.35)] focus:outline-[rgba(12,28,51,0.6)]'
+  }, {
+    colorScheme: 'brand',
+    border: true,
+    class: 'outline-dash-brand/30 focus:outline-dash-brand'
+  }, {
+    colorScheme: 'error',
+    border: true,
+    class: 'outline-red-500 focus:outline-red-500'
+  }, {
+    colorScheme: 'success',
+    border: true,
+    class: 'outline-green-500 focus:outline-green-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'xl',
+    border: true,
+    disabled: false
+  }
+});
+const overlayContent$1 = classVarianceAuthority.cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-[rgba(12,28,51,0.05)]',
+      dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] backdrop-blur-[256px]'
+    },
+    size: {
+      sm: 'rounded-[0.625rem]',
+      md: 'rounded-[0.875rem]',
+      xl: 'rounded-[1rem]'
+    }
+  }
+});
+const overlayItem$1 = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] hover:bg-gray-50',
+      dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  }
+});
+// Arrow icon
+const ChevronDownIcon$1 = ({
+  className
+}) => jsxRuntime.jsx("svg", {
+  width: '15',
+  height: '15',
+  viewBox: '0 0 15 15',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  children: jsxRuntime.jsx("path", {
+    d: 'm4.93179 5.43179c0.20081-0.20081 0.52632-0.20081 0.72713 0l2.34108 2.34108 2.34108-2.34108c0.20081-0.20081 0.52632-0.20081 0.72713 0s0.20081 0.52632 0 0.72713l-2.70455 2.70455c-0.20081 0.20081-0.52632 0.20081-0.72713 0l-2.70455-2.70455c-0.20081-0.20081-0.20081-0.52632 0-0.72713z',
+    fill: 'currentColor',
+    fillRule: 'evenodd',
+    clipRule: 'evenodd'
+  })
+});
+/**
+ * Overlay select component that opens above the trigger with overlay positioning.
+ * Simple select component without additional button functionality.
+ */
+const OverlaySelect = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      error = false,
+      success = false,
+      border = true,
+      disabled = false,
+      options = [],
+      showArrow = true,
+      value,
+      defaultValue,
+      onValueChange,
+      placeholder = 'Select an option...',
+      name,
+      overlayLabel,
+      maxHeight = '200px'
+    } = _a;
+    tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
+  const {
+    theme
+  } = useTheme();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const triggerRef = React.useRef(null);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const triggerClasses = overlaySelectTrigger({
+    theme,
+    colorScheme: finalColorScheme,
+    size,
+    border,
+    disabled
+  }) + ' ' + className;
+  const contentClasses = overlayContent$1({
+    theme,
+    size
+  });
+  const itemClasses = overlayItem$1({
+    theme,
+    size
+  });
+  const selectedOption = options.find(opt => opt.value === value);
+  const handleOptionClick = optionValue => {
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(optionValue);
+    setIsOpen(false);
+  };
+  return jsxRuntime.jsxs("div", {
+    className: 'relative',
+    children: [jsxRuntime.jsxs("button", {
+      ref: triggerRef,
+      type: 'button',
+      className: triggerClasses,
+      onClick: () => !disabled && setIsOpen(!isOpen),
+      disabled: disabled,
+      name: name,
+      children: [jsxRuntime.jsx("div", {
+        className: 'w-full flex-1 text-left',
+        children: selectedOption ? selectedOption.content || selectedOption.label : jsxRuntime.jsx("span", {
+          className: theme === 'dark' ? 'text-gray-400' : 'text-gray-500',
+          children: placeholder
+        })
+      }), showArrow && jsxRuntime.jsx(ChevronDownIcon$1, {
+        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
+      })]
+    }), isOpen && jsxRuntime.jsxs(jsxRuntime.Fragment, {
+      children: [jsxRuntime.jsx("div", {
+        className: 'fixed inset-0 z-40',
+        onClick: () => setIsOpen(false)
+      }), jsxRuntime.jsxs("div", {
+        className: `${contentClasses} top-0 left-0 right-0`,
+        style: {
+          maxHeight
+        },
+        children: [overlayLabel && jsxRuntime.jsx("div", {
+          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          children: overlayLabel
+        }), jsxRuntime.jsx("div", {
+          className: 'overflow-y-auto',
+          style: {
+            maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})`
+          },
+          children: options.map((option, index) => jsxRuntime.jsx("div", {
+            className: `${itemClasses} ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < options.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            onClick: () => !option.disabled && handleOptionClick(option.value),
+            children: jsxRuntime.jsx("div", {
+              className: 'w-full flex-1 text-left',
+              children: option.content || option.label
+            })
+          }, option.value))
+        })]
+      })]
+    })]
+  });
+};
+
+const overlayMenuTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] bg-white',
+      dark: 'text-white bg-gray-800'
+    },
+    colorScheme: {
+      default: '',
+      brand: '',
+      error: '',
+      success: ''
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    },
+    border: {
+      true: 'outline outline-1 outline-offset-[-1px]',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    }
+  },
+  compoundVariants: [{
+    colorScheme: 'default',
+    border: true,
+    class: 'outline-[rgba(12,28,51,0.35)] focus:outline-[rgba(12,28,51,0.6)]'
+  }, {
+    colorScheme: 'brand',
+    border: true,
+    class: 'outline-dash-brand/30 focus:outline-dash-brand'
+  }, {
+    colorScheme: 'error',
+    border: true,
+    class: 'outline-red-500 focus:outline-red-500'
+  }, {
+    colorScheme: 'success',
+    border: true,
+    class: 'outline-green-500 focus:outline-green-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'xl',
+    border: true,
+    disabled: false
+  }
+});
+const overlayContent = classVarianceAuthority.cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-[rgba(12,28,51,0.05)]',
+      dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] backdrop-blur-[256px]'
+    },
+    size: {
+      sm: 'rounded-[0.625rem]',
+      md: 'rounded-[0.875rem]',
+      xl: 'rounded-[1rem]'
+    }
+  }
+});
+const overlayItem = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] hover:bg-gray-50',
+      dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  }
+});
+// Arrow icon
+const ChevronDownIcon = ({
+  className
+}) => jsxRuntime.jsx("svg", {
+  width: '15',
+  height: '15',
+  viewBox: '0 0 15 15',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  children: jsxRuntime.jsx("path", {
+    d: 'm4.93179 5.43179c0.20081-0.20081 0.52632-0.20081 0.72713 0l2.34108 2.34108 2.34108-2.34108c0.20081-0.20081 0.52632-0.20081 0.72713 0s0.20081 0.52632 0 0.72713l-2.70455 2.70455c-0.20081 0.20081-0.52632 0.20081-0.72713 0l-2.70455-2.70455c-0.20081-0.20081-0.20081-0.52632 0-0.72713z',
+    fill: 'currentColor',
+    fillRule: 'evenodd',
+    clipRule: 'evenodd'
+  })
+});
+/**
+ * Overlay menu component that opens above the trigger with overlay positioning.
+ * Supports custom content items with onClick handlers.
+ */
+const OverlayMenu = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      error = false,
+      success = false,
+      border = true,
+      disabled = false,
+      items = [],
+      showArrow = true,
+      name,
+      overlayLabel,
+      maxHeight = '200px',
+      triggerContent,
+      placeholder = 'Menu',
+      showItemBorders = true
+    } = _a;
+    tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+  const {
+    theme
+  } = useTheme();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const triggerRef = React.useRef(null);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const triggerClasses = overlayMenuTrigger({
+    theme,
+    colorScheme: finalColorScheme,
+    size,
+    border,
+    disabled
+  }) + ' ' + className;
+  const contentClasses = overlayContent({
+    theme,
+    size
+  });
+  const itemClasses = overlayItem({
+    theme,
+    size
+  });
+  const handleItemClick = item => {
+    if (!item.disabled && item.onClick) {
+      item.onClick();
+    }
+    setIsOpen(false);
+  };
+  return jsxRuntime.jsxs("div", {
+    className: 'relative',
+    children: [jsxRuntime.jsxs("button", {
+      ref: triggerRef,
+      type: 'button',
+      className: triggerClasses,
+      onClick: () => !disabled && setIsOpen(!isOpen),
+      disabled: disabled,
+      name: name,
+      children: [jsxRuntime.jsx("div", {
+        className: 'w-full flex-1 text-left',
+        children: triggerContent || jsxRuntime.jsx("span", {
+          className: theme === 'dark' ? 'text-gray-400' : 'text-gray-500',
+          children: placeholder
+        })
+      }), showArrow && jsxRuntime.jsx(ChevronDownIcon, {
+        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
+      })]
+    }), isOpen && jsxRuntime.jsxs(jsxRuntime.Fragment, {
+      children: [jsxRuntime.jsx("div", {
+        className: 'fixed inset-0 z-40',
+        onClick: () => setIsOpen(false)
+      }), jsxRuntime.jsxs("div", {
+        className: `${contentClasses} top-0 left-0 right-0`,
+        style: {
+          maxHeight
+        },
+        children: [overlayLabel && jsxRuntime.jsx("div", {
+          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          children: overlayLabel
+        }), jsxRuntime.jsx("div", {
+          className: 'overflow-y-auto',
+          style: {
+            maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})`
+          },
+          children: items.map((item, index) => jsxRuntime.jsx("div", {
+            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            onClick: () => handleItemClick(item),
+            children: jsxRuntime.jsx("div", {
+              className: 'w-full flex-1',
+              children: item.content
+            })
+          }, item.id))
+        })]
+      })]
     })]
   });
 };
@@ -8916,6 +9306,8 @@ exports.Input = Input;
 exports.KeyIcon = KeyIcon;
 exports.List = List;
 exports.NotActive = NotActive;
+exports.OverlayMenu = OverlayMenu;
+exports.OverlaySelect = OverlaySelect;
 exports.PooledIcon = PooledIcon;
 exports.ProgressStepBar = ProgressStepBar;
 exports.ProtectedMessageIcon = ProtectedMessageIcon;

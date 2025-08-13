@@ -4,6 +4,8 @@ export { Textarea, type TextareaProps } from './components/textarea';
 export { Text, type TextProps } from './components/text';
 export { ValueCard, type ValueCardProps } from './components/valueCard';
 export { Select, type SelectProps, type SelectOption } from './components/select';
+export { OverlaySelect, type OverlaySelectProps, type OverlaySelectOption } from './components/overlaySelect';
+export { OverlayMenu, type OverlayMenuProps, type OverlayMenuItem } from './components/overlayMenu';
 export { Switch, type SwitchProps, type SwitchOption } from './components/switch';
 export { Avatar, type AvatarProps } from './components/avatar';
 export { List, type ListProps, type ListItem } from './components/list';
