@@ -8734,6 +8734,8 @@ const contentStyles = cva(`
     w-full
     translate-x-[-50%]
     translate-y-[-50%]
+    flex
+    flex-col
     gap-4
     border
     p-6
@@ -8769,45 +8771,40 @@ const contentStyles = cva(`
 });
 const headerStyles = cva(`
     flex
-    flex-col
-    space-y-1.5
-    text-center
-    sm:text-left
+    flex-row
+    justify-between
+    items-center
+    gap-1
+    w-full
   `);
 const titleStyles = cva(`
-    text-lg
-    font-semibold
-    leading-none
-    tracking-tight
+    text-2xl
+    font-medium
+    leading-[1.366]
+    tracking-[-0.03em]
+    flex-1
+    font-dash-main
   `, {
   variants: {
     theme: {
-      light: 'text-gray-900',
+      light: 'text-[#0C1C33]',
       dark: 'text-gray-50'
     }
   }
 });
 const closeButtonStyles = cva(`
-    absolute
-    right-4
-    top-4
     rounded-sm
     opacity-70
-    ring-offset-background
     transition-opacity
     hover:opacity-100
     focus:outline-none
-    focus:ring-2
-    focus:ring-ring
-    focus:ring-offset-2
     disabled:pointer-events-none
-    data-[state=open]:bg-accent
-    data-[state=open]:text-muted-foreground
     cursor-pointer
+    flex-shrink-0
   `, {
   variants: {
     theme: {
-      light: 'text-gray-500 hover:text-gray-700',
+      light: 'text-[#0C1C33] hover:text-gray-700',
       dark: 'text-gray-400 hover:text-gray-200'
     }
   }
@@ -8846,8 +8843,11 @@ const DashDialog = ({
           className: closeButtonStyles({
             theme
           }),
-          children: [jsx(CrossIcon, {
-            size: 16
+          children: [jsx("div", {
+            className: 'w-8 h-8 flex items-center justify-center',
+            children: jsx(CrossIcon, {
+              size: 16
+            })
           }), jsx("span", {
             className: 'sr-only',
             children: "Close"

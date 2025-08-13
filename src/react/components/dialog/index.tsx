@@ -36,6 +36,8 @@ const contentStyles = cva(
     w-full
     translate-x-[-50%]
     translate-y-[-50%]
+    flex
+    flex-col
     gap-4
     border
     p-6
@@ -90,8 +92,7 @@ const titleStyles = cva(
     leading-[1.366]
     tracking-[-0.03em]
     flex-1
-    text-center
-    font-[Manrope]
+    font-dash-main
   `,
   {
     variants: {
@@ -110,9 +111,6 @@ const closeButtonStyles = cva(
     transition-opacity
     hover:opacity-100
     focus:outline-none
-    focus:ring-2
-    focus:ring-ring
-    focus:ring-offset-2
     disabled:pointer-events-none
     cursor-pointer
     flex-shrink-0
@@ -171,7 +169,9 @@ export const DashDialog: React.FC<DialogProps> = ({
             )}
             {showCloseButton && (
               <Dialog.Close className={closeButtonStyles({ theme })}>
-                <CrossIcon size={16} />
+                <div className='w-8 h-8 flex items-center justify-center'>
+                    <CrossIcon size={16} />
+                </div>
                 <span className='sr-only'>Close</span>
               </Dialog.Close>
             )}
