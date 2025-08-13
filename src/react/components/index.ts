@@ -4,6 +4,7 @@ export { Textarea, type TextareaProps } from './textarea'
 export { Text, type TextProps } from './text'
 export { ValueCard, type ValueCardProps } from './valueCard'
 export { Select, type SelectProps, type SelectOption } from './select'
+export { OverlaySelect, type OverlaySelectProps, type OverlaySelectOption } from './overlaySelect'
 export { Switch, type SwitchProps, type SwitchOption } from './switch'
 export { Avatar, type AvatarProps } from './avatar'
 export { List, type ListProps, type ListItem } from './list'
@@ -17,6 +18,7 @@ export { DateBlock, type DateBlockProps, type DateBlockFormat } from './dateBloc
 export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './transactionStatusIcon'
 export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar'
 export { DashLogo, type DashLogoProps } from './dashLogo'
+export { Dialog, type DialogProps } from './dialog'
 export type { TimeDeltaFormat } from '../utils/datetime'
 export {
   ArrowIcon,
@@ -32,5 +34,6 @@ export {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon
 } from './icons'

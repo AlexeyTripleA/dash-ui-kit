@@ -19,3 +19,4 @@ export declare const CheckIcon: React.FC<IconProps>;
 export declare const KeyIcon: React.FC<IconProps>;
 export declare const ProtectedMessageIcon: React.FC<IconProps>;
 export declare const SmartphoneIcon: React.FC<IconProps>;
+export declare const CrossIcon: React.FC<IconProps>;

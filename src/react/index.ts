@@ -17,6 +17,7 @@ export { DateBlock, type DateBlockProps, type DateBlockFormat } from './componen
 export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './components/transactionStatusIcon'
 export { ProgressStepBar, type ProgressStepBarProps } from './components/progressStepBar'
 export { DashLogo, type DashLogoProps } from './components/dashLogo'
+export { Dialog, type DialogProps } from './components/dialog'
 export type { TimeDeltaFormat } from './utils/datetime'
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext'
 export {
@@ -33,6 +34,7 @@ export {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'
