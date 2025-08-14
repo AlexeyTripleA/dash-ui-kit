@@ -14,7 +14,18 @@ import {
   KeyIcon,
   ProtectedMessageIcon,
   SmartphoneIcon,
-  CrossIcon
+  CrossIcon,
+  WalletIcon,
+  WalletSmallIcon,
+  PlusIcon,
+  FilterIcon,
+  EditIcon,
+  DeleteIcon,
+  ChevronIcon,
+  BurgerMenuIcon,
+  KebabMenuIcon,
+  CircleProcessIcon,
+  CreditsIcon
 } from './index'
 
 const meta: Meta = {
@@ -108,6 +119,50 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <CrossIcon />
         <span className="text-sm">CrossIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WalletIcon />
+        <span className="text-sm">WalletIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WalletSmallIcon />
+        <span className="text-sm">WalletSmallIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <PlusIcon />
+        <span className="text-sm">PlusIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FilterIcon />
+        <span className="text-sm">FilterIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <EditIcon />
+        <span className="text-sm">EditIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <DeleteIcon />
+        <span className="text-sm">DeleteIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ChevronIcon />
+        <span className="text-sm">ChevronIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <BurgerMenuIcon />
+        <span className="text-sm">BurgerMenuIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <KebabMenuIcon size={2} />
+        <span className="text-sm">KebabMenuIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircleProcessIcon />
+        <span className="text-sm">CircleProcessIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CreditsIcon />
+        <span className="text-sm">CreditsIcon</span>
       </div>
     </div>
   ),
@@ -346,6 +401,116 @@ export const Cross: StoryObj = {
   }
 }
 
+// Wallet Icon
+export const Wallet: StoryObj = {
+  render: (args) => <WalletIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Wallet Small Icon
+export const WalletSmall: StoryObj = {
+  render: (args) => <WalletSmallIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Plus Icon
+export const Plus: StoryObj = {
+  render: (args) => <PlusIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Filter Icon
+export const Filter: StoryObj = {
+  render: (args) => <FilterIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Edit Icon
+export const Edit: StoryObj = {
+  render: (args) => <EditIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Delete Icon
+export const Delete: StoryObj = {
+  render: (args) => <DeleteIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Chevron Icon
+export const Chevron: StoryObj = {
+  render: (args) => <ChevronIcon {...args} />,
+  args: {
+    size: 12,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Burger Menu Icon
+export const BurgerMenu: StoryObj = {
+  render: (args) => <BurgerMenuIcon {...args} />,
+  args: {
+    size: 24,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Kebab Menu Icon
+export const KebabMenu: StoryObj = {
+  render: (args) => <KebabMenuIcon {...args} />,
+  args: {
+    size: 2,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Circle Process Icon
+export const CircleProcess: StoryObj = {
+  render: (args) => <CircleProcessIcon {...args} />,
+  args: {
+    size: 20,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Credits Icon
+export const Credits: StoryObj = {
+  render: (args) => <CreditsIcon {...args} />,
+  args: {
+    size: 14,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -386,6 +551,59 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Cross clicked!')}
         />
         <span className="text-xs">Close dialog</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WalletIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Wallet clicked!')}
+        />
+        <span className="text-xs">Wallet access</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <PlusIcon 
+          className="cursor-pointer hover:scale-110 transition-transform"
+          onClick={() => alert('Plus clicked!')}
+        />
+        <span className="text-xs">Add item</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FilterIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Filter clicked!')}
+        />
+        <span className="text-xs">Filter data</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <DeleteIcon 
+          color="#F45858"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Delete clicked!')}
+        />
+        <span className="text-xs">Delete item</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <BurgerMenuIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Menu clicked!')}
+        />
+        <span className="text-xs">Open menu</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircleProcessIcon 
+          className="cursor-pointer hover:scale-110 transition-transform"
+          onClick={() => alert('Process clicked!')}
+        />
+        <span className="text-xs">Processing</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CreditsIcon 
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Credits clicked!')}
+        />
+        <span className="text-xs">View credits</span>
       </div>
     </div>
   ),

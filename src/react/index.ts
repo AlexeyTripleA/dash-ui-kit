@@ -37,6 +37,17 @@ export {
   KeyIcon,
   ProtectedMessageIcon,
   SmartphoneIcon,
-  CrossIcon
+  CrossIcon,
+  WalletIcon,
+  WalletSmallIcon,
+  PlusIcon,
+  FilterIcon,
+  EditIcon,
+  DeleteIcon,
+  ChevronIcon,
+  BurgerMenuIcon,
+  KebabMenuIcon,
+  CircleProcessIcon,
+  CreditsIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'
