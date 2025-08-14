@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
-import * as RadixSelect from '@radix-ui/react-select'
+import { CrossIcon } from '../icons'
 
 const overlaySelectTrigger = cva(
   'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between',
@@ -247,10 +247,22 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
           >
             {/* Overlay label */}
             {overlayLabel && (
-              <div className={`${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${
-                theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
-              }`}>
-                {overlayLabel}
+              <div 
+                className={`${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${
+                  theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                <div className='w-full flex-1'>
+                  {overlayLabel}
+                </div>
+                <div className='flex items-center pl-1'>
+                  <CrossIcon 
+                    size={16} 
+                    color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
+                    className='cursor-pointer'
+                  />
+                </div>
               </div>
             )}
             

@@ -7433,9 +7433,20 @@ const OverlaySelect = _a => {
         style: {
           maxHeight
         },
-        children: [overlayLabel && jsxRuntime.jsx("div", {
-          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          children: overlayLabel
+        children: [overlayLabel && jsxRuntime.jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsxRuntime.jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsxRuntime.jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsxRuntime.jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
         }), jsxRuntime.jsx("div", {
           className: 'overflow-y-auto',
           style: {
@@ -7629,9 +7640,20 @@ const OverlayMenu = _a => {
         style: {
           maxHeight
         },
-        children: [overlayLabel && jsxRuntime.jsx("div", {
-          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          children: overlayLabel
+        children: [overlayLabel && jsxRuntime.jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsxRuntime.jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsxRuntime.jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsxRuntime.jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
         }), jsxRuntime.jsx("div", {
           children: items.map((item, index) => jsxRuntime.jsx("div", {
             className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,

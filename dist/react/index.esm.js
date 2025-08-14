@@ -7413,9 +7413,20 @@ const OverlaySelect = _a => {
         style: {
           maxHeight
         },
-        children: [overlayLabel && jsx("div", {
-          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          children: overlayLabel
+        children: [overlayLabel && jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
         }), jsx("div", {
           className: 'overflow-y-auto',
           style: {
@@ -7609,9 +7620,20 @@ const OverlayMenu = _a => {
         style: {
           maxHeight
         },
-        children: [overlayLabel && jsx("div", {
-          className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          children: overlayLabel
+        children: [overlayLabel && jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
         }), jsx("div", {
           children: items.map((item, index) => jsx("div", {
             className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
