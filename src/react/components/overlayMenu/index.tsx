@@ -200,6 +200,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         name={name}
+        {...props}
       >
         <div className='w-full flex-1 text-left'>
           {triggerContent || (
@@ -224,10 +225,10 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
             className='fixed inset-0 z-40' 
             onClick={() => setIsOpen(false)}
           />
-          
+
           {/* Overlay content */}
-          <div 
-            className={`${contentClasses} top-0 left-0 right-0`}
+          <div
+            className={`${contentClasses} top-0 left-0 right-0 overflow-y-auto`}
             style={{ maxHeight }}
           >
             {/* Overlay label */}
@@ -238,9 +239,9 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
                 {overlayLabel}
               </div>
             )}
-            
+
             {/* Menu items */}
-            <div className='overflow-y-auto' style={{ maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})` }}>
+            <div>
               {items.map((item, index) => (
                 <div
                   key={item.id}

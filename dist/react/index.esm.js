@@ -7292,8 +7292,8 @@ const OverlayMenu = _a => {
       triggerContent,
       placeholder = 'Menu',
       showItemBorders = true
-    } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+    } = _a,
+    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
   const {
     theme
   } = useTheme();
@@ -7325,13 +7325,14 @@ const OverlayMenu = _a => {
   };
   return jsxs("div", {
     className: 'relative',
-    children: [jsxs("button", {
+    children: [jsxs("button", Object.assign({
       ref: triggerRef,
       type: 'button',
       className: triggerClasses,
       onClick: () => !disabled && setIsOpen(!isOpen),
       disabled: disabled,
-      name: name,
+      name: name
+    }, props, {
       children: [jsx("div", {
         className: 'w-full flex-1 text-left',
         children: triggerContent || jsx("span", {
@@ -7341,12 +7342,12 @@ const OverlayMenu = _a => {
       }), showArrow && jsx(ChevronDownIcon, {
         className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
       })]
-    }), isOpen && jsxs(Fragment, {
+    })), isOpen && jsxs(Fragment, {
       children: [jsx("div", {
         className: 'fixed inset-0 z-40',
         onClick: () => setIsOpen(false)
       }), jsxs("div", {
-        className: `${contentClasses} top-0 left-0 right-0`,
+        className: `${contentClasses} top-0 left-0 right-0 overflow-y-auto`,
         style: {
           maxHeight
         },
@@ -7354,10 +7355,6 @@ const OverlayMenu = _a => {
           className: `${itemClasses} font-medium pointer-events-none border-b rounded-b-none ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
           children: overlayLabel
         }), jsx("div", {
-          className: 'overflow-y-auto',
-          style: {
-            maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})`
-          },
           children: items.map((item, index) => jsx("div", {
             className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
             onClick: () => handleItemClick(item),
