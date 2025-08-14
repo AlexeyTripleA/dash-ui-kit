@@ -241,7 +241,7 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
           />
           
           {/* Overlay content */}
-          <div 
+          <div
             className={`${contentClasses} top-0 left-0 right-0`}
             style={{ maxHeight }}
           >
@@ -257,7 +257,7 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
                   {overlayLabel}
                 </div>
                 <div className='flex items-center pl-1'>
-                  <CrossIcon 
+                  <CrossIcon
                     size={16} 
                     color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
                     className='cursor-pointer'
