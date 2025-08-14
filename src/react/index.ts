@@ -48,6 +48,7 @@ export {
   BurgerMenuIcon,
   KebabMenuIcon,
   CircleProcessIcon,
-  CreditsIcon
+  CreditsIcon,
+  WebIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

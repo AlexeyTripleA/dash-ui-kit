@@ -22,5 +22,5 @@ export { DashLogo, type DashLogoProps } from './components/dashLogo';
 export { Dialog, type DialogProps } from './components/dialog';
 export type { TimeDeltaFormat } from './utils/datetime';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
-export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, WalletSmallIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon } from './components/icons';
+export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, WalletSmallIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon } from './components/icons';
 export type { IconProps } from './components/icons';

@@ -47,5 +47,6 @@ export {
   BurgerMenuIcon,
   KebabMenuIcon,
   CircleProcessIcon,
-  CreditsIcon
+  CreditsIcon,
+  WebIcon
 } from './icons'

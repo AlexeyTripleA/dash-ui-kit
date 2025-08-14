@@ -26,7 +26,8 @@ import {
   BurgerMenuIcon,
   KebabMenuIcon,
   CircleProcessIcon,
-  CreditsIcon
+  CreditsIcon,
+  WebIcon
 } from './index'
 
 // Test suite for all icons
@@ -56,7 +57,8 @@ const icons = [
   { Component: BurgerMenuIcon, name: 'BurgerMenuIcon', defaultSize: 24, defaultColor: '#0C1C33' },
   { Component: KebabMenuIcon, name: 'KebabMenuIcon', defaultSize: 2, defaultColor: '#0C1C33' },
   { Component: CircleProcessIcon, name: 'CircleProcessIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
-  { Component: CreditsIcon, name: 'CreditsIcon', defaultSize: 14, defaultColor: '#4C7EFF' }
+  { Component: CreditsIcon, name: 'CreditsIcon', defaultSize: 14, defaultColor: '#4C7EFF' },
+  { Component: WebIcon, name: 'WebIcon', defaultSize: 16, defaultColor: '#4C7EFF' }
 ]
 
 describe('Icons', () => {
@@ -340,6 +342,16 @@ describe('Icons', () => {
       expect(clipPath).toBeInTheDocument()
       const paths = svg.querySelectorAll('path')
       expect(paths.length).toBeGreaterThan(0)
+    })
+
+    it('WebIcon has correct aspect ratio and renders correctly', () => {
+      render(<WebIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })
 

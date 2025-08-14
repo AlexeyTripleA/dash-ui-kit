@@ -31,3 +31,4 @@ export declare const BurgerMenuIcon: React.FC<IconProps>;
 export declare const KebabMenuIcon: React.FC<IconProps>;
 export declare const CircleProcessIcon: React.FC<IconProps>;
 export declare const CreditsIcon: React.FC<IconProps>;
+export declare const WebIcon: React.FC<IconProps>;

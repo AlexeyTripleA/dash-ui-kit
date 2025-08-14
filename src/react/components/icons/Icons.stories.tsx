@@ -25,7 +25,8 @@ import {
   BurgerMenuIcon,
   KebabMenuIcon,
   CircleProcessIcon,
-  CreditsIcon
+  CreditsIcon,
+  WebIcon
 } from './index'
 
 const meta: Meta = {
@@ -163,6 +164,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <CreditsIcon />
         <span className="text-sm">CreditsIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WebIcon />
+        <span className="text-sm">WebIcon</span>
       </div>
     </div>
   ),
@@ -511,6 +516,16 @@ export const Credits: StoryObj = {
   }
 }
 
+// Web Icon
+export const Web: StoryObj = {
+  render: (args) => <WebIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -604,6 +619,13 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Credits clicked!')}
         />
         <span className="text-xs">View credits</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WebIcon 
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Web clicked!')}
+        />
+        <span className="text-xs">Web access</span>
       </div>
     </div>
   ),
