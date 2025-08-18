@@ -39,7 +39,6 @@ const contentStyles = cva(
     flex
     flex-col
     gap-4
-    border
     p-6
     shadow-lg
     duration-200
