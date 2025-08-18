@@ -15,7 +15,7 @@ import { Avatar } from '../avatar'
 
 /** CVA for the root container, now with light/dark theme */
 const identifier = cva(
-  'flex items-center font-mono text-sm font-normal break-all',
+  'flex items-center font-dash-grotesque text-sm font-normal break-all',
   {
     variants: {
       theme: {
@@ -111,7 +111,7 @@ const MiddleEllipsisText: React.FC<{ children: string; edgeChars: number }> = ({
   return (
     <>
       <span>{first}</span>
-      <span>...</span>
+      <span className={'opacity-50'}>&hellip;</span>
       <span>{last}</span>
     </>
   )
@@ -149,7 +149,7 @@ const Identifier: React.FC<IdentifierProps> = ({
     }
   })
 
-  if ((ellipsis ?? false) || maxLines > 0) linesAdjustment = false
+  if ((ellipsis ?? false) || maxLines > 0 || middleEllipsis) linesAdjustment = false
 
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width)
