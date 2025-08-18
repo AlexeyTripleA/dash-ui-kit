@@ -8317,7 +8317,7 @@ const CopyButton = _a => {
 };
 
 /** CVA for the root container, now with light/dark theme */
-const identifier = classVarianceAuthority.cva('flex items-center font-mono text-sm font-normal break-all', {
+const identifier = classVarianceAuthority.cva('flex items-center font-dash-grotesque text-sm font-normal break-all', {
   variants: {
     theme: {
       light: 'text-gray-900',
@@ -8434,7 +8434,8 @@ const MiddleEllipsisText = ({
     children: [jsxRuntime.jsx("span", {
       children: first
     }), jsxRuntime.jsx("span", {
-      children: "..."
+      className: 'opacity-50',
+      children: "\u2026"
     }), jsxRuntime.jsx("span", {
       children: last
     })]
@@ -8476,7 +8477,7 @@ const Identifier = ({
       // console.log('Window width debounced to:', newWidth)
     }
   });
-  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0) linesAdjustment = false;
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis) linesAdjustment = false;
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width);
   });
@@ -9443,7 +9444,6 @@ const contentStyles = classVarianceAuthority.cva(`
     flex
     flex-col
     gap-4
-    border
     p-6
     shadow-lg
     duration-200

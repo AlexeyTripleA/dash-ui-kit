@@ -4,11 +4,11 @@ import { __rest, __assign, __spreadArray } from 'tslib';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import * as React from 'react';
-import React__default, { useState, useRef, useLayoutEffect, useMemo, useCallback, useEffect } from 'react';
+import React__default, { useState, useEffect, createContext, useContext, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
 
-const ThemeContext = /*#__PURE__*/React__default.createContext(undefined);
+const ThemeContext = /*#__PURE__*/createContext(undefined);
 /**
  * Provides theme context to its descendants and syncs theme with localStorage
  * and the root HTML element's class list ('light' or 'dark').
@@ -28,12 +28,12 @@ const ThemeProvider = ({
     const stored = localStorage.getItem('theme');
     return stored != null && (stored === 'light' || stored === 'dark') ? stored : null;
   };
-  const [theme, setThemeState] = React__default.useState(() => {
+  const [theme, setThemeState] = useState(() => {
     var _a;
     return (_a = initialTheme !== null && initialTheme !== void 0 ? initialTheme : getStoredTheme()) !== null && _a !== void 0 ? _a : 'light';
   });
   // Sync theme changes to document <html> class and localStorage.
-  React__default.useEffect(() => {
+  useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.classList.toggle('light', theme === 'light');
     try {
@@ -70,7 +70,7 @@ const ThemeProvider = ({
  * @throws If used outside of a ThemeProvider.
  */
 function useTheme() {
-  const context = React__default.useContext(ThemeContext);
+  const context = useContext(ThemeContext);
   if (context == null) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
@@ -8297,7 +8297,7 @@ const CopyButton = _a => {
 };
 
 /** CVA for the root container, now with light/dark theme */
-const identifier = cva('flex items-center font-mono text-sm font-normal break-all', {
+const identifier = cva('flex items-center font-dash-grotesque text-sm font-normal break-all', {
   variants: {
     theme: {
       light: 'text-gray-900',
@@ -8414,7 +8414,8 @@ const MiddleEllipsisText = ({
     children: [jsx("span", {
       children: first
     }), jsx("span", {
-      children: "..."
+      className: 'opacity-50',
+      children: "\u2026"
     }), jsx("span", {
       children: last
     })]
@@ -8456,7 +8457,7 @@ const Identifier = ({
       // console.log('Window width debounced to:', newWidth)
     }
   });
-  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0) linesAdjustment = false;
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis) linesAdjustment = false;
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width);
   });
@@ -9423,7 +9424,6 @@ const contentStyles = cva(`
     flex
     flex-col
     gap-4
-    border
     p-6
     shadow-lg
     duration-200
