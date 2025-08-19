@@ -14,6 +14,10 @@ export interface DashLogoProps {
  * Dash Logo component with customizable size and color
  * Original aspect ratio: 30:25 (1.2:1)
  *
+ * Color can be set via:
+ * - color prop (takes precedence)
+ * - CSS class with text color (e.g., "text-dash-primary-dark-blue")
+ *
  * SVG is wrapped in a container that centers the logo and supports:
  * - containerPadding: padding around the logo
  * - containerSize: width/height of the container

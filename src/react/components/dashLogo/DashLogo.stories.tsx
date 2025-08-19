@@ -89,4 +89,26 @@ export const ColorVariations = () => (
     <DashLogo size={50} color="#7C3AED" />
     <DashLogo size={50} color="#10B981" />
   </div>
+)
+
+export const CSSClassColors = () => (
+  <div className="flex flex-col gap-6 p-4">
+    <div className="flex items-center gap-4">
+      <span className="text-sm font-medium w-32">CSS Classes:</span>
+      <DashLogo size={50} className="text-red-500" />
+      <DashLogo size={50} className="text-blue-600" />
+      <DashLogo size={50} className="text-green-500" />
+      <DashLogo size={50} className="text-purple-600" />
+      <DashLogo size={50} className="text-orange-500" />
+    </div>
+    <div className="flex items-center gap-4">
+      <span className="text-sm font-medium w-32">Default (no color):</span>
+      <DashLogo size={50} />
+    </div>
+    <div className="flex items-center gap-4">
+      <span className="text-sm font-medium w-32">Prop overrides CSS:</span>
+      <DashLogo size={50} color="#FF0000" className="text-blue-600" />
+      <span className="text-xs text-gray-500">Red prop wins over blue class</span>
+    </div>
+  </div>
 ) 
