@@ -27,7 +27,10 @@ import {
   KebabMenuIcon,
   CircleProcessIcon,
   CreditsIcon,
-  WebIcon
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon
 } from './index'
 
 // Test suite for all icons
@@ -58,7 +61,10 @@ const icons = [
   { Component: KebabMenuIcon, name: 'KebabMenuIcon', defaultSize: 2, defaultColor: '#0C1C33' },
   { Component: CircleProcessIcon, name: 'CircleProcessIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
   { Component: CreditsIcon, name: 'CreditsIcon', defaultSize: 14, defaultColor: '#4C7EFF' },
-  { Component: WebIcon, name: 'WebIcon', defaultSize: 16, defaultColor: '#4C7EFF' }
+  { Component: WebIcon, name: 'WebIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: ChainSmallIcon, name: 'ChainSmallIcon', defaultSize: 17, defaultColor: '#0C1C33' },
+  { Component: SettingsIcon, name: 'SettingsIcon', defaultSize: 17, defaultColor: '#0C1C33' },
+  { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' }
 ]
 
 describe('Icons', () => {
@@ -351,6 +357,36 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('width', '16')
       expect(svg).toHaveAttribute('height', '16')
       expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ChainSmallIcon has correct aspect ratio', () => {
+      render(<ChainSmallIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '13') // 17 * 13 / 17
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 13')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('SettingsIcon has correct aspect ratio and renders correctly', () => {
+      render(<SettingsIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '17')
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ShieldSmallIcon has correct aspect ratio', () => {
+      render(<ShieldSmallIcon size={15} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '15')
+      expect(svg).toHaveAttribute('height', '17') // 15 * 17 / 15
+      expect(svg).toHaveAttribute('viewBox', '0 0 15 17')
       expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })

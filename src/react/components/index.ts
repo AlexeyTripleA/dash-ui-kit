@@ -48,5 +48,8 @@ export {
   KebabMenuIcon,
   CircleProcessIcon,
   CreditsIcon,
-  WebIcon
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon
 } from './icons'

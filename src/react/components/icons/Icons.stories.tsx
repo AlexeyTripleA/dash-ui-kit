@@ -26,7 +26,10 @@ import {
   KebabMenuIcon,
   CircleProcessIcon,
   CreditsIcon,
-  WebIcon
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon
 } from './index'
 
 const meta: Meta = {
@@ -168,6 +171,18 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <WebIcon />
         <span className="text-sm">WebIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ChainSmallIcon />
+        <span className="text-sm">ChainSmallIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SettingsIcon />
+        <span className="text-sm">SettingsIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ShieldSmallIcon />
+        <span className="text-sm">ShieldSmallIcon</span>
       </div>
     </div>
   ),
@@ -526,6 +541,36 @@ export const Web: StoryObj = {
   }
 }
 
+// Chain Small Icon
+export const ChainSmall: StoryObj = {
+  render: (args) => <ChainSmallIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Settings Icon
+export const Settings: StoryObj = {
+  render: (args) => <SettingsIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Shield Small Icon
+export const ShieldSmall: StoryObj = {
+  render: (args) => <ShieldSmallIcon {...args} />,
+  args: {
+    size: 15,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -626,6 +671,30 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Web clicked!')}
         />
         <span className="text-xs">Web access</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ChainSmallIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Chain clicked!')}
+        />
+        <span className="text-xs">Link chain</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SettingsIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Settings clicked!')}
+        />
+        <span className="text-xs">Settings</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ShieldSmallIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Shield clicked!')}
+        />
+        <span className="text-xs">Security</span>
       </div>
     </div>
   ),

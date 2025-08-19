@@ -49,6 +49,9 @@ export {
   KebabMenuIcon,
   CircleProcessIcon,
   CreditsIcon,
-  WebIcon
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

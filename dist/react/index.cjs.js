@@ -1044,6 +1044,68 @@ const WebIcon = ({
     fill: 'currentColor'
   })
 });
+const ChainSmallIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size * 13 / 17,
+  viewBox: '0 0 17 13',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M6.22948 11.2552C6.03745 11.4435 5.88884 11.5696 5.73696 11.6618C4.99352 12.1127 4.07756 12.1127 3.33413 11.6618C3.06016 11.4956 2.79682 11.2188 2.27013 10.6655C1.74343 10.1121 1.48008 9.83542 1.32192 9.54752C0.892693 8.76639 0.892693 7.80399 1.32192 7.02286C1.48008 6.73505 1.74343 6.45834 2.27013 5.90494L4.53554 3.52467C5.06224 2.97127 5.32558 2.69457 5.59953 2.52839C6.34298 2.0774 7.25895 2.0774 8.00238 2.52838C8.27631 2.69457 8.53966 2.97127 9.06636 3.52467C9.59306 4.07807 9.85641 4.35476 10.0146 4.64261C10.4438 5.42374 10.4438 6.38614 10.0146 7.16727C9.9269 7.32683 9.80691 7.48302 9.62758 7.68474M7.37244 5.31526C7.19311 5.51698 7.07313 5.67317 6.98542 5.83273C6.55623 6.61386 6.55623 7.57626 6.98542 8.35739C7.14361 8.64529 7.40696 8.92199 7.93366 9.47532C8.46036 10.0287 8.72372 10.3054 8.99764 10.4716C9.74108 10.9226 10.657 10.9226 11.4005 10.4716C11.6745 10.3054 11.9378 10.0287 12.4645 9.47532L14.7299 7.09506C15.2566 6.54166 15.52 6.26495 15.6781 5.97714C16.1073 5.19601 16.1073 4.2336 15.6781 3.45247C15.52 3.16463 15.2566 2.88792 14.7299 2.33452C14.2032 1.78113 13.9399 1.50443 13.6659 1.33824C12.9224 0.887253 12.0065 0.887253 11.2631 1.33824C11.1112 1.43038 10.9626 1.55647 10.7705 1.74484',
+    stroke: 'currentColor',
+    strokeLinecap: 'round'
+  })
+});
+const SettingsIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 17 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M8.5 3.08333C8.5 4.23392 7.56725 5.16667 6.41667 5.16667C5.26607 5.16667 4.33333 4.23392 4.33333 3.08333M8.5 3.08333C8.5 1.93274 7.56725 1 6.41667 1C5.26607 1 4.33333 1.93274 4.33333 3.08333M8.5 3.08333H16M4.33333 3.08333H1M14.3333 8.5C14.3333 9.65058 13.4006 10.5833 12.25 10.5833C11.0994 10.5833 10.1667 9.65058 10.1667 8.5M14.3333 8.5C14.3333 7.34942 13.4006 6.41667 12.25 6.41667C11.0994 6.41667 10.1667 7.34942 10.1667 8.5M14.3333 8.5H16M10.1667 8.5H1M6.83333 13.9167C6.83333 15.0672 5.90059 16 4.75 16C3.59941 16 2.66667 15.0672 2.66667 13.9167M6.83333 13.9167C6.83333 12.7661 5.90059 11.8333 4.75 11.8333C3.59941 11.8333 2.66667 12.7661 2.66667 13.9167M6.83333 13.9167H16M2.66667 13.9167H1',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
+const ShieldSmallIcon = ({
+  color = '#0C1C33',
+  size = 15,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size * 17 / 15,
+  viewBox: '0 0 15 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M4.875 8.51877L6.625 10.2023L10.125 6.83521M14.5 8.51877C14.5 12.274 9.7225 14.9952 8.06123 15.8279C7.88159 15.918 7.79172 15.963 7.66712 15.9864C7.57 16.0045 7.43 16.0045 7.33288 15.9864C7.20828 15.963 7.11841 15.918 6.93877 15.8279C5.27746 14.9952 0.5 12.274 0.5 8.51877V5.33482C0.5 4.66181 0.5 4.32531 0.614415 4.03605C0.715486 3.78051 0.879732 3.5525 1.09295 3.37173C1.33431 3.1671 1.66182 3.04895 2.31685 2.81264L7.00842 1.1201C7.19034 1.05448 7.28125 1.02166 7.37488 1.00865C7.45783 0.997117 7.54217 0.997117 7.62512 1.00865C7.71875 1.02166 7.80966 1.05448 7.99158 1.1201L12.6831 2.81264C13.3382 3.04895 13.6657 3.1671 13.907 3.37173C14.1202 3.5525 14.2845 3.78051 14.3855 4.03605C14.5 4.32531 14.5 4.66181 14.5 5.33482V8.51877Z',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
 
 const input = classVarianceAuthority.cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
@@ -9587,6 +9649,7 @@ exports.BroadcastedIcon = BroadcastedIcon;
 exports.BurgerMenuIcon = BurgerMenuIcon;
 exports.Button = Button;
 exports.CalendarIcon = CalendarIcon;
+exports.ChainSmallIcon = ChainSmallIcon;
 exports.CheckIcon = CheckIcon;
 exports.ChevronIcon = ChevronIcon;
 exports.CircleProcessIcon = CircleProcessIcon;
@@ -9618,6 +9681,8 @@ exports.ProgressStepBar = ProgressStepBar;
 exports.ProtectedMessageIcon = ProtectedMessageIcon;
 exports.QueuedIcon = QueuedIcon;
 exports.Select = Select;
+exports.SettingsIcon = SettingsIcon;
+exports.ShieldSmallIcon = ShieldSmallIcon;
 exports.SmartphoneIcon = SmartphoneIcon;
 exports.SuccessIcon = SuccessIcon;
 exports.Switch = Switch;
