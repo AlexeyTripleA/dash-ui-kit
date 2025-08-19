@@ -1086,6 +1086,25 @@ const ShieldSmallIcon = ({
     strokeLinejoin: 'round'
   })
 });
+const QuestionMessageIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 17 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M15.5 8.5C15.5 4.63401 12.366 1.5 8.5 1.5C4.63401 1.5 1.5 4.63401 1.5 8.5C1.5 9.61866 1.76197 10.6746 2.22754 11.6113C2.42563 12.0098 2.42445 12.5262 2.37402 12.9814C2.32099 13.4602 2.19994 13.9782 2.06641 14.4463C1.95449 14.8386 1.82896 15.2054 1.72363 15.5H8.5C12.366 15.5 15.5 12.366 15.5 8.5ZM8.47754 11.125C8.75368 11.125 8.97754 11.3489 8.97754 11.625C8.97754 11.9011 8.75368 12.125 8.47754 12.125H8.46973C8.19358 12.125 7.96973 11.9011 7.96973 11.625C7.96973 11.3489 8.19358 11.125 8.46973 11.125H8.47754ZM9.63574 7.04199C9.63574 6.39782 9.11386 5.87526 8.46973 5.875C7.92679 5.875 7.46839 6.24673 7.33887 6.75C7.26985 7.01714 6.99773 7.17813 6.73047 7.10938C6.46304 7.04055 6.30227 6.76743 6.37109 6.5C6.61172 5.5658 7.45964 4.875 8.46973 4.875C9.66615 4.87526 10.6357 5.84554 10.6357 7.04199C10.6356 7.69162 10.3249 8.12528 9.96191 8.47559C9.78884 8.64261 9.5883 8.80642 9.40137 8.96191C9.20811 9.12267 9.01442 9.28736 8.82324 9.47852C8.62798 9.67378 8.3105 9.67378 8.11523 9.47852C7.9203 9.28332 7.9203 8.96668 8.11523 8.77148C8.34062 8.5461 8.56445 8.35745 8.76172 8.19336C8.96533 8.024 9.12822 7.89036 9.26758 7.75586C9.52941 7.50314 9.63566 7.31249 9.63574 7.04199ZM16.5 8.5C16.5 12.9183 12.9183 16.5 8.5 16.5H1.00098C0.833871 16.5 0.677709 16.4163 0.584961 16.2773C0.492224 16.1383 0.474797 15.9619 0.539062 15.8076L0.540039 15.8066C0.540039 15.8066 0.540917 15.8034 0.541992 15.8008C0.544161 15.7955 0.54735 15.7872 0.551758 15.7764C0.560575 15.7547 0.574209 15.7217 0.59082 15.6797C0.624076 15.5955 0.671372 15.4732 0.726562 15.3232C0.837449 15.022 0.979061 14.6115 1.10449 14.1719C1.23071 13.7294 1.33653 13.2714 1.38086 12.8711C1.42778 12.4473 1.39393 12.1812 1.33203 12.0566C0.799214 10.9847 0.5 9.77661 0.5 8.5C0.5 4.08172 4.08172 0.5 8.5 0.5C12.9183 0.500003 16.5 4.08173 16.5 8.5Z',
+    fill: 'currentColor'
+  })
+});
 
 const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
@@ -9622,5 +9641,5 @@ const DashDialog = ({
   });
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WalletSmallIcon, WebIcon, useTheme };
+export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WalletSmallIcon, WebIcon, useTheme };
 //# sourceMappingURL=index.esm.js.map

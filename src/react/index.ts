@@ -52,6 +52,7 @@ export {
   WebIcon,
   ChainSmallIcon,
   SettingsIcon,
-  ShieldSmallIcon
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

@@ -51,5 +51,6 @@ export {
   WebIcon,
   ChainSmallIcon,
   SettingsIcon,
-  ShieldSmallIcon
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './icons'

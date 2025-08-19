@@ -29,7 +29,8 @@ import {
   WebIcon,
   ChainSmallIcon,
   SettingsIcon,
-  ShieldSmallIcon
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './index'
 
 const meta: Meta = {
@@ -183,6 +184,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <ShieldSmallIcon />
         <span className="text-sm">ShieldSmallIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <QuestionMessageIcon />
+        <span className="text-sm">QuestionMessageIcon</span>
       </div>
     </div>
   ),
@@ -571,6 +576,16 @@ export const ShieldSmall: StoryObj = {
   }
 }
 
+// Question Message Icon
+export const QuestionMessage: StoryObj = {
+  render: (args) => <QuestionMessageIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
@@ -695,6 +710,14 @@ export const Interactive: StoryObj = {
           onClick={() => alert('Shield clicked!')}
         />
         <span className="text-xs">Security</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <QuestionMessageIcon 
+          color="#4C7EFF"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={() => alert('Question clicked!')}
+        />
+        <span className="text-xs">Help/FAQ</span>
       </div>
     </div>
   ),

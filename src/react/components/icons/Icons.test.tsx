@@ -30,7 +30,8 @@ import {
   WebIcon,
   ChainSmallIcon,
   SettingsIcon,
-  ShieldSmallIcon
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './index'
 
 // Test suite for all icons
@@ -64,7 +65,8 @@ const icons = [
   { Component: WebIcon, name: 'WebIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
   { Component: ChainSmallIcon, name: 'ChainSmallIcon', defaultSize: 17, defaultColor: '#0C1C33' },
   { Component: SettingsIcon, name: 'SettingsIcon', defaultSize: 17, defaultColor: '#0C1C33' },
-  { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' }
+  { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' },
+  { Component: QuestionMessageIcon, name: 'QuestionMessageIcon', defaultSize: 17, defaultColor: '#0C1C33' }
 ]
 
 describe('Icons', () => {
@@ -387,6 +389,16 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('width', '15')
       expect(svg).toHaveAttribute('height', '17') // 15 * 17 / 15
       expect(svg).toHaveAttribute('viewBox', '0 0 15 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('QuestionMessageIcon has correct aspect ratio and renders correctly', () => {
+      render(<QuestionMessageIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '17')
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 17')
       expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })
