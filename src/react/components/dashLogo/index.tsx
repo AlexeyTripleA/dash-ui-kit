@@ -64,7 +64,10 @@ export const DashLogo: React.FC<DashLogoProps> = ({
         viewBox='0 0 30 25'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
-        className={className}
+        className={`text-dash-brand ${className}`}
+        style={{ 
+          color: color || 'var(--color-dash-brand, #4C7EFF)'
+        }}
       >
         <path
           d='M19.6465 0C29.2466 2.13767e-05 30.9542 5.2464 29.585 12.6006C28.6773 17.5547 26.3845 21.3391 22.5537 23.1084C20.8153 23.9084 19.1848 24.3555 15.3389 24.3555H4.44629L5.33887 19.293H14.9229C20.6921 19.3084 22.2159 16.8009 22.9697 14.6162C23.2467 13.8008 23.9084 11.2619 23.9238 9.76953C23.9699 6.84642 22.5383 5.07715 17.6768 5.07715L7.81543 5.06152L8.72363 0H19.6465Z'
