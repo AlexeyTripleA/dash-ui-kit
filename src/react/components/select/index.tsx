@@ -126,7 +126,7 @@ export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> 
   showArrow?: boolean
   value?: string
   defaultValue?: string
-  onValueChange?: (value: string) => void
+  onChange?: (value: string) => void
   placeholder?: string
   disabled?: boolean
   name?: string
@@ -178,7 +178,7 @@ export const Select: React.FC<SelectProps> = ({
   showArrow = true,
   value,
   defaultValue,
-  onValueChange,
+  onChange,
   placeholder = 'Select an option...',
   name,
   ...props
@@ -206,7 +206,7 @@ export const Select: React.FC<SelectProps> = ({
     <RadixSelect.Root
       value={value}
       defaultValue={defaultValue}
-      onValueChange={onValueChange}
+      onValueChange={onChange}
       disabled={disabled}
       name={name}
     >
