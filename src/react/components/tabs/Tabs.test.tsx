@@ -287,6 +287,76 @@ describe('Tabs', () => {
     expect(screen.getByTestId('transactions-content')).toBeInTheDocument()
     expect(screen.getAllByRole('tab')).toHaveLength(1)
   })
+
+  test('renders with small size variant', () => {
+    renderWithTheme(
+      <Tabs items={sampleItems} defaultValue="transactions" size="sm" />
+    )
+    
+    const firstTab = screen.getByRole('tab', { name: 'Transactions' })
+    expect(firstTab).toHaveClass('text-sm')
+    expect(firstTab).toHaveClass('pr-3')
+    expect(firstTab).toHaveClass('pb-2')
+  })
+
+  test('renders with large size variant', () => {
+    renderWithTheme(
+      <Tabs items={sampleItems} defaultValue="transactions" size="lg" />
+    )
+    
+    const firstTab = screen.getByRole('tab', { name: 'Transactions' })
+    expect(firstTab).toHaveClass('text-xl')
+    expect(firstTab).toHaveClass('pr-4')
+    expect(firstTab).toHaveClass('pb-3')
+  })
+
+  test('renders with extra large size variant (default)', () => {
+    renderWithTheme(
+      <Tabs items={sampleItems} defaultValue="transactions" size="xl" />
+    )
+    
+    const firstTab = screen.getByRole('tab', { name: 'Transactions' })
+    expect(firstTab).toHaveClass('text-2xl')
+    expect(firstTab).toHaveClass('pr-[0.875rem]')
+    expect(firstTab).toHaveClass('pb-[10px]')
+  })
+
+  test('uses xl size as default when size not specified', () => {
+    renderWithTheme(
+      <Tabs items={sampleItems} defaultValue="transactions" />
+    )
+    
+    const firstTab = screen.getByRole('tab', { name: 'Transactions' })
+    expect(firstTab).toHaveClass('text-2xl')
+    expect(firstTab).toHaveClass('pr-[0.875rem]')
+  })
+
+  test('applies correct content spacing for different sizes', () => {
+    const { rerender } = renderWithTheme(
+      <Tabs items={sampleItems} defaultValue="transactions" size="sm" />
+    )
+    
+    let content = screen.getByRole('tabpanel')
+    expect(content).toHaveClass('mt-2')
+    
+    rerender(
+      <ThemeProvider initialTheme="light">
+        <Tabs items={sampleItems} defaultValue="transactions" size="lg" />
+      </ThemeProvider>
+    )
+    
+    content = screen.getByRole('tabpanel')
+    expect(content).toHaveClass('mt-3')
+    
+    rerender(
+      <ThemeProvider initialTheme="light">
+        <Tabs items={sampleItems} defaultValue="transactions" size="xl" />
+      </ThemeProvider>
+    )
+    
+    content = screen.getByRole('tabpanel')
+    expect(content).toHaveClass('mt-4')
+  })
 })
 
 

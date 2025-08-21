@@ -14,6 +14,11 @@ const meta: Meta<TabsProps> = {
       control: { type: 'text' },
       description: 'Default active tab value (uncontrolled)'
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'lg', 'xl'],
+      description: 'Size variant'
+    },
     onValueChange: { 
       action: 'tab-changed',
       description: 'Callback when active tab changes'
@@ -34,12 +39,12 @@ const sampleItems = [
   {
     value: 'tab1',
     label: 'Tab 1',
-    content: <div className="p-4">Content of Tab 1</div>
+    content: <div className='p-4'>Content of Tab 1</div>
   },
   {
     value: 'tab2',
     label: 'Tab 2',
-    content: <div className="p-4">Content of Tab 2</div>
+    content: <div className='p-4'>Content of Tab 2</div>
   }
 ]
 
@@ -61,17 +66,17 @@ export const Controlled: StoryFn<TabsProps> = () => {
   const [activeTab, setActiveTab] = React.useState('tab1')
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div className='space-y-4'>
+      <div className='flex gap-2'>
         <button 
           onClick={() => setActiveTab('tab1')}
-          className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
+          className='px-3 py-1 bg-blue-500 text-white rounded text-sm'
         >
           Set Tab 1
         </button>
         <button 
           onClick={() => setActiveTab('tab2')}
-          className="px-3 py-1 bg-green-500 text-white rounded text-sm"
+          className='px-3 py-1 bg-green-500 text-white rounded text-sm'
         >
           Set Tab 2
         </button>
@@ -81,7 +86,7 @@ export const Controlled: StoryFn<TabsProps> = () => {
         value={activeTab}
         onValueChange={setActiveTab}
       />
-      <p className="text-sm text-gray-600">
+      <p className='text-sm text-gray-600'>
         Active tab: <code>{activeTab}</code>
       </p>
     </div>
@@ -95,7 +100,7 @@ WithDisabledTab.args = {
     {
       value: 'tab3',
       label: 'Disabled Tab',
-      content: <div className="p-4">Content of Disabled Tab</div>,
+      content: <div className='p-4'>Content of Disabled Tab</div>,
       disabled: true
     }
   ],
@@ -109,17 +114,17 @@ ManyTabs.args = {
     {
       value: 'tab3',
       label: 'Tab 3',
-      content: <div className="p-4">Content of Tab 3</div>
+      content: <div className='p-4'>Content of Tab 3</div>
     },
     {
       value: 'tab4',
       label: 'Tab 4',
-      content: <div className="p-4">Content of Tab 4</div>
+      content: <div className='p-4'>Content of Tab 4</div>
     },
     {
       value: 'tab5',
       label: 'Tab 5',
-      content: <div className="p-4">Content of Tab 5</div>
+      content: <div className='p-4'>Content of Tab 5</div>
     }
   ],
   defaultValue: 'tab1'
@@ -131,7 +136,7 @@ SingleTab.args = {
     {
       value: 'single',
       label: 'Single Tab',
-      content: <div className="p-4">Content of Single Tab</div>
+      content: <div className='p-4'>Content of Single Tab</div>
     }
   ],
   defaultValue: 'single'
@@ -152,6 +157,45 @@ EmptyContent.args = {
     }
   ],
   defaultValue: 'empty1'
+}
+
+export const Sizes: StoryFn<TabsProps> = () => {
+  const items = [
+    {
+      value: 'overview',
+      label: 'Overview',
+      content: <div className='p-4'>Overview content</div>
+    },
+    {
+      value: 'transactions',
+      label: 'Transactions',
+      content: <div className='p-4'>Transactions content</div>
+    },
+    {
+      value: 'settings',
+      label: 'Settings',
+      content: <div className='p-4'>Settings content</div>
+    }
+  ]
+
+  return (
+    <div className='space-y-8'>
+      <div>
+        <h3 className="text-sm font-medium mb-2">Small (sm)</h3>
+        <Tabs items={items} size="sm" defaultValue="overview" />
+      </div>
+      
+      <div>
+        <h3 className="text-sm font-medium mb-2">Large (lg)</h3>
+        <Tabs items={items} size="lg" defaultValue="overview" />
+      </div>
+      
+      <div>
+        <h3 className="text-sm font-medium mb-2">Extra Large (xl) - Default</h3>
+        <Tabs items={items} size="xl" defaultValue="overview" />
+      </div>
+    </div>
+  )
 }
 
 

@@ -21,12 +21,12 @@ const tabsRootStyles = cva(
 )
 
 const tabsListStyles = cva(
-  'flex border-b relative overflow-x-auto scrollbar-hide',
+  'flex relative overflow-x-auto scrollbar-hide after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:transition-colors',
   {
     variants: {
       theme: {
-        light: 'border-[rgba(12,28,51,0.15)]',
-        dark: 'border-gray-600/50'
+        light: 'after:bg-[rgba(12,28,51,0.15)]',
+        dark: 'after:bg-gray-600/50'
       }
     },
     defaultVariants: {
@@ -38,15 +38,13 @@ const tabsListStyles = cva(
 const tabsTriggerStyles = cva(
   [
     'flex items-center justify-center relative',
-    'font-dash-main text-2xl leading-[1.366] tracking-[-0.03em]',
-    'px-0 pr-[15px] pb-[10px]',
+    'font-dash-main font-light',
     'transition-all duration-200 ease-in-out cursor-pointer',
-    'border-b-[1px] border-transparent',
     'hover:opacity-80',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
     'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50',
-    'font-light',
-    'whitespace-nowrap flex-shrink-0'
+    'whitespace-nowrap flex-shrink-0',
+    'after:absolute after:bottom-0 after:left-0 after:bg-transparent after:transition-colors after:duration-200 after:z-10'
   ],
   {
     variants: {
@@ -57,13 +55,18 @@ const tabsTriggerStyles = cva(
       active: {
         true: '',
         false: ''
+      },
+      size: {
+        sm: 'text-sm leading-[1.25] tracking-[-0.02em] px-0 pr-3 pb-2 after:right-3',
+        lg: 'text-xl leading-[1.3] tracking-[-0.025em] px-0 pr-4 pb-3 after:right-4',
+        xl: 'text-2xl leading-[1.366] tracking-[-0.03em] px-0 pr-[0.875rem] pb-[10px] after:right-[0.875rem]'
       }
     },
     compoundVariants: [
       {
         theme: 'light',
         active: true,
-        class: 'text-[#0C1C33] !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+        class: 'text-dash-primary-dark-blue [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
       },
       {
         theme: 'light',
@@ -73,7 +76,7 @@ const tabsTriggerStyles = cva(
       {
         theme: 'dark',
         active: true,
-        class: 'text-white !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+        class: 'text-white [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
       },
       {
         theme: 'dark',
@@ -83,22 +86,29 @@ const tabsTriggerStyles = cva(
     ],
     defaultVariants: {
       theme: 'light',
-      active: false
+      active: false,
+      size: 'xl'
     }
   }
 )
 
 const tabsContentStyles = cva(
-  'mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
   {
     variants: {
       theme: {
         light: '',
         dark: ''
+      },
+      size: {
+        sm: 'mt-2',
+        lg: 'mt-3',
+        xl: 'mt-4'
       }
     },
     defaultVariants: {
-      theme: 'light'
+      theme: 'light',
+      size: 'xl'
     }
   }
 )
@@ -123,6 +133,8 @@ export interface TabsProps {
   defaultValue?: string
   /** Callback when active tab changes */
   onValueChange?: (value: string) => void
+  /** Size variant */
+  size?: 'sm' | 'lg' | 'xl'
   /** Additional CSS classes */
   className?: string
   /** Additional CSS classes for the tabs list */
@@ -142,6 +154,7 @@ export const Tabs: React.FC<TabsProps> = ({
   value,
   defaultValue,
   onValueChange,
+  size = 'xl',
   className = '',
   listClassName = '',
   triggerClassName = '',
@@ -162,7 +175,7 @@ export const Tabs: React.FC<TabsProps> = ({
   
   const rootClasses = tabsRootStyles({ theme }) + (className ? ` ${className}` : '')
   const listClasses = tabsListStyles({ theme }) + (listClassName ? ` ${listClassName}` : '')
-  const contentClasses = tabsContentStyles({ theme }) + (contentClassName ? ` ${contentClassName}` : '')
+  const contentClasses = tabsContentStyles({ theme, size }) + (contentClassName ? ` ${contentClassName}` : '')
 
   return (
     <RadixTabs.Root
@@ -175,7 +188,8 @@ export const Tabs: React.FC<TabsProps> = ({
           const isActive = currentValue === item.value
           const triggerClasses = tabsTriggerStyles({ 
             theme, 
-            active: isActive 
+            active: isActive,
+            size
           }) + (triggerClassName ? ` ${triggerClassName}` : '')
           
           return (

@@ -10721,18 +10721,18 @@ const tabsRootStyles = cva('flex flex-col w-full', {
     theme: 'light'
   }
 });
-const tabsListStyles = cva('flex border-b relative overflow-x-auto scrollbar-hide', {
+const tabsListStyles = cva('flex relative overflow-x-auto scrollbar-hide after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:transition-colors', {
   variants: {
     theme: {
-      light: 'border-[rgba(12,28,51,0.15)]',
-      dark: 'border-gray-600/50'
+      light: 'after:bg-[rgba(12,28,51,0.15)]',
+      dark: 'after:bg-gray-600/50'
     }
   },
   defaultVariants: {
     theme: 'light'
   }
 });
-const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'font-dash-main text-2xl leading-[1.366] tracking-[-0.03em]', 'px-0 pr-[15px] pb-[10px]', 'transition-all duration-200 ease-in-out cursor-pointer', 'border-b-[1px] border-transparent', 'hover:opacity-80', 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', 'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50', 'font-light', 'whitespace-nowrap flex-shrink-0'], {
+const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'font-dash-main font-light', 'transition-all duration-200 ease-in-out cursor-pointer', 'hover:opacity-80', 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', 'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50', 'whitespace-nowrap flex-shrink-0', 'after:absolute after:bottom-0 after:left-0 after:bg-transparent after:transition-colors after:duration-200 after:z-10'], {
   variants: {
     theme: {
       light: '',
@@ -10741,12 +10741,17 @@ const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'fon
     active: {
       true: '',
       false: ''
+    },
+    size: {
+      sm: 'text-sm leading-[1.25] tracking-[-0.02em] px-0 pr-3 pb-2 after:right-3',
+      lg: 'text-xl leading-[1.3] tracking-[-0.025em] px-0 pr-4 pb-3 after:right-4',
+      xl: 'text-2xl leading-[1.366] tracking-[-0.03em] px-0 pr-[0.875rem] pb-[10px] after:right-[0.875rem]'
     }
   },
   compoundVariants: [{
     theme: 'light',
     active: true,
-    class: 'text-[#0C1C33] !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+    class: 'text-dash-primary-dark-blue [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
   }, {
     theme: 'light',
     active: false,
@@ -10754,7 +10759,7 @@ const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'fon
   }, {
     theme: 'dark',
     active: true,
-    class: 'text-white !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+    class: 'text-white [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
   }, {
     theme: 'dark',
     active: false,
@@ -10762,18 +10767,25 @@ const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'fon
   }],
   defaultVariants: {
     theme: 'light',
-    active: false
+    active: false,
+    size: 'xl'
   }
 });
-const tabsContentStyles = cva('mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', {
+const tabsContentStyles = cva('focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', {
   variants: {
     theme: {
       light: '',
       dark: ''
+    },
+    size: {
+      sm: 'mt-2',
+      lg: 'mt-3',
+      xl: 'mt-4'
     }
   },
   defaultVariants: {
-    theme: 'light'
+    theme: 'light',
+    size: 'xl'
   }
 });
 /**
@@ -10785,6 +10797,7 @@ const Tabs = ({
   value,
   defaultValue,
   onValueChange,
+  size = 'xl',
   className = '',
   listClassName = '',
   triggerClassName = '',
@@ -10810,7 +10823,8 @@ const Tabs = ({
     theme
   }) + (listClassName ? ` ${listClassName}` : '');
   const contentClasses = tabsContentStyles({
-    theme
+    theme,
+    size
   }) + (contentClassName ? ` ${contentClassName}` : '');
   return jsxs(Root2, {
     className: rootClasses,
@@ -10822,7 +10836,8 @@ const Tabs = ({
         const isActive = currentValue === item.value;
         const triggerClasses = tabsTriggerStyles({
           theme,
-          active: isActive
+          active: isActive,
+          size
         }) + (triggerClassName ? ` ${triggerClassName}` : '');
         return jsx(Trigger, {
           value: item.value,
