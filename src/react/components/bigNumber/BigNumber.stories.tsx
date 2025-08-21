@@ -16,6 +16,10 @@ const meta: Meta<typeof BigNumber> = {
     children: {
       control: { type: 'text' },
     },
+    className: {
+      control: { type: 'text' },
+      description: 'CSS classes including gap classes (e.g., gap-1, gap-2, gap-4)',
+    },
   },
 }
 
@@ -89,5 +93,29 @@ export const NullValue: Story = {
   args: {
     children: null as null,
     variant: 'space',
+  },
+}
+
+export const CustomGapSmall: Story = {
+  args: {
+    children: 1234567890,
+    variant: 'space',
+    className: 'gap-0.5',
+  },
+}
+
+export const CustomGapLarge: Story = {
+  args: {
+    children: 1234567890,
+    variant: 'space',
+    className: 'gap-4',
+  },
+}
+
+export const NoGap: Story = {
+  args: {
+    children: 1234567890,
+    variant: 'space',
+    className: 'gap-0',
   },
 } 

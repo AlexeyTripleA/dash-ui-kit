@@ -17,11 +17,10 @@ describe('BigNumber', () => {
     expect(element).toBeInTheDocument()
   })
 
-  it('groups digits with space variant', () => {
+  it('groups digits with space variant using gap', () => {
     const { container } = render(<BigNumber variant="space">1234567</BigNumber>)
-    // Should have space separators between groups
-    const spaces = container.querySelectorAll('.w-\\[3px\\]')
-    expect(spaces.length).toBeGreaterThan(0)
+    // Should have gap class applied
+    expect(container.firstChild).toHaveClass('gap-1')
   })
 
   it('groups digits with comma variant', () => {
@@ -77,5 +76,24 @@ describe('BigNumber', () => {
     render(<BigNumber variant="comma">12345.678</BigNumber>)
     expect(screen.getByText('678')).toBeInTheDocument()
     expect(screen.getByText('.')).toBeInTheDocument()
+  })
+
+  it('applies custom gap via className', () => {
+    const { container } = render(
+      <BigNumber variant="space" className="gap-4">123456</BigNumber>
+    )
+    expect(container.firstChild).toHaveClass('gap-4')
+  })
+
+  it('uses default gap when no gap specified in className', () => {
+    const { container } = render(<BigNumber variant="space">123456</BigNumber>)
+    expect(container.firstChild).toHaveClass('gap-1')
+  })
+
+  it('can override default gap with className', () => {
+    const { container } = render(
+      <BigNumber variant="space" className="gap-0">123456</BigNumber>
+    )
+    expect(container.firstChild).toHaveClass('gap-0')
   })
 }) 
