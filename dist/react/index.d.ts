@@ -1,3 +1,4 @@
+export { Accordion, type AccordionProps } from './components/accordion';
 export { Button, type ButtonProps } from './components/button';
 export { Input, type InputProps } from './components/input';
 export { Textarea, type TextareaProps } from './components/textarea';
@@ -20,6 +21,7 @@ export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey 
 export { ProgressStepBar, type ProgressStepBarProps } from './components/progressStepBar';
 export { DashLogo, type DashLogoProps } from './components/dashLogo';
 export { Dialog, type DialogProps } from './components/dialog';
+export { Tabs, type TabsProps, type TabItem } from './components/tabs';
 export type { TimeDeltaFormat } from './utils/datetime';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
 export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, WalletSmallIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon } from './components/icons';

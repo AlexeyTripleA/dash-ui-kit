@@ -13,6 +13,11 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
     error?: boolean;
     success?: boolean;
     prefix?: string | React.ReactNode;
+    /**
+     * Controls visibility toggle for password inputs. When false, the eye icon is hidden and no extra right padding is applied.
+     * Defaults to true.
+     */
+    showPasswordToggle?: boolean;
 }
 /**
  * A versatile input component that adapts to light/dark theme,

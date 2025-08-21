@@ -1,3 +1,4 @@
+export { Accordion, type AccordionProps } from './accordion'
 export { Button, type ButtonProps } from './button'
 export { Input, type InputProps } from './input'
 export { Textarea, type TextareaProps } from './textarea'
@@ -20,6 +21,7 @@ export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey 
 export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar'
 export { DashLogo, type DashLogoProps } from './dashLogo'
 export { Dialog, type DialogProps } from './dialog'
+export { Tabs, type TabsProps, type TabItem } from './tabs'
 export type { TimeDeltaFormat } from '../utils/datetime'
 export {
   ArrowIcon,

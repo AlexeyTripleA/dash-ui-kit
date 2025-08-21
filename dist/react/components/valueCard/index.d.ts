@@ -2,7 +2,7 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const valueCard: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "lightBlue" | "lightGray" | "white" | "green" | "transparent" | "yellow" | null | undefined;
+    colorScheme?: "white" | "default" | "lightBlue" | "lightGray" | "green" | "transparent" | "yellow" | null | undefined;
     size?: "sm" | "md" | "xl" | null | undefined;
     clickable?: boolean | null | undefined;
     loading?: boolean | null | undefined;

@@ -23,7 +23,7 @@ export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> 
     showArrow?: boolean;
     value?: string;
     defaultValue?: string;
-    onValueChange?: (value: string) => void;
+    onChange?: (value: string) => void;
     placeholder?: string;
     disabled?: boolean;
     name?: string;

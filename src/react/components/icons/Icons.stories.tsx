@@ -319,71 +319,29 @@ export const Check: StoryObj = {
 // Size Variations
 export const SizeVariations: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon size={12} />
-        <span className="text-xs">12px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons support different sizes:</p>
+      <div className="flex items-center gap-4">
         <SuccessIcon size={16} />
-        <span className="text-xs">16px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon size={20} />
-        <span className="text-xs">20px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon size={24} />
-        <span className="text-xs">24px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon size={32} />
-        <span className="text-xs">32px</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons can be displayed in different sizes using the size prop.'
-      }
-    }
-  }
+  )
 }
 
 // Color Variations
 export const ColorVariations: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons support custom colors:</p>
+      <div className="flex items-center gap-4">
         <SuccessIcon color="#1CC400" />
-        <span className="text-xs">Green</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon color="#F45858" />
-        <span className="text-xs">Red</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon color="#008DE4" />
-        <span className="text-xs">Blue</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon color="#F4A358" />
-        <span className="text-xs">Orange</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon color="#9333EA" />
-        <span className="text-xs">Purple</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons support custom colors via the color prop.'
-      }
-    }
-  }
+  )
 }
 
 // Key Icon
@@ -589,143 +547,24 @@ export const QuestionMessage: StoryObj = {
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons can be interactive with click handlers:</p>
+      <div className="flex items-center gap-4">
         <CopyIcon 
           color="#4C7EFF" 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
+          className="cursor-pointer hover:opacity-80"
           onClick={() => alert('Copy clicked!')}
         />
-        <span className="text-xs">Click to copy</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <EyeOpenIcon 
-          color="#4C7EFF" 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Eye clicked!')}
-        />
-        <span className="text-xs">Toggle visibility</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <CheckIcon 
-          className="cursor-pointer hover:scale-110 transition-transform"
+          className="cursor-pointer hover:scale-110"
           onClick={() => alert('Check clicked!')}
         />
-        <span className="text-xs">Mark as done</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <KeyIcon 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Key clicked!')}
-        />
-        <span className="text-xs">Security key</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <CrossIcon 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Cross clicked!')}
-        />
-        <span className="text-xs">Close dialog</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <WalletIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Wallet clicked!')}
-        />
-        <span className="text-xs">Wallet access</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <PlusIcon 
-          className="cursor-pointer hover:scale-110 transition-transform"
-          onClick={() => alert('Plus clicked!')}
-        />
-        <span className="text-xs">Add item</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <FilterIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Filter clicked!')}
-        />
-        <span className="text-xs">Filter data</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <DeleteIcon 
           color="#F45858"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
+          className="cursor-pointer hover:opacity-80"
           onClick={() => alert('Delete clicked!')}
         />
-        <span className="text-xs">Delete item</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <BurgerMenuIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Menu clicked!')}
-        />
-        <span className="text-xs">Open menu</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <CircleProcessIcon 
-          className="cursor-pointer hover:scale-110 transition-transform"
-          onClick={() => alert('Process clicked!')}
-        />
-        <span className="text-xs">Processing</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <CreditsIcon 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Credits clicked!')}
-        />
-        <span className="text-xs">View credits</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <WebIcon 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Web clicked!')}
-        />
-        <span className="text-xs">Web access</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <ChainSmallIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Chain clicked!')}
-        />
-        <span className="text-xs">Link chain</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SettingsIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Settings clicked!')}
-        />
-        <span className="text-xs">Settings</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <ShieldSmallIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Shield clicked!')}
-        />
-        <span className="text-xs">Security</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <QuestionMessageIcon 
-          color="#4C7EFF"
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Question clicked!')}
-        />
-        <span className="text-xs">Help/FAQ</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons can be made interactive with onClick handlers and hover effects.'
-      }
-    }
-  }
+  )
 } 

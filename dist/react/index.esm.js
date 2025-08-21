@@ -1,12 +1,954 @@
 "use client";
 
-import { __rest, __assign, __spreadArray } from 'tslib';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { cva } from 'class-variance-authority';
 import * as React from 'react';
 import React__default, { useState, useEffect, createContext, useContext, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
+import { cva } from 'class-variance-authority';
+import { __rest, __assign, __spreadArray } from 'tslib';
+
+// packages/react/context/src/create-context.tsx
+function createContext2(rootComponentName, defaultContext) {
+  const Context = React.createContext(defaultContext);
+  const Provider = (props) => {
+    const { children, ...context } = props;
+    const value = React.useMemo(() => context, Object.values(context));
+    return /* @__PURE__ */ jsx(Context.Provider, { value, children });
+  };
+  Provider.displayName = rootComponentName + "Provider";
+  function useContext2(consumerName) {
+    const context = React.useContext(Context);
+    if (context) return context;
+    if (defaultContext !== void 0) return defaultContext;
+    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+  }
+  return [Provider, useContext2];
+}
+function createContextScope(scopeName, createContextScopeDeps = []) {
+  let defaultContexts = [];
+  function createContext3(rootComponentName, defaultContext) {
+    const BaseContext = React.createContext(defaultContext);
+    const index = defaultContexts.length;
+    defaultContexts = [...defaultContexts, defaultContext];
+    const Provider = (props) => {
+      const { scope, children, ...context } = props;
+      const Context = scope?.[scopeName]?.[index] || BaseContext;
+      const value = React.useMemo(() => context, Object.values(context));
+      return /* @__PURE__ */ jsx(Context.Provider, { value, children });
+    };
+    Provider.displayName = rootComponentName + "Provider";
+    function useContext2(consumerName, scope) {
+      const Context = scope?.[scopeName]?.[index] || BaseContext;
+      const context = React.useContext(Context);
+      if (context) return context;
+      if (defaultContext !== void 0) return defaultContext;
+      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+    }
+    return [Provider, useContext2];
+  }
+  const createScope = () => {
+    const scopeContexts = defaultContexts.map((defaultContext) => {
+      return React.createContext(defaultContext);
+    });
+    return function useScope(scope) {
+      const contexts = scope?.[scopeName] || scopeContexts;
+      return React.useMemo(
+        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
+        [scope, contexts]
+      );
+    };
+  };
+  createScope.scopeName = scopeName;
+  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes(...scopes) {
+  const baseScope = scopes[0];
+  if (scopes.length === 1) return baseScope;
+  const createScope = () => {
+    const scopeHooks = scopes.map((createScope2) => ({
+      useScope: createScope2(),
+      scopeName: createScope2.scopeName
+    }));
+    return function useComposedScopes(overrideScopes) {
+      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+        const scopeProps = useScope(overrideScopes);
+        const currentScope = scopeProps[`__scope${scopeName}`];
+        return { ...nextScopes2, ...currentScope };
+      }, {});
+      return React.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+    };
+  };
+  createScope.scopeName = baseScope.scopeName;
+  return createScope;
+}
+
+// packages/react/compose-refs/src/compose-refs.tsx
+function setRef(ref, value) {
+  if (typeof ref === "function") {
+    return ref(value);
+  } else if (ref !== null && ref !== void 0) {
+    ref.current = value;
+  }
+}
+function composeRefs(...refs) {
+  return (node) => {
+    let hasCleanup = false;
+    const cleanups = refs.map((ref) => {
+      const cleanup = setRef(ref, node);
+      if (!hasCleanup && typeof cleanup == "function") {
+        hasCleanup = true;
+      }
+      return cleanup;
+    });
+    if (hasCleanup) {
+      return () => {
+        for (let i = 0; i < cleanups.length; i++) {
+          const cleanup = cleanups[i];
+          if (typeof cleanup == "function") {
+            cleanup();
+          } else {
+            setRef(refs[i], null);
+          }
+        }
+      };
+    }
+  };
+}
+function useComposedRefs(...refs) {
+  return React.useCallback(composeRefs(...refs), refs);
+}
+
+// src/slot.tsx
+// @__NO_SIDE_EFFECTS__
+function createSlot(ownerName) {
+  const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
+  const Slot2 = React.forwardRef((props, forwardedRef) => {
+    const { children, ...slotProps } = props;
+    const childrenArray = React.Children.toArray(children);
+    const slottable = childrenArray.find(isSlottable);
+    if (slottable) {
+      const newElement = slottable.props.children;
+      const newChildren = childrenArray.map((child) => {
+        if (child === slottable) {
+          if (React.Children.count(newElement) > 1) return React.Children.only(null);
+          return React.isValidElement(newElement) ? newElement.props.children : null;
+        } else {
+          return child;
+        }
+      });
+      return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children: React.isValidElement(newElement) ? React.cloneElement(newElement, void 0, newChildren) : null });
+    }
+    return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children });
+  });
+  Slot2.displayName = `${ownerName}.Slot`;
+  return Slot2;
+}
+// @__NO_SIDE_EFFECTS__
+function createSlotClone(ownerName) {
+  const SlotClone = React.forwardRef((props, forwardedRef) => {
+    const { children, ...slotProps } = props;
+    if (React.isValidElement(children)) {
+      const childrenRef = getElementRef$2(children);
+      const props2 = mergeProps(slotProps, children.props);
+      if (children.type !== React.Fragment) {
+        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+      }
+      return React.cloneElement(children, props2);
+    }
+    return React.Children.count(children) > 1 ? React.Children.only(null) : null;
+  });
+  SlotClone.displayName = `${ownerName}.SlotClone`;
+  return SlotClone;
+}
+var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
+function isSlottable(child) {
+  return React.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
+}
+function mergeProps(slotProps, childProps) {
+  const overrideProps = { ...childProps };
+  for (const propName in childProps) {
+    const slotPropValue = slotProps[propName];
+    const childPropValue = childProps[propName];
+    const isHandler = /^on[A-Z]/.test(propName);
+    if (isHandler) {
+      if (slotPropValue && childPropValue) {
+        overrideProps[propName] = (...args) => {
+          const result = childPropValue(...args);
+          slotPropValue(...args);
+          return result;
+        };
+      } else if (slotPropValue) {
+        overrideProps[propName] = slotPropValue;
+      }
+    } else if (propName === "style") {
+      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+    } else if (propName === "className") {
+      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+    }
+  }
+  return { ...slotProps, ...overrideProps };
+}
+function getElementRef$2(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+
+function createCollection(name) {
+  const PROVIDER_NAME = name + "CollectionProvider";
+  const [createCollectionContext, createCollectionScope] = createContextScope(PROVIDER_NAME);
+  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
+    PROVIDER_NAME,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  );
+  const CollectionProvider = (props) => {
+    const { scope, children } = props;
+    const ref = React__default.useRef(null);
+    const itemMap = React__default.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
+  };
+  CollectionProvider.displayName = PROVIDER_NAME;
+  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
+  const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
+  const CollectionSlot = React__default.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children } = props;
+      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
+      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
+      return /* @__PURE__ */ jsx(CollectionSlotImpl, { ref: composedRefs, children });
+    }
+  );
+  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
+  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
+  const ITEM_DATA_ATTR = "data-radix-collection-item";
+  const CollectionItemSlotImpl = createSlot(ITEM_SLOT_NAME);
+  const CollectionItemSlot = React__default.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children, ...itemData } = props;
+      const ref = React__default.useRef(null);
+      const composedRefs = useComposedRefs(forwardedRef, ref);
+      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
+      React__default.useEffect(() => {
+        context.itemMap.set(ref, { ref, ...itemData });
+        return () => void context.itemMap.delete(ref);
+      });
+      return /* @__PURE__ */ jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
+    }
+  );
+  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
+  function useCollection(scope) {
+    const context = useCollectionContext(name + "CollectionConsumer", scope);
+    const getItems = React__default.useCallback(() => {
+      const collectionNode = context.collectionRef.current;
+      if (!collectionNode) return [];
+      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
+      const items = Array.from(context.itemMap.values());
+      const orderedItems = items.sort(
+        (a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current)
+      );
+      return orderedItems;
+    }, [context.collectionRef, context.itemMap]);
+    return getItems;
+  }
+  return [
+    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
+    useCollection,
+    createCollectionScope
+  ];
+}
+
+// src/primitive.tsx
+function composeEventHandlers$1(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+  return function handleEvent(event) {
+    originalEventHandler?.(event);
+    if (checkForDefaultPrevented === false || !event.defaultPrevented) {
+      return ourEventHandler?.(event);
+    }
+  };
+}
+
+// packages/react/use-layout-effect/src/use-layout-effect.tsx
+var useLayoutEffect2 = globalThis?.document ? React.useLayoutEffect : () => {
+};
+
+// src/use-controllable-state.tsx
+var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+function useControllableState({
+  prop,
+  defaultProp,
+  onChange = () => {
+  },
+  caller
+}) {
+  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+    defaultProp,
+    onChange
+  });
+  const isControlled = prop !== void 0;
+  const value = isControlled ? prop : uncontrolledProp;
+  {
+    const isControlledRef = React.useRef(prop !== void 0);
+    React.useEffect(() => {
+      const wasControlled = isControlledRef.current;
+      if (wasControlled !== isControlled) {
+        const from = wasControlled ? "controlled" : "uncontrolled";
+        const to = isControlled ? "controlled" : "uncontrolled";
+        console.warn(
+          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+        );
+      }
+      isControlledRef.current = isControlled;
+    }, [isControlled, caller]);
+  }
+  const setValue = React.useCallback(
+    (nextValue) => {
+      if (isControlled) {
+        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
+        if (value2 !== prop) {
+          onChangeRef.current?.(value2);
+        }
+      } else {
+        setUncontrolledProp(nextValue);
+      }
+    },
+    [isControlled, prop, setUncontrolledProp, onChangeRef]
+  );
+  return [value, setValue];
+}
+function useUncontrolledState({
+  defaultProp,
+  onChange
+}) {
+  const [value, setValue] = React.useState(defaultProp);
+  const prevValueRef = React.useRef(value);
+  const onChangeRef = React.useRef(onChange);
+  useInsertionEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+  React.useEffect(() => {
+    if (prevValueRef.current !== value) {
+      onChangeRef.current?.(value);
+      prevValueRef.current = value;
+    }
+  }, [value, prevValueRef]);
+  return [value, setValue, onChangeRef];
+}
+function isFunction(value) {
+  return typeof value === "function";
+}
+
+// src/primitive.tsx
+var NODES = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+];
+var Primitive = NODES.reduce((primitive, node) => {
+  const Slot = createSlot(`Primitive.${node}`);
+  const Node = React.forwardRef((props, forwardedRef) => {
+    const { asChild, ...primitiveProps } = props;
+    const Comp = asChild ? Slot : node;
+    if (typeof window !== "undefined") {
+      window[Symbol.for("radix-ui")] = true;
+    }
+    return /* @__PURE__ */ jsx(Comp, { ...primitiveProps, ref: forwardedRef });
+  });
+  Node.displayName = `Primitive.${node}`;
+  return { ...primitive, [node]: Node };
+}, {});
+function dispatchDiscreteCustomEvent(target, event) {
+  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
+}
+
+function useStateMachine$1(initialState, machine) {
+  return React.useReducer((state, event) => {
+    const nextState = machine[state][event];
+    return nextState ?? state;
+  }, initialState);
+}
+
+// src/presence.tsx
+var Presence$1 = (props) => {
+  const { present, children } = props;
+  const presence = usePresence$1(present);
+  const child = typeof children === "function" ? children({ present: presence.isPresent }) : React.Children.only(children);
+  const ref = useComposedRefs(presence.ref, getElementRef$1(child));
+  const forceMount = typeof children === "function";
+  return forceMount || presence.isPresent ? React.cloneElement(child, { ref }) : null;
+};
+Presence$1.displayName = "Presence";
+function usePresence$1(present) {
+  const [node, setNode] = React.useState();
+  const stylesRef = React.useRef(null);
+  const prevPresentRef = React.useRef(present);
+  const prevAnimationNameRef = React.useRef("none");
+  const initialState = present ? "mounted" : "unmounted";
+  const [state, send] = useStateMachine$1(initialState, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
+    }
+  });
+  React.useEffect(() => {
+    const currentAnimationName = getAnimationName$1(stylesRef.current);
+    prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+  }, [state]);
+  useLayoutEffect2(() => {
+    const styles = stylesRef.current;
+    const wasPresent = prevPresentRef.current;
+    const hasPresentChanged = wasPresent !== present;
+    if (hasPresentChanged) {
+      const prevAnimationName = prevAnimationNameRef.current;
+      const currentAnimationName = getAnimationName$1(styles);
+      if (present) {
+        send("MOUNT");
+      } else if (currentAnimationName === "none" || styles?.display === "none") {
+        send("UNMOUNT");
+      } else {
+        const isAnimating = prevAnimationName !== currentAnimationName;
+        if (wasPresent && isAnimating) {
+          send("ANIMATION_OUT");
+        } else {
+          send("UNMOUNT");
+        }
+      }
+      prevPresentRef.current = present;
+    }
+  }, [present, send]);
+  useLayoutEffect2(() => {
+    if (node) {
+      let timeoutId;
+      const ownerWindow = node.ownerDocument.defaultView ?? window;
+      const handleAnimationEnd = (event) => {
+        const currentAnimationName = getAnimationName$1(stylesRef.current);
+        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
+        if (event.target === node && isCurrentAnimation) {
+          send("ANIMATION_END");
+          if (!prevPresentRef.current) {
+            const currentFillMode = node.style.animationFillMode;
+            node.style.animationFillMode = "forwards";
+            timeoutId = ownerWindow.setTimeout(() => {
+              if (node.style.animationFillMode === "forwards") {
+                node.style.animationFillMode = currentFillMode;
+              }
+            });
+          }
+        }
+      };
+      const handleAnimationStart = (event) => {
+        if (event.target === node) {
+          prevAnimationNameRef.current = getAnimationName$1(stylesRef.current);
+        }
+      };
+      node.addEventListener("animationstart", handleAnimationStart);
+      node.addEventListener("animationcancel", handleAnimationEnd);
+      node.addEventListener("animationend", handleAnimationEnd);
+      return () => {
+        ownerWindow.clearTimeout(timeoutId);
+        node.removeEventListener("animationstart", handleAnimationStart);
+        node.removeEventListener("animationcancel", handleAnimationEnd);
+        node.removeEventListener("animationend", handleAnimationEnd);
+      };
+    } else {
+      send("ANIMATION_END");
+    }
+  }, [node, send]);
+  return {
+    isPresent: ["mounted", "unmountSuspended"].includes(state),
+    ref: React.useCallback((node2) => {
+      stylesRef.current = node2 ? getComputedStyle(node2) : null;
+      setNode(node2);
+    }, [])
+  };
+}
+function getAnimationName$1(styles) {
+  return styles?.animationName || "none";
+}
+function getElementRef$1(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+
+// packages/react/id/src/id.tsx
+var useReactId = React[" useId ".trim().toString()] || (() => void 0);
+var count$1 = 0;
+function useId(deterministicId) {
+  const [id, setId] = React.useState(useReactId());
+  useLayoutEffect2(() => {
+    setId((reactId) => reactId ?? String(count$1++));
+  }, [deterministicId]);
+  return (id ? `radix-${id}` : "");
+}
+
+var COLLAPSIBLE_NAME = "Collapsible";
+var [createCollapsibleContext, createCollapsibleScope] = createContextScope(COLLAPSIBLE_NAME);
+var [CollapsibleProvider, useCollapsibleContext] = createCollapsibleContext(COLLAPSIBLE_NAME);
+var Collapsible = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeCollapsible,
+      open: openProp,
+      defaultOpen,
+      disabled,
+      onOpenChange,
+      ...collapsibleProps
+    } = props;
+    const [open, setOpen] = useControllableState({
+      prop: openProp,
+      defaultProp: defaultOpen ?? false,
+      onChange: onOpenChange,
+      caller: COLLAPSIBLE_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      CollapsibleProvider,
+      {
+        scope: __scopeCollapsible,
+        disabled,
+        contentId: useId(),
+        open,
+        onOpenToggle: React.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            "data-state": getState$2(open),
+            "data-disabled": disabled ? "" : void 0,
+            ...collapsibleProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+Collapsible.displayName = COLLAPSIBLE_NAME;
+var TRIGGER_NAME$4 = "CollapsibleTrigger";
+var CollapsibleTrigger = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeCollapsible, ...triggerProps } = props;
+    const context = useCollapsibleContext(TRIGGER_NAME$4, __scopeCollapsible);
+    return /* @__PURE__ */ jsx(
+      Primitive.button,
+      {
+        type: "button",
+        "aria-controls": context.contentId,
+        "aria-expanded": context.open || false,
+        "data-state": getState$2(context.open),
+        "data-disabled": context.disabled ? "" : void 0,
+        disabled: context.disabled,
+        ...triggerProps,
+        ref: forwardedRef,
+        onClick: composeEventHandlers$1(props.onClick, context.onOpenToggle)
+      }
+    );
+  }
+);
+CollapsibleTrigger.displayName = TRIGGER_NAME$4;
+var CONTENT_NAME$5 = "CollapsibleContent";
+var CollapsibleContent = React.forwardRef(
+  (props, forwardedRef) => {
+    const { forceMount, ...contentProps } = props;
+    const context = useCollapsibleContext(CONTENT_NAME$5, props.__scopeCollapsible);
+    return /* @__PURE__ */ jsx(Presence$1, { present: forceMount || context.open, children: ({ present }) => /* @__PURE__ */ jsx(CollapsibleContentImpl, { ...contentProps, ref: forwardedRef, present }) });
+  }
+);
+CollapsibleContent.displayName = CONTENT_NAME$5;
+var CollapsibleContentImpl = React.forwardRef((props, forwardedRef) => {
+  const { __scopeCollapsible, present, children, ...contentProps } = props;
+  const context = useCollapsibleContext(CONTENT_NAME$5, __scopeCollapsible);
+  const [isPresent, setIsPresent] = React.useState(present);
+  const ref = React.useRef(null);
+  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const heightRef = React.useRef(0);
+  const height = heightRef.current;
+  const widthRef = React.useRef(0);
+  const width = widthRef.current;
+  const isOpen = context.open || isPresent;
+  const isMountAnimationPreventedRef = React.useRef(isOpen);
+  const originalStylesRef = React.useRef(void 0);
+  React.useEffect(() => {
+    const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+    return () => cancelAnimationFrame(rAF);
+  }, []);
+  useLayoutEffect2(() => {
+    const node = ref.current;
+    if (node) {
+      originalStylesRef.current = originalStylesRef.current || {
+        transitionDuration: node.style.transitionDuration,
+        animationName: node.style.animationName
+      };
+      node.style.transitionDuration = "0s";
+      node.style.animationName = "none";
+      const rect = node.getBoundingClientRect();
+      heightRef.current = rect.height;
+      widthRef.current = rect.width;
+      if (!isMountAnimationPreventedRef.current) {
+        node.style.transitionDuration = originalStylesRef.current.transitionDuration;
+        node.style.animationName = originalStylesRef.current.animationName;
+      }
+      setIsPresent(present);
+    }
+  }, [context.open, present]);
+  return /* @__PURE__ */ jsx(
+    Primitive.div,
+    {
+      "data-state": getState$2(context.open),
+      "data-disabled": context.disabled ? "" : void 0,
+      id: context.contentId,
+      hidden: !isOpen,
+      ...contentProps,
+      ref: composedRefs,
+      style: {
+        [`--radix-collapsible-content-height`]: height ? `${height}px` : void 0,
+        [`--radix-collapsible-content-width`]: width ? `${width}px` : void 0,
+        ...props.style
+      },
+      children: isOpen && children
+    }
+  );
+});
+function getState$2(open) {
+  return open ? "open" : "closed";
+}
+var Root$3 = Collapsible;
+var Trigger$3 = CollapsibleTrigger;
+var Content$3 = CollapsibleContent;
+
+// packages/react/direction/src/direction.tsx
+var DirectionContext = React.createContext(void 0);
+function useDirection(localDir) {
+  const globalDir = React.useContext(DirectionContext);
+  return localDir || globalDir || "ltr";
+}
+
+var ACCORDION_NAME = "Accordion";
+var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+var [Collection$2, useCollection$2, createCollectionScope$2] = createCollection(ACCORDION_NAME);
+var [createAccordionContext, createAccordionScope] = createContextScope(ACCORDION_NAME, [
+  createCollectionScope$2,
+  createCollapsibleScope
+]);
+var useCollapsibleScope = createCollapsibleScope();
+var Accordion$1 = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { type, ...accordionProps } = props;
+    const singleProps = accordionProps;
+    const multipleProps = accordionProps;
+    return /* @__PURE__ */ jsx(Collection$2.Provider, { scope: props.__scopeAccordion, children: type === "multiple" ? /* @__PURE__ */ jsx(AccordionImplMultiple, { ...multipleProps, ref: forwardedRef }) : /* @__PURE__ */ jsx(AccordionImplSingle, { ...singleProps, ref: forwardedRef }) });
+  }
+);
+Accordion$1.displayName = ACCORDION_NAME;
+var [AccordionValueProvider, useAccordionValueContext] = createAccordionContext(ACCORDION_NAME);
+var [AccordionCollapsibleProvider, useAccordionCollapsibleContext] = createAccordionContext(
+  ACCORDION_NAME,
+  { collapsible: false }
+);
+var AccordionImplSingle = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      value: valueProp,
+      defaultValue,
+      onValueChange = () => {
+      },
+      collapsible = false,
+      ...accordionSingleProps
+    } = props;
+    const [value, setValue] = useControllableState({
+      prop: valueProp,
+      defaultProp: defaultValue ?? "",
+      onChange: onValueChange,
+      caller: ACCORDION_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      AccordionValueProvider,
+      {
+        scope: props.__scopeAccordion,
+        value: React__default.useMemo(() => value ? [value] : [], [value]),
+        onItemOpen: setValue,
+        onItemClose: React__default.useCallback(() => collapsible && setValue(""), [collapsible, setValue]),
+        children: /* @__PURE__ */ jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible, children: /* @__PURE__ */ jsx(AccordionImpl, { ...accordionSingleProps, ref: forwardedRef }) })
+      }
+    );
+  }
+);
+var AccordionImplMultiple = React__default.forwardRef((props, forwardedRef) => {
+  const {
+    value: valueProp,
+    defaultValue,
+    onValueChange = () => {
+    },
+    ...accordionMultipleProps
+  } = props;
+  const [value, setValue] = useControllableState({
+    prop: valueProp,
+    defaultProp: defaultValue ?? [],
+    onChange: onValueChange,
+    caller: ACCORDION_NAME
+  });
+  const handleItemOpen = React__default.useCallback(
+    (itemValue) => setValue((prevValue = []) => [...prevValue, itemValue]),
+    [setValue]
+  );
+  const handleItemClose = React__default.useCallback(
+    (itemValue) => setValue((prevValue = []) => prevValue.filter((value2) => value2 !== itemValue)),
+    [setValue]
+  );
+  return /* @__PURE__ */ jsx(
+    AccordionValueProvider,
+    {
+      scope: props.__scopeAccordion,
+      value,
+      onItemOpen: handleItemOpen,
+      onItemClose: handleItemClose,
+      children: /* @__PURE__ */ jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible: true, children: /* @__PURE__ */ jsx(AccordionImpl, { ...accordionMultipleProps, ref: forwardedRef }) })
+    }
+  );
+});
+var [AccordionImplProvider, useAccordionContext] = createAccordionContext(ACCORDION_NAME);
+var AccordionImpl = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, disabled, dir, orientation = "vertical", ...accordionProps } = props;
+    const accordionRef = React__default.useRef(null);
+    const composedRefs = useComposedRefs(accordionRef, forwardedRef);
+    const getItems = useCollection$2(__scopeAccordion);
+    const direction = useDirection(dir);
+    const isDirectionLTR = direction === "ltr";
+    const handleKeyDown = composeEventHandlers$1(props.onKeyDown, (event) => {
+      if (!ACCORDION_KEYS.includes(event.key)) return;
+      const target = event.target;
+      const triggerCollection = getItems().filter((item) => !item.ref.current?.disabled);
+      const triggerIndex = triggerCollection.findIndex((item) => item.ref.current === target);
+      const triggerCount = triggerCollection.length;
+      if (triggerIndex === -1) return;
+      event.preventDefault();
+      let nextIndex = triggerIndex;
+      const homeIndex = 0;
+      const endIndex = triggerCount - 1;
+      const moveNext = () => {
+        nextIndex = triggerIndex + 1;
+        if (nextIndex > endIndex) {
+          nextIndex = homeIndex;
+        }
+      };
+      const movePrev = () => {
+        nextIndex = triggerIndex - 1;
+        if (nextIndex < homeIndex) {
+          nextIndex = endIndex;
+        }
+      };
+      switch (event.key) {
+        case "Home":
+          nextIndex = homeIndex;
+          break;
+        case "End":
+          nextIndex = endIndex;
+          break;
+        case "ArrowRight":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              moveNext();
+            } else {
+              movePrev();
+            }
+          }
+          break;
+        case "ArrowDown":
+          if (orientation === "vertical") {
+            moveNext();
+          }
+          break;
+        case "ArrowLeft":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              movePrev();
+            } else {
+              moveNext();
+            }
+          }
+          break;
+        case "ArrowUp":
+          if (orientation === "vertical") {
+            movePrev();
+          }
+          break;
+      }
+      const clampedIndex = nextIndex % triggerCount;
+      triggerCollection[clampedIndex].ref.current?.focus();
+    });
+    return /* @__PURE__ */ jsx(
+      AccordionImplProvider,
+      {
+        scope: __scopeAccordion,
+        disabled,
+        direction: dir,
+        orientation,
+        children: /* @__PURE__ */ jsx(Collection$2.Slot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            ...accordionProps,
+            "data-orientation": orientation,
+            ref: composedRefs,
+            onKeyDown: disabled ? void 0 : handleKeyDown
+          }
+        ) })
+      }
+    );
+  }
+);
+var ITEM_NAME$2 = "AccordionItem";
+var [AccordionItemProvider, useAccordionItemContext] = createAccordionContext(ITEM_NAME$2);
+var AccordionItem = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, value, ...accordionItemProps } = props;
+    const accordionContext = useAccordionContext(ITEM_NAME$2, __scopeAccordion);
+    const valueContext = useAccordionValueContext(ITEM_NAME$2, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    const triggerId = useId();
+    const open = value && valueContext.value.includes(value) || false;
+    const disabled = accordionContext.disabled || props.disabled;
+    return /* @__PURE__ */ jsx(
+      AccordionItemProvider,
+      {
+        scope: __scopeAccordion,
+        open,
+        disabled,
+        triggerId,
+        children: /* @__PURE__ */ jsx(
+          Root$3,
+          {
+            "data-orientation": accordionContext.orientation,
+            "data-state": getState$1(open),
+            ...collapsibleScope,
+            ...accordionItemProps,
+            ref: forwardedRef,
+            disabled,
+            open,
+            onOpenChange: (open2) => {
+              if (open2) {
+                valueContext.onItemOpen(value);
+              } else {
+                valueContext.onItemClose(value);
+              }
+            }
+          }
+        )
+      }
+    );
+  }
+);
+AccordionItem.displayName = ITEM_NAME$2;
+var HEADER_NAME = "AccordionHeader";
+var AccordionHeader = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...headerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(HEADER_NAME, __scopeAccordion);
+    return /* @__PURE__ */ jsx(
+      Primitive.h3,
+      {
+        "data-orientation": accordionContext.orientation,
+        "data-state": getState$1(itemContext.open),
+        "data-disabled": itemContext.disabled ? "" : void 0,
+        ...headerProps,
+        ref: forwardedRef
+      }
+    );
+  }
+);
+AccordionHeader.displayName = HEADER_NAME;
+var TRIGGER_NAME$3 = "AccordionTrigger";
+var AccordionTrigger = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...triggerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(TRIGGER_NAME$3, __scopeAccordion);
+    const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME$3, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsx(Collection$2.ItemSlot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx(
+      Trigger$3,
+      {
+        "aria-disabled": itemContext.open && !collapsibleContext.collapsible || void 0,
+        "data-orientation": accordionContext.orientation,
+        id: itemContext.triggerId,
+        ...collapsibleScope,
+        ...triggerProps,
+        ref: forwardedRef
+      }
+    ) });
+  }
+);
+AccordionTrigger.displayName = TRIGGER_NAME$3;
+var CONTENT_NAME$4 = "AccordionContent";
+var AccordionContent = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...contentProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(CONTENT_NAME$4, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsx(
+      Content$3,
+      {
+        role: "region",
+        "aria-labelledby": itemContext.triggerId,
+        "data-orientation": accordionContext.orientation,
+        ...collapsibleScope,
+        ...contentProps,
+        ref: forwardedRef,
+        style: {
+          ["--radix-accordion-content-height"]: "var(--radix-collapsible-content-height)",
+          ["--radix-accordion-content-width"]: "var(--radix-collapsible-content-width)",
+          ...props.style
+        }
+      }
+    );
+  }
+);
+AccordionContent.displayName = CONTENT_NAME$4;
+function getState$1(open) {
+  return open ? "open" : "closed";
+}
+var Root2$3 = Accordion$1;
+var Item$2 = AccordionItem;
+var Trigger2 = AccordionTrigger;
+var Content2$1 = AccordionContent;
 
 const ThemeContext = /*#__PURE__*/createContext(undefined);
 /**
@@ -76,285 +1018,6 @@ function useTheme() {
   }
   return context;
 }
-
-const styles = cva(`
-    dash-btn-base
-    select-none
-    min-h-11
-    flex
-    items-center
-    capitalize
-    transition-colors
-    hover:cursor-pointer
-    justify-center
-    font-dash-main
-  `, {
-  variants: {
-    theme: {
-      light: '',
-      dark: ''
-    },
-    variant: {
-      solid: '',
-      outline: 'dash-btn-outline border !bg-transparent'
-    },
-    colorScheme: {
-      brand: '',
-      mint: '',
-      gray: '',
-      red: '',
-      lightBlue: '',
-      lightGray: ''
-    },
-    state: {
-      active: 'active:-translate-y-[-1px]',
-      disabled: 'hover:!cursor-not-allowed'
-    },
-    size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
-    }
-  },
-  compoundVariants: [
-  // solid variant color schemes - light theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    theme: 'light',
-    class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    theme: 'light',
-    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'gray',
-    theme: 'light',
-    class: '!bg-gray-200 !text-gray-700 hover:!bg-gray-300'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    theme: 'light',
-    class: '!bg-red-200 !text-red-700 hover:!bg-red-300'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    theme: 'light',
-    class: '!bg-dash-brand/10 !text-dash-brand hover:!bg-dash-brand/20'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    theme: 'light',
-    class: '!bg-[rgba(12,28,51,0.03)] !text-[#0C1C33] hover:!bg-[rgba(12,28,51,0.06)]'
-  },
-  // solid variant color schemes - dark theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    theme: 'dark',
-    class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    theme: 'dark',
-    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'gray',
-    theme: 'dark',
-    class: '!bg-gray-600 !text-gray-100 hover:!bg-gray-500'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    theme: 'dark',
-    class: '!bg-red-600 !text-red-100 hover:!bg-red-500'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    theme: 'dark',
-    class: '!bg-dash-brand/20 !text-dash-brand hover:!bg-dash-brand/30'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    theme: 'dark',
-    class: '!bg-gray-700/20 !text-gray-300 hover:!bg-gray-600/30'
-  },
-  // outline variant - light theme
-  {
-    variant: 'outline',
-    state: 'disabled',
-    theme: 'light',
-    class: 'opacity-40'
-  }, {
-    variant: 'outline',
-    state: 'disabled',
-    theme: 'dark',
-    class: 'opacity-50'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    theme: 'light',
-    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    theme: 'dark',
-    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    theme: 'light',
-    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    theme: 'dark',
-    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    theme: 'light',
-    class: '!text-gray-700 !border-gray-700 hover:!bg-gray-200/50'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    theme: 'dark',
-    class: '!text-gray-300 !border-gray-300 hover:!bg-gray-600/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    theme: 'light',
-    class: '!text-red-700 hover:!bg-red-300/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    theme: 'dark',
-    class: '!text-red-400 hover:!bg-red-500/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    theme: 'light',
-    class: '!text-dash-brand/60 !border-dash-brand/60 hover:!bg-dash-brand/5'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    theme: 'dark',
-    class: '!text-dash-brand/80 !border-dash-brand/80 hover:!bg-dash-brand/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightGray',
-    theme: 'light',
-    class: '!text-[#0C1C33] !border-[#0C1C33]/20 hover:!bg-[rgba(12,28,51,0.03)]'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightGray',
-    theme: 'dark',
-    class: '!text-gray-300 !border-gray-600/50 hover:!bg-gray-700/10'
-  },
-  // solid variant - light theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-brand/10 !text-dash-brand-dim'
-  }, {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-brand/20 !text-dash-brand/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-mint/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-mint/20 !text-gray-400'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-red-300/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-red-500/20 !text-gray-400'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-brand/5 !text-dash-brand/40'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-brand/10 !text-dash-brand/50'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-[#0C1C33]/5 !text-[#0C1C33]/40'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-gray-700/20 !text-gray-500'
-  }],
-  defaultVariants: {
-    theme: 'light',
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'active',
-    size: 'md'
-  }
-});
-/**
- * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size. Supports light/dark theme.
- */
-const Button = _a => {
-  var {
-      children,
-      variant,
-      colorScheme,
-      size,
-      disabled = false,
-      className = ''
-    } = _a,
-    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
-  const {
-    theme
-  } = useTheme();
-  const state = disabled ? 'disabled' : 'active';
-  const classes = styles({
-    theme,
-    variant,
-    colorScheme,
-    size,
-    state
-  }) + (className !== '' ? ` ${className}` : '');
-  return jsx("button", Object.assign({
-    className: classes,
-    disabled: disabled
-  }, props, {
-    children: children
-  }));
-};
 
 const ArrowIcon = ({
   color = 'white',
@@ -1106,6 +1769,409 @@ const QuestionMessageIcon = ({
   })
 });
 
+const accordionRootStyles = cva(`
+    w-full
+    rounded-[1rem]
+    overflow-hidden
+  `, {
+  variants: {
+    theme: {
+      light: '  bg-dash-primary-dark-blue/[0.03]',
+      dark: 'bg-gray-800/20'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const accordionItemStyles = cva(`
+    border-none
+    outline-none
+  `);
+const accordionTriggerStyles = cva(`
+    w-full
+    px-8
+    py-6
+    flex
+    items-center
+    justify-between
+    font-manrope
+    font-medium
+    text-1
+    leading-[1.366]
+    text-dash-primary-dark-blue
+    bg-transparent
+    border-none
+    outline-none
+    cursor-pointer
+    transition-all
+    duration-300
+    ease-in-out
+    hover:bg-dash-primary-dark-blue/[0.01]
+  `, {
+  variants: {
+    theme: {
+      light: 'text-dash-primary-dark-blue hover:bg-dash-primary-dark-blue/[0.05]',
+      dark: 'text-white hover:bg-white/5'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const accordionContentStyles = cva(`
+  overflow-hidden
+  will-change-[height]
+  data-[state=open]:h-[var(--radix-accordion-content-height)]
+  data-[state=closed]:h-0
+`);
+const accordionContentInnerStyles = cva(`
+  px-8
+  pb-6
+  space-y-[0.625rem]
+`);
+const chevronStyles = cva(`
+  w-4
+  h-4
+  transition-transform
+  duration-300
+  ease-in-out
+  transform
+  group-data-[state=open]:rotate-180
+`);
+/**
+ * Accordion component based on Radix UI with smooth animations.
+ * Displays custom content in an expandable format.
+ */
+const Accordion = ({
+  title,
+  children,
+  defaultOpen = false,
+  open,
+  onOpenChange,
+  className = ''
+}) => {
+  const {
+    theme
+  } = useTheme();
+  const isControlled = open !== undefined;
+  const rootClasses = accordionRootStyles({
+    theme
+  }) + (className ? ` ${className}` : '');
+  return jsx(Root2$3, {
+    type: 'single',
+    collapsible: true,
+    className: rootClasses,
+    value: isControlled ? open ? 'item-1' : undefined : undefined,
+    defaultValue: defaultOpen ? 'item-1' : undefined,
+    onValueChange: value => {
+      if (onOpenChange) {
+        onOpenChange(value === 'item-1');
+      }
+    },
+    children: jsxs(Item$2, {
+      value: 'item-1',
+      className: `AccordionItem ${accordionItemStyles()}`,
+      children: [jsxs(Trigger2, {
+        className: `${accordionTriggerStyles({
+          theme
+        })} group`,
+        children: [jsx("span", {
+          children: title
+        }), jsx(ChevronIcon, {
+          className: chevronStyles()
+        })]
+      }), jsx(Content2$1, {
+        forceMount: true,
+        className: accordionContentStyles(),
+        children: jsx("div", {
+          className: accordionContentInnerStyles(),
+          children: children
+        })
+      })]
+    })
+  });
+};
+
+const styles = cva(`
+    dash-btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    variant: {
+      solid: '',
+      outline: 'dash-btn-outline border !bg-transparent'
+    },
+    colorScheme: {
+      brand: '',
+      mint: '',
+      gray: '',
+      red: '',
+      lightBlue: '',
+      lightGray: ''
+    },
+    state: {
+      active: 'active:-translate-y-[-1px]',
+      disabled: 'hover:!cursor-not-allowed'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  compoundVariants: [
+  // solid variant color schemes - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!bg-gray-200 !text-gray-700 hover:!bg-gray-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!bg-red-200 !text-red-700 hover:!bg-red-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!bg-[rgba(12,28,51,0.03)] !text-[#0C1C33] hover:!bg-[rgba(12,28,51,0.06)]'
+  },
+  // solid variant color schemes - dark theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!bg-gray-600 !text-gray-100 hover:!bg-gray-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!bg-red-600 !text-red-100 hover:!bg-red-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand hover:!bg-dash-brand/30'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-300 hover:!bg-gray-600/30'
+  },
+  // outline variant - light theme
+  {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'light',
+    class: 'opacity-40'
+  }, {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'dark',
+    class: 'opacity-50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!text-gray-700 !border-gray-700 hover:!bg-gray-200/50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-300 hover:!bg-gray-600/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!text-red-400 hover:!bg-red-500/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!text-dash-brand/60 !border-dash-brand/60 hover:!bg-dash-brand/5'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!text-dash-brand/80 !border-dash-brand/80 hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!text-[#0C1C33] !border-[#0C1C33]/20 hover:!bg-[rgba(12,28,51,0.03)]'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-600/50 hover:!bg-gray-700/10'
+  },
+  // solid variant - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
+  }, {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-mint/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-red-500/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/10 !text-dash-brand/50'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-[#0C1C33]/5 !text-[#0C1C33]/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'active',
+    size: 'md'
+  }
+});
+/**
+ * Button with solid or outline style, color schemes, disabled state,
+ * press animation, and customizable size. Supports light/dark theme.
+ */
+const Button = _a => {
+  var {
+      children,
+      variant,
+      colorScheme,
+      size,
+      disabled = false,
+      className = ''
+    } = _a,
+    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+  const {
+    theme
+  } = useTheme();
+  const state = disabled ? 'disabled' : 'active';
+  const classes = styles({
+    theme,
+    variant,
+    colorScheme,
+    size,
+    state
+  }) + (className !== '' ? ` ${className}` : '');
+  return jsx("button", Object.assign({
+    className: classes,
+    disabled: disabled
+  }, props, {
+    children: children
+  }));
+};
+
 const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
     theme: {
@@ -1188,9 +2254,10 @@ const Input = _a => {
       success = false,
       disabled = false,
       type,
-      prefix
+      prefix,
+      showPasswordToggle = true
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix", "showPasswordToggle"]);
   const {
     theme
   } = useTheme();
@@ -1227,13 +2294,13 @@ const Input = _a => {
         className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
         children: prefix
       }), jsx("input", Object.assign({
-        className: `${classes}${isPassword ? ' pr-12' : ''}`,
+        className: `${classes}${isPassword && showPasswordToggle ? ' pr-12' : ''}`,
         style: {
           paddingLeft: `${leftPadding}rem`
         },
         disabled: disabled,
         type: inputType
-      }, props)), isPassword && jsx("button", {
+      }, props)), isPassword && showPasswordToggle && jsx("button", {
         type: 'button',
         className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
         onClick: togglePasswordVisibility,
@@ -1253,10 +2320,10 @@ const Input = _a => {
     return jsxs("div", {
       className: 'relative',
       children: [jsx("input", Object.assign({
-        className: classes + ' pr-12',
+        className: classes + (showPasswordToggle ? ' pr-12' : ''),
         disabled: disabled,
         type: inputType
-      }, props)), jsx("button", {
+      }, props)), showPasswordToggle && jsx("button", {
         type: 'button',
         className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
         onClick: togglePasswordVisibility,
@@ -1800,308 +2867,6 @@ function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForD
   };
 }
 
-// packages/react/context/src/create-context.tsx
-function createContext2(rootComponentName, defaultContext) {
-  const Context = React.createContext(defaultContext);
-  const Provider = (props) => {
-    const { children, ...context } = props;
-    const value = React.useMemo(() => context, Object.values(context));
-    return /* @__PURE__ */ jsx(Context.Provider, { value, children });
-  };
-  Provider.displayName = rootComponentName + "Provider";
-  function useContext2(consumerName) {
-    const context = React.useContext(Context);
-    if (context) return context;
-    if (defaultContext !== void 0) return defaultContext;
-    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-  }
-  return [Provider, useContext2];
-}
-function createContextScope(scopeName, createContextScopeDeps = []) {
-  let defaultContexts = [];
-  function createContext3(rootComponentName, defaultContext) {
-    const BaseContext = React.createContext(defaultContext);
-    const index = defaultContexts.length;
-    defaultContexts = [...defaultContexts, defaultContext];
-    const Provider = (props) => {
-      const { scope, children, ...context } = props;
-      const Context = scope?.[scopeName]?.[index] || BaseContext;
-      const value = React.useMemo(() => context, Object.values(context));
-      return /* @__PURE__ */ jsx(Context.Provider, { value, children });
-    };
-    Provider.displayName = rootComponentName + "Provider";
-    function useContext2(consumerName, scope) {
-      const Context = scope?.[scopeName]?.[index] || BaseContext;
-      const context = React.useContext(Context);
-      if (context) return context;
-      if (defaultContext !== void 0) return defaultContext;
-      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-    }
-    return [Provider, useContext2];
-  }
-  const createScope = () => {
-    const scopeContexts = defaultContexts.map((defaultContext) => {
-      return React.createContext(defaultContext);
-    });
-    return function useScope(scope) {
-      const contexts = scope?.[scopeName] || scopeContexts;
-      return React.useMemo(
-        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
-        [scope, contexts]
-      );
-    };
-  };
-  createScope.scopeName = scopeName;
-  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-  const baseScope = scopes[0];
-  if (scopes.length === 1) return baseScope;
-  const createScope = () => {
-    const scopeHooks = scopes.map((createScope2) => ({
-      useScope: createScope2(),
-      scopeName: createScope2.scopeName
-    }));
-    return function useComposedScopes(overrideScopes) {
-      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-        const scopeProps = useScope(overrideScopes);
-        const currentScope = scopeProps[`__scope${scopeName}`];
-        return { ...nextScopes2, ...currentScope };
-      }, {});
-      return React.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-    };
-  };
-  createScope.scopeName = baseScope.scopeName;
-  return createScope;
-}
-
-// packages/react/compose-refs/src/compose-refs.tsx
-function setRef(ref, value) {
-  if (typeof ref === "function") {
-    return ref(value);
-  } else if (ref !== null && ref !== void 0) {
-    ref.current = value;
-  }
-}
-function composeRefs(...refs) {
-  return (node) => {
-    let hasCleanup = false;
-    const cleanups = refs.map((ref) => {
-      const cleanup = setRef(ref, node);
-      if (!hasCleanup && typeof cleanup == "function") {
-        hasCleanup = true;
-      }
-      return cleanup;
-    });
-    if (hasCleanup) {
-      return () => {
-        for (let i = 0; i < cleanups.length; i++) {
-          const cleanup = cleanups[i];
-          if (typeof cleanup == "function") {
-            cleanup();
-          } else {
-            setRef(refs[i], null);
-          }
-        }
-      };
-    }
-  };
-}
-function useComposedRefs(...refs) {
-  return React.useCallback(composeRefs(...refs), refs);
-}
-
-// src/slot.tsx
-// @__NO_SIDE_EFFECTS__
-function createSlot(ownerName) {
-  const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
-  const Slot2 = React.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    const childrenArray = React.Children.toArray(children);
-    const slottable = childrenArray.find(isSlottable);
-    if (slottable) {
-      const newElement = slottable.props.children;
-      const newChildren = childrenArray.map((child) => {
-        if (child === slottable) {
-          if (React.Children.count(newElement) > 1) return React.Children.only(null);
-          return React.isValidElement(newElement) ? newElement.props.children : null;
-        } else {
-          return child;
-        }
-      });
-      return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children: React.isValidElement(newElement) ? React.cloneElement(newElement, void 0, newChildren) : null });
-    }
-    return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children });
-  });
-  Slot2.displayName = `${ownerName}.Slot`;
-  return Slot2;
-}
-// @__NO_SIDE_EFFECTS__
-function createSlotClone(ownerName) {
-  const SlotClone = React.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    if (React.isValidElement(children)) {
-      const childrenRef = getElementRef$1(children);
-      const props2 = mergeProps(slotProps, children.props);
-      if (children.type !== React.Fragment) {
-        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
-      }
-      return React.cloneElement(children, props2);
-    }
-    return React.Children.count(children) > 1 ? React.Children.only(null) : null;
-  });
-  SlotClone.displayName = `${ownerName}.SlotClone`;
-  return SlotClone;
-}
-var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
-function isSlottable(child) {
-  return React.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
-}
-function mergeProps(slotProps, childProps) {
-  const overrideProps = { ...childProps };
-  for (const propName in childProps) {
-    const slotPropValue = slotProps[propName];
-    const childPropValue = childProps[propName];
-    const isHandler = /^on[A-Z]/.test(propName);
-    if (isHandler) {
-      if (slotPropValue && childPropValue) {
-        overrideProps[propName] = (...args) => {
-          const result = childPropValue(...args);
-          slotPropValue(...args);
-          return result;
-        };
-      } else if (slotPropValue) {
-        overrideProps[propName] = slotPropValue;
-      }
-    } else if (propName === "style") {
-      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
-    } else if (propName === "className") {
-      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-    }
-  }
-  return { ...slotProps, ...overrideProps };
-}
-function getElementRef$1(element) {
-  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
-
-function createCollection(name) {
-  const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope] = createContextScope(PROVIDER_NAME);
-  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
-    PROVIDER_NAME,
-    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
-  );
-  const CollectionProvider = (props) => {
-    const { scope, children } = props;
-    const ref = React__default.useRef(null);
-    const itemMap = React__default.useRef(/* @__PURE__ */ new Map()).current;
-    return /* @__PURE__ */ jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
-  };
-  CollectionProvider.displayName = PROVIDER_NAME;
-  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
-  const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
-  const CollectionSlot = React__default.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children } = props;
-      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
-      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
-      return /* @__PURE__ */ jsx(CollectionSlotImpl, { ref: composedRefs, children });
-    }
-  );
-  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
-  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
-  const ITEM_DATA_ATTR = "data-radix-collection-item";
-  const CollectionItemSlotImpl = createSlot(ITEM_SLOT_NAME);
-  const CollectionItemSlot = React__default.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children, ...itemData } = props;
-      const ref = React__default.useRef(null);
-      const composedRefs = useComposedRefs(forwardedRef, ref);
-      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
-      React__default.useEffect(() => {
-        context.itemMap.set(ref, { ref, ...itemData });
-        return () => void context.itemMap.delete(ref);
-      });
-      return /* @__PURE__ */ jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
-    }
-  );
-  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
-  function useCollection(scope) {
-    const context = useCollectionContext(name + "CollectionConsumer", scope);
-    const getItems = React__default.useCallback(() => {
-      const collectionNode = context.collectionRef.current;
-      if (!collectionNode) return [];
-      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
-      const items = Array.from(context.itemMap.values());
-      const orderedItems = items.sort(
-        (a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current)
-      );
-      return orderedItems;
-    }, [context.collectionRef, context.itemMap]);
-    return getItems;
-  }
-  return [
-    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
-    useCollection,
-    createCollectionScope
-  ];
-}
-
-// packages/react/direction/src/direction.tsx
-var DirectionContext = React.createContext(void 0);
-function useDirection(localDir) {
-  const globalDir = React.useContext(DirectionContext);
-  return localDir || globalDir || "ltr";
-}
-
-// src/primitive.tsx
-var NODES = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive = NODES.reduce((primitive, node) => {
-  const Slot = createSlot(`Primitive.${node}`);
-  const Node = React.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot : node;
-    if (typeof window !== "undefined") {
-      window[Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ jsx(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node };
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
-}
-
 // packages/react/use-callback-ref/src/use-callback-ref.tsx
 function useCallbackRef$1(callback) {
   const callbackRef = React.useRef(callback);
@@ -2327,18 +3092,18 @@ function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
   }
 }
 
-var count$1 = 0;
+var count = 0;
 function useFocusGuards() {
   React.useEffect(() => {
     const edgeGuards = document.querySelectorAll("[data-radix-focus-guard]");
     document.body.insertAdjacentElement("afterbegin", edgeGuards[0] ?? createFocusGuard());
     document.body.insertAdjacentElement("beforeend", edgeGuards[1] ?? createFocusGuard());
-    count$1++;
+    count++;
     return () => {
-      if (count$1 === 1) {
+      if (count === 1) {
         document.querySelectorAll("[data-radix-focus-guard]").forEach((node) => node.remove());
       }
-      count$1--;
+      count--;
     };
   }, []);
 }
@@ -2355,7 +3120,7 @@ function createFocusGuard() {
 
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
 var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
-var EVENT_OPTIONS = { bubbles: false, cancelable: true };
+var EVENT_OPTIONS$1 = { bubbles: false, cancelable: true };
 var FOCUS_SCOPE_NAME = "FocusScope";
 var FocusScope = React.forwardRef((props, forwardedRef) => {
   const {
@@ -2420,11 +3185,11 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
       const previouslyFocusedElement = document.activeElement;
       const hasFocusedCandidate = container.contains(previouslyFocusedElement);
       if (!hasFocusedCandidate) {
-        const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS);
+        const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS$1);
         container.addEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
         container.dispatchEvent(mountEvent);
         if (!mountEvent.defaultPrevented) {
-          focusFirst(removeLinks(getTabbableCandidates(container)), { select: true });
+          focusFirst$1(removeLinks(getTabbableCandidates(container)), { select: true });
           if (document.activeElement === previouslyFocusedElement) {
             focus(container);
           }
@@ -2433,7 +3198,7 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
       return () => {
         container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
         setTimeout(() => {
-          const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS);
+          const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS$1);
           container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
           container.dispatchEvent(unmountEvent);
           if (!unmountEvent.defaultPrevented) {
@@ -2473,7 +3238,7 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
   return /* @__PURE__ */ jsx(Primitive.div, { tabIndex: -1, ...scopeProps, ref: composedRefs, onKeyDown: handleKeyDown });
 });
 FocusScope.displayName = FOCUS_SCOPE_NAME;
-function focusFirst(candidates, { select = false } = {}) {
+function focusFirst$1(candidates, { select = false } = {}) {
   const previouslyFocusedElement = document.activeElement;
   for (const candidate of candidates) {
     focus(candidate, { select });
@@ -2551,21 +3316,6 @@ function arrayRemove(array, item) {
 }
 function removeLinks(items) {
   return items.filter((item) => item.tagName !== "A");
-}
-
-// packages/react/use-layout-effect/src/use-layout-effect.tsx
-var useLayoutEffect2 = globalThis?.document ? React.useLayoutEffect : () => {
-};
-
-// packages/react/id/src/id.tsx
-var useReactId = React[" useId ".trim().toString()] || (() => void 0);
-var count = 0;
-function useId(deterministicId) {
-  const [id, setId] = React.useState(useReactId());
-  useLayoutEffect2(() => {
-    setId((reactId) => reactId ?? String(count++));
-  }, [deterministicId]);
-  return deterministicId || (id ? `radix-${id}` : "");
 }
 
 /**
@@ -4765,7 +5515,7 @@ var Arrow$1 = React.forwardRef((props, forwardedRef) => {
   );
 });
 Arrow$1.displayName = NAME$1;
-var Root$1 = Arrow$1;
+var Root$2 = Arrow$1;
 
 // packages/react/use-size/src/use-size.tsx
 function useSize(element) {
@@ -4826,8 +5576,8 @@ var PopperAnchor = React.forwardRef(
   }
 );
 PopperAnchor.displayName = ANCHOR_NAME;
-var CONTENT_NAME$2 = "PopperContent";
-var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$2);
+var CONTENT_NAME$3 = "PopperContent";
+var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$3);
 var PopperContent = React.forwardRef(
   (props, forwardedRef) => {
     const {
@@ -4846,7 +5596,7 @@ var PopperContent = React.forwardRef(
       onPlaced,
       ...contentProps
     } = props;
-    const context = usePopperContext(CONTENT_NAME$2, __scopePopper);
+    const context = usePopperContext(CONTENT_NAME$3, __scopePopper);
     const [content, setContent] = React.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
     const [arrow$1, setArrow] = React.useState(null);
@@ -4969,7 +5719,7 @@ var PopperContent = React.forwardRef(
     );
   }
 );
-PopperContent.displayName = CONTENT_NAME$2;
+PopperContent.displayName = CONTENT_NAME$3;
 var ARROW_NAME$1 = "PopperArrow";
 var OPPOSITE_SIDE = {
   top: "bottom",
@@ -5009,7 +5759,7 @@ var PopperArrow = React.forwardRef(function PopperArrow2(props, forwardedRef) {
           visibility: contentContext.shouldHideArrow ? "hidden" : void 0
         },
         children: /* @__PURE__ */ jsx(
-          Root$1,
+          Root$2,
           {
             ...arrowProps,
             ref: forwardedRef,
@@ -5063,9 +5813,9 @@ function getSideAndAlignFromPlacement(placement) {
   const [side, align = "center"] = placement.split("-");
   return [side, align];
 }
-var Root2$1 = Popper;
+var Root2$2 = Popper;
 var Anchor = PopperAnchor;
-var Content$1 = PopperContent;
+var Content$2 = PopperContent;
 var Arrow = PopperArrow;
 
 var PORTAL_NAME$2 = "Portal";
@@ -5077,72 +5827,6 @@ var Portal$2 = React.forwardRef((props, forwardedRef) => {
   return container ? ReactDOM__default.createPortal(/* @__PURE__ */ jsx(Primitive.div, { ...portalProps, ref: forwardedRef }), container) : null;
 });
 Portal$2.displayName = PORTAL_NAME$2;
-
-// src/use-controllable-state.tsx
-var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
-  prop,
-  defaultProp,
-  onChange = () => {
-  },
-  caller
-}) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-    defaultProp,
-    onChange
-  });
-  const isControlled = prop !== void 0;
-  const value = isControlled ? prop : uncontrolledProp;
-  {
-    const isControlledRef = React.useRef(prop !== void 0);
-    React.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const setValue = React.useCallback(
-    (nextValue) => {
-      if (isControlled) {
-        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
-        if (value2 !== prop) {
-          onChangeRef.current?.(value2);
-        }
-      } else {
-        setUncontrolledProp(nextValue);
-      }
-    },
-    [isControlled, prop, setUncontrolledProp, onChangeRef]
-  );
-  return [value, setValue];
-}
-function useUncontrolledState({
-  defaultProp,
-  onChange
-}) {
-  const [value, setValue] = React.useState(defaultProp);
-  const prevValueRef = React.useRef(value);
-  const onChangeRef = React.useRef(onChange);
-  useInsertionEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
-  React.useEffect(() => {
-    if (prevValueRef.current !== value) {
-      onChangeRef.current?.(value);
-      prevValueRef.current = value;
-    }
-  }, [value, prevValueRef]);
-  return [value, setValue, onChangeRef];
-}
-function isFunction(value) {
-  return typeof value === "function";
-}
 
 // packages/react/use-previous/src/use-previous.tsx
 function usePrevious(value) {
@@ -6020,9 +6704,9 @@ ReactRemoveScroll.classNames = RemoveScroll.classNames;
 var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
 var SELECTION_KEYS = [" ", "Enter"];
 var SELECT_NAME = "Select";
-var [Collection, useCollection, createCollectionScope] = createCollection(SELECT_NAME);
+var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(SELECT_NAME);
 var [createSelectContext, createSelectScope] = createContextScope(SELECT_NAME, [
-  createCollectionScope,
+  createCollectionScope$1,
   createPopperScope
 ]);
 var usePopperScope = createPopperScope();
@@ -6066,7 +6750,7 @@ var Select$1 = (props) => {
   const isFormControl = trigger ? form || !!trigger.closest("form") : true;
   const [nativeOptionsSet, setNativeOptionsSet] = React.useState(/* @__PURE__ */ new Set());
   const nativeSelectKey = Array.from(nativeOptionsSet).map((option) => option.props.value).join(";");
-  return /* @__PURE__ */ jsx(Root2$1, { ...popperScope, children: /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(Root2$2, { ...popperScope, children: /* @__PURE__ */ jsxs(
     SelectProvider,
     {
       required,
@@ -6086,7 +6770,7 @@ var Select$1 = (props) => {
       triggerPointerDownPosRef,
       disabled,
       children: [
-        /* @__PURE__ */ jsx(Collection.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx(Collection$1.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
           SelectNativeOptionsProvider,
           {
             scope: props.__scopeSelect,
@@ -6127,15 +6811,15 @@ var Select$1 = (props) => {
   ) });
 };
 Select$1.displayName = SELECT_NAME;
-var TRIGGER_NAME$1 = "SelectTrigger";
+var TRIGGER_NAME$2 = "SelectTrigger";
 var SelectTrigger = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, disabled = false, ...triggerProps } = props;
     const popperScope = usePopperScope(__scopeSelect);
-    const context = useSelectContext(TRIGGER_NAME$1, __scopeSelect);
+    const context = useSelectContext(TRIGGER_NAME$2, __scopeSelect);
     const isDisabled = context.disabled || disabled;
     const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
-    const getItems = useCollection(__scopeSelect);
+    const getItems = useCollection$1(__scopeSelect);
     const pointerTypeRef = React.useRef("touch");
     const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
       const enabledItems = getItems().filter((item) => !item.disabled);
@@ -6204,7 +6888,7 @@ var SelectTrigger = React.forwardRef(
     ) });
   }
 );
-SelectTrigger.displayName = TRIGGER_NAME$1;
+SelectTrigger.displayName = TRIGGER_NAME$2;
 var VALUE_NAME = "SelectValue";
 var SelectValue = React.forwardRef(
   (props, forwardedRef) => {
@@ -6241,10 +6925,10 @@ var SelectPortal = (props) => {
   return /* @__PURE__ */ jsx(Portal$2, { asChild: true, ...props });
 };
 SelectPortal.displayName = PORTAL_NAME$1;
-var CONTENT_NAME$1 = "SelectContent";
+var CONTENT_NAME$2 = "SelectContent";
 var SelectContent = React.forwardRef(
   (props, forwardedRef) => {
-    const context = useSelectContext(CONTENT_NAME$1, props.__scopeSelect);
+    const context = useSelectContext(CONTENT_NAME$2, props.__scopeSelect);
     const [fragment, setFragment] = React.useState();
     useLayoutEffect2(() => {
       setFragment(new DocumentFragment());
@@ -6252,16 +6936,16 @@ var SelectContent = React.forwardRef(
     if (!context.open) {
       const frag = fragment;
       return frag ? ReactDOM.createPortal(
-        /* @__PURE__ */ jsx(SelectContentProvider, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx(Collection.Slot, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx("div", { children: props.children }) }) }),
+        /* @__PURE__ */ jsx(SelectContentProvider, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx(Collection$1.Slot, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx("div", { children: props.children }) }) }),
         frag
       ) : null;
     }
     return /* @__PURE__ */ jsx(SelectContentImpl, { ...props, ref: forwardedRef });
   }
 );
-SelectContent.displayName = CONTENT_NAME$1;
+SelectContent.displayName = CONTENT_NAME$2;
 var CONTENT_MARGIN = 10;
-var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME$1);
+var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME$2);
 var CONTENT_IMPL_NAME = "SelectContentImpl";
 var Slot$1 = createSlot("SelectContent.RemoveScroll");
 var SelectContentImpl = React.forwardRef(
@@ -6287,7 +6971,7 @@ var SelectContentImpl = React.forwardRef(
       //
       ...contentProps
     } = props;
-    const context = useSelectContext(CONTENT_NAME$1, __scopeSelect);
+    const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
     const [content, setContent] = React.useState(null);
     const [viewport, setViewport] = React.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
@@ -6295,7 +6979,7 @@ var SelectContentImpl = React.forwardRef(
     const [selectedItemText, setSelectedItemText] = React.useState(
       null
     );
-    const getItems = useCollection(__scopeSelect);
+    const getItems = useCollection$1(__scopeSelect);
     const [isPositioned, setIsPositioned] = React.useState(false);
     const firstValidItemFoundRef = React.useRef(false);
     React.useEffect(() => {
@@ -6500,12 +7184,12 @@ SelectContentImpl.displayName = CONTENT_IMPL_NAME;
 var ITEM_ALIGNED_POSITION_NAME = "SelectItemAlignedPosition";
 var SelectItemAlignedPosition = React.forwardRef((props, forwardedRef) => {
   const { __scopeSelect, onPlaced, ...popperProps } = props;
-  const context = useSelectContext(CONTENT_NAME$1, __scopeSelect);
-  const contentContext = useSelectContentContext(CONTENT_NAME$1, __scopeSelect);
+  const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
+  const contentContext = useSelectContentContext(CONTENT_NAME$2, __scopeSelect);
   const [contentWrapper, setContentWrapper] = React.useState(null);
   const [content, setContent] = React.useState(null);
   const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
-  const getItems = useCollection(__scopeSelect);
+  const getItems = useCollection$1(__scopeSelect);
   const shouldExpandOnScrollRef = React.useRef(false);
   const shouldRepositionRef = React.useRef(true);
   const { viewport, selectedItem, selectedItemText, focusSelectedItem } = contentContext;
@@ -6671,7 +7355,7 @@ var SelectPopperPosition = React.forwardRef((props, forwardedRef) => {
   } = props;
   const popperScope = usePopperScope(__scopeSelect);
   return /* @__PURE__ */ jsx(
-    Content$1,
+    Content$2,
     {
       ...popperScope,
       ...popperProps,
@@ -6695,7 +7379,7 @@ var SelectPopperPosition = React.forwardRef((props, forwardedRef) => {
   );
 });
 SelectPopperPosition.displayName = POPPER_POSITION_NAME;
-var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$1, {});
+var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$2, {});
 var VIEWPORT_NAME = "SelectViewport";
 var SelectViewport = React.forwardRef(
   (props, forwardedRef) => {
@@ -6714,7 +7398,7 @@ var SelectViewport = React.forwardRef(
           nonce
         }
       ),
-      /* @__PURE__ */ jsx(Collection.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsx(Collection$1.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
         Primitive.div,
         {
           "data-radix-select-viewport": "",
@@ -6764,8 +7448,8 @@ var SelectViewport = React.forwardRef(
   }
 );
 SelectViewport.displayName = VIEWPORT_NAME;
-var GROUP_NAME = "SelectGroup";
-var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME);
+var GROUP_NAME$1 = "SelectGroup";
+var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME$1);
 var SelectGroup = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, ...groupProps } = props;
@@ -6773,7 +7457,7 @@ var SelectGroup = React.forwardRef(
     return /* @__PURE__ */ jsx(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsx(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
   }
 );
-SelectGroup.displayName = GROUP_NAME;
+SelectGroup.displayName = GROUP_NAME$1;
 var LABEL_NAME = "SelectLabel";
 var SelectLabel = React.forwardRef(
   (props, forwardedRef) => {
@@ -6783,8 +7467,8 @@ var SelectLabel = React.forwardRef(
   }
 );
 SelectLabel.displayName = LABEL_NAME;
-var ITEM_NAME = "SelectItem";
-var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME);
+var ITEM_NAME$1 = "SelectItem";
+var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME$1);
 var SelectItem = React.forwardRef(
   (props, forwardedRef) => {
     const {
@@ -6794,8 +7478,8 @@ var SelectItem = React.forwardRef(
       textValue: textValueProp,
       ...itemProps
     } = props;
-    const context = useSelectContext(ITEM_NAME, __scopeSelect);
-    const contentContext = useSelectContentContext(ITEM_NAME, __scopeSelect);
+    const context = useSelectContext(ITEM_NAME$1, __scopeSelect);
+    const contentContext = useSelectContentContext(ITEM_NAME$1, __scopeSelect);
     const isSelected = context.value === value;
     const [textValue, setTextValue] = React.useState(textValueProp ?? "");
     const [isFocused, setIsFocused] = React.useState(false);
@@ -6828,7 +7512,7 @@ var SelectItem = React.forwardRef(
           setTextValue((prevTextValue) => prevTextValue || (node?.textContent ?? "").trim());
         }, []),
         children: /* @__PURE__ */ jsx(
-          Collection.ItemSlot,
+          Collection$1.ItemSlot,
           {
             scope: __scopeSelect,
             value,
@@ -6885,7 +7569,7 @@ var SelectItem = React.forwardRef(
     );
   }
 );
-SelectItem.displayName = ITEM_NAME;
+SelectItem.displayName = ITEM_NAME$1;
 var ITEM_TEXT_NAME = "SelectItemText";
 var SelectItemText = React.forwardRef(
   (props, forwardedRef) => {
@@ -6998,7 +7682,7 @@ var SelectScrollButtonImpl = React.forwardRef((props, forwardedRef) => {
   const { __scopeSelect, onAutoScroll, ...scrollIndicatorProps } = props;
   const contentContext = useSelectContentContext("SelectScrollButton", __scopeSelect);
   const autoScrollTimerRef = React.useRef(null);
-  const getItems = useCollection(__scopeSelect);
+  const getItems = useCollection$1(__scopeSelect);
   const clearAutoScrollTimer = React.useCallback(() => {
     if (autoScrollTimerRef.current !== null) {
       window.clearInterval(autoScrollTimerRef.current);
@@ -7120,7 +7804,7 @@ function findNextItem(items, search, currentItem) {
   const isRepeated = search.length > 1 && Array.from(search).every((char) => char === search[0]);
   const normalizedSearch = isRepeated ? search[0] : search;
   const currentItemIndex = currentItem ? items.indexOf(currentItem) : -1;
-  let wrappedItems = wrapArray(items, Math.max(currentItemIndex, 0));
+  let wrappedItems = wrapArray$1(items, Math.max(currentItemIndex, 0));
   const excludeCurrentItem = normalizedSearch.length === 1;
   if (excludeCurrentItem) wrappedItems = wrappedItems.filter((v) => v !== currentItem);
   const nextItem = wrappedItems.find(
@@ -7128,17 +7812,17 @@ function findNextItem(items, search, currentItem) {
   );
   return nextItem !== currentItem ? nextItem : void 0;
 }
-function wrapArray(array, startIndex) {
+function wrapArray$1(array, startIndex) {
   return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
-var Root2 = Select$1;
-var Trigger$1 = SelectTrigger;
+var Root2$1 = Select$1;
+var Trigger$2 = SelectTrigger;
 var Value = SelectValue;
 var Icon = SelectIcon;
 var Portal$1 = SelectPortal;
 var Content2 = SelectContent;
 var Viewport = SelectViewport;
-var Item = SelectItem;
+var Item$1 = SelectItem;
 var ItemText = SelectItemText;
 
 const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
@@ -7269,11 +7953,11 @@ const Select = _a => {
       showArrow = true,
       value,
       defaultValue,
-      onValueChange,
+      onChange,
       placeholder = 'Select an option...',
       name
     } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name"]);
+    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
   const {
     theme
   } = useTheme();
@@ -7297,13 +7981,13 @@ const Select = _a => {
   const iconClasses = selectIcon({
     size
   });
-  return jsxs(Root2, {
+  return jsxs(Root2$1, {
     value: value,
     defaultValue: defaultValue,
-    onValueChange: onValueChange,
+    onValueChange: onChange,
     disabled: disabled,
     name: name,
-    children: [jsxs(Trigger$1, {
+    children: [jsxs(Trigger$2, {
       className: triggerClasses,
       children: [jsx("div", {
         className: 'w-full flex-1 text-left',
@@ -7322,7 +8006,7 @@ const Select = _a => {
         position: 'popper',
         sideOffset: 5,
         children: jsx(Viewport, {
-          children: options.map(option => jsx(Item, {
+          children: options.map(option => jsx(Item$1, {
             value: option.value,
             className: itemClasses,
             disabled: option.disabled,
@@ -8011,7 +8695,7 @@ const Avatar = _a => {
 const iconComponents = {
   check: CheckIcon
 };
-const List = ({
+const List$1 = ({
   items,
   iconType = 'check',
   className = '',
@@ -8046,7 +8730,7 @@ const List = ({
   });
 };
 
-const bigNumberStyles = cva('inline-flex whitespace-nowrap', {
+const bigNumberStyles = cva('inline-flex whitespace-nowrap gap-1', {
   variants: {
     theme: {
       light: 'text-gray-900',
@@ -8057,11 +8741,10 @@ const bigNumberStyles = cva('inline-flex whitespace-nowrap', {
     theme: 'light'
   }
 });
-const spaceStyles = cva('inline-block w-[3px]');
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
- * - `space`: groups separated by a fixed 3px block
+ * - `space`: groups separated by gap
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */
@@ -8086,12 +8769,8 @@ const BigNumber = ({
       className: `${bigNumberStyles({
         theme
       })} ${className}`,
-      children: groups.map((grp, i) => jsxs("span", {
-        children: [jsx("span", {
-          children: grp
-        }), i < groups.length - 1 && jsx("span", {
-          className: spaceStyles()
-        })]
+      children: groups.map((grp, i) => jsx("span", {
+        children: grp
       }, i))
     });
   } else {
@@ -8110,12 +8789,10 @@ const BigNumber = ({
         children: [jsx("span", {
           children: grp
         }), i < groups.length - 1 && jsx("span", {
-          className: 'px-[0.125ch]',
           children: ","
         })]
       }, i)), fracPart != null && jsxs(Fragment, {
         children: [jsx("span", {
-          className: 'px-[0.125ch]',
           children: "."
         }), jsx("span", {
           children: fracPart
@@ -9042,7 +9719,10 @@ const DashLogo = ({
       viewBox: '0 0 30 25',
       fill: 'none',
       xmlns: 'http://www.w3.org/2000/svg',
-      className: className,
+      className: `text-dash-brand ${className}`,
+      style: {
+        color: color || 'var(--color-dash-brand, #4C7EFF)'
+      },
       children: [jsx("path", {
         d: 'M19.6465 0C29.2466 2.13767e-05 30.9542 5.2464 29.585 12.6006C28.6773 17.5547 26.3845 21.3391 22.5537 23.1084C20.8153 23.9084 19.1848 24.3555 15.3389 24.3555H4.44629L5.33887 19.293H14.9229C20.6921 19.3084 22.2159 16.8009 22.9697 14.6162C23.2467 13.8008 23.9084 11.2619 23.9238 9.76953C23.9699 6.84642 22.5383 5.07715 17.6768 5.07715L7.81543 5.06152L8.72363 0H19.6465Z',
         fill: color || 'currentColor'
@@ -9217,11 +9897,11 @@ var Dialog = (props) => {
   );
 };
 Dialog.displayName = DIALOG_NAME;
-var TRIGGER_NAME = "DialogTrigger";
+var TRIGGER_NAME$1 = "DialogTrigger";
 var DialogTrigger = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDialog, ...triggerProps } = props;
-    const context = useDialogContext(TRIGGER_NAME, __scopeDialog);
+    const context = useDialogContext(TRIGGER_NAME$1, __scopeDialog);
     const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
     return /* @__PURE__ */ jsx(
       Primitive.button,
@@ -9238,7 +9918,7 @@ var DialogTrigger = React.forwardRef(
     );
   }
 );
-DialogTrigger.displayName = TRIGGER_NAME;
+DialogTrigger.displayName = TRIGGER_NAME$1;
 var PORTAL_NAME = "DialogPortal";
 var [PortalProvider, usePortalContext] = createDialogContext(PORTAL_NAME, {
   forceMount: void 0
@@ -9279,19 +9959,19 @@ var DialogOverlayImpl = React.forwardRef(
     );
   }
 );
-var CONTENT_NAME = "DialogContent";
+var CONTENT_NAME$1 = "DialogContent";
 var DialogContent = React.forwardRef(
   (props, forwardedRef) => {
-    const portalContext = usePortalContext(CONTENT_NAME, props.__scopeDialog);
+    const portalContext = usePortalContext(CONTENT_NAME$1, props.__scopeDialog);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = useDialogContext(CONTENT_NAME, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
     return /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ jsx(DialogContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx(DialogContentNonModal, { ...contentProps, ref: forwardedRef }) });
   }
 );
-DialogContent.displayName = CONTENT_NAME;
+DialogContent.displayName = CONTENT_NAME$1;
 var DialogContentModal = React.forwardRef(
   (props, forwardedRef) => {
-    const context = useDialogContext(CONTENT_NAME, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
     const contentRef = React.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
     React.useEffect(() => {
@@ -9325,7 +10005,7 @@ var DialogContentModal = React.forwardRef(
 );
 var DialogContentNonModal = React.forwardRef(
   (props, forwardedRef) => {
-    const context = useDialogContext(CONTENT_NAME, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
     const hasInteractedOutsideRef = React.useRef(false);
     const hasPointerDownOutsideRef = React.useRef(false);
     return /* @__PURE__ */ jsx(
@@ -9366,7 +10046,7 @@ var DialogContentNonModal = React.forwardRef(
 var DialogContentImpl = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
-    const context = useDialogContext(CONTENT_NAME, __scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$1, __scopeDialog);
     const contentRef = React.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, contentRef);
     useFocusGuards();
@@ -9441,7 +10121,7 @@ function getState(open) {
 }
 var TITLE_WARNING_NAME = "DialogTitleWarning";
 var [WarningProvider, useWarningContext] = createContext2(TITLE_WARNING_NAME, {
-  contentName: CONTENT_NAME,
+  contentName: CONTENT_NAME$1,
   titleName: TITLE_NAME,
   docsSlug: "dialog"
 });
@@ -9473,11 +10153,11 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
   }, [MESSAGE, contentRef, descriptionId]);
   return null;
 };
-var Root = Dialog;
-var Trigger = DialogTrigger;
+var Root$1 = Dialog;
+var Trigger$1 = DialogTrigger;
 var Portal = DialogPortal;
 var Overlay = DialogOverlay;
-var Content = DialogContent;
+var Content$1 = DialogContent;
 var Title = DialogTitle;
 var Close = DialogClose;
 
@@ -9598,7 +10278,7 @@ const DashDialog = ({
       className: overlayStyles({
         theme
       })
-    }), jsxs(Content, {
+    }), jsxs(Content$1, {
       className: `${contentStyles({
         theme,
         size
@@ -9629,21 +10309,535 @@ const DashDialog = ({
   });
   if (trigger) {
     // Uncontrolled mode with trigger
-    return jsxs(Root, {
+    return jsxs(Root$1, {
       onOpenChange: onOpenChange,
-      children: [jsx(Trigger, {
+      children: [jsx(Trigger$1, {
         asChild: true,
         children: trigger
       }), DialogContent]
     });
   }
   // Controlled mode
-  return jsx(Root, {
+  return jsx(Root$1, {
     open: open,
     onOpenChange: onOpenChange,
     children: DialogContent
   });
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WalletSmallIcon, WebIcon, useTheme };
+var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
+var EVENT_OPTIONS = { bubbles: false, cancelable: true };
+var GROUP_NAME = "RovingFocusGroup";
+var [Collection, useCollection, createCollectionScope] = createCollection(GROUP_NAME);
+var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope(
+  GROUP_NAME,
+  [createCollectionScope]
+);
+var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME);
+var RovingFocusGroup = React.forwardRef(
+  (props, forwardedRef) => {
+    return /* @__PURE__ */ jsx(Collection.Provider, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx(Collection.Slot, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx(RovingFocusGroupImpl, { ...props, ref: forwardedRef }) }) });
+  }
+);
+RovingFocusGroup.displayName = GROUP_NAME;
+var RovingFocusGroupImpl = React.forwardRef((props, forwardedRef) => {
+  const {
+    __scopeRovingFocusGroup,
+    orientation,
+    loop = false,
+    dir,
+    currentTabStopId: currentTabStopIdProp,
+    defaultCurrentTabStopId,
+    onCurrentTabStopIdChange,
+    onEntryFocus,
+    preventScrollOnEntryFocus = false,
+    ...groupProps
+  } = props;
+  const ref = React.useRef(null);
+  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const direction = useDirection(dir);
+  const [currentTabStopId, setCurrentTabStopId] = useControllableState({
+    prop: currentTabStopIdProp,
+    defaultProp: defaultCurrentTabStopId ?? null,
+    onChange: onCurrentTabStopIdChange,
+    caller: GROUP_NAME
+  });
+  const [isTabbingBackOut, setIsTabbingBackOut] = React.useState(false);
+  const handleEntryFocus = useCallbackRef$1(onEntryFocus);
+  const getItems = useCollection(__scopeRovingFocusGroup);
+  const isClickFocusRef = React.useRef(false);
+  const [focusableItemsCount, setFocusableItemsCount] = React.useState(0);
+  React.useEffect(() => {
+    const node = ref.current;
+    if (node) {
+      node.addEventListener(ENTRY_FOCUS, handleEntryFocus);
+      return () => node.removeEventListener(ENTRY_FOCUS, handleEntryFocus);
+    }
+  }, [handleEntryFocus]);
+  return /* @__PURE__ */ jsx(
+    RovingFocusProvider,
+    {
+      scope: __scopeRovingFocusGroup,
+      orientation,
+      dir: direction,
+      loop,
+      currentTabStopId,
+      onItemFocus: React.useCallback(
+        (tabStopId) => setCurrentTabStopId(tabStopId),
+        [setCurrentTabStopId]
+      ),
+      onItemShiftTab: React.useCallback(() => setIsTabbingBackOut(true), []),
+      onFocusableItemAdd: React.useCallback(
+        () => setFocusableItemsCount((prevCount) => prevCount + 1),
+        []
+      ),
+      onFocusableItemRemove: React.useCallback(
+        () => setFocusableItemsCount((prevCount) => prevCount - 1),
+        []
+      ),
+      children: /* @__PURE__ */ jsx(
+        Primitive.div,
+        {
+          tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
+          "data-orientation": orientation,
+          ...groupProps,
+          ref: composedRefs,
+          style: { outline: "none", ...props.style },
+          onMouseDown: composeEventHandlers(props.onMouseDown, () => {
+            isClickFocusRef.current = true;
+          }),
+          onFocus: composeEventHandlers(props.onFocus, (event) => {
+            const isKeyboardFocus = !isClickFocusRef.current;
+            if (event.target === event.currentTarget && isKeyboardFocus && !isTabbingBackOut) {
+              const entryFocusEvent = new CustomEvent(ENTRY_FOCUS, EVENT_OPTIONS);
+              event.currentTarget.dispatchEvent(entryFocusEvent);
+              if (!entryFocusEvent.defaultPrevented) {
+                const items = getItems().filter((item) => item.focusable);
+                const activeItem = items.find((item) => item.active);
+                const currentItem = items.find((item) => item.id === currentTabStopId);
+                const candidateItems = [activeItem, currentItem, ...items].filter(
+                  Boolean
+                );
+                const candidateNodes = candidateItems.map((item) => item.ref.current);
+                focusFirst(candidateNodes, preventScrollOnEntryFocus);
+              }
+            }
+            isClickFocusRef.current = false;
+          }),
+          onBlur: composeEventHandlers(props.onBlur, () => setIsTabbingBackOut(false))
+        }
+      )
+    }
+  );
+});
+var ITEM_NAME = "RovingFocusGroupItem";
+var RovingFocusGroupItem = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeRovingFocusGroup,
+      focusable = true,
+      active = false,
+      tabStopId,
+      children,
+      ...itemProps
+    } = props;
+    const autoId = useId();
+    const id = tabStopId || autoId;
+    const context = useRovingFocusContext(ITEM_NAME, __scopeRovingFocusGroup);
+    const isCurrentTabStop = context.currentTabStopId === id;
+    const getItems = useCollection(__scopeRovingFocusGroup);
+    const { onFocusableItemAdd, onFocusableItemRemove, currentTabStopId } = context;
+    React.useEffect(() => {
+      if (focusable) {
+        onFocusableItemAdd();
+        return () => onFocusableItemRemove();
+      }
+    }, [focusable, onFocusableItemAdd, onFocusableItemRemove]);
+    return /* @__PURE__ */ jsx(
+      Collection.ItemSlot,
+      {
+        scope: __scopeRovingFocusGroup,
+        id,
+        focusable,
+        active,
+        children: /* @__PURE__ */ jsx(
+          Primitive.span,
+          {
+            tabIndex: isCurrentTabStop ? 0 : -1,
+            "data-orientation": context.orientation,
+            ...itemProps,
+            ref: forwardedRef,
+            onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+              if (!focusable) event.preventDefault();
+              else context.onItemFocus(id);
+            }),
+            onFocus: composeEventHandlers(props.onFocus, () => context.onItemFocus(id)),
+            onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+              if (event.key === "Tab" && event.shiftKey) {
+                context.onItemShiftTab();
+                return;
+              }
+              if (event.target !== event.currentTarget) return;
+              const focusIntent = getFocusIntent(event, context.orientation, context.dir);
+              if (focusIntent !== void 0) {
+                if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+                event.preventDefault();
+                const items = getItems().filter((item) => item.focusable);
+                let candidateNodes = items.map((item) => item.ref.current);
+                if (focusIntent === "last") candidateNodes.reverse();
+                else if (focusIntent === "prev" || focusIntent === "next") {
+                  if (focusIntent === "prev") candidateNodes.reverse();
+                  const currentIndex = candidateNodes.indexOf(event.currentTarget);
+                  candidateNodes = context.loop ? wrapArray(candidateNodes, currentIndex + 1) : candidateNodes.slice(currentIndex + 1);
+                }
+                setTimeout(() => focusFirst(candidateNodes));
+              }
+            }),
+            children: typeof children === "function" ? children({ isCurrentTabStop, hasTabStop: currentTabStopId != null }) : children
+          }
+        )
+      }
+    );
+  }
+);
+RovingFocusGroupItem.displayName = ITEM_NAME;
+var MAP_KEY_TO_FOCUS_INTENT = {
+  ArrowLeft: "prev",
+  ArrowUp: "prev",
+  ArrowRight: "next",
+  ArrowDown: "next",
+  PageUp: "first",
+  Home: "first",
+  PageDown: "last",
+  End: "last"
+};
+function getDirectionAwareKey(key, dir) {
+  if (dir !== "rtl") return key;
+  return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
+}
+function getFocusIntent(event, orientation, dir) {
+  const key = getDirectionAwareKey(event.key, dir);
+  if (orientation === "vertical" && ["ArrowLeft", "ArrowRight"].includes(key)) return void 0;
+  if (orientation === "horizontal" && ["ArrowUp", "ArrowDown"].includes(key)) return void 0;
+  return MAP_KEY_TO_FOCUS_INTENT[key];
+}
+function focusFirst(candidates, preventScroll = false) {
+  const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
+  for (const candidate of candidates) {
+    if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
+    candidate.focus({ preventScroll });
+    if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
+  }
+}
+function wrapArray(array, startIndex) {
+  return array.map((_, index) => array[(startIndex + index) % array.length]);
+}
+var Root = RovingFocusGroup;
+var Item = RovingFocusGroupItem;
+
+var TABS_NAME = "Tabs";
+var [createTabsContext, createTabsScope] = createContextScope(TABS_NAME, [
+  createRovingFocusGroupScope
+]);
+var useRovingFocusGroupScope = createRovingFocusGroupScope();
+var [TabsProvider, useTabsContext] = createTabsContext(TABS_NAME);
+var Tabs$1 = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeTabs,
+      value: valueProp,
+      onValueChange,
+      defaultValue,
+      orientation = "horizontal",
+      dir,
+      activationMode = "automatic",
+      ...tabsProps
+    } = props;
+    const direction = useDirection(dir);
+    const [value, setValue] = useControllableState({
+      prop: valueProp,
+      onChange: onValueChange,
+      defaultProp: defaultValue ?? "",
+      caller: TABS_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      TabsProvider,
+      {
+        scope: __scopeTabs,
+        baseId: useId(),
+        value,
+        onValueChange: setValue,
+        orientation,
+        dir: direction,
+        activationMode,
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            dir: direction,
+            "data-orientation": orientation,
+            ...tabsProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+Tabs$1.displayName = TABS_NAME;
+var TAB_LIST_NAME = "TabsList";
+var TabsList = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, loop = true, ...listProps } = props;
+    const context = useTabsContext(TAB_LIST_NAME, __scopeTabs);
+    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+    return /* @__PURE__ */ jsx(
+      Root,
+      {
+        asChild: true,
+        ...rovingFocusGroupScope,
+        orientation: context.orientation,
+        dir: context.dir,
+        loop,
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            role: "tablist",
+            "aria-orientation": context.orientation,
+            ...listProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+TabsList.displayName = TAB_LIST_NAME;
+var TRIGGER_NAME = "TabsTrigger";
+var TabsTrigger = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, value, disabled = false, ...triggerProps } = props;
+    const context = useTabsContext(TRIGGER_NAME, __scopeTabs);
+    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+    const triggerId = makeTriggerId(context.baseId, value);
+    const contentId = makeContentId(context.baseId, value);
+    const isSelected = value === context.value;
+    return /* @__PURE__ */ jsx(
+      Item,
+      {
+        asChild: true,
+        ...rovingFocusGroupScope,
+        focusable: !disabled,
+        active: isSelected,
+        children: /* @__PURE__ */ jsx(
+          Primitive.button,
+          {
+            type: "button",
+            role: "tab",
+            "aria-selected": isSelected,
+            "aria-controls": contentId,
+            "data-state": isSelected ? "active" : "inactive",
+            "data-disabled": disabled ? "" : void 0,
+            disabled,
+            id: triggerId,
+            ...triggerProps,
+            ref: forwardedRef,
+            onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+              if (!disabled && event.button === 0 && event.ctrlKey === false) {
+                context.onValueChange(value);
+              } else {
+                event.preventDefault();
+              }
+            }),
+            onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+              if ([" ", "Enter"].includes(event.key)) context.onValueChange(value);
+            }),
+            onFocus: composeEventHandlers(props.onFocus, () => {
+              const isAutomaticActivation = context.activationMode !== "manual";
+              if (!isSelected && !disabled && isAutomaticActivation) {
+                context.onValueChange(value);
+              }
+            })
+          }
+        )
+      }
+    );
+  }
+);
+TabsTrigger.displayName = TRIGGER_NAME;
+var CONTENT_NAME = "TabsContent";
+var TabsContent = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, value, forceMount, children, ...contentProps } = props;
+    const context = useTabsContext(CONTENT_NAME, __scopeTabs);
+    const triggerId = makeTriggerId(context.baseId, value);
+    const contentId = makeContentId(context.baseId, value);
+    const isSelected = value === context.value;
+    const isMountAnimationPreventedRef = React.useRef(isSelected);
+    React.useEffect(() => {
+      const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+      return () => cancelAnimationFrame(rAF);
+    }, []);
+    return /* @__PURE__ */ jsx(Presence, { present: forceMount || isSelected, children: ({ present }) => /* @__PURE__ */ jsx(
+      Primitive.div,
+      {
+        "data-state": isSelected ? "active" : "inactive",
+        "data-orientation": context.orientation,
+        role: "tabpanel",
+        "aria-labelledby": triggerId,
+        hidden: !present,
+        id: contentId,
+        tabIndex: 0,
+        ...contentProps,
+        ref: forwardedRef,
+        style: {
+          ...props.style,
+          animationDuration: isMountAnimationPreventedRef.current ? "0s" : void 0
+        },
+        children: present && children
+      }
+    ) });
+  }
+);
+TabsContent.displayName = CONTENT_NAME;
+function makeTriggerId(baseId, value) {
+  return `${baseId}-trigger-${value}`;
+}
+function makeContentId(baseId, value) {
+  return `${baseId}-content-${value}`;
+}
+var Root2 = Tabs$1;
+var List = TabsList;
+var Trigger = TabsTrigger;
+var Content = TabsContent;
+
+const tabsRootStyles = cva('flex flex-col w-full', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsListStyles = cva('flex border-b relative overflow-x-auto scrollbar-hide', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(12,28,51,0.15)]',
+      dark: 'border-gray-600/50'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'font-dash-main text-2xl leading-[1.366] tracking-[-0.03em]', 'px-0 pr-[15px] pb-[10px]', 'transition-all duration-200 ease-in-out cursor-pointer', 'border-b-[1px] border-transparent', 'hover:opacity-80', 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', 'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50', 'font-light', 'whitespace-nowrap flex-shrink-0'], {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    active: {
+      true: '',
+      false: ''
+    }
+  },
+  compoundVariants: [{
+    theme: 'light',
+    active: true,
+    class: 'text-[#0C1C33] !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+  }, {
+    theme: 'light',
+    active: false,
+    class: 'text-[rgba(12,28,51,0.35)]'
+  }, {
+    theme: 'dark',
+    active: true,
+    class: 'text-white !border-b-[#4C7EFF] [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor]'
+  }, {
+    theme: 'dark',
+    active: false,
+    class: 'text-gray-400'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    active: false
+  }
+});
+const tabsContentStyles = cva('mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+/**
+ * Tabs component with sleek underline style matching Figma design.
+ * Built on radix-ui with light/dark theme support and keyboard navigation.
+ */
+const Tabs = ({
+  items,
+  value,
+  defaultValue,
+  onValueChange,
+  className = '',
+  listClassName = '',
+  triggerClassName = '',
+  contentClassName = ''
+}) => {
+  var _a;
+  const {
+    theme
+  } = useTheme();
+  const [internalValue, setInternalValue] = React__default.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
+  // Use controlled value if provided, otherwise use internal state
+  const currentValue = value !== undefined ? value : internalValue;
+  const handleValueChange = newValue => {
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(newValue);
+  };
+  const rootClasses = tabsRootStyles({
+    theme
+  }) + (className ? ` ${className}` : '');
+  const listClasses = tabsListStyles({
+    theme
+  }) + (listClassName ? ` ${listClassName}` : '');
+  const contentClasses = tabsContentStyles({
+    theme
+  }) + (contentClassName ? ` ${contentClassName}` : '');
+  return jsxs(Root2, {
+    className: rootClasses,
+    value: currentValue,
+    onValueChange: handleValueChange,
+    children: [jsx(List, {
+      className: listClasses,
+      children: items.map(item => {
+        const isActive = currentValue === item.value;
+        const triggerClasses = tabsTriggerStyles({
+          theme,
+          active: isActive
+        }) + (triggerClassName ? ` ${triggerClassName}` : '');
+        return jsx(Trigger, {
+          value: item.value,
+          disabled: item.disabled,
+          className: triggerClasses,
+          children: item.label
+        }, item.value);
+      })
+    }), items.map(item => jsx(Content, {
+      value: item.value,
+      className: contentClasses,
+      children: item.content
+    }, item.value))]
+  });
+};
+
+export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WalletSmallIcon, WebIcon, useTheme };
 //# sourceMappingURL=index.esm.js.map
