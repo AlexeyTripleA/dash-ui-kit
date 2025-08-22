@@ -17,7 +17,8 @@ const overlayMenuTrigger = cva(
         default: '',
         brand: '',
         error: '',
-        success: ''
+        success: '',
+        lightGray: ''
       },
       size: {
         sm: 'dash-block-sm',
@@ -53,6 +54,30 @@ const overlayMenuTrigger = cva(
         colorScheme: 'success',
         border: true,
         class: 'outline-green-500 focus:outline-green-500'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: true,
+        theme: 'light',
+        class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: true,
+        theme: 'dark',
+        class: 'outline-gray-600/50 focus:outline-gray-500'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: false,
+        theme: 'light',
+        class: 'bg-[rgba(12,28,51,0.03)]'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: false,
+        theme: 'dark',
+        class: 'bg-gray-700/20'
       }
     ],
     defaultVariants: {

@@ -176,7 +176,7 @@ const meta: Meta<OverlayMenuProps> = {
   argTypes: {
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['default', 'brand', 'error', 'success'],
+      options: ['default', 'brand', 'error', 'success', 'lightGray'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -384,6 +384,62 @@ export const ColorSchemes: StoryFn<OverlayMenuProps> = () => {
           size='xl'
           border
           showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Light gray color scheme'
+          overlayLabel='Actions'
+          colorScheme='lightGray'
+          size='xl'
+          border
+          showArrow
+        />
+      </div>
+    </div>
+  )
+}
+
+export const BorderlessVariants: StoryFn<OverlayMenuProps> = () => {
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Default Borderless</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Default borderless'
+          overlayLabel='Actions'
+          colorScheme='default'
+          size='xl'
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray Borderless</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Light gray borderless'
+          overlayLabel='Actions'
+          colorScheme='lightGray'
+          size='xl'
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Kebab Menu (Borderless)</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          triggerContent={<KebabMenuIcon className='w-5 h-5' />}
+          overlayLabel='Actions'
+          colorScheme='lightGray'
+          size='md'
+          border={false}
+          showArrow={false}
+          className='w-auto px-2'
         />
       </div>
     </div>

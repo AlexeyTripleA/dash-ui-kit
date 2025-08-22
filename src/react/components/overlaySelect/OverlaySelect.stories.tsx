@@ -78,7 +78,7 @@ const meta: Meta<OverlaySelectProps> = {
   argTypes: {
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['default', 'brand', 'error', 'success'],
+      options: ['default', 'brand', 'error', 'success', 'lightGray'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -221,6 +221,7 @@ export const ColorSchemes: StoryFn<OverlaySelectProps> = () => {
   const [brandValue, setBrandValue] = React.useState<string>('')
   const [errorValue, setErrorValue] = React.useState<string>('')
   const [successValue, setSuccessValue] = React.useState<string>('')
+  const [lightGrayValue, setLightGrayValue] = React.useState<string>('')
 
   return (
     <div className='space-y-8'>
@@ -266,6 +267,53 @@ export const ColorSchemes: StoryFn<OverlaySelectProps> = () => {
           colorScheme='success'
           value={successValue}
           onValueChange={setSuccessValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Light gray color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='lightGray'
+          value={lightGrayValue}
+          onValueChange={setLightGrayValue}
+        />
+      </div>
+    </div>
+  )
+}
+
+export const BorderlessVariants: StoryFn<OverlaySelectProps> = () => {
+  const [defaultValue, setDefaultValue] = React.useState<string>('')
+  const [lightGrayValue, setLightGrayValue] = React.useState<string>('')
+
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Default Borderless</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Default borderless...' 
+          overlayLabel='Your wallet'
+          colorScheme='default'
+          size='xl'
+          border={false}
+          value={defaultValue}
+          onValueChange={setDefaultValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray Borderless</label>
+        <OverlaySelect 
+          options={walletsWithContent} 
+          placeholder='Light gray borderless...' 
+          overlayLabel='Your wallet'
+          colorScheme='lightGray'
+          size='xl'
+          border={false}
+          value={lightGrayValue}
+          onValueChange={setLightGrayValue}
         />
       </div>
     </div>
