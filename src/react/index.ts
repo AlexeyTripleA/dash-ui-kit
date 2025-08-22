@@ -41,7 +41,7 @@ export {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-  WalletSmallIcon,
+
   PlusIcon,
   FilterIcon,
   EditIcon,
