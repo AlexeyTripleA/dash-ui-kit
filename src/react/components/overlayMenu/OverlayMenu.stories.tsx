@@ -176,7 +176,7 @@ const meta: Meta<OverlayMenuProps> = {
   argTypes: {
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['default', 'brand', 'error', 'success', 'lightGray'],
+      options: ['default', 'brand', 'error', 'success', 'gray', 'lightGray'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -186,6 +186,7 @@ const meta: Meta<OverlayMenuProps> = {
     error: { control: 'boolean' },
     success: { control: 'boolean' },
     border: { control: 'boolean' },
+    filled: { control: 'boolean' },
     showArrow: { control: 'boolean' },
   },
 }
@@ -387,14 +388,26 @@ export const ColorSchemes: StoryFn<OverlayMenuProps> = () => {
         />
       </div>
       <div>
-        <label className='block text-sm font-medium mb-1'>Light Gray</label>
+        <label className='block text-sm font-medium mb-1'>Gray</label>
         <OverlayMenu 
           items={basicMenuItems}
-          placeholder='Light gray color scheme'
+          placeholder='Gray color scheme'
+          overlayLabel='Actions'
+          colorScheme='gray'
+          size='xl'
+          border
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray (new)</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Light gray (new)'
           overlayLabel='Actions'
           colorScheme='lightGray'
           size='xl'
-          border
+          border={false}
           showArrow
         />
       </div>
@@ -440,6 +453,105 @@ export const BorderlessVariants: StoryFn<OverlayMenuProps> = () => {
           border={false}
           showArrow={false}
           className='w-auto px-2'
+        />
+      </div>
+    </div>
+  )
+}
+
+export const FilledVariants: StoryFn<OverlayMenuProps> = () => {
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Default Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Default filled'
+          overlayLabel='Actions'
+          colorScheme='default'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Brand Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Brand filled'
+          overlayLabel='Actions'
+          colorScheme='brand'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Error Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Error filled'
+          overlayLabel='Actions'
+          colorScheme='error'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Success Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Success filled'
+          overlayLabel='Actions'
+          colorScheme='success'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Gray Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Gray filled'
+          overlayLabel='Actions'
+          colorScheme='gray'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          placeholder='Light gray filled'
+          overlayLabel='Actions'
+          colorScheme='lightGray'
+          size='xl'
+          filled={true}
+          border={false}
+          showArrow
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Kebab Menu Filled</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          triggerContent={<KebabMenuIcon className='w-5 h-5' />}
+          overlayLabel='Actions'
+          colorScheme='brand'
+          size='md'
+          filled={true}
+          border={false}
+          showArrow={false}
+          className='w-auto px-3'
         />
       </div>
     </div>

@@ -1429,25 +1429,6 @@ const WalletIcon = ({
     fill: 'currentColor'
   })
 });
-const WalletSmallIcon = ({
-  color = '#0C1C33',
-  size = 16,
-  className = '',
-  onClick
-}) => jsx("svg", {
-  width: size,
-  height: size,
-  viewBox: '0 0 16 16',
-  fill: 'none',
-  xmlns: 'http://www.w3.org/2000/svg',
-  className: className,
-  onClick: onClick,
-  color: color,
-  children: jsx("path", {
-    d: 'M12.6667 2.66666H3.33333C2.80289 2.66666 2.29419 2.87737 1.91911 3.25244C1.54404 3.62752 1.33333 4.13622 1.33333 4.66666V11.3333C1.33333 11.8637 1.54404 12.3725 1.91911 12.7475C2.29419 13.1226 2.80289 13.3333 3.33333 13.3333H12.6667C13.1971 13.3333 13.7058 13.1226 14.0809 12.7475C14.4559 12.3725 14.6667 11.8637 14.6667 11.3333V4.66666C14.6667 4.13622 14.4559 3.62752 14.0809 3.25244C13.7058 2.87737 13.1971 2.66666 12.6667 2.66666ZM13.6667 9.66666H11.3333C10.8913 9.66666 10.4674 9.49106 10.1548 9.17852C9.84226 8.86592 9.66666 8.44199 9.66666 7.99999C9.66666 7.55799 9.84226 7.13406 10.1548 6.82146C10.4674 6.50892 10.8913 6.33332 11.3333 6.33332H13.6667V9.66666ZM13.6667 5.33332H11.3333C10.6261 5.33332 9.94779 5.61428 9.44773 6.11437C8.94759 6.61447 8.66666 7.29272 8.66666 7.99999C8.66666 8.70726 8.94759 9.38552 9.44773 9.88559C9.94779 10.3857 10.6261 10.6667 11.3333 10.6667H13.6667V11.3333C13.6663 11.5985 13.5609 11.8527 13.3735 12.0401C13.186 12.2276 12.9318 12.333 12.6667 12.3333H3.33333C3.0682 12.333 2.81402 12.2276 2.62655 12.0401C2.43908 11.8527 2.33363 11.5985 2.33333 11.3333V4.66666C2.33363 4.40153 2.43908 4.14735 2.62655 3.95988C2.81402 3.77241 3.0682 3.66696 3.33333 3.66666H12.6667C12.9318 3.66696 13.186 3.77241 13.3735 3.95988C13.5609 4.14735 13.6663 4.40153 13.6667 4.66666V5.33332ZM10.7333 7.99999C10.7333 8.11866 10.7685 8.23466 10.8345 8.33332C10.9004 8.43199 10.9941 8.50892 11.1037 8.55432C11.2133 8.59972 11.334 8.61159 11.4504 8.58846C11.5668 8.56532 11.6737 8.50819 11.7576 8.42426C11.8415 8.34032 11.8987 8.23346 11.9218 8.11706C11.9449 8.00066 11.9331 7.87999 11.8877 7.77039C11.8423 7.66072 11.7653 7.56706 11.6667 7.50112C11.568 7.43519 11.452 7.39999 11.3333 7.39999C11.1742 7.39999 11.0216 7.46319 10.9091 7.57572C10.7965 7.68826 10.7333 7.84086 10.7333 7.99999Z',
-    fill: 'currentColor'
-  })
-});
 const PlusIcon = ({
   color = '#4C7EFF',
   size = 17,
@@ -1507,20 +1488,20 @@ const EditIcon = ({
 });
 const DeleteIcon = ({
   color = '#0C1C33',
-  size = 16,
+  size = 12,
   className = '',
   onClick
 }) => jsx("svg", {
   width: size,
-  height: size * 17 / 16,
-  viewBox: '0 0 16 17',
+  height: size,
+  viewBox: '0 0 12 12',
   fill: 'none',
   xmlns: 'http://www.w3.org/2000/svg',
   className: className,
   onClick: onClick,
   color: color,
   children: jsx("path", {
-    d: 'M14 3.83337H10V3.16671C10 2.81309 9.85953 2.47395 9.60947 2.2239C9.3594 1.97385 9.02027 1.83337 8.66667 1.83337H7.33333C6.97973 1.83337 6.64057 1.97385 6.39053 2.2239C6.14047 2.47395 6 2.81309 6 3.16671V3.83337H2V4.50004H3.21333L4.1766 15.1667H11.8233L12.787 4.50004H14V3.83337ZM6.66667 3.16671C6.66687 2.98995 6.73713 2.8205 6.86213 2.69551C6.98713 2.57053 7.1566 2.50023 7.33333 2.50004H8.66667C8.8434 2.50023 9.01287 2.57053 9.13787 2.69551C9.26287 2.8205 9.33313 2.98995 9.33333 3.16671V3.83337H6.66667V3.16671ZM11.2143 14.5H4.78573L3.8824 4.50004H12.1177L11.2143 14.5Z',
+    d: 'M9.64453 3.16694H3.14453V8.33296C3.14453 8.8087 3.14505 9.1321 3.16797 9.38178C3.1902 9.62369 3.22996 9.75055 3.28223 9.84174C3.40594 10.0575 3.61068 10.2435 3.875 10.3632C3.99868 10.4192 4.16361 10.4577 4.44922 10.4785C4.73956 10.4996 5.11214 10.4999 5.64453 10.4999H7.14453C7.67694 10.4999 8.04951 10.4996 8.33984 10.4785C8.62542 10.4577 8.79035 10.4192 8.91406 10.3632C9.17838 10.2435 9.38313 10.0575 9.50684 9.84174C9.55911 9.75055 9.59886 9.62369 9.62109 9.38178C9.64401 9.1321 9.64453 8.8087 9.64453 8.33296V3.16694ZM4.64453 8.77729V4.88862C4.64465 4.61258 4.86846 4.38862 5.14453 4.38862C5.4206 4.38862 5.64441 4.61258 5.64453 4.88862V8.77729C5.64453 9.05343 5.42067 9.27729 5.14453 9.27729C4.86839 9.27729 4.64453 9.05343 4.64453 8.77729ZM7.14453 8.77729V4.88862C7.14465 4.61258 7.36846 4.38862 7.64453 4.38862C7.9206 4.38862 8.14441 4.61258 8.14453 4.88862V8.77729C8.14453 9.05343 7.92067 9.27729 7.64453 9.27729C7.36839 9.27729 7.14453 9.05343 7.14453 8.77729ZM5.38086 1.50874C5.25742 1.51573 5.18835 1.52766 5.12793 1.54878C5.00489 1.59179 4.90244 1.6601 4.82617 1.74116C4.77137 1.7994 4.73247 1.87921 4.62109 2.16694H8.16797C8.05659 1.87926 8.0177 1.79942 7.96289 1.74116C7.88659 1.66008 7.78415 1.59178 7.66113 1.54878C7.60071 1.52766 7.53164 1.51573 7.4082 1.50874L6.82812 1.49995H5.96094L5.38086 1.50874ZM10.6445 8.33296C10.6445 8.79033 10.6453 9.16751 10.6172 9.47358C10.5883 9.78751 10.5261 10.0734 10.374 10.3388C10.1383 10.7501 9.76826 11.0736 9.32715 11.2734C9.0498 11.399 8.75142 11.4509 8.41211 11.4755C8.07715 11.4999 7.66219 11.4999 7.14453 11.4999H5.64453C5.12688 11.4999 4.71192 11.4999 4.37695 11.4755C4.03764 11.4509 3.73926 11.399 3.46191 11.2734C3.02083 11.0736 2.65082 10.7501 2.41504 10.3388C2.26294 10.0735 2.20073 9.78751 2.17188 9.47358C2.14375 9.16751 2.14453 8.79033 2.14453 8.33296V3.16694H1.39453C1.1185 3.16694 0.894707 2.94293 0.894531 2.66694C0.894531 2.3908 1.11839 2.16694 1.39453 2.16694H3.54785L3.5957 2.03999C3.74459 1.64296 3.86062 1.30755 4.09766 1.05561C4.28979 0.851432 4.53158 0.698535 4.79785 0.605416C5.11806 0.49348 5.48131 0.499947 5.96094 0.499948H6.82812L7.16699 0.500924C7.48654 0.504247 7.75101 0.521452 7.99121 0.605416C8.25751 0.698545 8.49928 0.85145 8.69141 1.05561C8.92837 1.30753 9.04444 1.64289 9.19336 2.03999L9.24121 2.16694H11.3945C11.6707 2.16694 11.8945 2.3908 11.8945 2.66694C11.8944 2.94293 11.6706 3.16694 11.3945 3.16694H10.6445V8.33296Z',
     fill: 'currentColor'
   })
 });
@@ -8027,14 +8008,16 @@ const Select = _a => {
 const overlaySelectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
     theme: {
-      light: 'text-[#0C1C33] bg-white',
-      dark: 'text-white bg-gray-800'
+      light: 'text-dash-primary-dark-blue',
+      dark: 'text-white'
     },
     colorScheme: {
       default: '',
       brand: '',
       error: '',
-      success: ''
+      success: '',
+      gray: '',
+      lightGray: ''
     },
     size: {
       sm: 'dash-block-sm',
@@ -8048,6 +8031,10 @@ const overlaySelectTrigger = cva('w-full transition-all font-inter appearance-no
     disabled: {
       false: '',
       true: 'opacity-60 cursor-not-allowed'
+    },
+    filled: {
+      false: '',
+      true: ''
     }
   },
   compoundVariants: [{
@@ -8066,13 +8053,128 @@ const overlaySelectTrigger = cva('w-full transition-all font-inter appearance-no
     colorScheme: 'success',
     border: true,
     class: 'outline-green-500 focus:outline-green-500'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'light',
+    class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-gray-600/50 focus:outline-gray-500'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'light',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'light',
+    class: 'bg-[rgba(12,28,51,0.03)]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-gray-700/20'
+  },
+  // New lightGray scheme using dash-primary-dark-blue with 3% base and 5% hover
+  {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  },
+  // Default background when not filled
+  {
+    filled: false,
+    theme: 'light',
+    class: 'bg-white'
+  }, {
+    filled: false,
+    theme: 'dark',
+    class: 'bg-gray-800'
+  },
+  // Filled variants
+  {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'light',
+    class: 'bg-white text-gray-900'
+  }, {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-700 text-white'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'light',
+    class: 'bg-blue-50 text-blue-700'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-blue-900/30 text-blue-300'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'light',
+    class: 'bg-red-50 text-red-700'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-red-500/20 text-red-400'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'light',
+    class: 'bg-green-50 text-green-700'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-green-500/20 text-green-400'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-gray-200 text-gray-800'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-600 text-gray-200'
   }],
   defaultVariants: {
     theme: 'light',
     colorScheme: 'default',
     size: 'xl',
     border: true,
-    disabled: false
+    disabled: false,
+    filled: false
   }
 });
 const overlayContent$1 = cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
@@ -8130,6 +8232,7 @@ const OverlaySelect = _a => {
       error = false,
       success = false,
       border = true,
+      filled = false,
       disabled = false,
       options = [],
       showArrow = true,
@@ -8141,7 +8244,7 @@ const OverlaySelect = _a => {
       overlayLabel,
       maxHeight = '200px'
     } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
+    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
   const {
     theme
   } = useTheme();
@@ -8155,6 +8258,7 @@ const OverlaySelect = _a => {
     colorScheme: finalColorScheme,
     size,
     border,
+    filled,
     disabled
   }) + ' ' + className;
   const contentClasses = overlayContent$1({
@@ -8233,14 +8337,16 @@ const OverlaySelect = _a => {
 const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
     theme: {
-      light: 'text-[#0C1C33] bg-white',
-      dark: 'text-white bg-gray-800'
+      light: 'text-dash-primary-dark-blue',
+      dark: 'text-white'
     },
     colorScheme: {
       default: '',
       brand: '',
       error: '',
-      success: ''
+      success: '',
+      gray: '',
+      lightGray: ''
     },
     size: {
       sm: 'dash-block-sm',
@@ -8254,6 +8360,10 @@ const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none
     disabled: {
       false: '',
       true: 'opacity-60 cursor-not-allowed'
+    },
+    filled: {
+      false: '',
+      true: ''
     }
   },
   compoundVariants: [{
@@ -8272,13 +8382,128 @@ const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none
     colorScheme: 'success',
     border: true,
     class: 'outline-green-500 focus:outline-green-500'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'light',
+    class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-gray-600/50 focus:outline-gray-500'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'light',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'light',
+    class: 'bg-[rgba(12,28,51,0.03)]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-gray-700/20'
+  },
+  // New lightGray scheme using dash-primary-dark-blue with 3% base and 5% hover
+  {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  },
+  // Default background when not filled
+  {
+    filled: false,
+    theme: 'light',
+    class: 'bg-white'
+  }, {
+    filled: false,
+    theme: 'dark',
+    class: 'bg-gray-800'
+  },
+  // Filled variants
+  {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'light',
+    class: 'bg-white text-gray-900'
+  }, {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-700 text-white'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'light',
+    class: 'bg-blue-50 text-blue-700'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-blue-900/30 text-blue-300'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'light',
+    class: 'bg-red-50 text-red-700'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-red-500/20 text-red-400'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'light',
+    class: 'bg-green-50 text-green-700'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-green-500/20 text-green-400'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-gray-200 text-gray-800'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-600 text-gray-200'
   }],
   defaultVariants: {
     theme: 'light',
     colorScheme: 'default',
     size: 'xl',
     border: true,
-    disabled: false
+    disabled: false,
+    filled: false
   }
 });
 const overlayContent = cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
@@ -8336,6 +8561,7 @@ const OverlayMenu = _a => {
       error = false,
       success = false,
       border = true,
+      filled = false,
       disabled = false,
       items = [],
       showArrow = true,
@@ -8346,7 +8572,7 @@ const OverlayMenu = _a => {
       placeholder = 'Menu',
       showItemBorders = true
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
   const {
     theme
   } = useTheme();
@@ -8360,6 +8586,7 @@ const OverlayMenu = _a => {
     colorScheme: finalColorScheme,
     size,
     border,
+    filled,
     disabled
   }) + ' ' + className;
   const contentClasses = overlayContent({
@@ -10854,5 +11081,5 @@ const Tabs = ({
   });
 };
 
-export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WalletSmallIcon, WebIcon, useTheme };
+export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WebIcon, useTheme };
 //# sourceMappingURL=index.esm.js.map

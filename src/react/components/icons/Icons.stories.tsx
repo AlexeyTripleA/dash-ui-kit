@@ -16,7 +16,7 @@ import {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-  WalletSmallIcon,
+
   PlusIcon,
   FilterIcon,
   EditIcon,
@@ -129,10 +129,7 @@ export const AllIcons: StoryObj = {
         <WalletIcon />
         <span className="text-sm">WalletIcon</span>
       </div>
-      <div className="flex flex-col items-center gap-2">
-        <WalletSmallIcon />
-        <span className="text-sm">WalletSmallIcon</span>
-      </div>
+
       <div className="flex flex-col items-center gap-2">
         <PlusIcon />
         <span className="text-sm">PlusIcon</span>
@@ -394,15 +391,7 @@ export const Wallet: StoryObj = {
   }
 }
 
-// Wallet Small Icon
-export const WalletSmall: StoryObj = {
-  render: (args) => <WalletSmallIcon {...args} />,
-  args: {
-    size: 16,
-    color: '#0C1C33',
-    className: ''
-  }
-}
+
 
 // Plus Icon
 export const Plus: StoryObj = {

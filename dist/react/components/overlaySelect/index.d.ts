@@ -2,10 +2,11 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const overlaySelectTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "brand" | "error" | "success" | null | undefined;
+    colorScheme?: "default" | "brand" | "error" | "success" | "gray" | "lightGray" | null | undefined;
     size?: "sm" | "md" | "xl" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
+    filled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type OverlaySelectVariants = VariantProps<typeof overlaySelectTrigger>;
 export interface OverlaySelectOption {
@@ -19,6 +20,7 @@ export interface OverlaySelectProps extends Omit<OverlaySelectVariants, 'theme' 
     error?: boolean;
     success?: boolean;
     border?: boolean;
+    filled?: boolean;
     options?: OverlaySelectOption[];
     showArrow?: boolean;
     value?: string;

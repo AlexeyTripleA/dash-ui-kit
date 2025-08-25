@@ -21,7 +21,6 @@ export declare const ProtectedMessageIcon: React.FC<IconProps>;
 export declare const SmartphoneIcon: React.FC<IconProps>;
 export declare const CrossIcon: React.FC<IconProps>;
 export declare const WalletIcon: React.FC<IconProps>;
-export declare const WalletSmallIcon: React.FC<IconProps>;
 export declare const PlusIcon: React.FC<IconProps>;
 export declare const FilterIcon: React.FC<IconProps>;
 export declare const EditIcon: React.FC<IconProps>;

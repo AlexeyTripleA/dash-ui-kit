@@ -2,10 +2,11 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const overlayMenuTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "brand" | "error" | "success" | null | undefined;
+    colorScheme?: "default" | "brand" | "error" | "success" | "gray" | "lightGray" | null | undefined;
     size?: "sm" | "md" | "xl" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
+    filled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type OverlayMenuVariants = VariantProps<typeof overlayMenuTrigger>;
 export interface OverlayMenuItem {
@@ -19,6 +20,7 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
     error?: boolean;
     success?: boolean;
     border?: boolean;
+    filled?: boolean;
     items?: OverlayMenuItem[];
     showArrow?: boolean;
     disabled?: boolean;

@@ -78,7 +78,7 @@ const meta: Meta<OverlaySelectProps> = {
   argTypes: {
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['default', 'brand', 'error', 'success', 'lightGray'],
+      options: ['default', 'brand', 'error', 'success', 'gray', 'lightGray'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -88,6 +88,7 @@ const meta: Meta<OverlaySelectProps> = {
     error: { control: 'boolean' },
     success: { control: 'boolean' },
     border: { control: 'boolean' },
+    filled: { control: 'boolean' },
     showArrow: { control: 'boolean' },
     onValueChange: { action: 'value-changed' },
   },
@@ -221,6 +222,7 @@ export const ColorSchemes: StoryFn<OverlaySelectProps> = () => {
   const [brandValue, setBrandValue] = React.useState<string>('')
   const [errorValue, setErrorValue] = React.useState<string>('')
   const [successValue, setSuccessValue] = React.useState<string>('')
+  const [grayValue, setGrayValue] = React.useState<string>('')
   const [lightGrayValue, setLightGrayValue] = React.useState<string>('')
 
   return (
@@ -270,12 +272,24 @@ export const ColorSchemes: StoryFn<OverlaySelectProps> = () => {
         />
       </div>
       <div>
-        <label className='block text-sm font-medium mb-1'>Light Gray</label>
+        <label className='block text-sm font-medium mb-1'>Gray</label>
         <OverlaySelect 
           options={basicOptions} 
-          placeholder='Light gray color scheme...' 
+          placeholder='Gray color scheme...' 
+          overlayLabel='Your wallet'
+          colorScheme='gray'
+          value={grayValue}
+          onValueChange={setGrayValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray (new)</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Light gray (new)...' 
           overlayLabel='Your wallet'
           colorScheme='lightGray'
+          border={false}
           value={lightGrayValue}
           onValueChange={setLightGrayValue}
         />
@@ -311,6 +325,89 @@ export const BorderlessVariants: StoryFn<OverlaySelectProps> = () => {
           overlayLabel='Your wallet'
           colorScheme='lightGray'
           size='xl'
+          border={false}
+          value={lightGrayValue}
+          onValueChange={setLightGrayValue}
+        />
+      </div>
+    </div>
+  )
+}
+
+export const FilledVariants: StoryFn<OverlaySelectProps> = () => {
+  const [defaultValue, setDefaultValue] = React.useState<string>('')
+  const [brandValue, setBrandValue] = React.useState<string>('')
+  const [errorValue, setErrorValue] = React.useState<string>('')
+  const [successValue, setSuccessValue] = React.useState<string>('')
+  const [lightGrayValue, setLightGrayValue] = React.useState<string>('')
+
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Default Filled</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Default filled...' 
+          overlayLabel='Your wallet'
+          colorScheme='default'
+          size='xl'
+          filled={true}
+          border={false}
+          value={defaultValue}
+          onValueChange={setDefaultValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Brand Filled</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Brand filled...' 
+          overlayLabel='Your wallet'
+          colorScheme='brand'
+          size='xl'
+          filled={true}
+          border={false}
+          value={brandValue}
+          onValueChange={setBrandValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Error Filled</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Error filled...' 
+          overlayLabel='Your wallet'
+          colorScheme='error'
+          size='xl'
+          filled={true}
+          border={false}
+          value={errorValue}
+          onValueChange={setErrorValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Success Filled</label>
+        <OverlaySelect 
+          options={basicOptions} 
+          placeholder='Success filled...' 
+          overlayLabel='Your wallet'
+          colorScheme='success'
+          size='xl'
+          filled={true}
+          border={false}
+          value={successValue}
+          onValueChange={setSuccessValue}
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Light Gray Filled</label>
+        <OverlaySelect 
+          options={walletsWithContent} 
+          placeholder='Light gray filled...' 
+          overlayLabel='Your wallet'
+          colorScheme='lightGray'
+          size='xl'
+          filled={true}
           border={false}
           value={lightGrayValue}
           onValueChange={setLightGrayValue}

@@ -10,14 +10,15 @@ const overlayMenuTrigger = cva(
   {
     variants: {
       theme: {
-        light: 'text-[#0C1C33] bg-white',
-        dark: 'text-white bg-gray-800'
+        light: 'text-dash-primary-dark-blue',
+        dark: 'text-white'
       },
       colorScheme: {
         default: '',
         brand: '',
         error: '',
         success: '',
+        gray: '',
         lightGray: ''
       },
       size: {
@@ -32,6 +33,10 @@ const overlayMenuTrigger = cva(
       disabled: {
         false: '',
         true: 'opacity-60 cursor-not-allowed'
+      },
+      filled: {
+        false: '',
+        true: ''
       }
     },
     compoundVariants: [
@@ -56,28 +61,137 @@ const overlayMenuTrigger = cva(
         class: 'outline-green-500 focus:outline-green-500'
       },
       {
-        colorScheme: 'lightGray',
+        colorScheme: 'gray',
         border: true,
         theme: 'light',
         class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
       },
       {
-        colorScheme: 'lightGray',
+        colorScheme: 'gray',
         border: true,
         theme: 'dark',
         class: 'outline-gray-600/50 focus:outline-gray-500'
       },
       {
         colorScheme: 'lightGray',
+        border: true,
+        theme: 'light',
+        class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: true,
+        theme: 'dark',
+        class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+      },
+      {
+        colorScheme: 'gray',
         border: false,
         theme: 'light',
         class: 'bg-[rgba(12,28,51,0.03)]'
       },
       {
-        colorScheme: 'lightGray',
+        colorScheme: 'gray',
         border: false,
         theme: 'dark',
         class: 'bg-gray-700/20'
+      },
+      // New lightGray scheme using dash-primary-dark-blue with 3% base and 5% hover
+      {
+        colorScheme: 'lightGray',
+        border: false,
+        theme: 'light',
+        class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+      },
+      {
+        colorScheme: 'lightGray',
+        border: false,
+        theme: 'dark',
+        class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+      },
+      {
+        colorScheme: 'lightGray',
+        filled: true,
+        theme: 'light',
+        class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+      },
+      {
+        colorScheme: 'lightGray',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+      },
+      // Default background when not filled
+      {
+        filled: false,
+        theme: 'light',
+        class: 'bg-white'
+      },
+      {
+        filled: false,
+        theme: 'dark',
+        class: 'bg-gray-800'
+      },
+      // Filled variants
+      {
+        colorScheme: 'default',
+        filled: true,
+        theme: 'light',
+        class: 'bg-white text-gray-900'
+      },
+      {
+        colorScheme: 'default',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-gray-700 text-white'
+      },
+      {
+        colorScheme: 'brand',
+        filled: true,
+        theme: 'light',
+        class: 'bg-blue-50 text-blue-700'
+      },
+      {
+        colorScheme: 'brand',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-blue-900/30 text-blue-300'
+      },
+      {
+        colorScheme: 'error',
+        filled: true,
+        theme: 'light',
+        class: 'bg-red-50 text-red-700'
+      },
+      {
+        colorScheme: 'error',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-red-500/20 text-red-400'
+      },
+      {
+        colorScheme: 'success',
+        filled: true,
+        theme: 'light',
+        class: 'bg-green-50 text-green-700'
+      },
+      {
+        colorScheme: 'success',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-green-500/20 text-green-400'
+      },
+      {
+        colorScheme: 'gray',
+        filled: true,
+        theme: 'light',
+        class: 'bg-gray-200 text-gray-800'
+      },
+      {
+        colorScheme: 'gray',
+        filled: true,
+        theme: 'dark',
+        class: 'bg-gray-600 text-gray-200'
       }
     ],
     defaultVariants: {
@@ -85,7 +199,8 @@ const overlayMenuTrigger = cva(
       colorScheme: 'default',
       size: 'xl',
       border: true,
-      disabled: false
+      disabled: false,
+      filled: false
     }
   }
 )
@@ -157,6 +272,7 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
   error?: boolean
   success?: boolean
   border?: boolean
+  filled?: boolean
   items?: OverlayMenuItem[]
   showArrow?: boolean
   disabled?: boolean
@@ -179,6 +295,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   error = false,
   success = false,
   border = true,
+  filled = false,
   disabled = false,
   items = [],
   showArrow = true,
@@ -204,6 +321,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
     colorScheme: finalColorScheme,
     size,
     border,
+    filled,
     disabled
   }) + ' ' + className
 

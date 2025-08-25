@@ -17,7 +17,7 @@ import {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-  WalletSmallIcon,
+
   PlusIcon,
   FilterIcon,
   EditIcon,
@@ -52,7 +52,7 @@ const icons = [
   { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' },
   { Component: CrossIcon, name: 'CrossIcon', defaultSize: 16, defaultColor: '#0C1C33' },
   { Component: WalletIcon, name: 'WalletIcon', defaultSize: 16, defaultColor: '#0C1C33' },
-  { Component: WalletSmallIcon, name: 'WalletSmallIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+
   { Component: PlusIcon, name: 'PlusIcon', defaultSize: 17, defaultColor: '#4C7EFF' },
   { Component: FilterIcon, name: 'FilterIcon', defaultSize: 16, defaultColor: '#0C1C33' },
   { Component: EditIcon, name: 'EditIcon', defaultSize: 16, defaultColor: '#0C1C33' },
@@ -245,15 +245,7 @@ describe('Icons', () => {
       expect(svg.querySelector('path')).toBeInTheDocument()
     })
 
-    it('WalletSmallIcon has correct aspect ratio and renders correctly', () => {
-      render(<WalletSmallIcon size={16} />)
-      const svg = screen.getByRole('img', { hidden: true })
-      
-      expect(svg).toHaveAttribute('width', '16')
-      expect(svg).toHaveAttribute('height', '16')
-      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
-      expect(svg.querySelector('path')).toBeInTheDocument()
-    })
+
 
     it('PlusIcon has correct aspect ratio', () => {
       render(<PlusIcon size={17} />)
