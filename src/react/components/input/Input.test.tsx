@@ -226,6 +226,48 @@ describe('Input', () => {
       const input = screen.getByPlaceholderText('Enter password')
       expect(input).toHaveClass('pr-12')
     })
+
+    it('hides password toggle when showPasswordToggle is false', () => {
+      renderWithTheme(<Input type="password" placeholder="Enter password" showPasswordToggle={false} />)
+      
+      const input = screen.getByPlaceholderText('Enter password')
+      expect(input).toHaveAttribute('type', 'password')
+      
+      // Eye icon button should not be present
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    })
+
+    it('does not apply right padding when showPasswordToggle is false', () => {
+      renderWithTheme(<Input type="password" placeholder="Enter password" showPasswordToggle={false} />)
+      const input = screen.getByPlaceholderText('Enter password')
+      expect(input).not.toHaveClass('pr-12')
+    })
+
+    it('works with prefix and showPasswordToggle false', () => {
+      renderWithTheme(<Input type="password" prefix="PIN:" placeholder="Enter PIN" showPasswordToggle={false} />)
+      
+      const prefix = screen.getByText('PIN:')
+      const input = screen.getByPlaceholderText('Enter PIN')
+      
+      expect(prefix).toBeInTheDocument()
+      expect(input).toHaveAttribute('type', 'password')
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+      
+      // Should have left padding for prefix but no right padding for icon
+      expect(input.className).toMatch(/pl-\[/)
+      expect(input).not.toHaveClass('pr-12')
+    })
+
+    it('accepts user input when showPasswordToggle is false', async () => {
+      const user = userEvent.setup()
+      renderWithTheme(<Input type="password" placeholder="Enter password" showPasswordToggle={false} />)
+      
+      const input = screen.getByPlaceholderText('Enter password')
+      await user.type(input, 'secret123')
+      
+      expect(input).toHaveValue('secret123')
+      expect(input).toHaveAttribute('type', 'password')
+    })
   })
 
   describe('Size variants', () => {

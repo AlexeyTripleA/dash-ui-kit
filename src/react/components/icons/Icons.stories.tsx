@@ -13,7 +13,24 @@ import {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon,
+  WalletIcon,
+
+  PlusIcon,
+  FilterIcon,
+  EditIcon,
+  DeleteIcon,
+  ChevronIcon,
+  BurgerMenuIcon,
+  KebabMenuIcon,
+  CircleProcessIcon,
+  CreditsIcon,
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './index'
 
 const meta: Meta = {
@@ -103,6 +120,71 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <SmartphoneIcon />
         <span className="text-sm">SmartphoneIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CrossIcon />
+        <span className="text-sm">CrossIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WalletIcon />
+        <span className="text-sm">WalletIcon</span>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <PlusIcon />
+        <span className="text-sm">PlusIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FilterIcon />
+        <span className="text-sm">FilterIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <EditIcon />
+        <span className="text-sm">EditIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <DeleteIcon />
+        <span className="text-sm">DeleteIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ChevronIcon />
+        <span className="text-sm">ChevronIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <BurgerMenuIcon />
+        <span className="text-sm">BurgerMenuIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <KebabMenuIcon size={2} />
+        <span className="text-sm">KebabMenuIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CircleProcessIcon />
+        <span className="text-sm">CircleProcessIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CreditsIcon />
+        <span className="text-sm">CreditsIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <WebIcon />
+        <span className="text-sm">WebIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ChainSmallIcon />
+        <span className="text-sm">ChainSmallIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SettingsIcon />
+        <span className="text-sm">SettingsIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ShieldSmallIcon />
+        <span className="text-sm">ShieldSmallIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <QuestionMessageIcon />
+        <span className="text-sm">QuestionMessageIcon</span>
       </div>
     </div>
   ),
@@ -234,71 +316,29 @@ export const Check: StoryObj = {
 // Size Variations
 export const SizeVariations: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon size={12} />
-        <span className="text-xs">12px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons support different sizes:</p>
+      <div className="flex items-center gap-4">
         <SuccessIcon size={16} />
-        <span className="text-xs">16px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon size={20} />
-        <span className="text-xs">20px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon size={24} />
-        <span className="text-xs">24px</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon size={32} />
-        <span className="text-xs">32px</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons can be displayed in different sizes using the size prop.'
-      }
-    }
-  }
+  )
 }
 
 // Color Variations
 export const ColorVariations: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons support custom colors:</p>
+      <div className="flex items-center gap-4">
         <SuccessIcon color="#1CC400" />
-        <span className="text-xs">Green</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon color="#F45858" />
-        <span className="text-xs">Red</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <SuccessIcon color="#008DE4" />
-        <span className="text-xs">Blue</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon color="#F4A358" />
-        <span className="text-xs">Orange</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <SuccessIcon color="#9333EA" />
-        <span className="text-xs">Purple</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons support custom colors via the color prop.'
-      }
-    }
-  }
+  )
 }
 
 // Key Icon
@@ -331,47 +371,189 @@ export const Smartphone: StoryObj = {
   }
 }
 
+// Cross Icon
+export const Cross: StoryObj = {
+  render: (args) => <CrossIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Wallet Icon
+export const Wallet: StoryObj = {
+  render: (args) => <WalletIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+
+
+// Plus Icon
+export const Plus: StoryObj = {
+  render: (args) => <PlusIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Filter Icon
+export const Filter: StoryObj = {
+  render: (args) => <FilterIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Edit Icon
+export const Edit: StoryObj = {
+  render: (args) => <EditIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Delete Icon
+export const Delete: StoryObj = {
+  render: (args) => <DeleteIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Chevron Icon
+export const Chevron: StoryObj = {
+  render: (args) => <ChevronIcon {...args} />,
+  args: {
+    size: 12,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Burger Menu Icon
+export const BurgerMenu: StoryObj = {
+  render: (args) => <BurgerMenuIcon {...args} />,
+  args: {
+    size: 24,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Kebab Menu Icon
+export const KebabMenu: StoryObj = {
+  render: (args) => <KebabMenuIcon {...args} />,
+  args: {
+    size: 2,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Circle Process Icon
+export const CircleProcess: StoryObj = {
+  render: (args) => <CircleProcessIcon {...args} />,
+  args: {
+    size: 20,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Credits Icon
+export const Credits: StoryObj = {
+  render: (args) => <CreditsIcon {...args} />,
+  args: {
+    size: 14,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Web Icon
+export const Web: StoryObj = {
+  render: (args) => <WebIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Chain Small Icon
+export const ChainSmall: StoryObj = {
+  render: (args) => <ChainSmallIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Settings Icon
+export const Settings: StoryObj = {
+  render: (args) => <SettingsIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Shield Small Icon
+export const ShieldSmall: StoryObj = {
+  render: (args) => <ShieldSmallIcon {...args} />,
+  args: {
+    size: 15,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Question Message Icon
+export const QuestionMessage: StoryObj = {
+  render: (args) => <QuestionMessageIcon {...args} />,
+  args: {
+    size: 17,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
 // Interactive Icons
 export const Interactive: StoryObj = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
+    <div className="p-4">
+      <p className="mb-4 text-sm">Icons can be interactive with click handlers:</p>
+      <div className="flex items-center gap-4">
         <CopyIcon 
           color="#4C7EFF" 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
+          className="cursor-pointer hover:opacity-80"
           onClick={() => alert('Copy clicked!')}
         />
-        <span className="text-xs">Click to copy</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <EyeOpenIcon 
-          color="#4C7EFF" 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Eye clicked!')}
-        />
-        <span className="text-xs">Toggle visibility</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
         <CheckIcon 
-          className="cursor-pointer hover:scale-110 transition-transform"
+          className="cursor-pointer hover:scale-110"
           onClick={() => alert('Check clicked!')}
         />
-        <span className="text-xs">Mark as done</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <KeyIcon 
-          className="cursor-pointer hover:opacity-80 transition-opacity"
-          onClick={() => alert('Key clicked!')}
+        <DeleteIcon 
+          color="#F45858"
+          className="cursor-pointer hover:opacity-80"
+          onClick={() => alert('Delete clicked!')}
         />
-        <span className="text-xs">Security key</span>
       </div>
     </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: 'Icons can be made interactive with onClick handlers and hover effects.'
-      }
-    }
-  }
+  )
 } 

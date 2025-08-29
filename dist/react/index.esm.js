@@ -1,14 +1,956 @@
 "use client";
 
-import { __rest, __assign, __spreadArray } from 'tslib';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { cva } from 'class-variance-authority';
 import * as React from 'react';
-import React__default, { useState, useRef, useLayoutEffect, useMemo, useCallback, useEffect } from 'react';
+import React__default, { useState, useEffect, createContext, useContext, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
+import { cva } from 'class-variance-authority';
+import { __rest, __assign, __spreadArray } from 'tslib';
 
-const ThemeContext = /*#__PURE__*/React__default.createContext(undefined);
+// packages/react/context/src/create-context.tsx
+function createContext2(rootComponentName, defaultContext) {
+  const Context = React.createContext(defaultContext);
+  const Provider = (props) => {
+    const { children, ...context } = props;
+    const value = React.useMemo(() => context, Object.values(context));
+    return /* @__PURE__ */ jsx(Context.Provider, { value, children });
+  };
+  Provider.displayName = rootComponentName + "Provider";
+  function useContext2(consumerName) {
+    const context = React.useContext(Context);
+    if (context) return context;
+    if (defaultContext !== void 0) return defaultContext;
+    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+  }
+  return [Provider, useContext2];
+}
+function createContextScope(scopeName, createContextScopeDeps = []) {
+  let defaultContexts = [];
+  function createContext3(rootComponentName, defaultContext) {
+    const BaseContext = React.createContext(defaultContext);
+    const index = defaultContexts.length;
+    defaultContexts = [...defaultContexts, defaultContext];
+    const Provider = (props) => {
+      const { scope, children, ...context } = props;
+      const Context = scope?.[scopeName]?.[index] || BaseContext;
+      const value = React.useMemo(() => context, Object.values(context));
+      return /* @__PURE__ */ jsx(Context.Provider, { value, children });
+    };
+    Provider.displayName = rootComponentName + "Provider";
+    function useContext2(consumerName, scope) {
+      const Context = scope?.[scopeName]?.[index] || BaseContext;
+      const context = React.useContext(Context);
+      if (context) return context;
+      if (defaultContext !== void 0) return defaultContext;
+      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+    }
+    return [Provider, useContext2];
+  }
+  const createScope = () => {
+    const scopeContexts = defaultContexts.map((defaultContext) => {
+      return React.createContext(defaultContext);
+    });
+    return function useScope(scope) {
+      const contexts = scope?.[scopeName] || scopeContexts;
+      return React.useMemo(
+        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
+        [scope, contexts]
+      );
+    };
+  };
+  createScope.scopeName = scopeName;
+  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes(...scopes) {
+  const baseScope = scopes[0];
+  if (scopes.length === 1) return baseScope;
+  const createScope = () => {
+    const scopeHooks = scopes.map((createScope2) => ({
+      useScope: createScope2(),
+      scopeName: createScope2.scopeName
+    }));
+    return function useComposedScopes(overrideScopes) {
+      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+        const scopeProps = useScope(overrideScopes);
+        const currentScope = scopeProps[`__scope${scopeName}`];
+        return { ...nextScopes2, ...currentScope };
+      }, {});
+      return React.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+    };
+  };
+  createScope.scopeName = baseScope.scopeName;
+  return createScope;
+}
+
+// packages/react/compose-refs/src/compose-refs.tsx
+function setRef(ref, value) {
+  if (typeof ref === "function") {
+    return ref(value);
+  } else if (ref !== null && ref !== void 0) {
+    ref.current = value;
+  }
+}
+function composeRefs(...refs) {
+  return (node) => {
+    let hasCleanup = false;
+    const cleanups = refs.map((ref) => {
+      const cleanup = setRef(ref, node);
+      if (!hasCleanup && typeof cleanup == "function") {
+        hasCleanup = true;
+      }
+      return cleanup;
+    });
+    if (hasCleanup) {
+      return () => {
+        for (let i = 0; i < cleanups.length; i++) {
+          const cleanup = cleanups[i];
+          if (typeof cleanup == "function") {
+            cleanup();
+          } else {
+            setRef(refs[i], null);
+          }
+        }
+      };
+    }
+  };
+}
+function useComposedRefs(...refs) {
+  return React.useCallback(composeRefs(...refs), refs);
+}
+
+// src/slot.tsx
+// @__NO_SIDE_EFFECTS__
+function createSlot(ownerName) {
+  const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
+  const Slot2 = React.forwardRef((props, forwardedRef) => {
+    const { children, ...slotProps } = props;
+    const childrenArray = React.Children.toArray(children);
+    const slottable = childrenArray.find(isSlottable);
+    if (slottable) {
+      const newElement = slottable.props.children;
+      const newChildren = childrenArray.map((child) => {
+        if (child === slottable) {
+          if (React.Children.count(newElement) > 1) return React.Children.only(null);
+          return React.isValidElement(newElement) ? newElement.props.children : null;
+        } else {
+          return child;
+        }
+      });
+      return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children: React.isValidElement(newElement) ? React.cloneElement(newElement, void 0, newChildren) : null });
+    }
+    return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children });
+  });
+  Slot2.displayName = `${ownerName}.Slot`;
+  return Slot2;
+}
+// @__NO_SIDE_EFFECTS__
+function createSlotClone(ownerName) {
+  const SlotClone = React.forwardRef((props, forwardedRef) => {
+    const { children, ...slotProps } = props;
+    if (React.isValidElement(children)) {
+      const childrenRef = getElementRef$2(children);
+      const props2 = mergeProps(slotProps, children.props);
+      if (children.type !== React.Fragment) {
+        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+      }
+      return React.cloneElement(children, props2);
+    }
+    return React.Children.count(children) > 1 ? React.Children.only(null) : null;
+  });
+  SlotClone.displayName = `${ownerName}.SlotClone`;
+  return SlotClone;
+}
+var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
+function isSlottable(child) {
+  return React.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
+}
+function mergeProps(slotProps, childProps) {
+  const overrideProps = { ...childProps };
+  for (const propName in childProps) {
+    const slotPropValue = slotProps[propName];
+    const childPropValue = childProps[propName];
+    const isHandler = /^on[A-Z]/.test(propName);
+    if (isHandler) {
+      if (slotPropValue && childPropValue) {
+        overrideProps[propName] = (...args) => {
+          const result = childPropValue(...args);
+          slotPropValue(...args);
+          return result;
+        };
+      } else if (slotPropValue) {
+        overrideProps[propName] = slotPropValue;
+      }
+    } else if (propName === "style") {
+      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
+    } else if (propName === "className") {
+      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+    }
+  }
+  return { ...slotProps, ...overrideProps };
+}
+function getElementRef$2(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+
+function createCollection(name) {
+  const PROVIDER_NAME = name + "CollectionProvider";
+  const [createCollectionContext, createCollectionScope] = createContextScope(PROVIDER_NAME);
+  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
+    PROVIDER_NAME,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  );
+  const CollectionProvider = (props) => {
+    const { scope, children } = props;
+    const ref = React__default.useRef(null);
+    const itemMap = React__default.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
+  };
+  CollectionProvider.displayName = PROVIDER_NAME;
+  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
+  const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
+  const CollectionSlot = React__default.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children } = props;
+      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
+      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
+      return /* @__PURE__ */ jsx(CollectionSlotImpl, { ref: composedRefs, children });
+    }
+  );
+  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
+  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
+  const ITEM_DATA_ATTR = "data-radix-collection-item";
+  const CollectionItemSlotImpl = createSlot(ITEM_SLOT_NAME);
+  const CollectionItemSlot = React__default.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children, ...itemData } = props;
+      const ref = React__default.useRef(null);
+      const composedRefs = useComposedRefs(forwardedRef, ref);
+      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
+      React__default.useEffect(() => {
+        context.itemMap.set(ref, { ref, ...itemData });
+        return () => void context.itemMap.delete(ref);
+      });
+      return /* @__PURE__ */ jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
+    }
+  );
+  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
+  function useCollection(scope) {
+    const context = useCollectionContext(name + "CollectionConsumer", scope);
+    const getItems = React__default.useCallback(() => {
+      const collectionNode = context.collectionRef.current;
+      if (!collectionNode) return [];
+      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
+      const items = Array.from(context.itemMap.values());
+      const orderedItems = items.sort(
+        (a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current)
+      );
+      return orderedItems;
+    }, [context.collectionRef, context.itemMap]);
+    return getItems;
+  }
+  return [
+    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
+    useCollection,
+    createCollectionScope
+  ];
+}
+
+// src/primitive.tsx
+function composeEventHandlers$1(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+  return function handleEvent(event) {
+    originalEventHandler?.(event);
+    if (checkForDefaultPrevented === false || !event.defaultPrevented) {
+      return ourEventHandler?.(event);
+    }
+  };
+}
+
+// packages/react/use-layout-effect/src/use-layout-effect.tsx
+var useLayoutEffect2 = globalThis?.document ? React.useLayoutEffect : () => {
+};
+
+// src/use-controllable-state.tsx
+var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+function useControllableState({
+  prop,
+  defaultProp,
+  onChange = () => {
+  },
+  caller
+}) {
+  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+    defaultProp,
+    onChange
+  });
+  const isControlled = prop !== void 0;
+  const value = isControlled ? prop : uncontrolledProp;
+  {
+    const isControlledRef = React.useRef(prop !== void 0);
+    React.useEffect(() => {
+      const wasControlled = isControlledRef.current;
+      if (wasControlled !== isControlled) {
+        const from = wasControlled ? "controlled" : "uncontrolled";
+        const to = isControlled ? "controlled" : "uncontrolled";
+        console.warn(
+          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+        );
+      }
+      isControlledRef.current = isControlled;
+    }, [isControlled, caller]);
+  }
+  const setValue = React.useCallback(
+    (nextValue) => {
+      if (isControlled) {
+        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
+        if (value2 !== prop) {
+          onChangeRef.current?.(value2);
+        }
+      } else {
+        setUncontrolledProp(nextValue);
+      }
+    },
+    [isControlled, prop, setUncontrolledProp, onChangeRef]
+  );
+  return [value, setValue];
+}
+function useUncontrolledState({
+  defaultProp,
+  onChange
+}) {
+  const [value, setValue] = React.useState(defaultProp);
+  const prevValueRef = React.useRef(value);
+  const onChangeRef = React.useRef(onChange);
+  useInsertionEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+  React.useEffect(() => {
+    if (prevValueRef.current !== value) {
+      onChangeRef.current?.(value);
+      prevValueRef.current = value;
+    }
+  }, [value, prevValueRef]);
+  return [value, setValue, onChangeRef];
+}
+function isFunction(value) {
+  return typeof value === "function";
+}
+
+// src/primitive.tsx
+var NODES = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+];
+var Primitive = NODES.reduce((primitive, node) => {
+  const Slot = createSlot(`Primitive.${node}`);
+  const Node = React.forwardRef((props, forwardedRef) => {
+    const { asChild, ...primitiveProps } = props;
+    const Comp = asChild ? Slot : node;
+    if (typeof window !== "undefined") {
+      window[Symbol.for("radix-ui")] = true;
+    }
+    return /* @__PURE__ */ jsx(Comp, { ...primitiveProps, ref: forwardedRef });
+  });
+  Node.displayName = `Primitive.${node}`;
+  return { ...primitive, [node]: Node };
+}, {});
+function dispatchDiscreteCustomEvent(target, event) {
+  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
+}
+
+function useStateMachine$1(initialState, machine) {
+  return React.useReducer((state, event) => {
+    const nextState = machine[state][event];
+    return nextState ?? state;
+  }, initialState);
+}
+
+// src/presence.tsx
+var Presence$1 = (props) => {
+  const { present, children } = props;
+  const presence = usePresence$1(present);
+  const child = typeof children === "function" ? children({ present: presence.isPresent }) : React.Children.only(children);
+  const ref = useComposedRefs(presence.ref, getElementRef$1(child));
+  const forceMount = typeof children === "function";
+  return forceMount || presence.isPresent ? React.cloneElement(child, { ref }) : null;
+};
+Presence$1.displayName = "Presence";
+function usePresence$1(present) {
+  const [node, setNode] = React.useState();
+  const stylesRef = React.useRef(null);
+  const prevPresentRef = React.useRef(present);
+  const prevAnimationNameRef = React.useRef("none");
+  const initialState = present ? "mounted" : "unmounted";
+  const [state, send] = useStateMachine$1(initialState, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
+    }
+  });
+  React.useEffect(() => {
+    const currentAnimationName = getAnimationName$1(stylesRef.current);
+    prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+  }, [state]);
+  useLayoutEffect2(() => {
+    const styles = stylesRef.current;
+    const wasPresent = prevPresentRef.current;
+    const hasPresentChanged = wasPresent !== present;
+    if (hasPresentChanged) {
+      const prevAnimationName = prevAnimationNameRef.current;
+      const currentAnimationName = getAnimationName$1(styles);
+      if (present) {
+        send("MOUNT");
+      } else if (currentAnimationName === "none" || styles?.display === "none") {
+        send("UNMOUNT");
+      } else {
+        const isAnimating = prevAnimationName !== currentAnimationName;
+        if (wasPresent && isAnimating) {
+          send("ANIMATION_OUT");
+        } else {
+          send("UNMOUNT");
+        }
+      }
+      prevPresentRef.current = present;
+    }
+  }, [present, send]);
+  useLayoutEffect2(() => {
+    if (node) {
+      let timeoutId;
+      const ownerWindow = node.ownerDocument.defaultView ?? window;
+      const handleAnimationEnd = (event) => {
+        const currentAnimationName = getAnimationName$1(stylesRef.current);
+        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
+        if (event.target === node && isCurrentAnimation) {
+          send("ANIMATION_END");
+          if (!prevPresentRef.current) {
+            const currentFillMode = node.style.animationFillMode;
+            node.style.animationFillMode = "forwards";
+            timeoutId = ownerWindow.setTimeout(() => {
+              if (node.style.animationFillMode === "forwards") {
+                node.style.animationFillMode = currentFillMode;
+              }
+            });
+          }
+        }
+      };
+      const handleAnimationStart = (event) => {
+        if (event.target === node) {
+          prevAnimationNameRef.current = getAnimationName$1(stylesRef.current);
+        }
+      };
+      node.addEventListener("animationstart", handleAnimationStart);
+      node.addEventListener("animationcancel", handleAnimationEnd);
+      node.addEventListener("animationend", handleAnimationEnd);
+      return () => {
+        ownerWindow.clearTimeout(timeoutId);
+        node.removeEventListener("animationstart", handleAnimationStart);
+        node.removeEventListener("animationcancel", handleAnimationEnd);
+        node.removeEventListener("animationend", handleAnimationEnd);
+      };
+    } else {
+      send("ANIMATION_END");
+    }
+  }, [node, send]);
+  return {
+    isPresent: ["mounted", "unmountSuspended"].includes(state),
+    ref: React.useCallback((node2) => {
+      stylesRef.current = node2 ? getComputedStyle(node2) : null;
+      setNode(node2);
+    }, [])
+  };
+}
+function getAnimationName$1(styles) {
+  return styles?.animationName || "none";
+}
+function getElementRef$1(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+
+// packages/react/id/src/id.tsx
+var useReactId = React[" useId ".trim().toString()] || (() => void 0);
+var count$1 = 0;
+function useId(deterministicId) {
+  const [id, setId] = React.useState(useReactId());
+  useLayoutEffect2(() => {
+    setId((reactId) => reactId ?? String(count$1++));
+  }, [deterministicId]);
+  return (id ? `radix-${id}` : "");
+}
+
+var COLLAPSIBLE_NAME = "Collapsible";
+var [createCollapsibleContext, createCollapsibleScope] = createContextScope(COLLAPSIBLE_NAME);
+var [CollapsibleProvider, useCollapsibleContext] = createCollapsibleContext(COLLAPSIBLE_NAME);
+var Collapsible = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeCollapsible,
+      open: openProp,
+      defaultOpen,
+      disabled,
+      onOpenChange,
+      ...collapsibleProps
+    } = props;
+    const [open, setOpen] = useControllableState({
+      prop: openProp,
+      defaultProp: defaultOpen ?? false,
+      onChange: onOpenChange,
+      caller: COLLAPSIBLE_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      CollapsibleProvider,
+      {
+        scope: __scopeCollapsible,
+        disabled,
+        contentId: useId(),
+        open,
+        onOpenToggle: React.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            "data-state": getState$2(open),
+            "data-disabled": disabled ? "" : void 0,
+            ...collapsibleProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+Collapsible.displayName = COLLAPSIBLE_NAME;
+var TRIGGER_NAME$4 = "CollapsibleTrigger";
+var CollapsibleTrigger = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeCollapsible, ...triggerProps } = props;
+    const context = useCollapsibleContext(TRIGGER_NAME$4, __scopeCollapsible);
+    return /* @__PURE__ */ jsx(
+      Primitive.button,
+      {
+        type: "button",
+        "aria-controls": context.contentId,
+        "aria-expanded": context.open || false,
+        "data-state": getState$2(context.open),
+        "data-disabled": context.disabled ? "" : void 0,
+        disabled: context.disabled,
+        ...triggerProps,
+        ref: forwardedRef,
+        onClick: composeEventHandlers$1(props.onClick, context.onOpenToggle)
+      }
+    );
+  }
+);
+CollapsibleTrigger.displayName = TRIGGER_NAME$4;
+var CONTENT_NAME$5 = "CollapsibleContent";
+var CollapsibleContent = React.forwardRef(
+  (props, forwardedRef) => {
+    const { forceMount, ...contentProps } = props;
+    const context = useCollapsibleContext(CONTENT_NAME$5, props.__scopeCollapsible);
+    return /* @__PURE__ */ jsx(Presence$1, { present: forceMount || context.open, children: ({ present }) => /* @__PURE__ */ jsx(CollapsibleContentImpl, { ...contentProps, ref: forwardedRef, present }) });
+  }
+);
+CollapsibleContent.displayName = CONTENT_NAME$5;
+var CollapsibleContentImpl = React.forwardRef((props, forwardedRef) => {
+  const { __scopeCollapsible, present, children, ...contentProps } = props;
+  const context = useCollapsibleContext(CONTENT_NAME$5, __scopeCollapsible);
+  const [isPresent, setIsPresent] = React.useState(present);
+  const ref = React.useRef(null);
+  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const heightRef = React.useRef(0);
+  const height = heightRef.current;
+  const widthRef = React.useRef(0);
+  const width = widthRef.current;
+  const isOpen = context.open || isPresent;
+  const isMountAnimationPreventedRef = React.useRef(isOpen);
+  const originalStylesRef = React.useRef(void 0);
+  React.useEffect(() => {
+    const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+    return () => cancelAnimationFrame(rAF);
+  }, []);
+  useLayoutEffect2(() => {
+    const node = ref.current;
+    if (node) {
+      originalStylesRef.current = originalStylesRef.current || {
+        transitionDuration: node.style.transitionDuration,
+        animationName: node.style.animationName
+      };
+      node.style.transitionDuration = "0s";
+      node.style.animationName = "none";
+      const rect = node.getBoundingClientRect();
+      heightRef.current = rect.height;
+      widthRef.current = rect.width;
+      if (!isMountAnimationPreventedRef.current) {
+        node.style.transitionDuration = originalStylesRef.current.transitionDuration;
+        node.style.animationName = originalStylesRef.current.animationName;
+      }
+      setIsPresent(present);
+    }
+  }, [context.open, present]);
+  return /* @__PURE__ */ jsx(
+    Primitive.div,
+    {
+      "data-state": getState$2(context.open),
+      "data-disabled": context.disabled ? "" : void 0,
+      id: context.contentId,
+      hidden: !isOpen,
+      ...contentProps,
+      ref: composedRefs,
+      style: {
+        [`--radix-collapsible-content-height`]: height ? `${height}px` : void 0,
+        [`--radix-collapsible-content-width`]: width ? `${width}px` : void 0,
+        ...props.style
+      },
+      children: isOpen && children
+    }
+  );
+});
+function getState$2(open) {
+  return open ? "open" : "closed";
+}
+var Root$3 = Collapsible;
+var Trigger$3 = CollapsibleTrigger;
+var Content$3 = CollapsibleContent;
+
+// packages/react/direction/src/direction.tsx
+var DirectionContext = React.createContext(void 0);
+function useDirection(localDir) {
+  const globalDir = React.useContext(DirectionContext);
+  return localDir || globalDir || "ltr";
+}
+
+var ACCORDION_NAME = "Accordion";
+var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+var [Collection$2, useCollection$2, createCollectionScope$2] = createCollection(ACCORDION_NAME);
+var [createAccordionContext, createAccordionScope] = createContextScope(ACCORDION_NAME, [
+  createCollectionScope$2,
+  createCollapsibleScope
+]);
+var useCollapsibleScope = createCollapsibleScope();
+var Accordion$1 = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { type, ...accordionProps } = props;
+    const singleProps = accordionProps;
+    const multipleProps = accordionProps;
+    return /* @__PURE__ */ jsx(Collection$2.Provider, { scope: props.__scopeAccordion, children: type === "multiple" ? /* @__PURE__ */ jsx(AccordionImplMultiple, { ...multipleProps, ref: forwardedRef }) : /* @__PURE__ */ jsx(AccordionImplSingle, { ...singleProps, ref: forwardedRef }) });
+  }
+);
+Accordion$1.displayName = ACCORDION_NAME;
+var [AccordionValueProvider, useAccordionValueContext] = createAccordionContext(ACCORDION_NAME);
+var [AccordionCollapsibleProvider, useAccordionCollapsibleContext] = createAccordionContext(
+  ACCORDION_NAME,
+  { collapsible: false }
+);
+var AccordionImplSingle = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      value: valueProp,
+      defaultValue,
+      onValueChange = () => {
+      },
+      collapsible = false,
+      ...accordionSingleProps
+    } = props;
+    const [value, setValue] = useControllableState({
+      prop: valueProp,
+      defaultProp: defaultValue ?? "",
+      onChange: onValueChange,
+      caller: ACCORDION_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      AccordionValueProvider,
+      {
+        scope: props.__scopeAccordion,
+        value: React__default.useMemo(() => value ? [value] : [], [value]),
+        onItemOpen: setValue,
+        onItemClose: React__default.useCallback(() => collapsible && setValue(""), [collapsible, setValue]),
+        children: /* @__PURE__ */ jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible, children: /* @__PURE__ */ jsx(AccordionImpl, { ...accordionSingleProps, ref: forwardedRef }) })
+      }
+    );
+  }
+);
+var AccordionImplMultiple = React__default.forwardRef((props, forwardedRef) => {
+  const {
+    value: valueProp,
+    defaultValue,
+    onValueChange = () => {
+    },
+    ...accordionMultipleProps
+  } = props;
+  const [value, setValue] = useControllableState({
+    prop: valueProp,
+    defaultProp: defaultValue ?? [],
+    onChange: onValueChange,
+    caller: ACCORDION_NAME
+  });
+  const handleItemOpen = React__default.useCallback(
+    (itemValue) => setValue((prevValue = []) => [...prevValue, itemValue]),
+    [setValue]
+  );
+  const handleItemClose = React__default.useCallback(
+    (itemValue) => setValue((prevValue = []) => prevValue.filter((value2) => value2 !== itemValue)),
+    [setValue]
+  );
+  return /* @__PURE__ */ jsx(
+    AccordionValueProvider,
+    {
+      scope: props.__scopeAccordion,
+      value,
+      onItemOpen: handleItemOpen,
+      onItemClose: handleItemClose,
+      children: /* @__PURE__ */ jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible: true, children: /* @__PURE__ */ jsx(AccordionImpl, { ...accordionMultipleProps, ref: forwardedRef }) })
+    }
+  );
+});
+var [AccordionImplProvider, useAccordionContext] = createAccordionContext(ACCORDION_NAME);
+var AccordionImpl = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, disabled, dir, orientation = "vertical", ...accordionProps } = props;
+    const accordionRef = React__default.useRef(null);
+    const composedRefs = useComposedRefs(accordionRef, forwardedRef);
+    const getItems = useCollection$2(__scopeAccordion);
+    const direction = useDirection(dir);
+    const isDirectionLTR = direction === "ltr";
+    const handleKeyDown = composeEventHandlers$1(props.onKeyDown, (event) => {
+      if (!ACCORDION_KEYS.includes(event.key)) return;
+      const target = event.target;
+      const triggerCollection = getItems().filter((item) => !item.ref.current?.disabled);
+      const triggerIndex = triggerCollection.findIndex((item) => item.ref.current === target);
+      const triggerCount = triggerCollection.length;
+      if (triggerIndex === -1) return;
+      event.preventDefault();
+      let nextIndex = triggerIndex;
+      const homeIndex = 0;
+      const endIndex = triggerCount - 1;
+      const moveNext = () => {
+        nextIndex = triggerIndex + 1;
+        if (nextIndex > endIndex) {
+          nextIndex = homeIndex;
+        }
+      };
+      const movePrev = () => {
+        nextIndex = triggerIndex - 1;
+        if (nextIndex < homeIndex) {
+          nextIndex = endIndex;
+        }
+      };
+      switch (event.key) {
+        case "Home":
+          nextIndex = homeIndex;
+          break;
+        case "End":
+          nextIndex = endIndex;
+          break;
+        case "ArrowRight":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              moveNext();
+            } else {
+              movePrev();
+            }
+          }
+          break;
+        case "ArrowDown":
+          if (orientation === "vertical") {
+            moveNext();
+          }
+          break;
+        case "ArrowLeft":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              movePrev();
+            } else {
+              moveNext();
+            }
+          }
+          break;
+        case "ArrowUp":
+          if (orientation === "vertical") {
+            movePrev();
+          }
+          break;
+      }
+      const clampedIndex = nextIndex % triggerCount;
+      triggerCollection[clampedIndex].ref.current?.focus();
+    });
+    return /* @__PURE__ */ jsx(
+      AccordionImplProvider,
+      {
+        scope: __scopeAccordion,
+        disabled,
+        direction: dir,
+        orientation,
+        children: /* @__PURE__ */ jsx(Collection$2.Slot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            ...accordionProps,
+            "data-orientation": orientation,
+            ref: composedRefs,
+            onKeyDown: disabled ? void 0 : handleKeyDown
+          }
+        ) })
+      }
+    );
+  }
+);
+var ITEM_NAME$2 = "AccordionItem";
+var [AccordionItemProvider, useAccordionItemContext] = createAccordionContext(ITEM_NAME$2);
+var AccordionItem = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, value, ...accordionItemProps } = props;
+    const accordionContext = useAccordionContext(ITEM_NAME$2, __scopeAccordion);
+    const valueContext = useAccordionValueContext(ITEM_NAME$2, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    const triggerId = useId();
+    const open = value && valueContext.value.includes(value) || false;
+    const disabled = accordionContext.disabled || props.disabled;
+    return /* @__PURE__ */ jsx(
+      AccordionItemProvider,
+      {
+        scope: __scopeAccordion,
+        open,
+        disabled,
+        triggerId,
+        children: /* @__PURE__ */ jsx(
+          Root$3,
+          {
+            "data-orientation": accordionContext.orientation,
+            "data-state": getState$1(open),
+            ...collapsibleScope,
+            ...accordionItemProps,
+            ref: forwardedRef,
+            disabled,
+            open,
+            onOpenChange: (open2) => {
+              if (open2) {
+                valueContext.onItemOpen(value);
+              } else {
+                valueContext.onItemClose(value);
+              }
+            }
+          }
+        )
+      }
+    );
+  }
+);
+AccordionItem.displayName = ITEM_NAME$2;
+var HEADER_NAME = "AccordionHeader";
+var AccordionHeader = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...headerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(HEADER_NAME, __scopeAccordion);
+    return /* @__PURE__ */ jsx(
+      Primitive.h3,
+      {
+        "data-orientation": accordionContext.orientation,
+        "data-state": getState$1(itemContext.open),
+        "data-disabled": itemContext.disabled ? "" : void 0,
+        ...headerProps,
+        ref: forwardedRef
+      }
+    );
+  }
+);
+AccordionHeader.displayName = HEADER_NAME;
+var TRIGGER_NAME$3 = "AccordionTrigger";
+var AccordionTrigger = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...triggerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(TRIGGER_NAME$3, __scopeAccordion);
+    const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME$3, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsx(Collection$2.ItemSlot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx(
+      Trigger$3,
+      {
+        "aria-disabled": itemContext.open && !collapsibleContext.collapsible || void 0,
+        "data-orientation": accordionContext.orientation,
+        id: itemContext.triggerId,
+        ...collapsibleScope,
+        ...triggerProps,
+        ref: forwardedRef
+      }
+    ) });
+  }
+);
+AccordionTrigger.displayName = TRIGGER_NAME$3;
+var CONTENT_NAME$4 = "AccordionContent";
+var AccordionContent = React__default.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...contentProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(CONTENT_NAME$4, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsx(
+      Content$3,
+      {
+        role: "region",
+        "aria-labelledby": itemContext.triggerId,
+        "data-orientation": accordionContext.orientation,
+        ...collapsibleScope,
+        ...contentProps,
+        ref: forwardedRef,
+        style: {
+          ["--radix-accordion-content-height"]: "var(--radix-collapsible-content-height)",
+          ["--radix-accordion-content-width"]: "var(--radix-collapsible-content-width)",
+          ...props.style
+        }
+      }
+    );
+  }
+);
+AccordionContent.displayName = CONTENT_NAME$4;
+function getState$1(open) {
+  return open ? "open" : "closed";
+}
+var Root2$3 = Accordion$1;
+var Item$2 = AccordionItem;
+var Trigger2 = AccordionTrigger;
+var Content2$1 = AccordionContent;
+
+const ThemeContext = /*#__PURE__*/createContext(undefined);
 /**
  * Provides theme context to its descendants and syncs theme with localStorage
  * and the root HTML element's class list ('light' or 'dark').
@@ -28,12 +970,12 @@ const ThemeProvider = ({
     const stored = localStorage.getItem('theme');
     return stored != null && (stored === 'light' || stored === 'dark') ? stored : null;
   };
-  const [theme, setThemeState] = React__default.useState(() => {
+  const [theme, setThemeState] = useState(() => {
     var _a;
     return (_a = initialTheme !== null && initialTheme !== void 0 ? initialTheme : getStoredTheme()) !== null && _a !== void 0 ? _a : 'light';
   });
   // Sync theme changes to document <html> class and localStorage.
-  React__default.useEffect(() => {
+  useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.classList.toggle('light', theme === 'light');
     try {
@@ -70,291 +1012,12 @@ const ThemeProvider = ({
  * @throws If used outside of a ThemeProvider.
  */
 function useTheme() {
-  const context = React__default.useContext(ThemeContext);
+  const context = useContext(ThemeContext);
   if (context == null) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
-
-const styles = cva(`
-    dash-btn-base
-    select-none
-    min-h-11
-    flex
-    items-center
-    capitalize
-    transition-colors
-    hover:cursor-pointer
-    justify-center
-    font-dash-main
-  `, {
-  variants: {
-    theme: {
-      light: '',
-      dark: ''
-    },
-    variant: {
-      solid: '',
-      outline: 'dash-btn-outline border !bg-transparent'
-    },
-    colorScheme: {
-      brand: '',
-      mint: '',
-      gray: '',
-      red: '',
-      lightBlue: '',
-      lightGray: ''
-    },
-    state: {
-      active: 'active:-translate-y-[-1px]',
-      disabled: 'hover:!cursor-not-allowed'
-    },
-    size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
-    }
-  },
-  compoundVariants: [
-  // solid variant color schemes - light theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    theme: 'light',
-    class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    theme: 'light',
-    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'gray',
-    theme: 'light',
-    class: '!bg-gray-200 !text-gray-700 hover:!bg-gray-300'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    theme: 'light',
-    class: '!bg-red-200 !text-red-700 hover:!bg-red-300'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    theme: 'light',
-    class: '!bg-dash-brand/10 !text-dash-brand hover:!bg-dash-brand/20'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    theme: 'light',
-    class: '!bg-[rgba(12,28,51,0.03)] !text-[#0C1C33] hover:!bg-[rgba(12,28,51,0.06)]'
-  },
-  // solid variant color schemes - dark theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    theme: 'dark',
-    class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    theme: 'dark',
-    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
-  }, {
-    variant: 'solid',
-    colorScheme: 'gray',
-    theme: 'dark',
-    class: '!bg-gray-600 !text-gray-100 hover:!bg-gray-500'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    theme: 'dark',
-    class: '!bg-red-600 !text-red-100 hover:!bg-red-500'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    theme: 'dark',
-    class: '!bg-dash-brand/20 !text-dash-brand hover:!bg-dash-brand/30'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    theme: 'dark',
-    class: '!bg-gray-700/20 !text-gray-300 hover:!bg-gray-600/30'
-  },
-  // outline variant - light theme
-  {
-    variant: 'outline',
-    state: 'disabled',
-    theme: 'light',
-    class: 'opacity-40'
-  }, {
-    variant: 'outline',
-    state: 'disabled',
-    theme: 'dark',
-    class: 'opacity-50'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    theme: 'light',
-    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'brand',
-    theme: 'dark',
-    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    theme: 'light',
-    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'mint',
-    theme: 'dark',
-    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    theme: 'light',
-    class: '!text-gray-700 !border-gray-700 hover:!bg-gray-200/50'
-  }, {
-    variant: 'outline',
-    colorScheme: 'gray',
-    theme: 'dark',
-    class: '!text-gray-300 !border-gray-300 hover:!bg-gray-600/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    theme: 'light',
-    class: '!text-red-700 hover:!bg-red-300/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'red',
-    theme: 'dark',
-    class: '!text-red-400 hover:!bg-red-500/20'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    theme: 'light',
-    class: '!text-dash-brand/60 !border-dash-brand/60 hover:!bg-dash-brand/5'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightBlue',
-    theme: 'dark',
-    class: '!text-dash-brand/80 !border-dash-brand/80 hover:!bg-dash-brand/10'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightGray',
-    theme: 'light',
-    class: '!text-[#0C1C33] !border-[#0C1C33]/20 hover:!bg-[rgba(12,28,51,0.03)]'
-  }, {
-    variant: 'outline',
-    colorScheme: 'lightGray',
-    theme: 'dark',
-    class: '!text-gray-300 !border-gray-600/50 hover:!bg-gray-700/10'
-  },
-  // solid variant - light theme
-  {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-brand/10 !text-dash-brand-dim'
-  }, {
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-brand/20 !text-dash-brand/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-mint/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'mint',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-mint/20 !text-gray-400'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-red-300/30 !text-black/60'
-  }, {
-    variant: 'solid',
-    colorScheme: 'red',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-red-500/20 !text-gray-400'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-dash-brand/5 !text-dash-brand/40'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightBlue',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-dash-brand/10 !text-dash-brand/50'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    state: 'disabled',
-    theme: 'light',
-    class: '!bg-[#0C1C33]/5 !text-[#0C1C33]/40'
-  }, {
-    variant: 'solid',
-    colorScheme: 'lightGray',
-    state: 'disabled',
-    theme: 'dark',
-    class: '!bg-gray-700/20 !text-gray-500'
-  }],
-  defaultVariants: {
-    theme: 'light',
-    variant: 'solid',
-    colorScheme: 'brand',
-    state: 'active',
-    size: 'md'
-  }
-});
-/**
- * Button with solid or outline style, color schemes, disabled state,
- * press animation, and customizable size. Supports light/dark theme.
- */
-const Button = _a => {
-  var {
-      children,
-      variant,
-      colorScheme,
-      size,
-      disabled = false,
-      className = ''
-    } = _a,
-    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
-  const {
-    theme
-  } = useTheme();
-  const state = disabled ? 'disabled' : 'active';
-  const classes = styles({
-    theme,
-    variant,
-    colorScheme,
-    size,
-    state
-  }) + (className !== '' ? ` ${className}` : '');
-  return jsx("button", Object.assign({
-    className: classes,
-    disabled: disabled
-  }, props, {
-    children: children
-  }));
-};
 
 const ArrowIcon = ({
   color = 'white',
@@ -658,10 +1321,10 @@ const CheckIcon = ({
     className: className,
     onClick: onClick,
     children: [jsx("circle", {
-      cx: "10",
-      cy: "10",
-      r: "10",
-      fill: "rgba(12, 28, 51, 0.05)"
+      cx: '10',
+      cy: '10',
+      r: '10',
+      fill: 'rgba(12, 28, 51, 0.05)'
     }), jsx("path", {
       d: 'M6.33 10L8.83 12.5L13.67 7.67',
       stroke: color,
@@ -728,6 +1391,779 @@ const SmartphoneIcon = ({
     fill: 'currentColor'
   })
 });
+const CrossIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 17 / 16,
+  viewBox: '0 0 16 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M13.5693 3.40266L13.0973 2.93066L8 8.02866L2.90266 2.93066L2.43066 3.40266L7.52866 8.5L2.43066 13.5973L2.90266 14.0693L8 8.97133L13.0973 14.0693L13.5693 13.5973L8.47133 8.5L13.5693 3.40266Z',
+    fill: 'currentColor'
+  })
+});
+const WalletIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M12.6667 2.66666H3.33333C2.80289 2.66666 2.29419 2.87737 1.91911 3.25244C1.54404 3.62752 1.33333 4.13622 1.33333 4.66666V11.3333C1.33333 11.8637 1.54404 12.3725 1.91911 12.7475C2.29419 13.1226 2.80289 13.3333 3.33333 13.3333H12.6667C13.1971 13.3333 13.7058 13.1226 14.0809 12.7475C14.4559 12.3725 14.6667 11.8637 14.6667 11.3333V4.66666C14.6667 4.13622 14.4559 3.62752 14.0809 3.25244C13.7058 2.87737 13.1971 2.66666 12.6667 2.66666ZM13.6667 9.66666H11.3333C10.8913 9.66666 10.4674 9.49106 10.1548 9.17852C9.84226 8.86592 9.66666 8.44199 9.66666 7.99999C9.66666 7.55799 9.84226 7.13406 10.1548 6.82146C10.4674 6.50892 10.8913 6.33332 11.3333 6.33332H13.6667V9.66666ZM13.6667 5.33332H11.3333C10.6261 5.33332 9.94779 5.61428 9.44773 6.11437C8.94759 6.61447 8.66666 7.29272 8.66666 7.99999C8.66666 8.70726 8.94759 9.38552 9.44773 9.88559C9.94779 10.3857 10.6261 10.6667 11.3333 10.6667H13.6667V11.3333C13.6663 11.5985 13.5609 11.8527 13.3735 12.0401C13.186 12.2276 12.9318 12.333 12.6667 12.3333H3.33333C3.0682 12.333 2.81402 12.2276 2.62655 12.0401C2.43908 11.8527 2.33363 11.5985 2.33333 11.3333V4.66666C2.33363 4.40153 2.43908 4.14735 2.62655 3.95988C2.81402 3.77241 3.0682 3.66696 3.33333 3.66666H12.6667C12.9318 3.66696 13.186 3.77241 13.3735 3.95988C13.5609 4.14735 13.6663 4.40153 13.6667 4.66666V5.33332ZM10.7333 7.99999C10.7333 8.11866 10.7685 8.23466 10.8345 8.33332C10.9004 8.43199 10.9941 8.50892 11.1037 8.55432C11.2133 8.59972 11.334 8.61159 11.4504 8.58846C11.5668 8.56532 11.6737 8.50819 11.7576 8.42426C11.8415 8.34032 11.8987 8.23346 11.9218 8.11706C11.9449 8.00066 11.9331 7.87999 11.8877 7.77039C11.8423 7.66072 11.7653 7.56706 11.6667 7.50112C11.568 7.43519 11.452 7.39999 11.3333 7.39999C11.1742 7.39999 11.0216 7.46319 10.9091 7.57572C10.7965 7.68826 10.7333 7.84086 10.7333 7.99999Z',
+    fill: 'currentColor'
+  })
+});
+const PlusIcon = ({
+  color = '#4C7EFF',
+  size = 17,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 16 / 17,
+  viewBox: '0 0 17 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M15.1667 7.66665H8.83337V1.33331H8.16671V7.66665H1.83337V8.33331H8.16671V14.6666H8.83337V8.33331H15.1667V7.66665Z',
+    fill: 'currentColor'
+  })
+});
+const FilterIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M9.7725 12.4346V8.4707C9.77253 8.14729 9.87686 7.83238 10.0704 7.57324L12.8887 3.79883C13.135 3.46908 12.8999 3 12.4883 3H4.50297C4.08918 3 3.85471 3.47362 4.10551 3.80273L6.97367 7.56738C7.17261 7.82859 7.28031 8.14821 7.28031 8.47656V13.0273C7.28053 13.3803 7.63675 13.6224 7.96488 13.4922L9.45707 12.8994C9.64752 12.8238 9.77249 12.6395 9.7725 12.4346ZM10.7725 12.4346C10.7725 13.0493 10.3976 13.6022 9.82621 13.8291L8.33402 14.4209C7.34935 14.8119 6.28053 14.0867 6.28031 13.0273V8.47656C6.28031 8.36707 6.24414 8.25994 6.17777 8.17285L3.30961 4.40918C2.55722 3.42182 3.26161 2 4.50297 2H12.4883C13.7229 2 14.4291 3.40823 13.6905 4.39746L10.8721 8.17188C10.8076 8.25823 10.7725 8.36293 10.7725 8.4707V12.4346Z',
+    fill: 'currentColor'
+  })
+});
+const EditIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M9.7725 12.4346V8.4707C9.77253 8.14729 9.87686 7.83238 10.0704 7.57324L12.8887 3.79883C13.135 3.46908 12.8999 3 12.4883 3H4.50297C4.08918 3 3.85471 3.47362 4.10551 3.80273L6.97367 7.56738C7.17261 7.82859 7.28031 8.14821 7.28031 8.47656V13.0273C7.28053 13.3803 7.63675 13.6224 7.96488 13.4922L9.45707 12.8994C9.64752 12.8238 9.77249 12.6395 9.7725 12.4346ZM10.7725 12.4346C10.7725 13.0493 10.3976 13.6022 9.82621 13.8291L8.33402 14.4209C7.34935 14.8119 6.28053 14.0867 6.28031 13.0273V8.47656C6.28031 8.36707 6.24414 8.25994 6.17777 8.17285L3.30961 4.40918C2.55722 3.42182 3.26161 2 4.50297 2H12.4883C13.7229 2 14.4291 3.40823 13.6905 4.39746L10.8721 8.17188C10.8076 8.25823 10.7725 8.36293 10.7725 8.4707V12.4346Z',
+    fill: 'currentColor'
+  })
+});
+const DeleteIcon = ({
+  color = '#0C1C33',
+  size = 11,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 11 11',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("g", {
+    clipPath: 'url(#clip0_106_23)',
+    children: jsx("path", {
+      d: 'M8.75 2.66706H2.25V7.83308C2.25 8.30882 2.25052 8.63222 2.27344 8.88191C2.29567 9.12381 2.33543 9.25067 2.3877 9.34187C2.51141 9.55763 2.71615 9.74365 2.98047 9.86335C3.10415 9.91928 3.26908 9.95784 3.55469 9.97859C3.84502 9.99967 4.21761 10.0001 4.75 10.0001H6.25C6.78241 10.0001 7.15498 9.99967 7.44531 9.97859C7.73089 9.95784 7.89582 9.91928 8.01953 9.86335C8.28385 9.74365 8.4886 9.55763 8.6123 9.34187C8.66457 9.25068 8.70433 9.12381 8.72656 8.88191C8.74948 8.63222 8.75 8.30882 8.75 7.83308V2.66706ZM3.75 8.27741V4.38874C3.75012 4.1127 3.97393 3.88874 4.25 3.88874C4.52607 3.88874 4.74988 4.1127 4.75 4.38874V8.27741C4.75 8.55356 4.52614 8.77741 4.25 8.77741C3.97386 8.77741 3.75 8.55356 3.75 8.27741ZM6.25 8.27741V4.38874C6.25012 4.1127 6.47393 3.88874 6.75 3.88874C7.02607 3.88874 7.24988 4.1127 7.25 4.38874V8.27741C7.25 8.55356 7.02614 8.77741 6.75 8.77741C6.47386 8.77741 6.25 8.55356 6.25 8.27741ZM4.48633 1.00886C4.36289 1.01585 4.29382 1.02778 4.2334 1.0489C4.11036 1.09191 4.00791 1.16023 3.93164 1.24128C3.87684 1.29953 3.83794 1.37933 3.72656 1.66706H7.27344C7.16206 1.37938 7.12317 1.29955 7.06836 1.24128C6.99206 1.16021 6.88962 1.0919 6.7666 1.0489C6.70618 1.02778 6.63711 1.01585 6.51367 1.00886L5.93359 1.00007H5.06641L4.48633 1.00886ZM9.75 7.83308C9.75 8.29045 9.75078 8.66763 9.72266 8.9737C9.6938 9.28763 9.6316 9.57357 9.47949 9.83894C9.24373 10.2502 8.87373 10.5737 8.43262 10.7735C8.15527 10.8991 7.85689 10.951 7.51758 10.9757C7.18262 11 6.76766 11.0001 6.25 11.0001H4.75C4.23235 11.0001 3.81739 11 3.48242 10.9757C3.14311 10.951 2.84472 10.8991 2.56738 10.7735C2.12629 10.5737 1.75629 10.2502 1.52051 9.83894C1.36841 9.57357 1.3062 9.28763 1.27734 8.9737C1.24922 8.66764 1.25 8.29045 1.25 7.83308V2.66706H0.5C0.223966 2.66706 0.000175928 2.44305 0 2.16706C0 1.89092 0.223858 1.66706 0.5 1.66706H2.65332L2.70117 1.54011C2.85006 1.14308 2.96609 0.807677 3.20312 0.555734C3.39526 0.351554 3.63705 0.198657 3.90332 0.105538C4.22353 -0.00639754 4.58678 6.87183e-05 5.06641 6.96102e-05H5.93359L6.27246 0.00104617C6.59201 0.0043687 6.85648 0.0215742 7.09668 0.105538C7.36298 0.198667 7.60475 0.351572 7.79688 0.555734C8.03384 0.807649 8.1499 1.14302 8.29883 1.54011L8.34668 1.66706H10.5C10.7761 1.66706 11 1.89092 11 2.16706C10.9998 2.44305 10.776 2.66706 10.5 2.66706H9.75V7.83308Z',
+      fill: 'currentColor'
+    })
+  }), jsx("defs", {
+    children: jsx("clipPath", {
+      id: 'clip0_106_23',
+      children: jsx("rect", {
+        width: '11',
+        height: '11.0001',
+        fill: 'white'
+      })
+    })
+  })]
+});
+const ChevronIcon = ({
+  color = '#0C1C33',
+  size = 12,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 12 12',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M6 8.9395L1.65149 4.59099L2.18149 4.06049L6 7.879L9.8185 4.06049L10.3485 4.59099L6 8.9395Z',
+    fill: 'currentColor'
+  })
+});
+const BurgerMenuIcon = ({
+  color = '#0C1C33',
+  size = 24,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M4 7V8.07143H20V7H4ZM4 12.5357H20V11.4643H4V12.5357ZM4 17H20V15.9286H4V17Z',
+    fill: 'currentColor'
+  })
+});
+const KebabMenuIcon = ({
+  color = '#0C1C33',
+  size = 2,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size * 12 / 2,
+  viewBox: '0 0 2 12',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsx("path", {
+    d: 'M0 11C4.82823e-08 10.4477 0.447715 10 1 10C1.55228 10 2 10.4477 2 11C2 11.5523 1.55228 12 1 12C0.447715 12 -4.82823e-08 11.5523 0 11Z',
+    fill: 'currentColor'
+  }), jsx("path", {
+    d: 'M0 6C4.82823e-08 5.44771 0.447715 5 1 5C1.55228 5 2 5.44772 2 6C2 6.55228 1.55228 7 1 7C0.447715 7 -4.82823e-08 6.55228 0 6Z',
+    fill: 'currentColor'
+  }), jsx("path", {
+    d: 'M0 1C4.82823e-08 0.447715 0.447715 -4.82823e-08 1 0C1.55228 4.82823e-08 2 0.447715 2 1C2 1.55228 1.55228 2 1 2C0.447715 2 -4.82823e-08 1.55228 0 1Z',
+    fill: 'currentColor'
+  })]
+});
+const CircleProcessIcon = ({
+  color = '#4C7EFF',
+  size = 20,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size * 21 / 20,
+  viewBox: '0 0 20 21',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsxs("g", {
+    clipPath: 'url(#clip0_13_9)',
+    children: [jsx("path", {
+      d: 'M18.7533 4.27841C18.9677 5.07861 18.4928 5.90112 17.6926 6.11553C16.8924 6.32994 16.0699 5.85507 15.8555 5.05487C15.6411 4.25467 16.116 3.43216 16.9162 3.21775C17.7164 3.00334 18.5389 3.47821 18.7533 4.27841Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M4.14428 15.4398C4.3587 16.24 3.88382 17.0625 3.08362 17.2769C2.28342 17.4913 1.46092 17.0165 1.24651 16.2163C1.03209 15.4161 1.50697 14.5936 2.30717 14.3792C3.10737 14.1647 3.92987 14.6396 4.14428 15.4398Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M17.7273 8.1769C17.5844 7.64343 17.9009 7.0951 18.4344 6.95216C18.9679 6.80921 19.5162 7.1258 19.6592 7.65926C20.1711 9.56968 20.1047 11.589 19.469 13.4619C18.8332 15.3346 17.657 16.9774 16.0879 18.1814C14.5188 19.3854 12.6272 20.0965 10.6536 20.2259C8.68013 20.3552 6.71249 19.8968 4.99974 18.908C4.52157 18.6319 4.35791 18.0203 4.63376 17.5421C4.9099 17.0638 5.52134 16.9 5.99964 17.1761C7.3699 17.9672 8.94453 18.3341 10.5234 18.2307C12.1022 18.1271 13.6147 17.557 14.8699 16.5939C16.1251 15.6307 17.0663 14.3171 17.5749 12.8189C18.0835 11.3206 18.1368 9.70524 17.7273 8.1769Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M2.27249 12.3179C2.41543 12.8514 2.09885 13.3997 1.56538 13.5426C1.03192 13.6856 0.483582 13.369 0.34064 12.8355C-0.171256 10.9251 -0.104905 8.90577 0.530843 7.03292C1.16659 5.16014 2.34283 3.51743 3.91186 2.31344C5.48097 1.10942 7.37261 0.398263 9.34619 0.268908C11.3197 0.139621 13.2873 0.59796 15.0001 1.58681C15.4782 1.86289 15.6419 2.47446 15.366 2.95269C15.0899 3.43099 14.4785 3.59482 14.0002 3.31868C12.6299 2.52756 11.0553 2.16065 9.4764 2.26413C7.89763 2.36766 6.38508 2.93776 5.12986 3.90092C3.87467 4.86412 2.93347 6.17774 2.42489 7.67594C1.9163 9.17422 1.86298 10.7896 2.27249 12.3179Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M13.9999 10.2473C13.9999 12.4565 12.209 14.2473 9.9999 14.2473C7.79076 14.2473 5.9999 12.4565 5.9999 10.2473C5.9999 8.0382 7.79076 6.24734 9.9999 6.24734C12.209 6.24734 13.9999 8.0382 13.9999 10.2473Z',
+      fill: 'currentColor'
+    })]
+  }), jsx("defs", {
+    children: jsx("clipPath", {
+      id: 'clip0_13_9',
+      children: jsx("rect", {
+        width: '19.9998',
+        height: '19.9998',
+        fill: 'white',
+        transform: 'translate(0 0.247498)'
+      })
+    })
+  })]
+});
+const CreditsIcon = ({
+  color = '#4C7EFF',
+  size = 14,
+  className = '',
+  onClick
+}) => jsxs("svg", {
+  width: size,
+  height: size * 20 / 14,
+  viewBox: '0 0 14 20',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsxs("g", {
+    clipPath: 'url(#clip0_14_24)',
+    children: [jsx("path", {
+      d: 'M7.21466 18.0451C6.70232 18.0451 6.21497 18.0067 5.7526 17.9299C4.85417 17.7808 4.05008 17.4868 3.34031 17.0479C2.26527 16.3761 1.43805 15.4426 0.858639 14.2474C0.286213 13.0523 0 11.6662 0 10.0892C0 8.51211 0.286213 7.12602 0.858639 5.93086C1.43805 4.73571 2.26527 3.80575 3.34031 3.14099C4.05008 2.69743 4.85417 2.4003 5.7526 2.24959C6.21497 2.17202 6.70232 2.13324 7.21466 2.13324C7.88445 2.13324 8.51123 2.19887 9.09499 2.33012C10.0262 2.5395 10.8479 2.91587 11.5602 3.45922C12.719 4.33614 13.5323 5.52069 14 7.01287L11.4555 7.72359C11.1623 6.72645 10.6632 5.94854 9.95812 5.38986C9.25305 4.82411 8.33857 4.54123 7.21466 4.54123C6.20244 4.54123 5.35777 4.77107 4.68063 5.23074C4.01047 5.69042 3.50436 6.3375 3.1623 7.17198C2.82723 7.9994 2.6562 8.97179 2.64921 10.0892C2.64921 11.2065 2.81675 12.1824 3.15183 13.0169C3.49389 13.8443 4.00349 14.4879 4.68063 14.9476C5.35777 15.4072 6.20244 15.6371 7.21466 15.6371C8.33857 15.6371 9.25305 15.3542 9.95812 14.7884C10.6632 14.2227 11.1623 13.4448 11.4555 12.4547L14 13.1654C13.5323 14.6576 12.719 15.8457 11.5602 16.7297C10.8479 17.2687 10.0262 17.6421 9.09499 17.8498C8.51123 17.98 7.88445 18.0451 7.21466 18.0451Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M7.21466 18.0451C6.70232 18.0451 6.21497 18.0067 5.7526 17.9299V20H9.09499V17.8498C8.51123 17.98 7.88445 18.0451 7.21466 18.0451Z',
+      fill: 'currentColor'
+    }), jsx("path", {
+      d: 'M5.7526 2.24959C6.21497 2.17202 6.70232 2.13324 7.21466 2.13324C7.88445 2.13324 8.51123 2.19887 9.09499 2.33012V0H5.7526V2.24959Z',
+      fill: 'currentColor'
+    })]
+  }), jsx("defs", {
+    children: jsx("clipPath", {
+      id: 'clip0_14_24',
+      children: jsx("rect", {
+        width: '14',
+        height: '20',
+        fill: 'white'
+      })
+    })
+  })]
+});
+const WebIcon = ({
+  color = '#4C7EFF',
+  size = 16,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M8.00001 1.33334C6.68148 1.33334 5.39254 1.72434 4.29621 2.45688C3.19988 3.18942 2.3454 4.23061 1.84082 5.44879C1.33623 6.66694 1.20421 8.00741 1.46144 9.30061C1.71868 10.5938 2.35362 11.7817 3.28597 12.7141C4.21832 13.6464 5.4062 14.2813 6.69941 14.5386C7.99261 14.7958 9.33308 14.6638 10.5512 14.1592C11.7694 13.6546 12.8106 12.8001 13.5431 11.7038C14.2757 10.6075 14.6667 9.31854 14.6667 8.00001C14.6667 7.12454 14.4942 6.25762 14.1592 5.44879C13.8242 4.63995 13.3331 3.90502 12.7141 3.28596C12.095 2.66691 11.3601 2.17584 10.5512 1.84081C9.74241 1.50578 8.87548 1.33334 8.00001 1.33334ZM12.9973 5.33334H10.8857C10.699 4.36613 10.3231 3.44532 9.77948 2.62381C11.1587 3.08299 12.31 4.05243 12.9973 5.33334ZM13.6667 8.00001C13.6669 8.56501 13.5823 9.12681 13.4157 9.66668H11.0577C11.1297 9.11401 11.1661 8.55734 11.1667 8.00001C11.1661 7.44268 11.1297 6.88601 11.0577 6.33334H13.4157C13.5823 6.87321 13.6669 7.43501 13.6667 8.00001ZM8.00001 13.6667C7.18488 13.6667 6.47708 12.4514 6.11794 10.6667H9.88208C9.52294 12.4514 8.81514 13.6667 8.00001 13.6667ZM5.96081 9.66668C5.8353 8.55908 5.8353 7.44094 5.96081 6.33334H10.0392C10.1025 6.88661 10.1339 7.44308 10.1333 8.00001C10.1339 8.55694 10.1025 9.11341 10.0392 9.66668H5.96081ZM2.33334 8.00001C2.33313 7.43501 2.41772 6.87321 2.58428 6.33334H4.94234C4.79701 7.43968 4.79701 8.56034 4.94234 9.66668H2.58428C2.41772 9.12681 2.33313 8.56501 2.33334 8.00001ZM8.00001 2.33334C8.81514 2.33334 9.52294 3.54854 9.88208 5.33334H6.11794C6.47708 3.54854 7.18488 2.33334 8.00001 2.33334ZM6.22054 2.62381C5.67696 3.44532 5.30101 4.36613 5.11428 5.33334H3.00274C3.69004 4.05243 4.84132 3.08299 6.22054 2.62381ZM3.00274 10.6667H5.11428C5.301 11.6339 5.67695 12.5547 6.22054 13.3762C4.84134 12.917 3.69005 11.9475 3.00274 10.6667ZM9.77948 13.3762C10.3231 12.5547 10.699 11.6339 10.8857 10.6667H12.9973C12.3099 11.9475 11.1587 12.917 9.77948 13.3762Z',
+    fill: 'currentColor'
+  })
+});
+const ChainSmallIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 13 / 17,
+  viewBox: '0 0 17 13',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M6.22948 11.2552C6.03745 11.4435 5.88884 11.5696 5.73696 11.6618C4.99352 12.1127 4.07756 12.1127 3.33413 11.6618C3.06016 11.4956 2.79682 11.2188 2.27013 10.6655C1.74343 10.1121 1.48008 9.83542 1.32192 9.54752C0.892693 8.76639 0.892693 7.80399 1.32192 7.02286C1.48008 6.73505 1.74343 6.45834 2.27013 5.90494L4.53554 3.52467C5.06224 2.97127 5.32558 2.69457 5.59953 2.52839C6.34298 2.0774 7.25895 2.0774 8.00238 2.52838C8.27631 2.69457 8.53966 2.97127 9.06636 3.52467C9.59306 4.07807 9.85641 4.35476 10.0146 4.64261C10.4438 5.42374 10.4438 6.38614 10.0146 7.16727C9.9269 7.32683 9.80691 7.48302 9.62758 7.68474M7.37244 5.31526C7.19311 5.51698 7.07313 5.67317 6.98542 5.83273C6.55623 6.61386 6.55623 7.57626 6.98542 8.35739C7.14361 8.64529 7.40696 8.92199 7.93366 9.47532C8.46036 10.0287 8.72372 10.3054 8.99764 10.4716C9.74108 10.9226 10.657 10.9226 11.4005 10.4716C11.6745 10.3054 11.9378 10.0287 12.4645 9.47532L14.7299 7.09506C15.2566 6.54166 15.52 6.26495 15.6781 5.97714C16.1073 5.19601 16.1073 4.2336 15.6781 3.45247C15.52 3.16463 15.2566 2.88792 14.7299 2.33452C14.2032 1.78113 13.9399 1.50443 13.6659 1.33824C12.9224 0.887253 12.0065 0.887253 11.2631 1.33824C11.1112 1.43038 10.9626 1.55647 10.7705 1.74484',
+    stroke: 'currentColor',
+    strokeLinecap: 'round'
+  })
+});
+const SettingsIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 17 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M8.5 3.08333C8.5 4.23392 7.56725 5.16667 6.41667 5.16667C5.26607 5.16667 4.33333 4.23392 4.33333 3.08333M8.5 3.08333C8.5 1.93274 7.56725 1 6.41667 1C5.26607 1 4.33333 1.93274 4.33333 3.08333M8.5 3.08333H16M4.33333 3.08333H1M14.3333 8.5C14.3333 9.65058 13.4006 10.5833 12.25 10.5833C11.0994 10.5833 10.1667 9.65058 10.1667 8.5M14.3333 8.5C14.3333 7.34942 13.4006 6.41667 12.25 6.41667C11.0994 6.41667 10.1667 7.34942 10.1667 8.5M14.3333 8.5H16M10.1667 8.5H1M6.83333 13.9167C6.83333 15.0672 5.90059 16 4.75 16C3.59941 16 2.66667 15.0672 2.66667 13.9167M6.83333 13.9167C6.83333 12.7661 5.90059 11.8333 4.75 11.8333C3.59941 11.8333 2.66667 12.7661 2.66667 13.9167M6.83333 13.9167H16M2.66667 13.9167H1',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
+const ShieldSmallIcon = ({
+  color = '#0C1C33',
+  size = 15,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 17 / 15,
+  viewBox: '0 0 15 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M4.875 8.51877L6.625 10.2023L10.125 6.83521M14.5 8.51877C14.5 12.274 9.7225 14.9952 8.06123 15.8279C7.88159 15.918 7.79172 15.963 7.66712 15.9864C7.57 16.0045 7.43 16.0045 7.33288 15.9864C7.20828 15.963 7.11841 15.918 6.93877 15.8279C5.27746 14.9952 0.5 12.274 0.5 8.51877V5.33482C0.5 4.66181 0.5 4.32531 0.614415 4.03605C0.715486 3.78051 0.879732 3.5525 1.09295 3.37173C1.33431 3.1671 1.66182 3.04895 2.31685 2.81264L7.00842 1.1201C7.19034 1.05448 7.28125 1.02166 7.37488 1.00865C7.45783 0.997117 7.54217 0.997117 7.62512 1.00865C7.71875 1.02166 7.80966 1.05448 7.99158 1.1201L12.6831 2.81264C13.3382 3.04895 13.6657 3.1671 13.907 3.37173C14.1202 3.5525 14.2845 3.78051 14.3855 4.03605C14.5 4.32531 14.5 4.66181 14.5 5.33482V8.51877Z',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
+const QuestionMessageIcon = ({
+  color = '#0C1C33',
+  size = 17,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 17 17',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M15.5 8.5C15.5 4.63401 12.366 1.5 8.5 1.5C4.63401 1.5 1.5 4.63401 1.5 8.5C1.5 9.61866 1.76197 10.6746 2.22754 11.6113C2.42563 12.0098 2.42445 12.5262 2.37402 12.9814C2.32099 13.4602 2.19994 13.9782 2.06641 14.4463C1.95449 14.8386 1.82896 15.2054 1.72363 15.5H8.5C12.366 15.5 15.5 12.366 15.5 8.5ZM8.47754 11.125C8.75368 11.125 8.97754 11.3489 8.97754 11.625C8.97754 11.9011 8.75368 12.125 8.47754 12.125H8.46973C8.19358 12.125 7.96973 11.9011 7.96973 11.625C7.96973 11.3489 8.19358 11.125 8.46973 11.125H8.47754ZM9.63574 7.04199C9.63574 6.39782 9.11386 5.87526 8.46973 5.875C7.92679 5.875 7.46839 6.24673 7.33887 6.75C7.26985 7.01714 6.99773 7.17813 6.73047 7.10938C6.46304 7.04055 6.30227 6.76743 6.37109 6.5C6.61172 5.5658 7.45964 4.875 8.46973 4.875C9.66615 4.87526 10.6357 5.84554 10.6357 7.04199C10.6356 7.69162 10.3249 8.12528 9.96191 8.47559C9.78884 8.64261 9.5883 8.80642 9.40137 8.96191C9.20811 9.12267 9.01442 9.28736 8.82324 9.47852C8.62798 9.67378 8.3105 9.67378 8.11523 9.47852C7.9203 9.28332 7.9203 8.96668 8.11523 8.77148C8.34062 8.5461 8.56445 8.35745 8.76172 8.19336C8.96533 8.024 9.12822 7.89036 9.26758 7.75586C9.52941 7.50314 9.63566 7.31249 9.63574 7.04199ZM16.5 8.5C16.5 12.9183 12.9183 16.5 8.5 16.5H1.00098C0.833871 16.5 0.677709 16.4163 0.584961 16.2773C0.492224 16.1383 0.474797 15.9619 0.539062 15.8076L0.540039 15.8066C0.540039 15.8066 0.540917 15.8034 0.541992 15.8008C0.544161 15.7955 0.54735 15.7872 0.551758 15.7764C0.560575 15.7547 0.574209 15.7217 0.59082 15.6797C0.624076 15.5955 0.671372 15.4732 0.726562 15.3232C0.837449 15.022 0.979061 14.6115 1.10449 14.1719C1.23071 13.7294 1.33653 13.2714 1.38086 12.8711C1.42778 12.4473 1.39393 12.1812 1.33203 12.0566C0.799214 10.9847 0.5 9.77661 0.5 8.5C0.5 4.08172 4.08172 0.5 8.5 0.5C12.9183 0.500003 16.5 4.08173 16.5 8.5Z',
+    fill: 'currentColor'
+  })
+});
+
+const accordionRootStyles = cva(`
+    w-full
+    rounded-[1rem]
+    overflow-hidden
+  `, {
+  variants: {
+    theme: {
+      light: '  bg-dash-primary-dark-blue/[0.03]',
+      dark: 'bg-gray-800/20'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const accordionItemStyles = cva(`
+    border-none
+    outline-none
+  `);
+const accordionTriggerStyles = cva(`
+    w-full
+    px-8
+    py-6
+    flex
+    items-center
+    justify-between
+    font-manrope
+    font-medium
+    text-1
+    leading-[1.366]
+    text-dash-primary-dark-blue
+    bg-transparent
+    border-none
+    outline-none
+    cursor-pointer
+    transition-all
+    duration-300
+    ease-in-out
+    hover:bg-dash-primary-dark-blue/[0.01]
+  `, {
+  variants: {
+    theme: {
+      light: 'text-dash-primary-dark-blue hover:bg-dash-primary-dark-blue/[0.05]',
+      dark: 'text-white hover:bg-white/5'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const accordionContentStyles = cva(`
+  overflow-hidden
+  will-change-[height]
+  data-[state=open]:h-[var(--radix-accordion-content-height)]
+  data-[state=closed]:h-0
+`);
+const accordionContentInnerStyles = cva(`
+  px-8
+  pb-6
+  space-y-[0.625rem]
+`);
+const chevronStyles = cva(`
+  w-4
+  h-4
+  transition-transform
+  duration-300
+  ease-in-out
+  transform
+  group-data-[state=open]:rotate-180
+`);
+/**
+ * Accordion component based on Radix UI with smooth animations.
+ * Displays custom content in an expandable format.
+ */
+const Accordion = ({
+  title,
+  children,
+  defaultOpen = false,
+  open,
+  onOpenChange,
+  className = ''
+}) => {
+  const {
+    theme
+  } = useTheme();
+  const isControlled = open !== undefined;
+  const rootClasses = accordionRootStyles({
+    theme
+  }) + (className ? ` ${className}` : '');
+  return jsx(Root2$3, {
+    type: 'single',
+    collapsible: true,
+    className: rootClasses,
+    value: isControlled ? open ? 'item-1' : undefined : undefined,
+    defaultValue: defaultOpen ? 'item-1' : undefined,
+    onValueChange: value => {
+      if (onOpenChange) {
+        onOpenChange(value === 'item-1');
+      }
+    },
+    children: jsxs(Item$2, {
+      value: 'item-1',
+      className: `AccordionItem ${accordionItemStyles()}`,
+      children: [jsxs(Trigger2, {
+        className: `${accordionTriggerStyles({
+          theme
+        })} group`,
+        children: [jsx("span", {
+          children: title
+        }), jsx(ChevronIcon, {
+          className: chevronStyles()
+        })]
+      }), jsx(Content2$1, {
+        forceMount: true,
+        className: accordionContentStyles(),
+        children: jsx("div", {
+          className: accordionContentInnerStyles(),
+          children: children
+        })
+      })]
+    })
+  });
+};
+
+const styles = cva(`
+    dash-btn-base
+    select-none
+    min-h-11
+    flex
+    items-center
+    capitalize
+    transition-colors
+    hover:cursor-pointer
+    justify-center
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    variant: {
+      solid: '',
+      outline: 'dash-btn-outline border !bg-transparent'
+    },
+    colorScheme: {
+      brand: '',
+      mint: '',
+      gray: '',
+      red: '',
+      lightBlue: '',
+      lightGray: ''
+    },
+    state: {
+      active: 'active:-translate-y-[-1px]',
+      disabled: 'hover:!cursor-not-allowed'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  compoundVariants: [
+  // solid variant color schemes - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!bg-dash-brand text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!bg-gray-200 !text-gray-700 hover:!bg-gray-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!bg-red-200 !text-red-700 hover:!bg-red-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!bg-[rgba(12,28,51,0.03)] !text-[#0C1C33] hover:!bg-[rgba(12,28,51,0.06)]'
+  },
+  // solid variant color schemes - dark theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!bg-dash-brand !text-white hover:!bg-dash-brand/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!bg-dash-mint !text-black hover:!bg-dash-mint/80'
+  }, {
+    variant: 'solid',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!bg-gray-600 !text-gray-100 hover:!bg-gray-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!bg-red-600 !text-red-100 hover:!bg-red-500'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand hover:!bg-dash-brand/30'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-300 hover:!bg-gray-600/30'
+  },
+  // outline variant - light theme
+  {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'light',
+    class: 'opacity-40'
+  }, {
+    variant: 'outline',
+    state: 'disabled',
+    theme: 'dark',
+    class: 'opacity-50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'light',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'brand',
+    theme: 'dark',
+    class: '!text-dash-brand !border-dash-brand hover:!bg-dash-brand/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'light',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'mint',
+    theme: 'dark',
+    class: '!text-dash-mint !border-dash-mint hover:!bg-dash-mint/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'light',
+    class: '!text-gray-700 !border-gray-700 hover:!bg-gray-200/50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'gray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-300 hover:!bg-gray-600/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'light',
+    class: '!text-red-700 hover:!bg-red-300/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'red',
+    theme: 'dark',
+    class: '!text-red-400 hover:!bg-red-500/20'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'light',
+    class: '!text-dash-brand/60 !border-dash-brand/60 hover:!bg-dash-brand/5'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightBlue',
+    theme: 'dark',
+    class: '!text-dash-brand/80 !border-dash-brand/80 hover:!bg-dash-brand/10'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'light',
+    class: '!text-[#0C1C33] !border-[#0C1C33]/20 hover:!bg-[rgba(12,28,51,0.03)]'
+  }, {
+    variant: 'outline',
+    colorScheme: 'lightGray',
+    theme: 'dark',
+    class: '!text-gray-300 !border-gray-600/50 hover:!bg-gray-700/10'
+  },
+  // solid variant - light theme
+  {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/10 !text-dash-brand-dim'
+  }, {
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/20 !text-dash-brand/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-mint/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'mint',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-mint/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-red-300/30 !text-black/60'
+  }, {
+    variant: 'solid',
+    colorScheme: 'red',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-red-500/20 !text-gray-400'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-dash-brand/5 !text-dash-brand/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightBlue',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-dash-brand/10 !text-dash-brand/50'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'light',
+    class: '!bg-[#0C1C33]/5 !text-[#0C1C33]/40'
+  }, {
+    variant: 'solid',
+    colorScheme: 'lightGray',
+    state: 'disabled',
+    theme: 'dark',
+    class: '!bg-gray-700/20 !text-gray-500'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    variant: 'solid',
+    colorScheme: 'brand',
+    state: 'active',
+    size: 'md'
+  }
+});
+/**
+ * Button with solid or outline style, color schemes, disabled state,
+ * press animation, and customizable size. Supports light/dark theme.
+ */
+const Button = _a => {
+  var {
+      children,
+      variant,
+      colorScheme,
+      size,
+      disabled = false,
+      className = ''
+    } = _a,
+    props = __rest(_a, ["children", "variant", "colorScheme", "size", "disabled", "className"]);
+  const {
+    theme
+  } = useTheme();
+  const state = disabled ? 'disabled' : 'active';
+  const classes = styles({
+    theme,
+    variant,
+    colorScheme,
+    size,
+    state
+  }) + (className !== '' ? ` ${className}` : '');
+  return jsx("button", Object.assign({
+    className: classes,
+    disabled: disabled
+  }, props, {
+    children: children
+  }));
+};
 
 const input = cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
@@ -811,9 +2247,10 @@ const Input = _a => {
       success = false,
       disabled = false,
       type,
-      prefix
+      prefix,
+      showPasswordToggle = true
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix", "showPasswordToggle"]);
   const {
     theme
   } = useTheme();
@@ -850,13 +2287,13 @@ const Input = _a => {
         className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
         children: prefix
       }), jsx("input", Object.assign({
-        className: `${classes}${isPassword ? ' pr-12' : ''}`,
+        className: `${classes}${isPassword && showPasswordToggle ? ' pr-12' : ''}`,
         style: {
           paddingLeft: `${leftPadding}rem`
         },
         disabled: disabled,
         type: inputType
-      }, props)), isPassword && jsx("button", {
+      }, props)), isPassword && showPasswordToggle && jsx("button", {
         type: 'button',
         className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
         onClick: togglePasswordVisibility,
@@ -876,10 +2313,10 @@ const Input = _a => {
     return jsxs("div", {
       className: 'relative',
       children: [jsx("input", Object.assign({
-        className: classes + ' pr-12',
+        className: classes + (showPasswordToggle ? ' pr-12' : ''),
         disabled: disabled,
         type: inputType
-      }, props)), jsx("button", {
+      }, props)), showPasswordToggle && jsx("button", {
         type: 'button',
         className: 'absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none',
         onClick: togglePasswordVisibility,
@@ -1154,7 +2591,8 @@ const textStyles = cva('', {
     },
     color: {
       default: '',
-      blue: '!text-dash-brand-dark dark:text-dash-brand-dim',
+      blue: '!text-dash-brand',
+      'blue-dark': '!text-dash-brand-dark dark:text-dash-brand-dim',
       red: 'text-red-700'
     },
     size: {
@@ -1423,292 +2861,6 @@ function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForD
   };
 }
 
-// packages/react/context/src/create-context.tsx
-function createContextScope(scopeName, createContextScopeDeps = []) {
-  let defaultContexts = [];
-  function createContext3(rootComponentName, defaultContext) {
-    const BaseContext = React.createContext(defaultContext);
-    const index = defaultContexts.length;
-    defaultContexts = [...defaultContexts, defaultContext];
-    const Provider = (props) => {
-      const { scope, children, ...context } = props;
-      const Context = scope?.[scopeName]?.[index] || BaseContext;
-      const value = React.useMemo(() => context, Object.values(context));
-      return /* @__PURE__ */ jsx(Context.Provider, { value, children });
-    };
-    Provider.displayName = rootComponentName + "Provider";
-    function useContext2(consumerName, scope) {
-      const Context = scope?.[scopeName]?.[index] || BaseContext;
-      const context = React.useContext(Context);
-      if (context) return context;
-      if (defaultContext !== void 0) return defaultContext;
-      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-    }
-    return [Provider, useContext2];
-  }
-  const createScope = () => {
-    const scopeContexts = defaultContexts.map((defaultContext) => {
-      return React.createContext(defaultContext);
-    });
-    return function useScope(scope) {
-      const contexts = scope?.[scopeName] || scopeContexts;
-      return React.useMemo(
-        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
-        [scope, contexts]
-      );
-    };
-  };
-  createScope.scopeName = scopeName;
-  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-  const baseScope = scopes[0];
-  if (scopes.length === 1) return baseScope;
-  const createScope = () => {
-    const scopeHooks = scopes.map((createScope2) => ({
-      useScope: createScope2(),
-      scopeName: createScope2.scopeName
-    }));
-    return function useComposedScopes(overrideScopes) {
-      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-        const scopeProps = useScope(overrideScopes);
-        const currentScope = scopeProps[`__scope${scopeName}`];
-        return { ...nextScopes2, ...currentScope };
-      }, {});
-      return React.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-    };
-  };
-  createScope.scopeName = baseScope.scopeName;
-  return createScope;
-}
-
-// packages/react/compose-refs/src/compose-refs.tsx
-function setRef(ref, value) {
-  if (typeof ref === "function") {
-    return ref(value);
-  } else if (ref !== null && ref !== void 0) {
-    ref.current = value;
-  }
-}
-function composeRefs(...refs) {
-  return (node) => {
-    let hasCleanup = false;
-    const cleanups = refs.map((ref) => {
-      const cleanup = setRef(ref, node);
-      if (!hasCleanup && typeof cleanup == "function") {
-        hasCleanup = true;
-      }
-      return cleanup;
-    });
-    if (hasCleanup) {
-      return () => {
-        for (let i = 0; i < cleanups.length; i++) {
-          const cleanup = cleanups[i];
-          if (typeof cleanup == "function") {
-            cleanup();
-          } else {
-            setRef(refs[i], null);
-          }
-        }
-      };
-    }
-  };
-}
-function useComposedRefs(...refs) {
-  return React.useCallback(composeRefs(...refs), refs);
-}
-
-// src/slot.tsx
-// @__NO_SIDE_EFFECTS__
-function createSlot(ownerName) {
-  const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
-  const Slot2 = React.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    const childrenArray = React.Children.toArray(children);
-    const slottable = childrenArray.find(isSlottable);
-    if (slottable) {
-      const newElement = slottable.props.children;
-      const newChildren = childrenArray.map((child) => {
-        if (child === slottable) {
-          if (React.Children.count(newElement) > 1) return React.Children.only(null);
-          return React.isValidElement(newElement) ? newElement.props.children : null;
-        } else {
-          return child;
-        }
-      });
-      return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children: React.isValidElement(newElement) ? React.cloneElement(newElement, void 0, newChildren) : null });
-    }
-    return /* @__PURE__ */ jsx(SlotClone, { ...slotProps, ref: forwardedRef, children });
-  });
-  Slot2.displayName = `${ownerName}.Slot`;
-  return Slot2;
-}
-// @__NO_SIDE_EFFECTS__
-function createSlotClone(ownerName) {
-  const SlotClone = React.forwardRef((props, forwardedRef) => {
-    const { children, ...slotProps } = props;
-    if (React.isValidElement(children)) {
-      const childrenRef = getElementRef(children);
-      const props2 = mergeProps(slotProps, children.props);
-      if (children.type !== React.Fragment) {
-        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
-      }
-      return React.cloneElement(children, props2);
-    }
-    return React.Children.count(children) > 1 ? React.Children.only(null) : null;
-  });
-  SlotClone.displayName = `${ownerName}.SlotClone`;
-  return SlotClone;
-}
-var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
-function isSlottable(child) {
-  return React.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
-}
-function mergeProps(slotProps, childProps) {
-  const overrideProps = { ...childProps };
-  for (const propName in childProps) {
-    const slotPropValue = slotProps[propName];
-    const childPropValue = childProps[propName];
-    const isHandler = /^on[A-Z]/.test(propName);
-    if (isHandler) {
-      if (slotPropValue && childPropValue) {
-        overrideProps[propName] = (...args) => {
-          const result = childPropValue(...args);
-          slotPropValue(...args);
-          return result;
-        };
-      } else if (slotPropValue) {
-        overrideProps[propName] = slotPropValue;
-      }
-    } else if (propName === "style") {
-      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
-    } else if (propName === "className") {
-      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-    }
-  }
-  return { ...slotProps, ...overrideProps };
-}
-function getElementRef(element) {
-  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
-
-function createCollection(name) {
-  const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope] = createContextScope(PROVIDER_NAME);
-  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
-    PROVIDER_NAME,
-    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
-  );
-  const CollectionProvider = (props) => {
-    const { scope, children } = props;
-    const ref = React__default.useRef(null);
-    const itemMap = React__default.useRef(/* @__PURE__ */ new Map()).current;
-    return /* @__PURE__ */ jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
-  };
-  CollectionProvider.displayName = PROVIDER_NAME;
-  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
-  const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
-  const CollectionSlot = React__default.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children } = props;
-      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
-      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
-      return /* @__PURE__ */ jsx(CollectionSlotImpl, { ref: composedRefs, children });
-    }
-  );
-  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
-  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
-  const ITEM_DATA_ATTR = "data-radix-collection-item";
-  const CollectionItemSlotImpl = createSlot(ITEM_SLOT_NAME);
-  const CollectionItemSlot = React__default.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children, ...itemData } = props;
-      const ref = React__default.useRef(null);
-      const composedRefs = useComposedRefs(forwardedRef, ref);
-      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
-      React__default.useEffect(() => {
-        context.itemMap.set(ref, { ref, ...itemData });
-        return () => void context.itemMap.delete(ref);
-      });
-      return /* @__PURE__ */ jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
-    }
-  );
-  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
-  function useCollection(scope) {
-    const context = useCollectionContext(name + "CollectionConsumer", scope);
-    const getItems = React__default.useCallback(() => {
-      const collectionNode = context.collectionRef.current;
-      if (!collectionNode) return [];
-      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
-      const items = Array.from(context.itemMap.values());
-      const orderedItems = items.sort(
-        (a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current)
-      );
-      return orderedItems;
-    }, [context.collectionRef, context.itemMap]);
-    return getItems;
-  }
-  return [
-    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
-    useCollection,
-    createCollectionScope
-  ];
-}
-
-// packages/react/direction/src/direction.tsx
-var DirectionContext = React.createContext(void 0);
-function useDirection(localDir) {
-  const globalDir = React.useContext(DirectionContext);
-  return localDir || globalDir || "ltr";
-}
-
-// src/primitive.tsx
-var NODES = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive = NODES.reduce((primitive, node) => {
-  const Slot = createSlot(`Primitive.${node}`);
-  const Node = React.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot : node;
-    if (typeof window !== "undefined") {
-      window[Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ jsx(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node };
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
-}
-
 // packages/react/use-callback-ref/src/use-callback-ref.tsx
 function useCallbackRef$1(callback) {
   const callbackRef = React.useRef(callback);
@@ -1934,18 +3086,18 @@ function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
   }
 }
 
-var count$1 = 0;
+var count = 0;
 function useFocusGuards() {
   React.useEffect(() => {
     const edgeGuards = document.querySelectorAll("[data-radix-focus-guard]");
     document.body.insertAdjacentElement("afterbegin", edgeGuards[0] ?? createFocusGuard());
     document.body.insertAdjacentElement("beforeend", edgeGuards[1] ?? createFocusGuard());
-    count$1++;
+    count++;
     return () => {
-      if (count$1 === 1) {
+      if (count === 1) {
         document.querySelectorAll("[data-radix-focus-guard]").forEach((node) => node.remove());
       }
-      count$1--;
+      count--;
     };
   }, []);
 }
@@ -1962,7 +3114,7 @@ function createFocusGuard() {
 
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
 var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
-var EVENT_OPTIONS = { bubbles: false, cancelable: true };
+var EVENT_OPTIONS$1 = { bubbles: false, cancelable: true };
 var FOCUS_SCOPE_NAME = "FocusScope";
 var FocusScope = React.forwardRef((props, forwardedRef) => {
   const {
@@ -2027,11 +3179,11 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
       const previouslyFocusedElement = document.activeElement;
       const hasFocusedCandidate = container.contains(previouslyFocusedElement);
       if (!hasFocusedCandidate) {
-        const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS);
+        const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS$1);
         container.addEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
         container.dispatchEvent(mountEvent);
         if (!mountEvent.defaultPrevented) {
-          focusFirst(removeLinks(getTabbableCandidates(container)), { select: true });
+          focusFirst$1(removeLinks(getTabbableCandidates(container)), { select: true });
           if (document.activeElement === previouslyFocusedElement) {
             focus(container);
           }
@@ -2040,7 +3192,7 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
       return () => {
         container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
         setTimeout(() => {
-          const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS);
+          const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS$1);
           container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
           container.dispatchEvent(unmountEvent);
           if (!unmountEvent.defaultPrevented) {
@@ -2080,7 +3232,7 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
   return /* @__PURE__ */ jsx(Primitive.div, { tabIndex: -1, ...scopeProps, ref: composedRefs, onKeyDown: handleKeyDown });
 });
 FocusScope.displayName = FOCUS_SCOPE_NAME;
-function focusFirst(candidates, { select = false } = {}) {
+function focusFirst$1(candidates, { select = false } = {}) {
   const previouslyFocusedElement = document.activeElement;
   for (const candidate of candidates) {
     focus(candidate, { select });
@@ -2158,21 +3310,6 @@ function arrayRemove(array, item) {
 }
 function removeLinks(items) {
   return items.filter((item) => item.tagName !== "A");
-}
-
-// packages/react/use-layout-effect/src/use-layout-effect.tsx
-var useLayoutEffect2 = globalThis?.document ? React.useLayoutEffect : () => {
-};
-
-// packages/react/id/src/id.tsx
-var useReactId = React[" useId ".trim().toString()] || (() => void 0);
-var count = 0;
-function useId(deterministicId) {
-  const [id, setId] = React.useState(useReactId());
-  useLayoutEffect2(() => {
-    setId((reactId) => reactId ?? String(count++));
-  }, [deterministicId]);
-  return deterministicId || (id ? `radix-${id}` : "");
 }
 
 /**
@@ -4372,7 +5509,7 @@ var Arrow$1 = React.forwardRef((props, forwardedRef) => {
   );
 });
 Arrow$1.displayName = NAME$1;
-var Root = Arrow$1;
+var Root$2 = Arrow$1;
 
 // packages/react/use-size/src/use-size.tsx
 function useSize(element) {
@@ -4433,8 +5570,8 @@ var PopperAnchor = React.forwardRef(
   }
 );
 PopperAnchor.displayName = ANCHOR_NAME;
-var CONTENT_NAME$1 = "PopperContent";
-var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$1);
+var CONTENT_NAME$3 = "PopperContent";
+var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$3);
 var PopperContent = React.forwardRef(
   (props, forwardedRef) => {
     const {
@@ -4453,7 +5590,7 @@ var PopperContent = React.forwardRef(
       onPlaced,
       ...contentProps
     } = props;
-    const context = usePopperContext(CONTENT_NAME$1, __scopePopper);
+    const context = usePopperContext(CONTENT_NAME$3, __scopePopper);
     const [content, setContent] = React.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
     const [arrow$1, setArrow] = React.useState(null);
@@ -4576,7 +5713,7 @@ var PopperContent = React.forwardRef(
     );
   }
 );
-PopperContent.displayName = CONTENT_NAME$1;
+PopperContent.displayName = CONTENT_NAME$3;
 var ARROW_NAME$1 = "PopperArrow";
 var OPPOSITE_SIDE = {
   top: "bottom",
@@ -4616,7 +5753,7 @@ var PopperArrow = React.forwardRef(function PopperArrow2(props, forwardedRef) {
           visibility: contentContext.shouldHideArrow ? "hidden" : void 0
         },
         children: /* @__PURE__ */ jsx(
-          Root,
+          Root$2,
           {
             ...arrowProps,
             ref: forwardedRef,
@@ -4670,86 +5807,20 @@ function getSideAndAlignFromPlacement(placement) {
   const [side, align = "center"] = placement.split("-");
   return [side, align];
 }
-var Root2$1 = Popper;
+var Root2$2 = Popper;
 var Anchor = PopperAnchor;
-var Content = PopperContent;
+var Content$2 = PopperContent;
 var Arrow = PopperArrow;
 
-var PORTAL_NAME$1 = "Portal";
-var Portal$1 = React.forwardRef((props, forwardedRef) => {
+var PORTAL_NAME$2 = "Portal";
+var Portal$2 = React.forwardRef((props, forwardedRef) => {
   const { container: containerProp, ...portalProps } = props;
   const [mounted, setMounted] = React.useState(false);
   useLayoutEffect2(() => setMounted(true), []);
   const container = containerProp || mounted && globalThis?.document?.body;
   return container ? ReactDOM__default.createPortal(/* @__PURE__ */ jsx(Primitive.div, { ...portalProps, ref: forwardedRef }), container) : null;
 });
-Portal$1.displayName = PORTAL_NAME$1;
-
-// src/use-controllable-state.tsx
-var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
-  prop,
-  defaultProp,
-  onChange = () => {
-  },
-  caller
-}) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-    defaultProp,
-    onChange
-  });
-  const isControlled = prop !== void 0;
-  const value = isControlled ? prop : uncontrolledProp;
-  {
-    const isControlledRef = React.useRef(prop !== void 0);
-    React.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const setValue = React.useCallback(
-    (nextValue) => {
-      if (isControlled) {
-        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
-        if (value2 !== prop) {
-          onChangeRef.current?.(value2);
-        }
-      } else {
-        setUncontrolledProp(nextValue);
-      }
-    },
-    [isControlled, prop, setUncontrolledProp, onChangeRef]
-  );
-  return [value, setValue];
-}
-function useUncontrolledState({
-  defaultProp,
-  onChange
-}) {
-  const [value, setValue] = React.useState(defaultProp);
-  const prevValueRef = React.useRef(value);
-  const onChangeRef = React.useRef(onChange);
-  useInsertionEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
-  React.useEffect(() => {
-    if (prevValueRef.current !== value) {
-      onChangeRef.current?.(value);
-      prevValueRef.current = value;
-    }
-  }, [value, prevValueRef]);
-  return [value, setValue, onChangeRef];
-}
-function isFunction(value) {
-  return typeof value === "function";
-}
+Portal$2.displayName = PORTAL_NAME$2;
 
 // packages/react/use-previous/src/use-previous.tsx
 function usePrevious(value) {
@@ -5627,9 +6698,9 @@ ReactRemoveScroll.classNames = RemoveScroll.classNames;
 var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
 var SELECTION_KEYS = [" ", "Enter"];
 var SELECT_NAME = "Select";
-var [Collection, useCollection, createCollectionScope] = createCollection(SELECT_NAME);
+var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(SELECT_NAME);
 var [createSelectContext, createSelectScope] = createContextScope(SELECT_NAME, [
-  createCollectionScope,
+  createCollectionScope$1,
   createPopperScope
 ]);
 var usePopperScope = createPopperScope();
@@ -5673,7 +6744,7 @@ var Select$1 = (props) => {
   const isFormControl = trigger ? form || !!trigger.closest("form") : true;
   const [nativeOptionsSet, setNativeOptionsSet] = React.useState(/* @__PURE__ */ new Set());
   const nativeSelectKey = Array.from(nativeOptionsSet).map((option) => option.props.value).join(";");
-  return /* @__PURE__ */ jsx(Root2$1, { ...popperScope, children: /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(Root2$2, { ...popperScope, children: /* @__PURE__ */ jsxs(
     SelectProvider,
     {
       required,
@@ -5693,7 +6764,7 @@ var Select$1 = (props) => {
       triggerPointerDownPosRef,
       disabled,
       children: [
-        /* @__PURE__ */ jsx(Collection.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx(Collection$1.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
           SelectNativeOptionsProvider,
           {
             scope: props.__scopeSelect,
@@ -5734,15 +6805,15 @@ var Select$1 = (props) => {
   ) });
 };
 Select$1.displayName = SELECT_NAME;
-var TRIGGER_NAME = "SelectTrigger";
+var TRIGGER_NAME$2 = "SelectTrigger";
 var SelectTrigger = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, disabled = false, ...triggerProps } = props;
     const popperScope = usePopperScope(__scopeSelect);
-    const context = useSelectContext(TRIGGER_NAME, __scopeSelect);
+    const context = useSelectContext(TRIGGER_NAME$2, __scopeSelect);
     const isDisabled = context.disabled || disabled;
     const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
-    const getItems = useCollection(__scopeSelect);
+    const getItems = useCollection$1(__scopeSelect);
     const pointerTypeRef = React.useRef("touch");
     const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
       const enabledItems = getItems().filter((item) => !item.disabled);
@@ -5811,7 +6882,7 @@ var SelectTrigger = React.forwardRef(
     ) });
   }
 );
-SelectTrigger.displayName = TRIGGER_NAME;
+SelectTrigger.displayName = TRIGGER_NAME$2;
 var VALUE_NAME = "SelectValue";
 var SelectValue = React.forwardRef(
   (props, forwardedRef) => {
@@ -5843,15 +6914,15 @@ var SelectIcon = React.forwardRef(
   }
 );
 SelectIcon.displayName = ICON_NAME;
-var PORTAL_NAME = "SelectPortal";
+var PORTAL_NAME$1 = "SelectPortal";
 var SelectPortal = (props) => {
-  return /* @__PURE__ */ jsx(Portal$1, { asChild: true, ...props });
+  return /* @__PURE__ */ jsx(Portal$2, { asChild: true, ...props });
 };
-SelectPortal.displayName = PORTAL_NAME;
-var CONTENT_NAME = "SelectContent";
+SelectPortal.displayName = PORTAL_NAME$1;
+var CONTENT_NAME$2 = "SelectContent";
 var SelectContent = React.forwardRef(
   (props, forwardedRef) => {
-    const context = useSelectContext(CONTENT_NAME, props.__scopeSelect);
+    const context = useSelectContext(CONTENT_NAME$2, props.__scopeSelect);
     const [fragment, setFragment] = React.useState();
     useLayoutEffect2(() => {
       setFragment(new DocumentFragment());
@@ -5859,18 +6930,18 @@ var SelectContent = React.forwardRef(
     if (!context.open) {
       const frag = fragment;
       return frag ? ReactDOM.createPortal(
-        /* @__PURE__ */ jsx(SelectContentProvider, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx(Collection.Slot, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx("div", { children: props.children }) }) }),
+        /* @__PURE__ */ jsx(SelectContentProvider, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx(Collection$1.Slot, { scope: props.__scopeSelect, children: /* @__PURE__ */ jsx("div", { children: props.children }) }) }),
         frag
       ) : null;
     }
     return /* @__PURE__ */ jsx(SelectContentImpl, { ...props, ref: forwardedRef });
   }
 );
-SelectContent.displayName = CONTENT_NAME;
+SelectContent.displayName = CONTENT_NAME$2;
 var CONTENT_MARGIN = 10;
-var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME);
+var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME$2);
 var CONTENT_IMPL_NAME = "SelectContentImpl";
-var Slot = createSlot("SelectContent.RemoveScroll");
+var Slot$1 = createSlot("SelectContent.RemoveScroll");
 var SelectContentImpl = React.forwardRef(
   (props, forwardedRef) => {
     const {
@@ -5894,7 +6965,7 @@ var SelectContentImpl = React.forwardRef(
       //
       ...contentProps
     } = props;
-    const context = useSelectContext(CONTENT_NAME, __scopeSelect);
+    const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
     const [content, setContent] = React.useState(null);
     const [viewport, setViewport] = React.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
@@ -5902,7 +6973,7 @@ var SelectContentImpl = React.forwardRef(
     const [selectedItemText, setSelectedItemText] = React.useState(
       null
     );
-    const getItems = useCollection(__scopeSelect);
+    const getItems = useCollection$1(__scopeSelect);
     const [isPositioned, setIsPositioned] = React.useState(false);
     const firstValidItemFoundRef = React.useRef(false);
     React.useEffect(() => {
@@ -6033,7 +7104,7 @@ var SelectContentImpl = React.forwardRef(
         position,
         isPositioned,
         searchRef,
-        children: /* @__PURE__ */ jsx(ReactRemoveScroll, { as: Slot, allowPinchZoom: true, children: /* @__PURE__ */ jsx(
+        children: /* @__PURE__ */ jsx(ReactRemoveScroll, { as: Slot$1, allowPinchZoom: true, children: /* @__PURE__ */ jsx(
           FocusScope,
           {
             asChild: true,
@@ -6107,12 +7178,12 @@ SelectContentImpl.displayName = CONTENT_IMPL_NAME;
 var ITEM_ALIGNED_POSITION_NAME = "SelectItemAlignedPosition";
 var SelectItemAlignedPosition = React.forwardRef((props, forwardedRef) => {
   const { __scopeSelect, onPlaced, ...popperProps } = props;
-  const context = useSelectContext(CONTENT_NAME, __scopeSelect);
-  const contentContext = useSelectContentContext(CONTENT_NAME, __scopeSelect);
+  const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
+  const contentContext = useSelectContentContext(CONTENT_NAME$2, __scopeSelect);
   const [contentWrapper, setContentWrapper] = React.useState(null);
   const [content, setContent] = React.useState(null);
   const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
-  const getItems = useCollection(__scopeSelect);
+  const getItems = useCollection$1(__scopeSelect);
   const shouldExpandOnScrollRef = React.useRef(false);
   const shouldRepositionRef = React.useRef(true);
   const { viewport, selectedItem, selectedItemText, focusSelectedItem } = contentContext;
@@ -6278,7 +7349,7 @@ var SelectPopperPosition = React.forwardRef((props, forwardedRef) => {
   } = props;
   const popperScope = usePopperScope(__scopeSelect);
   return /* @__PURE__ */ jsx(
-    Content,
+    Content$2,
     {
       ...popperScope,
       ...popperProps,
@@ -6302,7 +7373,7 @@ var SelectPopperPosition = React.forwardRef((props, forwardedRef) => {
   );
 });
 SelectPopperPosition.displayName = POPPER_POSITION_NAME;
-var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME, {});
+var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$2, {});
 var VIEWPORT_NAME = "SelectViewport";
 var SelectViewport = React.forwardRef(
   (props, forwardedRef) => {
@@ -6321,7 +7392,7 @@ var SelectViewport = React.forwardRef(
           nonce
         }
       ),
-      /* @__PURE__ */ jsx(Collection.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsx(Collection$1.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx(
         Primitive.div,
         {
           "data-radix-select-viewport": "",
@@ -6371,8 +7442,8 @@ var SelectViewport = React.forwardRef(
   }
 );
 SelectViewport.displayName = VIEWPORT_NAME;
-var GROUP_NAME = "SelectGroup";
-var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME);
+var GROUP_NAME$1 = "SelectGroup";
+var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME$1);
 var SelectGroup = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeSelect, ...groupProps } = props;
@@ -6380,7 +7451,7 @@ var SelectGroup = React.forwardRef(
     return /* @__PURE__ */ jsx(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsx(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
   }
 );
-SelectGroup.displayName = GROUP_NAME;
+SelectGroup.displayName = GROUP_NAME$1;
 var LABEL_NAME = "SelectLabel";
 var SelectLabel = React.forwardRef(
   (props, forwardedRef) => {
@@ -6390,8 +7461,8 @@ var SelectLabel = React.forwardRef(
   }
 );
 SelectLabel.displayName = LABEL_NAME;
-var ITEM_NAME = "SelectItem";
-var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME);
+var ITEM_NAME$1 = "SelectItem";
+var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME$1);
 var SelectItem = React.forwardRef(
   (props, forwardedRef) => {
     const {
@@ -6401,8 +7472,8 @@ var SelectItem = React.forwardRef(
       textValue: textValueProp,
       ...itemProps
     } = props;
-    const context = useSelectContext(ITEM_NAME, __scopeSelect);
-    const contentContext = useSelectContentContext(ITEM_NAME, __scopeSelect);
+    const context = useSelectContext(ITEM_NAME$1, __scopeSelect);
+    const contentContext = useSelectContentContext(ITEM_NAME$1, __scopeSelect);
     const isSelected = context.value === value;
     const [textValue, setTextValue] = React.useState(textValueProp ?? "");
     const [isFocused, setIsFocused] = React.useState(false);
@@ -6435,7 +7506,7 @@ var SelectItem = React.forwardRef(
           setTextValue((prevTextValue) => prevTextValue || (node?.textContent ?? "").trim());
         }, []),
         children: /* @__PURE__ */ jsx(
-          Collection.ItemSlot,
+          Collection$1.ItemSlot,
           {
             scope: __scopeSelect,
             value,
@@ -6492,7 +7563,7 @@ var SelectItem = React.forwardRef(
     );
   }
 );
-SelectItem.displayName = ITEM_NAME;
+SelectItem.displayName = ITEM_NAME$1;
 var ITEM_TEXT_NAME = "SelectItemText";
 var SelectItemText = React.forwardRef(
   (props, forwardedRef) => {
@@ -6605,7 +7676,7 @@ var SelectScrollButtonImpl = React.forwardRef((props, forwardedRef) => {
   const { __scopeSelect, onAutoScroll, ...scrollIndicatorProps } = props;
   const contentContext = useSelectContentContext("SelectScrollButton", __scopeSelect);
   const autoScrollTimerRef = React.useRef(null);
-  const getItems = useCollection(__scopeSelect);
+  const getItems = useCollection$1(__scopeSelect);
   const clearAutoScrollTimer = React.useCallback(() => {
     if (autoScrollTimerRef.current !== null) {
       window.clearInterval(autoScrollTimerRef.current);
@@ -6727,7 +7798,7 @@ function findNextItem(items, search, currentItem) {
   const isRepeated = search.length > 1 && Array.from(search).every((char) => char === search[0]);
   const normalizedSearch = isRepeated ? search[0] : search;
   const currentItemIndex = currentItem ? items.indexOf(currentItem) : -1;
-  let wrappedItems = wrapArray(items, Math.max(currentItemIndex, 0));
+  let wrappedItems = wrapArray$1(items, Math.max(currentItemIndex, 0));
   const excludeCurrentItem = normalizedSearch.length === 1;
   if (excludeCurrentItem) wrappedItems = wrappedItems.filter((v) => v !== currentItem);
   const nextItem = wrappedItems.find(
@@ -6735,17 +7806,17 @@ function findNextItem(items, search, currentItem) {
   );
   return nextItem !== currentItem ? nextItem : void 0;
 }
-function wrapArray(array, startIndex) {
+function wrapArray$1(array, startIndex) {
   return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
-var Root2 = Select$1;
-var Trigger = SelectTrigger;
+var Root2$1 = Select$1;
+var Trigger$2 = SelectTrigger;
 var Value = SelectValue;
 var Icon = SelectIcon;
-var Portal = SelectPortal;
+var Portal$1 = SelectPortal;
 var Content2 = SelectContent;
 var Viewport = SelectViewport;
-var Item = SelectItem;
+var Item$1 = SelectItem;
 var ItemText = SelectItemText;
 
 const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
@@ -6832,7 +7903,7 @@ const selectIcon = cva('pointer-events-none flex items-center justify-center tra
   }
 });
 // Arrow icon
-const ChevronDownIcon = ({
+const ChevronDownIcon$2 = ({
   className
 }) => jsx("svg", {
   width: "15",
@@ -6876,11 +7947,11 @@ const Select = _a => {
       showArrow = true,
       value,
       defaultValue,
-      onValueChange,
+      onChange,
       placeholder = 'Select an option...',
       name
     } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name"]);
+    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
   const {
     theme
   } = useTheme();
@@ -6904,13 +7975,13 @@ const Select = _a => {
   const iconClasses = selectIcon({
     size
   });
-  return jsxs(Root2, {
+  return jsxs(Root2$1, {
     value: value,
     defaultValue: defaultValue,
-    onValueChange: onValueChange,
+    onValueChange: onChange,
     disabled: disabled,
     name: name,
-    children: [jsxs(Trigger, {
+    children: [jsxs(Trigger$2, {
       className: triggerClasses,
       children: [jsx("div", {
         className: 'w-full flex-1 text-left',
@@ -6919,17 +7990,17 @@ const Select = _a => {
         })
       }), showArrow && jsx(Icon, {
         asChild: true,
-        children: jsx(ChevronDownIcon, {
+        children: jsx(ChevronDownIcon$2, {
           className: iconClasses
         })
       })]
-    }), jsx(Portal, {
+    }), jsx(Portal$1, {
       children: jsx(Content2, {
         className: contentClasses,
         position: 'popper',
         sideOffset: 5,
         children: jsx(Viewport, {
-          children: options.map(option => jsx(Item, {
+          children: options.map(option => jsx(Item$1, {
             value: option.value,
             className: itemClasses,
             disabled: option.disabled,
@@ -6943,6 +8014,661 @@ const Select = _a => {
           }, option.value))
         })
       })
+    })]
+  });
+};
+
+const overlaySelectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
+  variants: {
+    theme: {
+      light: 'text-dash-primary-dark-blue',
+      dark: 'text-white'
+    },
+    colorScheme: {
+      default: '',
+      brand: '',
+      error: '',
+      success: '',
+      gray: '',
+      lightGray: ''
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    },
+    border: {
+      true: 'outline outline-1 outline-offset-[-1px]',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    },
+    filled: {
+      false: '',
+      true: ''
+    }
+  },
+  compoundVariants: [{
+    colorScheme: 'default',
+    border: true,
+    class: 'outline-[rgba(12,28,51,0.35)] focus:outline-[rgba(12,28,51,0.6)]'
+  }, {
+    colorScheme: 'brand',
+    border: true,
+    class: 'outline-dash-brand/30 focus:outline-dash-brand'
+  }, {
+    colorScheme: 'error',
+    border: true,
+    class: 'outline-red-500 focus:outline-red-500'
+  }, {
+    colorScheme: 'success',
+    border: true,
+    class: 'outline-green-500 focus:outline-green-500'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'light',
+    class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-gray-600/50 focus:outline-gray-500'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'light',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'light',
+    class: 'bg-[rgba(12,28,51,0.03)]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-gray-700/20'
+  },
+  // New lightGray scheme using dash-primary-dark-blue with 3% base and 5% hover
+  {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  },
+  // Default background when not filled
+  {
+    filled: false,
+    theme: 'light',
+    class: 'bg-white'
+  }, {
+    filled: false,
+    theme: 'dark',
+    class: 'bg-gray-800'
+  },
+  // Filled variants
+  {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'light',
+    class: 'bg-white text-gray-900'
+  }, {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-700 text-white'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'light',
+    class: 'bg-blue-50 text-blue-700'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-blue-900/30 text-blue-300'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'light',
+    class: 'bg-red-50 text-red-700'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-red-500/20 text-red-400'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'light',
+    class: 'bg-green-50 text-green-700'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-green-500/20 text-green-400'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-gray-200 text-gray-800'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-600 text-gray-200'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'xl',
+    border: true,
+    disabled: false,
+    filled: false
+  }
+});
+const overlayContent$1 = cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-[rgba(12,28,51,0.05)]',
+      dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] backdrop-blur-[256px]'
+    },
+    size: {
+      sm: 'rounded-[0.625rem]',
+      md: 'rounded-[0.875rem]',
+      xl: 'rounded-[1rem]'
+    }
+  }
+});
+const overlayItem$1 = cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] hover:bg-gray-50',
+      dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  }
+});
+// Arrow icon
+const ChevronDownIcon$1 = ({
+  className
+}) => jsx("svg", {
+  width: '15',
+  height: '15',
+  viewBox: '0 0 15 15',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  children: jsx("path", {
+    d: 'm4.93179 5.43179c0.20081-0.20081 0.52632-0.20081 0.72713 0l2.34108 2.34108 2.34108-2.34108c0.20081-0.20081 0.52632-0.20081 0.72713 0s0.20081 0.52632 0 0.72713l-2.70455 2.70455c-0.20081 0.20081-0.52632 0.20081-0.72713 0l-2.70455-2.70455c-0.20081-0.20081-0.20081-0.52632 0-0.72713z',
+    fill: 'currentColor',
+    fillRule: 'evenodd',
+    clipRule: 'evenodd'
+  })
+});
+/**
+ * Overlay select component that opens above the trigger with overlay positioning.
+ * Simple select component without additional button functionality.
+ */
+const OverlaySelect = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      error = false,
+      success = false,
+      border = true,
+      filled = false,
+      disabled = false,
+      options = [],
+      showArrow = true,
+      value,
+      defaultValue,
+      onValueChange,
+      placeholder = 'Select an option...',
+      name,
+      overlayLabel,
+      maxHeight = '200px'
+    } = _a;
+    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
+  const {
+    theme
+  } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef(null);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const triggerClasses = overlaySelectTrigger({
+    theme,
+    colorScheme: finalColorScheme,
+    size,
+    border,
+    filled,
+    disabled
+  }) + ' ' + className;
+  const contentClasses = overlayContent$1({
+    theme,
+    size
+  });
+  const itemClasses = overlayItem$1({
+    theme,
+    size
+  });
+  const selectedOption = options.find(opt => opt.value === value);
+  const handleOptionClick = optionValue => {
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(optionValue);
+    setIsOpen(false);
+  };
+  return jsxs("div", {
+    className: 'relative',
+    children: [jsxs("button", {
+      ref: triggerRef,
+      type: 'button',
+      className: triggerClasses,
+      onClick: () => !disabled && setIsOpen(!isOpen),
+      disabled: disabled,
+      name: name,
+      children: [jsx("div", {
+        className: 'w-full flex-1 text-left',
+        children: selectedOption ? selectedOption.content || selectedOption.label : jsx("span", {
+          className: theme === 'dark' ? 'text-gray-400' : 'text-gray-500',
+          children: placeholder
+        })
+      }), showArrow && jsx(ChevronDownIcon$1, {
+        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
+      })]
+    }), isOpen && jsxs(Fragment, {
+      children: [jsx("div", {
+        className: 'fixed inset-0 z-40',
+        onClick: () => setIsOpen(false)
+      }), jsxs("div", {
+        className: `${contentClasses} top-0 left-0 right-0`,
+        style: {
+          maxHeight
+        },
+        children: [overlayLabel && jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
+        }), jsx("div", {
+          className: 'overflow-y-auto',
+          style: {
+            maxHeight: `calc(${maxHeight} - ${overlayLabel ? '50px' : '0px'})`
+          },
+          children: options.map((option, index) => jsx("div", {
+            className: `${itemClasses} ${option.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < options.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            onClick: () => !option.disabled && handleOptionClick(option.value),
+            children: jsx("div", {
+              className: 'w-full flex-1 text-left',
+              children: option.content || option.label
+            })
+          }, option.value))
+        })]
+      })]
+    })]
+  });
+};
+
+const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
+  variants: {
+    theme: {
+      light: 'text-dash-primary-dark-blue',
+      dark: 'text-white'
+    },
+    colorScheme: {
+      default: '',
+      brand: '',
+      error: '',
+      success: '',
+      gray: '',
+      lightGray: ''
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    },
+    border: {
+      true: 'outline outline-1 outline-offset-[-1px]',
+      false: ''
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60 cursor-not-allowed'
+    },
+    filled: {
+      false: '',
+      true: ''
+    }
+  },
+  compoundVariants: [{
+    colorScheme: 'default',
+    border: true,
+    class: 'outline-[rgba(12,28,51,0.35)] focus:outline-[rgba(12,28,51,0.6)]'
+  }, {
+    colorScheme: 'brand',
+    border: true,
+    class: 'outline-dash-brand/30 focus:outline-dash-brand'
+  }, {
+    colorScheme: 'error',
+    border: true,
+    class: 'outline-red-500 focus:outline-red-500'
+  }, {
+    colorScheme: 'success',
+    border: true,
+    class: 'outline-green-500 focus:outline-green-500'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'light',
+    class: 'outline-[rgba(12,28,51,0.20)] focus:outline-[rgba(12,28,51,0.35)]'
+  }, {
+    colorScheme: 'gray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-gray-600/50 focus:outline-gray-500'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'light',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: true,
+    theme: 'dark',
+    class: 'outline-dash-primary-dark-blue/[0.05] focus:outline-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'light',
+    class: 'bg-[rgba(12,28,51,0.03)]'
+  }, {
+    colorScheme: 'gray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-gray-700/20'
+  },
+  // New lightGray scheme using dash-primary-dark-blue with 3% base and 5% hover
+  {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    border: false,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  }, {
+    colorScheme: 'lightGray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-dash-primary-dark-blue/[0.03] hover:bg-dash-primary-dark-blue/[0.05]'
+  },
+  // Default background when not filled
+  {
+    filled: false,
+    theme: 'light',
+    class: 'bg-white'
+  }, {
+    filled: false,
+    theme: 'dark',
+    class: 'bg-gray-800'
+  },
+  // Filled variants
+  {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'light',
+    class: 'bg-white text-gray-900'
+  }, {
+    colorScheme: 'default',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-700 text-white'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'light',
+    class: 'bg-blue-50 text-blue-700'
+  }, {
+    colorScheme: 'brand',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-blue-900/30 text-blue-300'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'light',
+    class: 'bg-red-50 text-red-700'
+  }, {
+    colorScheme: 'error',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-red-500/20 text-red-400'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'light',
+    class: 'bg-green-50 text-green-700'
+  }, {
+    colorScheme: 'success',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-green-500/20 text-green-400'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'light',
+    class: 'bg-gray-200 text-gray-800'
+  }, {
+    colorScheme: 'gray',
+    filled: true,
+    theme: 'dark',
+    class: 'bg-gray-600 text-gray-200'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'xl',
+    border: true,
+    disabled: false,
+    filled: false
+  }
+});
+const overlayContent = cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+  variants: {
+    theme: {
+      light: 'bg-white border border-[rgba(12,28,51,0.05)]',
+      dark: 'bg-[rgba(255,255,255,0.15)] border border-[rgba(255,255,255,0.15)] backdrop-blur-[256px]'
+    },
+    size: {
+      sm: 'rounded-[0.625rem]',
+      md: 'rounded-[0.875rem]',
+      xl: 'rounded-[1rem]'
+    }
+  }
+});
+const overlayItem = cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] hover:bg-gray-50',
+      dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  }
+});
+// Arrow icon
+const ChevronDownIcon = ({
+  className
+}) => jsx("svg", {
+  width: '15',
+  height: '15',
+  viewBox: '0 0 15 15',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  children: jsx("path", {
+    d: 'm4.93179 5.43179c0.20081-0.20081 0.52632-0.20081 0.72713 0l2.34108 2.34108 2.34108-2.34108c0.20081-0.20081 0.52632-0.20081 0.72713 0s0.20081 0.52632 0 0.72713l-2.70455 2.70455c-0.20081 0.20081-0.52632 0.20081-0.72713 0l-2.70455-2.70455c-0.20081-0.20081-0.20081-0.52632 0-0.72713z',
+    fill: 'currentColor',
+    fillRule: 'evenodd',
+    clipRule: 'evenodd'
+  })
+});
+/**
+ * Overlay menu component that opens above the trigger with overlay positioning.
+ * Supports custom content items with onClick handlers.
+ */
+const OverlayMenu = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      error = false,
+      success = false,
+      border = true,
+      filled = false,
+      disabled = false,
+      items = [],
+      showArrow = true,
+      name,
+      overlayLabel,
+      maxHeight = '200px',
+      triggerContent,
+      placeholder = 'Menu',
+      showItemBorders = true
+    } = _a,
+    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+  const {
+    theme
+  } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef(null);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const triggerClasses = overlayMenuTrigger({
+    theme,
+    colorScheme: finalColorScheme,
+    size,
+    border,
+    filled,
+    disabled
+  }) + ' ' + className;
+  const contentClasses = overlayContent({
+    theme,
+    size
+  });
+  const itemClasses = overlayItem({
+    theme,
+    size
+  });
+  const handleItemClick = item => {
+    if (!item.disabled && item.onClick) {
+      item.onClick();
+    }
+    setIsOpen(false);
+  };
+  return jsxs("div", {
+    className: 'relative',
+    children: [jsxs("button", Object.assign({
+      ref: triggerRef,
+      type: 'button',
+      className: triggerClasses,
+      onClick: () => !disabled && setIsOpen(!isOpen),
+      disabled: disabled,
+      name: name
+    }, props, {
+      children: [jsx("div", {
+        className: 'w-full flex-1 text-left',
+        children: triggerContent || jsx("span", {
+          className: theme === 'dark' ? 'text-gray-400' : 'text-gray-500',
+          children: placeholder
+        })
+      }), showArrow && jsx(ChevronDownIcon, {
+        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
+      })]
+    })), isOpen && jsxs(Fragment, {
+      children: [jsx("div", {
+        className: 'fixed inset-0 z-40',
+        onClick: () => setIsOpen(false)
+      }), jsxs("div", {
+        className: `${contentClasses} top-0 left-0 right-0 overflow-y-auto`,
+        style: {
+          maxHeight
+        },
+        children: [overlayLabel && jsxs("div", {
+          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
+          onClick: () => setIsOpen(false),
+          children: [jsx("div", {
+            className: 'w-full flex-1',
+            children: overlayLabel
+          }), jsx("div", {
+            className: 'flex items-center pl-1',
+            children: jsx(CrossIcon, {
+              size: 16,
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
+              className: 'cursor-pointer'
+            })
+          })]
+        }), jsx("div", {
+          children: items.map((item, index) => jsx("div", {
+            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            onClick: () => handleItemClick(item),
+            children: jsx("div", {
+              className: 'w-full flex-1',
+              children: item.content
+            })
+          }, item.id))
+        })]
+      })]
     })]
   });
 };
@@ -7209,7 +8935,7 @@ const Avatar = _a => {
 const iconComponents = {
   check: CheckIcon
 };
-const List = ({
+const List$1 = ({
   items,
   iconType = 'check',
   className = '',
@@ -7244,7 +8970,7 @@ const List = ({
   });
 };
 
-const bigNumberStyles = cva('inline-flex whitespace-nowrap', {
+const bigNumberStyles = cva('inline-flex whitespace-nowrap gap-1', {
   variants: {
     theme: {
       light: 'text-gray-900',
@@ -7255,11 +8981,10 @@ const bigNumberStyles = cva('inline-flex whitespace-nowrap', {
     theme: 'light'
   }
 });
-const spaceStyles = cva('inline-block w-[3px]');
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
- * - `space`: groups separated by a fixed 3px block
+ * - `space`: groups separated by gap
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */
@@ -7284,12 +9009,8 @@ const BigNumber = ({
       className: `${bigNumberStyles({
         theme
       })} ${className}`,
-      children: groups.map((grp, i) => jsxs("span", {
-        children: [jsx("span", {
-          children: grp
-        }), i < groups.length - 1 && jsx("span", {
-          className: spaceStyles()
-        })]
+      children: groups.map((grp, i) => jsx("span", {
+        children: grp
       }, i))
     });
   } else {
@@ -7308,12 +9029,10 @@ const BigNumber = ({
         children: [jsx("span", {
           children: grp
         }), i < groups.length - 1 && jsx("span", {
-          className: 'px-[0.125ch]',
           children: ","
         })]
       }, i)), fracPart != null && jsxs(Fragment, {
         children: [jsx("span", {
-          className: 'px-[0.125ch]',
           children: "."
         }), jsx("span", {
           children: fracPart
@@ -7576,7 +9295,7 @@ const CopyButton = _a => {
 };
 
 /** CVA for the root container, now with light/dark theme */
-const identifier = cva('flex items-center font-mono text-sm font-normal break-all', {
+const identifier = cva('flex items-center font-dash-grotesque text-sm font-normal break-all', {
   variants: {
     theme: {
       light: 'text-gray-900',
@@ -7693,7 +9412,8 @@ const MiddleEllipsisText = ({
     children: [jsx("span", {
       children: first
     }), jsx("span", {
-      children: "..."
+      className: 'opacity-50',
+      children: "\u2026"
     }), jsx("span", {
       children: last
     })]
@@ -7735,7 +9455,7 @@ const Identifier = ({
       // console.log('Window width debounced to:', newWidth)
     }
   });
-  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0) linesAdjustment = false;
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis) linesAdjustment = false;
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width);
   });
@@ -8195,6 +9915,10 @@ function ProgressStepBar({
  * Dash Logo component with customizable size and color
  * Original aspect ratio: 30:25 (1.2:1)
  *
+ * Color can be set via:
+ * - color prop (takes precedence)
+ * - CSS class with text color (e.g., "text-dash-primary-dark-blue")
+ *
  * SVG is wrapped in a container that centers the logo and supports:
  * - containerPadding: padding around the logo
  * - containerSize: width/height of the container
@@ -8202,7 +9926,7 @@ function ProgressStepBar({
  * - minWidth/minHeight: min-content (adapts to logo size)
  */
 const DashLogo = ({
-  color = '#4C7EFF',
+  color,
   size,
   width,
   height,
@@ -8235,17 +9959,1140 @@ const DashLogo = ({
       viewBox: '0 0 30 25',
       fill: 'none',
       xmlns: 'http://www.w3.org/2000/svg',
-      className: className,
+      className: `text-dash-brand ${className}`,
+      style: {
+        color: color || 'var(--color-dash-brand, #4C7EFF)'
+      },
       children: [jsx("path", {
         d: 'M19.6465 0C29.2466 2.13767e-05 30.9542 5.2464 29.585 12.6006C28.6773 17.5547 26.3845 21.3391 22.5537 23.1084C20.8153 23.9084 19.1848 24.3555 15.3389 24.3555H4.44629L5.33887 19.293H14.9229C20.6921 19.3084 22.2159 16.8009 22.9697 14.6162C23.2467 13.8008 23.9084 11.2619 23.9238 9.76953C23.9699 6.84642 22.5383 5.07715 17.6768 5.07715L7.81543 5.06152L8.72363 0H19.6465Z',
-        fill: color
+        fill: color || 'currentColor'
       }), jsx("path", {
         d: 'M15.2002 9.63184C15.2002 9.63184 15.0775 10.232 14.7236 11.709C14.4621 12.8321 14.0462 14.6934 11.1846 14.6934H0C0.00327153 14.6775 0.12745 14.0734 0.476562 12.6162C0.73811 11.493 1.15435 9.63184 4.01562 9.63184H15.2002Z',
-        fill: color
+        fill: color || 'currentColor'
       })]
     })
   });
 };
 
-export { ArrowIcon, Avatar, BigNumber, BroadcastedIcon, Button, CalendarIcon, CheckIcon, CopyButton, CopyIcon, DashLogo, DateBlock, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Identifier, Input, KeyIcon, List, NotActive, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QueuedIcon, Select, SmartphoneIcon, SuccessIcon, Switch, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, useTheme };
+function useStateMachine(initialState, machine) {
+  return React.useReducer((state, event) => {
+    const nextState = machine[state][event];
+    return nextState ?? state;
+  }, initialState);
+}
+
+// src/presence.tsx
+var Presence = (props) => {
+  const { present, children } = props;
+  const presence = usePresence(present);
+  const child = typeof children === "function" ? children({ present: presence.isPresent }) : React.Children.only(children);
+  const ref = useComposedRefs(presence.ref, getElementRef(child));
+  const forceMount = typeof children === "function";
+  return forceMount || presence.isPresent ? React.cloneElement(child, { ref }) : null;
+};
+Presence.displayName = "Presence";
+function usePresence(present) {
+  const [node, setNode] = React.useState();
+  const stylesRef = React.useRef(null);
+  const prevPresentRef = React.useRef(present);
+  const prevAnimationNameRef = React.useRef("none");
+  const initialState = present ? "mounted" : "unmounted";
+  const [state, send] = useStateMachine(initialState, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
+    }
+  });
+  React.useEffect(() => {
+    const currentAnimationName = getAnimationName(stylesRef.current);
+    prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+  }, [state]);
+  useLayoutEffect2(() => {
+    const styles = stylesRef.current;
+    const wasPresent = prevPresentRef.current;
+    const hasPresentChanged = wasPresent !== present;
+    if (hasPresentChanged) {
+      const prevAnimationName = prevAnimationNameRef.current;
+      const currentAnimationName = getAnimationName(styles);
+      if (present) {
+        send("MOUNT");
+      } else if (currentAnimationName === "none" || styles?.display === "none") {
+        send("UNMOUNT");
+      } else {
+        const isAnimating = prevAnimationName !== currentAnimationName;
+        if (wasPresent && isAnimating) {
+          send("ANIMATION_OUT");
+        } else {
+          send("UNMOUNT");
+        }
+      }
+      prevPresentRef.current = present;
+    }
+  }, [present, send]);
+  useLayoutEffect2(() => {
+    if (node) {
+      let timeoutId;
+      const ownerWindow = node.ownerDocument.defaultView ?? window;
+      const handleAnimationEnd = (event) => {
+        const currentAnimationName = getAnimationName(stylesRef.current);
+        const isCurrentAnimation = currentAnimationName.includes(event.animationName);
+        if (event.target === node && isCurrentAnimation) {
+          send("ANIMATION_END");
+          if (!prevPresentRef.current) {
+            const currentFillMode = node.style.animationFillMode;
+            node.style.animationFillMode = "forwards";
+            timeoutId = ownerWindow.setTimeout(() => {
+              if (node.style.animationFillMode === "forwards") {
+                node.style.animationFillMode = currentFillMode;
+              }
+            });
+          }
+        }
+      };
+      const handleAnimationStart = (event) => {
+        if (event.target === node) {
+          prevAnimationNameRef.current = getAnimationName(stylesRef.current);
+        }
+      };
+      node.addEventListener("animationstart", handleAnimationStart);
+      node.addEventListener("animationcancel", handleAnimationEnd);
+      node.addEventListener("animationend", handleAnimationEnd);
+      return () => {
+        ownerWindow.clearTimeout(timeoutId);
+        node.removeEventListener("animationstart", handleAnimationStart);
+        node.removeEventListener("animationcancel", handleAnimationEnd);
+        node.removeEventListener("animationend", handleAnimationEnd);
+      };
+    } else {
+      send("ANIMATION_END");
+    }
+  }, [node, send]);
+  return {
+    isPresent: ["mounted", "unmountSuspended"].includes(state),
+    ref: React.useCallback((node2) => {
+      stylesRef.current = node2 ? getComputedStyle(node2) : null;
+      setNode(node2);
+    }, [])
+  };
+}
+function getAnimationName(styles) {
+  return styles?.animationName || "none";
+}
+function getElementRef(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+
+var DIALOG_NAME = "Dialog";
+var [createDialogContext, createDialogScope] = createContextScope(DIALOG_NAME);
+var [DialogProvider, useDialogContext] = createDialogContext(DIALOG_NAME);
+var Dialog = (props) => {
+  const {
+    __scopeDialog,
+    children,
+    open: openProp,
+    defaultOpen,
+    onOpenChange,
+    modal = true
+  } = props;
+  const triggerRef = React.useRef(null);
+  const contentRef = React.useRef(null);
+  const [open, setOpen] = useControllableState({
+    prop: openProp,
+    defaultProp: defaultOpen ?? false,
+    onChange: onOpenChange,
+    caller: DIALOG_NAME
+  });
+  return /* @__PURE__ */ jsx(
+    DialogProvider,
+    {
+      scope: __scopeDialog,
+      triggerRef,
+      contentRef,
+      contentId: useId(),
+      titleId: useId(),
+      descriptionId: useId(),
+      open,
+      onOpenChange: setOpen,
+      onOpenToggle: React.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+      modal,
+      children
+    }
+  );
+};
+Dialog.displayName = DIALOG_NAME;
+var TRIGGER_NAME$1 = "DialogTrigger";
+var DialogTrigger = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, ...triggerProps } = props;
+    const context = useDialogContext(TRIGGER_NAME$1, __scopeDialog);
+    const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
+    return /* @__PURE__ */ jsx(
+      Primitive.button,
+      {
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": context.open,
+        "aria-controls": context.contentId,
+        "data-state": getState(context.open),
+        ...triggerProps,
+        ref: composedTriggerRef,
+        onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
+      }
+    );
+  }
+);
+DialogTrigger.displayName = TRIGGER_NAME$1;
+var PORTAL_NAME = "DialogPortal";
+var [PortalProvider, usePortalContext] = createDialogContext(PORTAL_NAME, {
+  forceMount: void 0
+});
+var DialogPortal = (props) => {
+  const { __scopeDialog, forceMount, children, container } = props;
+  const context = useDialogContext(PORTAL_NAME, __scopeDialog);
+  return /* @__PURE__ */ jsx(PortalProvider, { scope: __scopeDialog, forceMount, children: React.Children.map(children, (child) => /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$2, { asChild: true, container, children: child }) })) });
+};
+DialogPortal.displayName = PORTAL_NAME;
+var OVERLAY_NAME = "DialogOverlay";
+var DialogOverlay = React.forwardRef(
+  (props, forwardedRef) => {
+    const portalContext = usePortalContext(OVERLAY_NAME, props.__scopeDialog);
+    const { forceMount = portalContext.forceMount, ...overlayProps } = props;
+    const context = useDialogContext(OVERLAY_NAME, props.__scopeDialog);
+    return context.modal ? /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(DialogOverlayImpl, { ...overlayProps, ref: forwardedRef }) }) : null;
+  }
+);
+DialogOverlay.displayName = OVERLAY_NAME;
+var Slot = createSlot("DialogOverlay.RemoveScroll");
+var DialogOverlayImpl = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, ...overlayProps } = props;
+    const context = useDialogContext(OVERLAY_NAME, __scopeDialog);
+    return (
+      // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
+      // ie. when `Overlay` and `Content` are siblings
+      /* @__PURE__ */ jsx(ReactRemoveScroll, { as: Slot, allowPinchZoom: true, shards: [context.contentRef], children: /* @__PURE__ */ jsx(
+        Primitive.div,
+        {
+          "data-state": getState(context.open),
+          ...overlayProps,
+          ref: forwardedRef,
+          style: { pointerEvents: "auto", ...overlayProps.style }
+        }
+      ) })
+    );
+  }
+);
+var CONTENT_NAME$1 = "DialogContent";
+var DialogContent = React.forwardRef(
+  (props, forwardedRef) => {
+    const portalContext = usePortalContext(CONTENT_NAME$1, props.__scopeDialog);
+    const { forceMount = portalContext.forceMount, ...contentProps } = props;
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
+    return /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ jsx(DialogContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx(DialogContentNonModal, { ...contentProps, ref: forwardedRef }) });
+  }
+);
+DialogContent.displayName = CONTENT_NAME$1;
+var DialogContentModal = React.forwardRef(
+  (props, forwardedRef) => {
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
+    const contentRef = React.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
+    React.useEffect(() => {
+      const content = contentRef.current;
+      if (content) return hideOthers(content);
+    }, []);
+    return /* @__PURE__ */ jsx(
+      DialogContentImpl,
+      {
+        ...props,
+        ref: composedRefs,
+        trapFocus: context.open,
+        disableOutsidePointerEvents: true,
+        onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {
+          event.preventDefault();
+          context.triggerRef.current?.focus();
+        }),
+        onPointerDownOutside: composeEventHandlers(props.onPointerDownOutside, (event) => {
+          const originalEvent = event.detail.originalEvent;
+          const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+          const isRightClick = originalEvent.button === 2 || ctrlLeftClick;
+          if (isRightClick) event.preventDefault();
+        }),
+        onFocusOutside: composeEventHandlers(
+          props.onFocusOutside,
+          (event) => event.preventDefault()
+        )
+      }
+    );
+  }
+);
+var DialogContentNonModal = React.forwardRef(
+  (props, forwardedRef) => {
+    const context = useDialogContext(CONTENT_NAME$1, props.__scopeDialog);
+    const hasInteractedOutsideRef = React.useRef(false);
+    const hasPointerDownOutsideRef = React.useRef(false);
+    return /* @__PURE__ */ jsx(
+      DialogContentImpl,
+      {
+        ...props,
+        ref: forwardedRef,
+        trapFocus: false,
+        disableOutsidePointerEvents: false,
+        onCloseAutoFocus: (event) => {
+          props.onCloseAutoFocus?.(event);
+          if (!event.defaultPrevented) {
+            if (!hasInteractedOutsideRef.current) context.triggerRef.current?.focus();
+            event.preventDefault();
+          }
+          hasInteractedOutsideRef.current = false;
+          hasPointerDownOutsideRef.current = false;
+        },
+        onInteractOutside: (event) => {
+          props.onInteractOutside?.(event);
+          if (!event.defaultPrevented) {
+            hasInteractedOutsideRef.current = true;
+            if (event.detail.originalEvent.type === "pointerdown") {
+              hasPointerDownOutsideRef.current = true;
+            }
+          }
+          const target = event.target;
+          const targetIsTrigger = context.triggerRef.current?.contains(target);
+          if (targetIsTrigger) event.preventDefault();
+          if (event.detail.originalEvent.type === "focusin" && hasPointerDownOutsideRef.current) {
+            event.preventDefault();
+          }
+        }
+      }
+    );
+  }
+);
+var DialogContentImpl = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
+    const context = useDialogContext(CONTENT_NAME$1, __scopeDialog);
+    const contentRef = React.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, contentRef);
+    useFocusGuards();
+    return /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(
+        FocusScope,
+        {
+          asChild: true,
+          loop: true,
+          trapped: trapFocus,
+          onMountAutoFocus: onOpenAutoFocus,
+          onUnmountAutoFocus: onCloseAutoFocus,
+          children: /* @__PURE__ */ jsx(
+            DismissableLayer,
+            {
+              role: "dialog",
+              id: context.contentId,
+              "aria-describedby": context.descriptionId,
+              "aria-labelledby": context.titleId,
+              "data-state": getState(context.open),
+              ...contentProps,
+              ref: composedRefs,
+              onDismiss: () => context.onOpenChange(false)
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx(TitleWarning, { titleId: context.titleId }),
+        /* @__PURE__ */ jsx(DescriptionWarning, { contentRef, descriptionId: context.descriptionId })
+      ] })
+    ] });
+  }
+);
+var TITLE_NAME = "DialogTitle";
+var DialogTitle = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, ...titleProps } = props;
+    const context = useDialogContext(TITLE_NAME, __scopeDialog);
+    return /* @__PURE__ */ jsx(Primitive.h2, { id: context.titleId, ...titleProps, ref: forwardedRef });
+  }
+);
+DialogTitle.displayName = TITLE_NAME;
+var DESCRIPTION_NAME = "DialogDescription";
+var DialogDescription = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, ...descriptionProps } = props;
+    const context = useDialogContext(DESCRIPTION_NAME, __scopeDialog);
+    return /* @__PURE__ */ jsx(Primitive.p, { id: context.descriptionId, ...descriptionProps, ref: forwardedRef });
+  }
+);
+DialogDescription.displayName = DESCRIPTION_NAME;
+var CLOSE_NAME = "DialogClose";
+var DialogClose = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeDialog, ...closeProps } = props;
+    const context = useDialogContext(CLOSE_NAME, __scopeDialog);
+    return /* @__PURE__ */ jsx(
+      Primitive.button,
+      {
+        type: "button",
+        ...closeProps,
+        ref: forwardedRef,
+        onClick: composeEventHandlers(props.onClick, () => context.onOpenChange(false))
+      }
+    );
+  }
+);
+DialogClose.displayName = CLOSE_NAME;
+function getState(open) {
+  return open ? "open" : "closed";
+}
+var TITLE_WARNING_NAME = "DialogTitleWarning";
+var [WarningProvider, useWarningContext] = createContext2(TITLE_WARNING_NAME, {
+  contentName: CONTENT_NAME$1,
+  titleName: TITLE_NAME,
+  docsSlug: "dialog"
+});
+var TitleWarning = ({ titleId }) => {
+  const titleWarningContext = useWarningContext(TITLE_WARNING_NAME);
+  const MESSAGE = `\`${titleWarningContext.contentName}\` requires a \`${titleWarningContext.titleName}\` for the component to be accessible for screen reader users.
+
+If you want to hide the \`${titleWarningContext.titleName}\`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/${titleWarningContext.docsSlug}`;
+  React.useEffect(() => {
+    if (titleId) {
+      const hasTitle = document.getElementById(titleId);
+      if (!hasTitle) console.error(MESSAGE);
+    }
+  }, [MESSAGE, titleId]);
+  return null;
+};
+var DESCRIPTION_WARNING_NAME = "DialogDescriptionWarning";
+var DescriptionWarning = ({ contentRef, descriptionId }) => {
+  const descriptionWarningContext = useWarningContext(DESCRIPTION_WARNING_NAME);
+  const MESSAGE = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${descriptionWarningContext.contentName}}.`;
+  React.useEffect(() => {
+    const describedById = contentRef.current?.getAttribute("aria-describedby");
+    if (descriptionId && describedById) {
+      const hasDescription = document.getElementById(descriptionId);
+      if (!hasDescription) console.warn(MESSAGE);
+    }
+  }, [MESSAGE, contentRef, descriptionId]);
+  return null;
+};
+var Root$1 = Dialog;
+var Trigger$1 = DialogTrigger;
+var Portal = DialogPortal;
+var Overlay = DialogOverlay;
+var Content$1 = DialogContent;
+var Title = DialogTitle;
+var Close = DialogClose;
+
+const overlayStyles = cva(`
+    fixed
+    inset-0
+    z-50
+    bg-black/80
+    data-[state=open]:animate-in
+    data-[state=closed]:animate-out
+    data-[state=closed]:fade-out-0
+    data-[state=open]:fade-in-0
+  `, {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  }
+});
+const contentStyles = cva(`
+    fixed
+    left-[50%]
+    top-[50%]
+    z-50
+    w-full
+    translate-x-[-50%]
+    translate-y-[-50%]
+    flex
+    flex-col
+    gap-4
+    p-6
+    shadow-lg
+    duration-200
+    data-[state=open]:animate-in
+    data-[state=closed]:animate-out
+    data-[state=closed]:fade-out-0
+    data-[state=open]:fade-in-0
+    data-[state=closed]:zoom-out-95
+    data-[state=open]:zoom-in-95
+    data-[state=closed]:slide-out-to-left-1/2
+    data-[state=closed]:slide-out-to-top-[48%]
+    data-[state=open]:slide-in-from-left-1/2
+    data-[state=open]:slide-in-from-top-[48%]
+    sm:rounded-lg
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: 'bg-white border-gray-200',
+      dark: 'bg-gray-950 border-gray-800'
+    },
+    size: {
+      sm: 'dash-block-sm',
+      md: 'dash-block-md',
+      xl: 'dash-block-xl'
+    }
+  },
+  defaultVariants: {
+    size: 'md'
+  }
+});
+const headerStyles = cva(`
+    flex
+    flex-row
+    justify-between
+    items-center
+    gap-1
+    w-full
+  `);
+const titleStyles = cva(`
+    text-2xl
+    font-medium
+    leading-[1.366]
+    tracking-[-0.03em]
+    flex-1
+    font-dash-main
+  `, {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33]',
+      dark: 'text-gray-50'
+    }
+  }
+});
+const closeButtonStyles = cva(`
+    rounded-sm
+    opacity-70
+    transition-opacity
+    hover:opacity-100
+    focus:outline-none
+    disabled:pointer-events-none
+    cursor-pointer
+    flex-shrink-0
+  `, {
+  variants: {
+    theme: {
+      light: 'text-[#0C1C33] hover:text-gray-700',
+      dark: 'text-gray-400 hover:text-gray-200'
+    }
+  }
+});
+const DashDialog = ({
+  open,
+  onOpenChange,
+  title,
+  showCloseButton = true,
+  size = 'md',
+  children,
+  className = '',
+  trigger
+}) => {
+  const {
+    theme
+  } = useTheme();
+  const DialogContent = jsxs(Portal, {
+    children: [jsx(Overlay, {
+      className: overlayStyles({
+        theme
+      })
+    }), jsxs(Content$1, {
+      className: `${contentStyles({
+        theme,
+        size
+      })} ${className}`,
+      children: [(title || showCloseButton) && jsxs("div", {
+        className: headerStyles(),
+        children: [title && jsx(Title, {
+          className: titleStyles({
+            theme
+          }),
+          children: title
+        }), showCloseButton && jsxs(Close, {
+          className: closeButtonStyles({
+            theme
+          }),
+          children: [jsx("div", {
+            className: 'w-8 h-8 flex items-center justify-center',
+            children: jsx(CrossIcon, {
+              size: 16
+            })
+          }), jsx("span", {
+            className: 'sr-only',
+            children: "Close"
+          })]
+        })]
+      }), children]
+    })]
+  });
+  if (trigger) {
+    // Uncontrolled mode with trigger
+    return jsxs(Root$1, {
+      onOpenChange: onOpenChange,
+      children: [jsx(Trigger$1, {
+        asChild: true,
+        children: trigger
+      }), DialogContent]
+    });
+  }
+  // Controlled mode
+  return jsx(Root$1, {
+    open: open,
+    onOpenChange: onOpenChange,
+    children: DialogContent
+  });
+};
+
+var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
+var EVENT_OPTIONS = { bubbles: false, cancelable: true };
+var GROUP_NAME = "RovingFocusGroup";
+var [Collection, useCollection, createCollectionScope] = createCollection(GROUP_NAME);
+var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope(
+  GROUP_NAME,
+  [createCollectionScope]
+);
+var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME);
+var RovingFocusGroup = React.forwardRef(
+  (props, forwardedRef) => {
+    return /* @__PURE__ */ jsx(Collection.Provider, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx(Collection.Slot, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx(RovingFocusGroupImpl, { ...props, ref: forwardedRef }) }) });
+  }
+);
+RovingFocusGroup.displayName = GROUP_NAME;
+var RovingFocusGroupImpl = React.forwardRef((props, forwardedRef) => {
+  const {
+    __scopeRovingFocusGroup,
+    orientation,
+    loop = false,
+    dir,
+    currentTabStopId: currentTabStopIdProp,
+    defaultCurrentTabStopId,
+    onCurrentTabStopIdChange,
+    onEntryFocus,
+    preventScrollOnEntryFocus = false,
+    ...groupProps
+  } = props;
+  const ref = React.useRef(null);
+  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const direction = useDirection(dir);
+  const [currentTabStopId, setCurrentTabStopId] = useControllableState({
+    prop: currentTabStopIdProp,
+    defaultProp: defaultCurrentTabStopId ?? null,
+    onChange: onCurrentTabStopIdChange,
+    caller: GROUP_NAME
+  });
+  const [isTabbingBackOut, setIsTabbingBackOut] = React.useState(false);
+  const handleEntryFocus = useCallbackRef$1(onEntryFocus);
+  const getItems = useCollection(__scopeRovingFocusGroup);
+  const isClickFocusRef = React.useRef(false);
+  const [focusableItemsCount, setFocusableItemsCount] = React.useState(0);
+  React.useEffect(() => {
+    const node = ref.current;
+    if (node) {
+      node.addEventListener(ENTRY_FOCUS, handleEntryFocus);
+      return () => node.removeEventListener(ENTRY_FOCUS, handleEntryFocus);
+    }
+  }, [handleEntryFocus]);
+  return /* @__PURE__ */ jsx(
+    RovingFocusProvider,
+    {
+      scope: __scopeRovingFocusGroup,
+      orientation,
+      dir: direction,
+      loop,
+      currentTabStopId,
+      onItemFocus: React.useCallback(
+        (tabStopId) => setCurrentTabStopId(tabStopId),
+        [setCurrentTabStopId]
+      ),
+      onItemShiftTab: React.useCallback(() => setIsTabbingBackOut(true), []),
+      onFocusableItemAdd: React.useCallback(
+        () => setFocusableItemsCount((prevCount) => prevCount + 1),
+        []
+      ),
+      onFocusableItemRemove: React.useCallback(
+        () => setFocusableItemsCount((prevCount) => prevCount - 1),
+        []
+      ),
+      children: /* @__PURE__ */ jsx(
+        Primitive.div,
+        {
+          tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
+          "data-orientation": orientation,
+          ...groupProps,
+          ref: composedRefs,
+          style: { outline: "none", ...props.style },
+          onMouseDown: composeEventHandlers(props.onMouseDown, () => {
+            isClickFocusRef.current = true;
+          }),
+          onFocus: composeEventHandlers(props.onFocus, (event) => {
+            const isKeyboardFocus = !isClickFocusRef.current;
+            if (event.target === event.currentTarget && isKeyboardFocus && !isTabbingBackOut) {
+              const entryFocusEvent = new CustomEvent(ENTRY_FOCUS, EVENT_OPTIONS);
+              event.currentTarget.dispatchEvent(entryFocusEvent);
+              if (!entryFocusEvent.defaultPrevented) {
+                const items = getItems().filter((item) => item.focusable);
+                const activeItem = items.find((item) => item.active);
+                const currentItem = items.find((item) => item.id === currentTabStopId);
+                const candidateItems = [activeItem, currentItem, ...items].filter(
+                  Boolean
+                );
+                const candidateNodes = candidateItems.map((item) => item.ref.current);
+                focusFirst(candidateNodes, preventScrollOnEntryFocus);
+              }
+            }
+            isClickFocusRef.current = false;
+          }),
+          onBlur: composeEventHandlers(props.onBlur, () => setIsTabbingBackOut(false))
+        }
+      )
+    }
+  );
+});
+var ITEM_NAME = "RovingFocusGroupItem";
+var RovingFocusGroupItem = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeRovingFocusGroup,
+      focusable = true,
+      active = false,
+      tabStopId,
+      children,
+      ...itemProps
+    } = props;
+    const autoId = useId();
+    const id = tabStopId || autoId;
+    const context = useRovingFocusContext(ITEM_NAME, __scopeRovingFocusGroup);
+    const isCurrentTabStop = context.currentTabStopId === id;
+    const getItems = useCollection(__scopeRovingFocusGroup);
+    const { onFocusableItemAdd, onFocusableItemRemove, currentTabStopId } = context;
+    React.useEffect(() => {
+      if (focusable) {
+        onFocusableItemAdd();
+        return () => onFocusableItemRemove();
+      }
+    }, [focusable, onFocusableItemAdd, onFocusableItemRemove]);
+    return /* @__PURE__ */ jsx(
+      Collection.ItemSlot,
+      {
+        scope: __scopeRovingFocusGroup,
+        id,
+        focusable,
+        active,
+        children: /* @__PURE__ */ jsx(
+          Primitive.span,
+          {
+            tabIndex: isCurrentTabStop ? 0 : -1,
+            "data-orientation": context.orientation,
+            ...itemProps,
+            ref: forwardedRef,
+            onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+              if (!focusable) event.preventDefault();
+              else context.onItemFocus(id);
+            }),
+            onFocus: composeEventHandlers(props.onFocus, () => context.onItemFocus(id)),
+            onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+              if (event.key === "Tab" && event.shiftKey) {
+                context.onItemShiftTab();
+                return;
+              }
+              if (event.target !== event.currentTarget) return;
+              const focusIntent = getFocusIntent(event, context.orientation, context.dir);
+              if (focusIntent !== void 0) {
+                if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+                event.preventDefault();
+                const items = getItems().filter((item) => item.focusable);
+                let candidateNodes = items.map((item) => item.ref.current);
+                if (focusIntent === "last") candidateNodes.reverse();
+                else if (focusIntent === "prev" || focusIntent === "next") {
+                  if (focusIntent === "prev") candidateNodes.reverse();
+                  const currentIndex = candidateNodes.indexOf(event.currentTarget);
+                  candidateNodes = context.loop ? wrapArray(candidateNodes, currentIndex + 1) : candidateNodes.slice(currentIndex + 1);
+                }
+                setTimeout(() => focusFirst(candidateNodes));
+              }
+            }),
+            children: typeof children === "function" ? children({ isCurrentTabStop, hasTabStop: currentTabStopId != null }) : children
+          }
+        )
+      }
+    );
+  }
+);
+RovingFocusGroupItem.displayName = ITEM_NAME;
+var MAP_KEY_TO_FOCUS_INTENT = {
+  ArrowLeft: "prev",
+  ArrowUp: "prev",
+  ArrowRight: "next",
+  ArrowDown: "next",
+  PageUp: "first",
+  Home: "first",
+  PageDown: "last",
+  End: "last"
+};
+function getDirectionAwareKey(key, dir) {
+  if (dir !== "rtl") return key;
+  return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
+}
+function getFocusIntent(event, orientation, dir) {
+  const key = getDirectionAwareKey(event.key, dir);
+  if (orientation === "vertical" && ["ArrowLeft", "ArrowRight"].includes(key)) return void 0;
+  if (orientation === "horizontal" && ["ArrowUp", "ArrowDown"].includes(key)) return void 0;
+  return MAP_KEY_TO_FOCUS_INTENT[key];
+}
+function focusFirst(candidates, preventScroll = false) {
+  const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
+  for (const candidate of candidates) {
+    if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
+    candidate.focus({ preventScroll });
+    if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
+  }
+}
+function wrapArray(array, startIndex) {
+  return array.map((_, index) => array[(startIndex + index) % array.length]);
+}
+var Root = RovingFocusGroup;
+var Item = RovingFocusGroupItem;
+
+var TABS_NAME = "Tabs";
+var [createTabsContext, createTabsScope] = createContextScope(TABS_NAME, [
+  createRovingFocusGroupScope
+]);
+var useRovingFocusGroupScope = createRovingFocusGroupScope();
+var [TabsProvider, useTabsContext] = createTabsContext(TABS_NAME);
+var Tabs$1 = React.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeTabs,
+      value: valueProp,
+      onValueChange,
+      defaultValue,
+      orientation = "horizontal",
+      dir,
+      activationMode = "automatic",
+      ...tabsProps
+    } = props;
+    const direction = useDirection(dir);
+    const [value, setValue] = useControllableState({
+      prop: valueProp,
+      onChange: onValueChange,
+      defaultProp: defaultValue ?? "",
+      caller: TABS_NAME
+    });
+    return /* @__PURE__ */ jsx(
+      TabsProvider,
+      {
+        scope: __scopeTabs,
+        baseId: useId(),
+        value,
+        onValueChange: setValue,
+        orientation,
+        dir: direction,
+        activationMode,
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            dir: direction,
+            "data-orientation": orientation,
+            ...tabsProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+Tabs$1.displayName = TABS_NAME;
+var TAB_LIST_NAME = "TabsList";
+var TabsList = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, loop = true, ...listProps } = props;
+    const context = useTabsContext(TAB_LIST_NAME, __scopeTabs);
+    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+    return /* @__PURE__ */ jsx(
+      Root,
+      {
+        asChild: true,
+        ...rovingFocusGroupScope,
+        orientation: context.orientation,
+        dir: context.dir,
+        loop,
+        children: /* @__PURE__ */ jsx(
+          Primitive.div,
+          {
+            role: "tablist",
+            "aria-orientation": context.orientation,
+            ...listProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+TabsList.displayName = TAB_LIST_NAME;
+var TRIGGER_NAME = "TabsTrigger";
+var TabsTrigger = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, value, disabled = false, ...triggerProps } = props;
+    const context = useTabsContext(TRIGGER_NAME, __scopeTabs);
+    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+    const triggerId = makeTriggerId(context.baseId, value);
+    const contentId = makeContentId(context.baseId, value);
+    const isSelected = value === context.value;
+    return /* @__PURE__ */ jsx(
+      Item,
+      {
+        asChild: true,
+        ...rovingFocusGroupScope,
+        focusable: !disabled,
+        active: isSelected,
+        children: /* @__PURE__ */ jsx(
+          Primitive.button,
+          {
+            type: "button",
+            role: "tab",
+            "aria-selected": isSelected,
+            "aria-controls": contentId,
+            "data-state": isSelected ? "active" : "inactive",
+            "data-disabled": disabled ? "" : void 0,
+            disabled,
+            id: triggerId,
+            ...triggerProps,
+            ref: forwardedRef,
+            onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+              if (!disabled && event.button === 0 && event.ctrlKey === false) {
+                context.onValueChange(value);
+              } else {
+                event.preventDefault();
+              }
+            }),
+            onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+              if ([" ", "Enter"].includes(event.key)) context.onValueChange(value);
+            }),
+            onFocus: composeEventHandlers(props.onFocus, () => {
+              const isAutomaticActivation = context.activationMode !== "manual";
+              if (!isSelected && !disabled && isAutomaticActivation) {
+                context.onValueChange(value);
+              }
+            })
+          }
+        )
+      }
+    );
+  }
+);
+TabsTrigger.displayName = TRIGGER_NAME;
+var CONTENT_NAME = "TabsContent";
+var TabsContent = React.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeTabs, value, forceMount, children, ...contentProps } = props;
+    const context = useTabsContext(CONTENT_NAME, __scopeTabs);
+    const triggerId = makeTriggerId(context.baseId, value);
+    const contentId = makeContentId(context.baseId, value);
+    const isSelected = value === context.value;
+    const isMountAnimationPreventedRef = React.useRef(isSelected);
+    React.useEffect(() => {
+      const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+      return () => cancelAnimationFrame(rAF);
+    }, []);
+    return /* @__PURE__ */ jsx(Presence, { present: forceMount || isSelected, children: ({ present }) => /* @__PURE__ */ jsx(
+      Primitive.div,
+      {
+        "data-state": isSelected ? "active" : "inactive",
+        "data-orientation": context.orientation,
+        role: "tabpanel",
+        "aria-labelledby": triggerId,
+        hidden: !present,
+        id: contentId,
+        tabIndex: 0,
+        ...contentProps,
+        ref: forwardedRef,
+        style: {
+          ...props.style,
+          animationDuration: isMountAnimationPreventedRef.current ? "0s" : void 0
+        },
+        children: present && children
+      }
+    ) });
+  }
+);
+TabsContent.displayName = CONTENT_NAME;
+function makeTriggerId(baseId, value) {
+  return `${baseId}-trigger-${value}`;
+}
+function makeContentId(baseId, value) {
+  return `${baseId}-content-${value}`;
+}
+var Root2 = Tabs$1;
+var List = TabsList;
+var Trigger = TabsTrigger;
+var Content = TabsContent;
+
+const tabsRootStyles = cva('flex flex-col w-full', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsListStyles = cva('flex relative overflow-x-auto scrollbar-hide after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:transition-colors', {
+  variants: {
+    theme: {
+      light: 'after:bg-[rgba(12,28,51,0.15)]',
+      dark: 'after:bg-gray-600/50'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsTriggerStyles = cva(['flex items-center justify-center relative', 'font-dash-main font-light', 'transition-all duration-200 ease-in-out cursor-pointer', 'hover:opacity-80', 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', 'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:opacity-50', 'whitespace-nowrap flex-shrink-0', 'after:absolute after:bottom-0 after:left-[-0.25rem] after:w-full after:h-[1px] after:bg-transparent after:transition-colors after:duration-200 after:z-10'], {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    active: {
+      true: '',
+      false: ''
+    },
+    size: {
+      sm: 'text-sm leading-[1.25] tracking-[-0.02em] px-0 pr-3 pb-2 after:right-3',
+      lg: 'text-xl leading-[1.3] tracking-[-0.025em] px-0 pr-4 pb-3 after:right-4',
+      xl: 'text-2xl leading-[1.366] tracking-[-0.03em] px-0 pr-[0.875rem] pb-[10px] after:right-[0.875rem]'
+    }
+  },
+  compoundVariants: [{
+    theme: 'light',
+    active: true,
+    class: 'text-dash-primary-dark-blue [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
+  }, {
+    theme: 'light',
+    active: false,
+    class: 'text-[rgba(12,28,51,0.35)]'
+  }, {
+    theme: 'dark',
+    active: true,
+    class: 'text-white [text-shadow:0.2px_0_0_currentColor,_-0.2px_0_0_currentColor] after:!bg-[#4C7EFF]'
+  }, {
+    theme: 'dark',
+    active: false,
+    class: 'text-gray-400'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    active: false,
+    size: 'xl'
+  }
+});
+const tabsContentStyles = cva('focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    size: {
+      sm: 'mt-2',
+      lg: 'mt-3',
+      xl: 'mt-4'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
+  }
+});
+/**
+ * Tabs component with sleek underline style matching Figma design.
+ * Built on radix-ui with light/dark theme support and keyboard navigation.
+ */
+const Tabs = ({
+  items,
+  value,
+  defaultValue,
+  onValueChange,
+  size = 'xl',
+  className = '',
+  listClassName = '',
+  triggerClassName = '',
+  contentClassName = ''
+}) => {
+  var _a;
+  const {
+    theme
+  } = useTheme();
+  const [internalValue, setInternalValue] = React__default.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
+  // Use controlled value if provided, otherwise use internal state
+  const currentValue = value !== undefined ? value : internalValue;
+  const handleValueChange = newValue => {
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(newValue);
+  };
+  const rootClasses = tabsRootStyles({
+    theme
+  }) + (className ? ` ${className}` : '');
+  const listClasses = tabsListStyles({
+    theme
+  }) + (listClassName ? ` ${listClassName}` : '');
+  const contentClasses = tabsContentStyles({
+    theme,
+    size
+  }) + (contentClassName ? ` ${contentClassName}` : '');
+  return jsxs(Root2, {
+    className: rootClasses,
+    value: currentValue,
+    onValueChange: handleValueChange,
+    children: [jsx(List, {
+      className: listClasses,
+      children: items.map(item => {
+        const isActive = currentValue === item.value;
+        const triggerClasses = tabsTriggerStyles({
+          theme,
+          active: isActive,
+          size
+        }) + (triggerClassName ? ` ${triggerClassName}` : '');
+        return jsx(Trigger, {
+          value: item.value,
+          disabled: item.disabled,
+          className: triggerClasses,
+          children: item.label
+        }, item.value);
+      })
+    }), items.map(item => jsx(Content, {
+      value: item.value,
+      className: contentClasses,
+      children: item.content
+    }, item.value))]
+  });
+};
+
+export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WebIcon, useTheme };
 //# sourceMappingURL=index.esm.js.map

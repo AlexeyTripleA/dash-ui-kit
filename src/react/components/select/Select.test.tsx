@@ -44,13 +44,13 @@ describe('Select', () => {
     })
   })
 
-  it('calls onValueChange when option is selected', async () => {
+  it('calls onChange when option is selected', async () => {
     const user = userEvent.setup()
-    const onValueChange = vi.fn()
+    const onChange = vi.fn()
     
     render(
       <Wrapper>
-        <Select options={testOptions} onValueChange={onValueChange} />
+        <Select options={testOptions} onChange={onChange} />
       </Wrapper>
     )
     
@@ -64,7 +64,7 @@ describe('Select', () => {
     await user.click(screen.getByText('Option 1'))
     
     await waitFor(() => {
-      expect(onValueChange).toHaveBeenCalledWith('option1')
+      expect(onChange).toHaveBeenCalledWith('option1')
     })
   })
 
@@ -100,11 +100,11 @@ describe('Select', () => {
 
   it('does not allow selection of disabled options', async () => {
     const user = userEvent.setup()
-    const onValueChange = vi.fn()
+    const onChange = vi.fn()
     
     render(
       <Wrapper>
-        <Select options={testOptions} onValueChange={onValueChange} />
+        <Select options={testOptions} onChange={onChange} />
       </Wrapper>
     )
     
@@ -119,7 +119,7 @@ describe('Select', () => {
     const disabledOption = screen.getByText('Option 3')
     await user.click(disabledOption)
     
-    expect(onValueChange).not.toHaveBeenCalled()
+    expect(onChange).not.toHaveBeenCalled()
   })
 
   it('respects disabled prop on entire select', () => {

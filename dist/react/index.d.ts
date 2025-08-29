@@ -1,9 +1,12 @@
+export { Accordion, type AccordionProps } from './components/accordion';
 export { Button, type ButtonProps } from './components/button';
 export { Input, type InputProps } from './components/input';
 export { Textarea, type TextareaProps } from './components/textarea';
 export { Text, type TextProps } from './components/text';
 export { ValueCard, type ValueCardProps } from './components/valueCard';
 export { Select, type SelectProps, type SelectOption } from './components/select';
+export { OverlaySelect, type OverlaySelectProps, type OverlaySelectOption } from './components/overlaySelect';
+export { OverlayMenu, type OverlayMenuProps, type OverlayMenuItem } from './components/overlayMenu';
 export { Switch, type SwitchProps, type SwitchOption } from './components/switch';
 export { Avatar, type AvatarProps } from './components/avatar';
 export { List, type ListProps, type ListItem } from './components/list';
@@ -17,7 +20,9 @@ export { DateBlock, type DateBlockProps, type DateBlockFormat } from './componen
 export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './components/transactionStatusIcon';
 export { ProgressStepBar, type ProgressStepBarProps } from './components/progressStepBar';
 export { DashLogo, type DashLogoProps } from './components/dashLogo';
+export { Dialog, type DialogProps } from './components/dialog';
+export { Tabs, type TabsProps, type TabItem } from './components/tabs';
 export type { TimeDeltaFormat } from './utils/datetime';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
-export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon } from './components/icons';
+export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon } from './components/icons';
 export type { IconProps } from './components/icons';

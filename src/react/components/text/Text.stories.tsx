@@ -16,15 +16,15 @@ const meta: Meta<TextProps> = {
   argTypes: {
     size: {
       control: { type: 'inline-radio' },
-      options: ['sm', 'md', 'lg', 'xl'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     weight: {
       control: { type: 'inline-radio' },
-      options: ['normal', 'bold'],
+      options: ['normal', '500', 'bold'],
     },
     color: {
       control: { type: 'inline-radio' },
-      options: ['default', 'blue', 'red'],
+      options: ['default', 'blue', 'blue-dark', 'red'],
     },
     italic: { control: 'boolean' },
     underline: { control: 'boolean' },
@@ -54,65 +54,61 @@ Default.args = {
   children: 'Default Text',
 }
 
-export const Sizes: StoryFn<TextProps> = () => (
-  <>
-    <Text size="sm">Small Text</Text>
-    <Text size="md">Medium Text</Text>
-    <Text size="lg">Large Text</Text>
-    <Text size="xl">Extra Large Text</Text>
-  </>
-)
+export const Sizes = Template.bind({})
+Sizes.args = {
+  children: 'Text Size Example',
+  size: 'md'
+}
 
-export const Weights: StoryFn<TextProps> = () => (
-  <>
-    <Text weight="normal">Normal Weight</Text>
-    <Text weight="bold">Bold Weight</Text>
-  </>
-)
+export const Weights = Template.bind({})
+Weights.args = {
+  children: 'Text Weight Example',
+  weight: 'normal'
+}
 
-export const Colors: StoryFn<TextProps> = () => (
-  <>
-    <Text color="default">Default Color</Text>
-    <Text color="blue">Blue Color</Text>
-    <Text color="red">Red Color</Text>
-  </>
-)
+export const Colors = Template.bind({})
+Colors.args = {
+  children: 'Text Color Example',
+  color: 'default'
+}
 
-export const Decorations: StoryFn<TextProps> = () => (
-  <>
-    <Text underline>Underline</Text>
-    <Text italic>Italic</Text>
-    <Text lineThrough>Line Through</Text>
-  </>
-)
+export const Decorations = Template.bind({})
+Decorations.args = {
+  children: 'Text Decoration Example',
+  underline: false,
+  italic: false,
+  lineThrough: false
+}
 
-export const Transforms: StoryFn<TextProps> = () => (
-  <>
-    <Text transform="none">None</Text>
-    <Text transform="uppercase">Uppercase</Text>
-    <Text transform="capitalize">Capitalize</Text>
-  </>
-)
+export const Transforms = Template.bind({})
+Transforms.args = {
+  children: 'Text Transform Example',
+  transform: 'none'
+}
 
-export const Opacities: StoryFn<TextProps> = () => (
-  <>
-    <Text opacity={100}>Opacity 100</Text>
-    <Text opacity={60}>Opacity 60</Text>
-    <Text opacity={30}>Opacity 30</Text>
-  </>
-)
+export const Opacities = Template.bind({})
+Opacities.args = {
+  children: 'Text Opacity Example',
+  opacity: 100
+}
 
-export const MonospaceAndDim: StoryFn<TextProps> = () => (
-  <>
-    <Text monospace>Monospace Font</Text>
-    <Text dim>Dimmed Text</Text>
-  </>
-)
+export const MonospaceAndDim = Template.bind({})
+MonospaceAndDim.args = {
+  children: 'Monospace and Dim Example',
+  monospace: false,
+  dim: false
+}
 
-export const All: StoryFn<TextProps> = () => (
-  <>
-    <Text size="xl" weight="bold" color="blue" underline italic transform="uppercase" opacity={80} monospace dim>
-      All Features Example
-    </Text>
-  </>
-) 
+export const AllFeatures = Template.bind({})
+AllFeatures.args = {
+  children: 'All Features Example',
+  size: 'xl',
+  weight: 'bold',
+  color: 'blue-dark',
+  underline: true,
+  italic: true,
+  transform: 'uppercase',
+  opacity: 80,
+  monospace: true,
+  dim: true
+} 

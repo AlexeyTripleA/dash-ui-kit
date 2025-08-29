@@ -75,6 +75,11 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   error?: boolean
   success?: boolean
   prefix?: string | React.ReactNode
+  /**
+   * Controls visibility toggle for password inputs. When false, the eye icon is hidden and no extra right padding is applied.
+   * Defaults to true.
+   */
+  showPasswordToggle?: boolean
 }
 
 /**
@@ -102,6 +107,7 @@ export const Input: React.FC<InputProps> = ({
   disabled = false,
   type,
   prefix,
+  showPasswordToggle = true,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -145,13 +151,13 @@ export const Input: React.FC<InputProps> = ({
           {prefix}
         </div>
         <input
-          className={`${classes}${isPassword ? ' pr-12' : ''}`}
+          className={`${classes}${isPassword && showPasswordToggle ? ' pr-12' : ''}`}
           style={{ paddingLeft: `${leftPadding}rem` }}
           disabled={disabled}
           type={inputType}
           {...props}
         />
-        {isPassword && (
+        {isPassword && showPasswordToggle && (
           <button
             type='button'
             className='absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none'
@@ -172,21 +178,23 @@ export const Input: React.FC<InputProps> = ({
     return (
       <div className='relative'>
         <input
-          className={classes + ' pr-12'}
+          className={classes + (showPasswordToggle ? ' pr-12' : '')}
           disabled={disabled}
           type={inputType}
           {...props}
         />
-        <button
-          type='button'
-          className='absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none'
-          onClick={togglePasswordVisibility}
-          tabIndex={-1}
-        >
-          {showPassword
-            ? <EyeClosedIcon size={16} color='#0C1C33' />
-            : <EyeOpenIcon size={16} color='#0C1C33' />}
-        </button>
+        {showPasswordToggle && (
+          <button
+            type='button'
+            className='absolute right-4 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-70 transition-opacity cursor-pointer focus:outline-none'
+            onClick={togglePasswordVisibility}
+            tabIndex={-1}
+          >
+            {showPassword
+              ? <EyeClosedIcon size={16} color='#0C1C33' />
+              : <EyeOpenIcon size={16} color='#0C1C33' />}
+          </button>
+        )}
       </div>
     )
   }

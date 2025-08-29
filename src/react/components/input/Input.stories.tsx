@@ -34,6 +34,10 @@ const meta: Meta<typeof Input> = {
       control: 'text',
       description: 'Text or element displayed before input content'
     },
+    showPasswordToggle: {
+      control: 'boolean',
+      description: 'Show/hide password visibility toggle for password inputs'
+    },
     disabled: { control: 'boolean' },
     error: { control: 'boolean' },
     success: { control: 'boolean' },
@@ -261,4 +265,36 @@ export const PasswordDarkTheme: Story = {
       </ThemeProvider>
     ),
   ],
+}
+
+export const PasswordWithoutToggle: Story = {
+  args: {
+    type: 'password',
+    placeholder: 'Password without toggle',
+    showPasswordToggle: false,
+    colorScheme: 'default',
+    size: 'xl',
+  },
+}
+
+export const PasswordWithoutToggleAndPrefix: Story = {
+  args: {
+    type: 'password',
+    prefix: 'PIN:',
+    placeholder: 'Enter PIN...',
+    showPasswordToggle: false,
+    colorScheme: 'brand',
+    size: 'xl',
+  },
+}
+
+export const PasswordVariations: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input type="password" placeholder="Password with toggle (default)" />
+      <Input type="password" placeholder="Password without toggle" showPasswordToggle={false} />
+      <Input type="password" prefix="PIN:" placeholder="PIN with toggle" />
+      <Input type="password" prefix="PIN:" placeholder="PIN without toggle" showPasswordToggle={false} />
+    </div>
+  ),
 } 

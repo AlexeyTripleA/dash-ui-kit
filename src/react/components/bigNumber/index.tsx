@@ -9,12 +9,12 @@ export interface BigNumberProps {
   children?: number | string | null
   /** Use non-breaking space groups or comma groups. */
   variant?: BigNumberVariant
-  /** Extra class names to apply to the wrapper. */
+  /** Extra class names to apply to the wrapper. Use gap-* classes for spacing between groups. */
   className?: string
 }
 
 const bigNumberStyles = cva(
-  'inline-flex whitespace-nowrap',
+  'inline-flex whitespace-nowrap gap-1',
   {
     variants: {
       theme: {
@@ -28,12 +28,10 @@ const bigNumberStyles = cva(
   }
 )
 
-const spaceStyles = cva('inline-block w-[3px]')
-
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
- * - `space`: groups separated by a fixed 3px block
+ * - `space`: groups separated by gap
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */
@@ -57,10 +55,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
     return (
       <span className={`${bigNumberStyles({ theme })} ${className}`}>
         {groups.map((grp, i) => (
-          <span key={i}>
-            <span>{grp}</span>
-            {i < groups.length - 1 && <span className={spaceStyles()} />}
-          </span>
+          <span key={i}>{grp}</span>
         ))}
       </span>
     )
@@ -81,12 +76,12 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
         {groups.map((grp, i) => (
           <span key={i}>
             <span>{grp}</span>
-            {i < groups.length - 1 && <span className='px-[0.125ch]'>,</span>}
+            {i < groups.length - 1 && <span>,</span>}
           </span>
         ))}
         {fracPart != null && (
           <>
-            <span className='px-[0.125ch]'>.</span>
+            <span>.</span>
             <span>{fracPart}</span>
           </>
         )}

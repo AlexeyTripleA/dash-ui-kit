@@ -90,7 +90,7 @@ const meta: Meta<SelectProps> = {
     success: { control: 'boolean' },
     border: { control: 'boolean' },
     showArrow: { control: 'boolean' },
-    onValueChange: { action: 'value-changed' },
+    onChange: { action: 'value-changed' },
   },
 }
 
@@ -281,7 +281,7 @@ export const ComplexExample: StoryFn<SelectProps> = () => {
         <Select
           options={htmlOptions}
           value={selectedUser}
-          onValueChange={setSelectedUser}
+          onChange={setSelectedUser}
           placeholder="Select a user to assign..."
           size="xl"
           colorScheme="brand"

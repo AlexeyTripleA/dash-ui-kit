@@ -43,6 +43,39 @@ describe('DashLogo', () => {
     })
   })
 
+  it('uses currentColor when no color prop is provided', () => {
+    const { container } = render(<DashLogo />)
+    const paths = container.querySelectorAll('path')
+    
+    paths.forEach(path => {
+      expect(path).toHaveAttribute('fill', 'currentColor')
+    })
+  })
+
+  it('color prop takes precedence over CSS class color', () => {
+    const propColor = '#FF0000'
+    const { container } = render(<DashLogo color={propColor} className="text-blue-500" />)
+    const paths = container.querySelectorAll('path')
+    
+    paths.forEach(path => {
+      expect(path).toHaveAttribute('fill', propColor)
+    })
+  })
+
+  it('inherits color from CSS class when no color prop is provided', () => {
+    const { container } = render(<DashLogo className="text-green-500" />)
+    const paths = container.querySelectorAll('path')
+    
+    // When no color prop is provided, should use currentColor
+    paths.forEach(path => {
+      expect(path).toHaveAttribute('fill', 'currentColor')
+    })
+    
+    // The SVG should have the CSS class applied
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveClass('text-green-500')
+  })
+
   it('applies custom className', () => {
     const customClass = 'custom-logo-class'
     render(<DashLogo className={customClass} data-testid="dash-logo" />)

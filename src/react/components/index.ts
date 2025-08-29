@@ -1,9 +1,12 @@
+export { Accordion, type AccordionProps } from './accordion'
 export { Button, type ButtonProps } from './button'
 export { Input, type InputProps } from './input'
 export { Textarea, type TextareaProps } from './textarea'
 export { Text, type TextProps } from './text'
 export { ValueCard, type ValueCardProps } from './valueCard'
 export { Select, type SelectProps, type SelectOption } from './select'
+export { OverlaySelect, type OverlaySelectProps, type OverlaySelectOption } from './overlaySelect'
+export { OverlayMenu, type OverlayMenuProps, type OverlayMenuItem } from './overlayMenu'
 export { Switch, type SwitchProps, type SwitchOption } from './switch'
 export { Avatar, type AvatarProps } from './avatar'
 export { List, type ListProps, type ListItem } from './list'
@@ -17,6 +20,8 @@ export { DateBlock, type DateBlockProps, type DateBlockFormat } from './dateBloc
 export { TransactionStatusIcon, type TransactionStatusIconProps, type StatusKey } from './transactionStatusIcon'
 export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar'
 export { DashLogo, type DashLogoProps } from './dashLogo'
+export { Dialog, type DialogProps } from './dialog'
+export { Tabs, type TabsProps, type TabItem } from './tabs'
 export type { TimeDeltaFormat } from '../utils/datetime'
 export {
   ArrowIcon,
@@ -32,5 +37,22 @@ export {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon,
+  WalletIcon,
+
+  PlusIcon,
+  FilterIcon,
+  EditIcon,
+  DeleteIcon,
+  ChevronIcon,
+  BurgerMenuIcon,
+  KebabMenuIcon,
+  CircleProcessIcon,
+  CreditsIcon,
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './icons'

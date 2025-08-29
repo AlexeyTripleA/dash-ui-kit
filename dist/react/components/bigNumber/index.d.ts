@@ -5,13 +5,13 @@ export interface BigNumberProps {
     children?: number | string | null;
     /** Use non-breaking space groups or comma groups. */
     variant?: BigNumberVariant;
-    /** Extra class names to apply to the wrapper. */
+    /** Extra class names to apply to the wrapper. Use gap-* classes for spacing between groups. */
     className?: string;
 }
 /**
  * Splits a numeric string into groups of three characters for display.
  * Supports two variants:
- * - `space`: groups separated by a fixed 3px block
+ * - `space`: groups separated by gap
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */

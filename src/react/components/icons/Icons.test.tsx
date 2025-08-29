@@ -14,7 +14,24 @@ import {
   CheckIcon,
   KeyIcon,
   ProtectedMessageIcon,
-  SmartphoneIcon
+  SmartphoneIcon,
+  CrossIcon,
+  WalletIcon,
+
+  PlusIcon,
+  FilterIcon,
+  EditIcon,
+  DeleteIcon,
+  ChevronIcon,
+  BurgerMenuIcon,
+  KebabMenuIcon,
+  CircleProcessIcon,
+  CreditsIcon,
+  WebIcon,
+  ChainSmallIcon,
+  SettingsIcon,
+  ShieldSmallIcon,
+  QuestionMessageIcon
 } from './index'
 
 // Test suite for all icons
@@ -32,7 +49,24 @@ const icons = [
   { Component: CheckIcon, name: 'CheckIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
   { Component: KeyIcon, name: 'KeyIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
   { Component: ProtectedMessageIcon, name: 'ProtectedMessageIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
-  { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' }
+  { Component: SmartphoneIcon, name: 'SmartphoneIcon', defaultSize: 12, defaultColor: '#4C7EFF' },
+  { Component: CrossIcon, name: 'CrossIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+  { Component: WalletIcon, name: 'WalletIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+
+  { Component: PlusIcon, name: 'PlusIcon', defaultSize: 17, defaultColor: '#4C7EFF' },
+  { Component: FilterIcon, name: 'FilterIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+  { Component: EditIcon, name: 'EditIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+  { Component: DeleteIcon, name: 'DeleteIcon', defaultSize: 16, defaultColor: '#0C1C33' },
+  { Component: ChevronIcon, name: 'ChevronIcon', defaultSize: 12, defaultColor: '#0C1C33' },
+  { Component: BurgerMenuIcon, name: 'BurgerMenuIcon', defaultSize: 24, defaultColor: '#0C1C33' },
+  { Component: KebabMenuIcon, name: 'KebabMenuIcon', defaultSize: 2, defaultColor: '#0C1C33' },
+  { Component: CircleProcessIcon, name: 'CircleProcessIcon', defaultSize: 20, defaultColor: '#4C7EFF' },
+  { Component: CreditsIcon, name: 'CreditsIcon', defaultSize: 14, defaultColor: '#4C7EFF' },
+  { Component: WebIcon, name: 'WebIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: ChainSmallIcon, name: 'ChainSmallIcon', defaultSize: 17, defaultColor: '#0C1C33' },
+  { Component: SettingsIcon, name: 'SettingsIcon', defaultSize: 17, defaultColor: '#0C1C33' },
+  { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' },
+  { Component: QuestionMessageIcon, name: 'QuestionMessageIcon', defaultSize: 17, defaultColor: '#0C1C33' }
 ]
 
 describe('Icons', () => {
@@ -189,6 +223,175 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('width', '12')
       expect(svg).toHaveAttribute('height', '16') // 12 * 16 / 12
       expect(svg).toHaveAttribute('viewBox', '0 0 12 16')
+    })
+
+    it('CrossIcon has correct aspect ratio', () => {
+      render(<CrossIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '17') // 16 * 17 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('WalletIcon has correct aspect ratio and renders correctly', () => {
+      render(<WalletIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+
+
+    it('PlusIcon has correct aspect ratio', () => {
+      render(<PlusIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '16') // 17 * 16 / 17
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('FilterIcon has correct aspect ratio and renders correctly', () => {
+      render(<FilterIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('EditIcon has correct aspect ratio and renders correctly', () => {
+      render(<EditIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('DeleteIcon has correct aspect ratio', () => {
+      render(<DeleteIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '17') // 16 * 17 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ChevronIcon has correct aspect ratio and renders correctly', () => {
+      render(<ChevronIcon size={12} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '12')
+      expect(svg).toHaveAttribute('height', '12')
+      expect(svg).toHaveAttribute('viewBox', '0 0 12 12')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('BurgerMenuIcon has correct aspect ratio and renders correctly', () => {
+      render(<BurgerMenuIcon size={24} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '24')
+      expect(svg).toHaveAttribute('height', '24')
+      expect(svg).toHaveAttribute('viewBox', '0 0 24 24')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('KebabMenuIcon has correct aspect ratio', () => {
+      render(<KebabMenuIcon size={12} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '12')
+      expect(svg).toHaveAttribute('height', '72') // 12 * 12 / 2
+      expect(svg).toHaveAttribute('viewBox', '0 0 2 12')
+      const paths = svg.querySelectorAll('path')
+      expect(paths).toHaveLength(3)
+    })
+
+    it('CircleProcessIcon has correct aspect ratio', () => {
+      render(<CircleProcessIcon size={20} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '20')
+      expect(svg).toHaveAttribute('height', '21') // 20 * 21 / 20
+      expect(svg).toHaveAttribute('viewBox', '0 0 20 21')
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+      const paths = svg.querySelectorAll('path')
+      expect(paths.length).toBeGreaterThan(0)
+    })
+
+    it('CreditsIcon has correct aspect ratio', () => {
+      render(<CreditsIcon size={14} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '14')
+      expect(svg).toHaveAttribute('height', '20') // 14 * 20 / 14
+      expect(svg).toHaveAttribute('viewBox', '0 0 14 20')
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+      const paths = svg.querySelectorAll('path')
+      expect(paths.length).toBeGreaterThan(0)
+    })
+
+    it('WebIcon has correct aspect ratio and renders correctly', () => {
+      render(<WebIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ChainSmallIcon has correct aspect ratio', () => {
+      render(<ChainSmallIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '13') // 17 * 13 / 17
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 13')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('SettingsIcon has correct aspect ratio and renders correctly', () => {
+      render(<SettingsIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '17')
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('ShieldSmallIcon has correct aspect ratio', () => {
+      render(<ShieldSmallIcon size={15} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '15')
+      expect(svg).toHaveAttribute('height', '17') // 15 * 17 / 15
+      expect(svg).toHaveAttribute('viewBox', '0 0 15 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('QuestionMessageIcon has correct aspect ratio and renders correctly', () => {
+      render(<QuestionMessageIcon size={17} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '17')
+      expect(svg).toHaveAttribute('height', '17')
+      expect(svg).toHaveAttribute('viewBox', '0 0 17 17')
+      expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })
 
