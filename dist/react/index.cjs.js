@@ -1889,7 +1889,8 @@ const Accordion = ({
         className: `${accordionTriggerStyles({
           theme
         })} group`,
-        children: [jsxRuntime.jsx("span", {
+        children: [jsxRuntime.jsx("div", {
+          className: 'w-full text-left',
           children: title
         }), jsxRuntime.jsx(ChevronIcon, {
           className: chevronStyles()
