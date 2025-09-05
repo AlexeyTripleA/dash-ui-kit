@@ -10,21 +10,24 @@ You can see all the created components in the storybook - https://alexeytriplea.
 
 ### Installation
 
+from npm
 ```bash
-npm install AlexeyTripleA/dash-ui-kit
+npm i dash-ui-kit
 ```
+
+
 
 ### Setup with Tailwind CSS v4
 
 ```css
 /* main.css */
 @import "tailwindcss";
-@import "dash-ui/theme";
-@import "dash-ui/styles";
+@import "dash-ui-kit/theme";
+@import "dash-ui-kit/styles";
 ```
 
 ```jsx
-import { Button } from 'dash-ui/react';
+import { Button } from 'dash-ui-kit/react';
 
 <Button colorScheme="brand">Button</Button>
 ```
@@ -51,7 +54,7 @@ import { Button } from 'dash-ui/react';
 ### Button Component
 
 ```jsx
-import { Button } from 'dash-ui/react';
+import { Button } from 'dash-ui-kit/react';
 
 // Color schemes
 <Button colorScheme="brand">Brand Button</Button>
@@ -71,7 +74,7 @@ import { Button } from 'dash-ui/react';
 ### Text Component
 
 ```jsx
-import { Text } from 'dash-ui/react';
+import { Text } from 'dash-ui-kit/react';
 
 <Text size="xl" weight="bold" color="blue">
   Styled Text
