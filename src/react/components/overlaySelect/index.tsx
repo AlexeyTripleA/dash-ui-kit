@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState, useRef } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
