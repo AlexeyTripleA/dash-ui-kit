@@ -142,7 +142,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         <RadixAccordion.Trigger 
           className={`${accordionTriggerStyles({ theme })} group`}
         >
-          <span>{title}</span>
+          <div className='w-full text-left'>{title}</div>
           <ChevronIcon className={chevronStyles()} />
         </RadixAccordion.Trigger>
 
