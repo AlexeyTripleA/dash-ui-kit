@@ -158,7 +158,7 @@ export const DashDialog: React.FC<DialogProps> = ({
   const DialogContent = (
     <Dialog.Portal>
       <Dialog.Overlay className={overlayStyles({ theme })} />
-      <Dialog.Content className={`${contentStyles({ theme, size })} ${className}`}>
+      <Dialog.Content aria-describedby={undefined} className={`${contentStyles({ theme, size })} ${className}`}>
         {(title || showCloseButton) && (
           <div className={headerStyles()}>
             {title && (
