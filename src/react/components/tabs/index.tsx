@@ -1,5 +1,3 @@
-"use client"
-
 import React from 'react'
 import * as RadixTabs from '@radix-ui/react-tabs'
 import { cva } from 'class-variance-authority'
