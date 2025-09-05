@@ -10540,6 +10540,7 @@ const DashDialog = ({
         theme
       })
     }), jsxRuntime.jsxs(Content$1, {
+      "aria-describedby": undefined,
       className: `${contentStyles({
         theme,
         size

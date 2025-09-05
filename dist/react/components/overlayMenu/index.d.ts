@@ -2,7 +2,7 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const overlayMenuTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "brand" | "gray" | "lightGray" | "error" | "success" | null | undefined;
+    colorScheme?: "default" | "brand" | "error" | "success" | "gray" | "lightGray" | null | undefined;
     size?: "sm" | "md" | "xl" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
