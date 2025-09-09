@@ -18,6 +18,15 @@ const config: StorybookConfig = {
   "staticDirs": [
     "../public"
   ],
+  "viteFinal": async (config) => {
+    // Set base URL for GitHub Pages deployment
+    config.base = '/dash-ui-react/';
+    return config;
+  },
+  "managerHead": (head) => `
+    ${head}
+    <base href="/dash-ui-react/">
+  `,
   "typescript": {
     "check": false,
     "reactDocgen": "react-docgen-typescript",
