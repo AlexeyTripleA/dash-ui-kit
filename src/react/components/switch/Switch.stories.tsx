@@ -1,7 +1,6 @@
+import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { useState } from 'react'
 import { Switch, SwitchOption } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta: Meta<typeof Switch> = {
   title: 'Components/Switch',
@@ -27,13 +26,6 @@ const meta: Meta<typeof Switch> = {
       action: 'changed'
     }
   },
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <Story />
-      </ThemeProvider>
-    )
-  ]
 }
 
 export default meta
@@ -232,22 +224,23 @@ export const DarkTheme: Story = {
     value: 'opt1',
     size: 'md'
   },
-  decorators: [
-    (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-6 rounded-lg">
-          <Story />
-        </div>
-      </ThemeProvider>
-    )
-  ],
   parameters: {
+    globals: {
+      theme: 'dark'
+    },
     docs: {
       description: {
         story: 'Switch component in dark theme with gray background and white text.'
       }
     }
-  }
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-gray-900 p-6 rounded-lg">
+        <Story />
+      </div>
+    )
+  ]
 }
 
 export const ThemeComparison: Story = {
@@ -255,15 +248,11 @@ export const ThemeComparison: Story = {
     <div className="space-y-6">
       <div>
         <h3 className="text-sm font-medium mb-2">Light Theme</h3>
-        <ThemeProvider initialTheme="light">
-          <ControlledSwitch options={defaultOptions} value="opt2" size="md" />
-        </ThemeProvider>
+        <ControlledSwitch options={defaultOptions} value="opt2" size="md" />
       </div>
       <div className="bg-gray-900 p-4 rounded-lg">
-        <h3 className="text-sm font-medium mb-2 text-white">Dark Theme</h3>
-        <ThemeProvider initialTheme="dark">
-          <ControlledSwitch options={defaultOptions} value="opt2" size="md" />
-        </ThemeProvider>
+        <h3 className="text-sm font-medium mb-2 text-white">Dark Theme (use theme switcher)</h3>
+        <ControlledSwitch options={defaultOptions} value="opt2" size="md" />
       </div>
     </div>
   ),

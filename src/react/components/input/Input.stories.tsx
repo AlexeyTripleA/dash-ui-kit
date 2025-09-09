@@ -1,6 +1,6 @@
+import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Input } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
@@ -44,11 +44,9 @@ const meta: Meta<typeof Input> = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div className="w-80">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div className="w-80">
+        <Story />
+      </div>
     ),
   ],
 }
@@ -222,13 +220,16 @@ export const DarkTheme: Story = {
     placeholder: 'Dark theme input',
     colorScheme: 'brand',
   },
+  parameters: {
+    globals: {
+      theme: 'dark'
+    }
+  },
   decorators: [
     (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-6 w-80">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div className="bg-gray-900 p-6 w-80">
+        <Story />
+      </div>
     ),
   ],
 }
@@ -239,13 +240,16 @@ export const DarkThemeWithPrefix: Story = {
     placeholder: 'Dark theme with prefix',
     colorScheme: 'brand',
   },
+  parameters: {
+    globals: {
+      theme: 'dark'
+    }
+  },
   decorators: [
     (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-6 w-80">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div className="bg-gray-900 p-6 w-80">
+        <Story />
+      </div>
     ),
   ],
 }
@@ -256,13 +260,16 @@ export const PasswordDarkTheme: Story = {
     placeholder: 'Dark theme password',
     colorScheme: 'brand',
   },
+  parameters: {
+    globals: {
+      theme: 'dark'
+    }
+  },
   decorators: [
     (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-6 w-80">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div className="bg-gray-900 p-6 w-80">
+        <Story />
+      </div>
     ),
   ],
 }

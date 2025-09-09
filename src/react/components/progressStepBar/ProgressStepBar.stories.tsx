@@ -1,6 +1,6 @@
+import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { ProgressStepBar } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta = {
   title: 'Components/ProgressStepBar',
@@ -34,11 +34,9 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div style={{ width: '400px' }}>
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div style={{ width: '400px' }}>
+        <Story />
+      </div>
     )
   ]
 } satisfies Meta<typeof ProgressStepBar>
@@ -101,22 +99,23 @@ export const DarkTheme: Story = {
     currentStep: 3,
     totalSteps: 5
   },
-  decorators: [
-    (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-6 rounded-lg" style={{ width: '400px' }}>
-          <Story />
-        </div>
-      </ThemeProvider>
-    )
-  ],
   parameters: {
+    globals: {
+      theme: 'dark'
+    },
     docs: {
       description: {
         story: 'ProgressStepBar in dark theme with gray background.'
       }
     }
-  }
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-gray-900 p-6 rounded-lg" style={{ width: '400px' }}>
+        <Story />
+      </div>
+    )
+  ]
 }
 
 export const ThemeComparison: Story = {
@@ -124,19 +123,15 @@ export const ThemeComparison: Story = {
     <div className="space-y-6 flex flex-col items-center">
       <div className="text-center">
         <h3 className="text-sm font-medium mb-4">Light theme</h3>
-        <ThemeProvider initialTheme="light">
-          <div style={{ width: '400px' }}>
-            <ProgressStepBar currentStep={3} totalSteps={5} />
-          </div>
-        </ThemeProvider>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} />
+        </div>
       </div>
       <div className="bg-gray-900 p-4 rounded-lg text-center" style={{ width: '432px' }}>
-        <h3 className="text-sm font-medium mb-4 text-white">Dark theme</h3>
-        <ThemeProvider initialTheme="dark">
-          <div style={{ width: '400px' }}>
-            <ProgressStepBar currentStep={3} totalSteps={5} />
-          </div>
-        </ThemeProvider>
+        <h3 className="text-sm font-medium mb-4 text-white">Dark theme (use theme switcher)</h3>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} />
+        </div>
       </div>
     </div>
   ),

@@ -1,6 +1,6 @@
+import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { Textarea } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta: Meta<typeof Textarea> = {
   title: 'Components/Textarea',
@@ -47,12 +47,10 @@ const meta: Meta<typeof Textarea> = {
     }
   },
   decorators: [
-    (Story, context) => (
-      <ThemeProvider initialTheme={context.globals.theme === 'dark' ? 'dark' : 'light'}>
-        <div style={{ width: '400px' }}>
-          <Story />
-        </div>
-      </ThemeProvider>
+    (Story) => (
+      <div style={{ width: '400px' }}>
+        <Story />
+      </div>
     )
   ]
 }

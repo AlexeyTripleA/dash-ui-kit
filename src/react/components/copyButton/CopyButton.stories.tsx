@@ -1,6 +1,6 @@
+import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import { CopyButton } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta: Meta<typeof CopyButton> = {
   title: 'Components/CopyButton',
@@ -19,13 +19,6 @@ const meta: Meta<typeof CopyButton> = {
       description: 'Additional CSS classes'
     }
   },
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
 }
 
 export default meta
@@ -54,15 +47,11 @@ export const DarkTheme: Story = {
   args: {
     text: 'Dark theme copy button',
   },
-  decorators: [
-    (Story) => (
-      <ThemeProvider initialTheme="dark">
-        <div className="bg-gray-900 p-4">
-          <Story />
-        </div>
-      </ThemeProvider>
-    ),
-  ],
+  parameters: {
+    globals: {
+      theme: 'dark'
+    }
+  }
 }
 
 export const Disabled: Story = {
