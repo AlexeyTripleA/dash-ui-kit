@@ -7,7 +7,7 @@ permissions:
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "master" ]
 
 jobs:
   deploy:
