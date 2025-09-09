@@ -39,9 +39,7 @@
     "build": "rm -rf dist && rollup -c && npm run types",
     "prepare": "rollup -c && npm run types",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build --output-dir storybook-static",
-    "build-storybook-gh": "storybook build --output-dir storybook-static",
-    "serve-storybook": "serve storybook-static",
+    "build-storybook": "storybook build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui"
