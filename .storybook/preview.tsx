@@ -6,7 +6,7 @@ import '../src/styles/styles.pcss'
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <ThemeProvider initialTheme="light">
+      <ThemeProvider initialTheme='light'>
         <Story />
       </ThemeProvider>
     )
