@@ -26,7 +26,7 @@ jobs:
         run: npm i
 
       - name: Build Storybook
-        run: NODE_ENV=production npm run build-storybook
+        run: npm run build-storybook
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
