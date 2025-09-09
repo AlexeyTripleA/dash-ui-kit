@@ -19,14 +19,12 @@ const config: StorybookConfig = {
     "../public"
   ],
   "viteFinal": async (config) => {
-    // Set base URL for GitHub Pages deployment
-    config.base = '/dash-ui-react/';
+    // Set base path for GitHub Pages deployment
+    if (process.env.NODE_ENV === 'production') {
+      config.base = '/dash-ui-react/';
+    }
     return config;
   },
-  "managerHead": (head) => `
-    ${head}
-    <base href="/dash-ui-react/">
-  `,
   "typescript": {
     "check": false,
     "reactDocgen": "react-docgen-typescript",
