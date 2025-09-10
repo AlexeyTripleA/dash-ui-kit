@@ -30,7 +30,8 @@ import {
   ChainSmallIcon,
   SettingsIcon,
   ShieldSmallIcon,
-  QuestionMessageIcon
+  QuestionMessageIcon,
+  CheckmarkIcon
 } from './index'
 
 const meta: Meta = {
@@ -185,6 +186,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <QuestionMessageIcon />
         <span className="text-sm">QuestionMessageIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <CheckmarkIcon />
+        <span className="text-sm">CheckmarkIcon</span>
       </div>
     </div>
   ),
@@ -529,6 +534,16 @@ export const QuestionMessage: StoryObj = {
   args: {
     size: 17,
     color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Checkmark Icon
+export const Checkmark: StoryObj = {
+  render: (args) => <CheckmarkIcon {...args} />,
+  args: {
+    size: 27,
+    color: '#1CC400',
     className: ''
   }
 }

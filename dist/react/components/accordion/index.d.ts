@@ -12,6 +12,12 @@ export interface AccordionProps {
     onOpenChange?: (open: boolean) => void;
     /** Additional CSS classes */
     className?: string;
+    /** Optional element to display on the right side of the trigger */
+    rightElement?: React.ReactNode;
+    /** Whether to show separator between title and content when open */
+    showSeparator?: boolean;
+    /** Whether to show border around the accordion */
+    border?: boolean;
 }
 /**
  * Accordion component based on Radix UI with smooth animations.

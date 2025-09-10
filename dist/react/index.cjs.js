@@ -1781,6 +1781,25 @@ const QuestionMessageIcon = ({
     fill: 'currentColor'
   })
 });
+const CheckmarkIcon = ({
+  color = '#1CC400',
+  size = 27,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size * 21 / 27,
+  viewBox: '0 0 27 21',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M25.235 0.341283C25.5909 -0.0640896 26.2219 -0.115686 26.6442 0.225963C27.0664 0.567654 27.1201 1.17343 26.7643 1.57886L10.0094 20.6667L0.253533 10.1585C-0.11396 9.76268 -0.0776687 9.15652 0.334587 8.8037C0.746855 8.45088 1.37822 8.48572 1.74572 8.88152L9.96642 17.7358L25.235 0.341283Z',
+    fill: 'currentColor'
+  })
+});
 
 const accordionRootStyles = classVarianceAuthority.cva(`
     w-full
@@ -1789,12 +1808,17 @@ const accordionRootStyles = classVarianceAuthority.cva(`
   `, {
   variants: {
     theme: {
-      light: '  bg-dash-primary-dark-blue/[0.03]',
+      light: 'bg-dash-primary-dark-blue/[0.05]',
       dark: 'bg-gray-800/20'
+    },
+    border: {
+      true: 'ring-1 ring-dash-primary-dark-blue/10',
+      false: ''
     }
   },
   defaultVariants: {
-    theme: 'light'
+    theme: 'light',
+    border: false
   }
 });
 const accordionItemStyles = classVarianceAuthority.cva(`
@@ -1803,14 +1827,13 @@ const accordionItemStyles = classVarianceAuthority.cva(`
   `);
 const accordionTriggerStyles = classVarianceAuthority.cva(`
     w-full
-    px-8
-    py-6
+    p-[0.875rem]
     flex
     items-center
     justify-between
-    font-manrope
+    font-dash-main
     font-medium
-    text-1
+    text-[0.875rem]
     leading-[1.366]
     text-dash-primary-dark-blue
     bg-transparent
@@ -1839,10 +1862,27 @@ const accordionContentStyles = classVarianceAuthority.cva(`
   data-[state=closed]:h-0
 `);
 const accordionContentInnerStyles = classVarianceAuthority.cva(`
-  px-8
-  pb-6
+  p-[0.875rem]
   space-y-[0.625rem]
 `);
+const separatorStyles = classVarianceAuthority.cva(`
+  mx-[0.875rem]
+  h-px
+  bg-dash-primary-dark-blue/10
+  transition-opacity
+  duration-300
+  ease-in-out
+`, {
+  variants: {
+    theme: {
+      light: 'bg-dash-primary-dark-blue/10',
+      dark: 'bg-white/10'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const chevronStyles = classVarianceAuthority.cva(`
   w-4
   h-4
@@ -1862,14 +1902,18 @@ const Accordion = ({
   defaultOpen = false,
   open,
   onOpenChange,
-  className = ''
+  className = '',
+  rightElement,
+  showSeparator = false,
+  border = false
 }) => {
   const {
     theme
   } = useTheme();
   const isControlled = open !== undefined;
   const rootClasses = accordionRootStyles({
-    theme
+    theme,
+    border
   }) + (className ? ` ${className}` : '');
   return jsxRuntime.jsx(Root2$3, {
     type: 'single',
@@ -1884,17 +1928,26 @@ const Accordion = ({
     },
     children: jsxRuntime.jsxs(Item$2, {
       value: 'item-1',
-      className: `AccordionItem ${accordionItemStyles()}`,
+      className: `AccordionItem ${accordionItemStyles()} group`,
       children: [jsxRuntime.jsxs(Trigger2, {
         className: `${accordionTriggerStyles({
           theme
-        })} group`,
+        })}`,
         children: [jsxRuntime.jsx("div", {
           className: 'w-full text-left',
           children: title
-        }), jsxRuntime.jsx(ChevronIcon, {
-          className: chevronStyles()
+        }), jsxRuntime.jsxs("div", {
+          className: 'flex items-center gap-3',
+          children: [rightElement && jsxRuntime.jsx("div", {
+            children: rightElement
+          }), jsxRuntime.jsx(ChevronIcon, {
+            className: chevronStyles()
+          })]
         })]
+      }), showSeparator && jsxRuntime.jsx("div", {
+        className: `${separatorStyles({
+          theme
+        })} group-data-[state=closed]:opacity-0 group-data-[state=open]:opacity-100`
       }), jsxRuntime.jsx(Content2$1, {
         forceMount: true,
         className: accordionContentStyles(),
@@ -11126,6 +11179,7 @@ exports.Button = Button;
 exports.CalendarIcon = CalendarIcon;
 exports.ChainSmallIcon = ChainSmallIcon;
 exports.CheckIcon = CheckIcon;
+exports.CheckmarkIcon = CheckmarkIcon;
 exports.ChevronIcon = ChevronIcon;
 exports.CircleProcessIcon = CircleProcessIcon;
 exports.CopyButton = CopyButton;

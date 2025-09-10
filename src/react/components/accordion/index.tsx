@@ -13,12 +13,17 @@ const accordionRootStyles = cva(
   {
     variants: {
       theme: {
-        light: '  bg-dash-primary-dark-blue/[0.03]',
+        light: 'bg-dash-primary-dark-blue/[0.05]',
         dark: 'bg-gray-800/20'
+      },
+      border: {
+        true: 'ring-1 ring-dash-primary-dark-blue/10',
+        false: ''
       }
     },
     defaultVariants: {
-      theme: 'light'
+      theme: 'light',
+      border: false
     }
   }
 )
@@ -33,14 +38,13 @@ const accordionItemStyles = cva(
 const accordionTriggerStyles = cva(
   `
     w-full
-    px-8
-    py-6
+    p-[0.875rem]
     flex
     items-center
     justify-between
-    font-manrope
+    font-dash-main
     font-medium
-    text-1
+    text-[0.875rem]
     leading-[1.366]
     text-dash-primary-dark-blue
     bg-transparent
@@ -73,10 +77,28 @@ const accordionContentStyles = cva(`
 `)
 
 const accordionContentInnerStyles = cva(`
-  px-8
-  pb-6
+  p-[0.875rem]
   space-y-[0.625rem]
 `)
+
+const separatorStyles = cva(`
+  mx-[0.875rem]
+  h-px
+  bg-dash-primary-dark-blue/10
+  transition-opacity
+  duration-300
+  ease-in-out
+`, {
+  variants: {
+    theme: {
+      light: 'bg-dash-primary-dark-blue/10',
+      dark: 'bg-white/10'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+})
 
 const chevronStyles = cva(`
   w-4
@@ -101,6 +123,12 @@ export interface AccordionProps {
   onOpenChange?: (open: boolean) => void
   /** Additional CSS classes */
   className?: string
+  /** Optional element to display on the right side of the trigger */
+  rightElement?: React.ReactNode
+  /** Whether to show separator between title and content when open */
+  showSeparator?: boolean
+  /** Whether to show border around the accordion */
+  border?: boolean
 }
 
 /**
@@ -113,12 +141,15 @@ export const Accordion: React.FC<AccordionProps> = ({
   defaultOpen = false,
   open,
   onOpenChange,
-  className = ''
+  className = '',
+  rightElement,
+  showSeparator = false,
+  border = false
 }) => {
   const { theme } = useTheme()
   const isControlled = open !== undefined
 
-  const rootClasses = accordionRootStyles({ theme }) + (className ? ` ${className}` : '')
+  const rootClasses = accordionRootStyles({ theme, border }) + (className ? ` ${className}` : '')
 
   return (
     <RadixAccordion.Root
@@ -135,14 +166,21 @@ export const Accordion: React.FC<AccordionProps> = ({
     >
       <RadixAccordion.Item
         value='item-1'
-        className={`AccordionItem ${accordionItemStyles()}`}
+        className={`AccordionItem ${accordionItemStyles()} group`}
       >
         <RadixAccordion.Trigger 
-          className={`${accordionTriggerStyles({ theme })} group`}
+          className={`${accordionTriggerStyles({ theme })}`}
         >
           <div className='w-full text-left'>{title}</div>
-          <ChevronIcon className={chevronStyles()} />
+          <div className='flex items-center gap-3'>
+            {rightElement && <div>{rightElement}</div>}
+            <ChevronIcon className={chevronStyles()} />
+          </div>
         </RadixAccordion.Trigger>
+
+        {showSeparator && (
+          <div className={`${separatorStyles({ theme })} group-data-[state=closed]:opacity-0 group-data-[state=open]:opacity-100`} />
+        )}
 
         <RadixAccordion.Content forceMount className={accordionContentStyles()}>
           <div className={accordionContentInnerStyles()}>

@@ -40,7 +40,6 @@ export {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-
   PlusIcon,
   FilterIcon,
   EditIcon,
@@ -54,5 +53,6 @@ export {
   ChainSmallIcon,
   SettingsIcon,
   ShieldSmallIcon,
-  QuestionMessageIcon
+  QuestionMessageIcon,
+  CheckmarkIcon
 } from './icons'

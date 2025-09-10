@@ -35,3 +35,4 @@ export declare const ChainSmallIcon: React.FC<IconProps>;
 export declare const SettingsIcon: React.FC<IconProps>;
 export declare const ShieldSmallIcon: React.FC<IconProps>;
 export declare const QuestionMessageIcon: React.FC<IconProps>;
+export declare const CheckmarkIcon: React.FC<IconProps>;
