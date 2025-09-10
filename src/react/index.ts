@@ -55,6 +55,7 @@ export {
   ChainSmallIcon,
   SettingsIcon,
   ShieldSmallIcon,
-  QuestionMessageIcon
+  QuestionMessageIcon,
+  CheckmarkIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

@@ -1761,6 +1761,25 @@ const QuestionMessageIcon = ({
     fill: 'currentColor'
   })
 });
+const CheckmarkIcon = ({
+  color = '#1CC400',
+  size = 27,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size * 21 / 27,
+  viewBox: '0 0 27 21',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M25.235 0.341283C25.5909 -0.0640896 26.2219 -0.115686 26.6442 0.225963C27.0664 0.567654 27.1201 1.17343 26.7643 1.57886L10.0094 20.6667L0.253533 10.1585C-0.11396 9.76268 -0.0776687 9.15652 0.334587 8.8037C0.746855 8.45088 1.37822 8.48572 1.74572 8.88152L9.96642 17.7358L25.235 0.341283Z',
+    fill: 'currentColor'
+  })
+});
 
 const accordionRootStyles = cva(`
     w-full
@@ -1769,12 +1788,17 @@ const accordionRootStyles = cva(`
   `, {
   variants: {
     theme: {
-      light: '  bg-dash-primary-dark-blue/[0.03]',
+      light: 'bg-dash-primary-dark-blue/[0.05]',
       dark: 'bg-gray-800/20'
+    },
+    border: {
+      true: 'ring-1 ring-dash-primary-dark-blue/10',
+      false: ''
     }
   },
   defaultVariants: {
-    theme: 'light'
+    theme: 'light',
+    border: false
   }
 });
 const accordionItemStyles = cva(`
@@ -1783,14 +1807,13 @@ const accordionItemStyles = cva(`
   `);
 const accordionTriggerStyles = cva(`
     w-full
-    px-8
-    py-6
+    p-[0.875rem]
     flex
     items-center
     justify-between
-    font-manrope
+    font-dash-main
     font-medium
-    text-1
+    text-[0.875rem]
     leading-[1.366]
     text-dash-primary-dark-blue
     bg-transparent
@@ -1819,10 +1842,27 @@ const accordionContentStyles = cva(`
   data-[state=closed]:h-0
 `);
 const accordionContentInnerStyles = cva(`
-  px-8
-  pb-6
+  p-[0.875rem]
   space-y-[0.625rem]
 `);
+const separatorStyles = cva(`
+  mx-[0.875rem]
+  h-px
+  bg-dash-primary-dark-blue/10
+  transition-opacity
+  duration-300
+  ease-in-out
+`, {
+  variants: {
+    theme: {
+      light: 'bg-dash-primary-dark-blue/10',
+      dark: 'bg-white/10'
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
 const chevronStyles = cva(`
   w-4
   h-4
@@ -1842,14 +1882,18 @@ const Accordion = ({
   defaultOpen = false,
   open,
   onOpenChange,
-  className = ''
+  className = '',
+  rightElement,
+  showSeparator = false,
+  border = false
 }) => {
   const {
     theme
   } = useTheme();
   const isControlled = open !== undefined;
   const rootClasses = accordionRootStyles({
-    theme
+    theme,
+    border
   }) + (className ? ` ${className}` : '');
   return jsx(Root2$3, {
     type: 'single',
@@ -1864,17 +1908,26 @@ const Accordion = ({
     },
     children: jsxs(Item$2, {
       value: 'item-1',
-      className: `AccordionItem ${accordionItemStyles()}`,
+      className: `AccordionItem ${accordionItemStyles()} group`,
       children: [jsxs(Trigger2, {
         className: `${accordionTriggerStyles({
           theme
-        })} group`,
+        })}`,
         children: [jsx("div", {
           className: 'w-full text-left',
           children: title
-        }), jsx(ChevronIcon, {
-          className: chevronStyles()
+        }), jsxs("div", {
+          className: 'flex items-center gap-3',
+          children: [rightElement && jsx("div", {
+            children: rightElement
+          }), jsx(ChevronIcon, {
+            className: chevronStyles()
+          })]
         })]
+      }), showSeparator && jsx("div", {
+        className: `${separatorStyles({
+          theme
+        })} group-data-[state=closed]:opacity-0 group-data-[state=open]:opacity-100`
       }), jsx(Content2$1, {
         forceMount: true,
         className: accordionContentStyles(),
@@ -11096,5 +11149,5 @@ const Tabs = ({
   });
 };
 
-export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WebIcon, useTheme };
+export { Accordion, ArrowIcon, Avatar, BigNumber, BroadcastedIcon, BurgerMenuIcon, Button, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyButton, CopyIcon, CreditsIcon, CrossIcon, DashLogo, DateBlock, DeleteIcon, DashDialog as Dialog, EditIcon, ErrorIcon, EyeClosedIcon, EyeOpenIcon, FilterIcon, Heading, Identifier, Input, KebabMenuIcon, KeyIcon, List$1 as List, NotActive, OverlayMenu, OverlaySelect, PlusIcon, PooledIcon, ProgressStepBar, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, Select, SettingsIcon, ShieldSmallIcon, SmartphoneIcon, SuccessIcon, Switch, Tabs, Text, Textarea, ThemeProvider, TimeDelta, TransactionStatusIcon, ValueCard, WalletIcon, WebIcon, useTheme };
 //# sourceMappingURL=index.esm.js.map

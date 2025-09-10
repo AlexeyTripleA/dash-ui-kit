@@ -803,4 +803,27 @@ export const QuestionMessageIcon: React.FC<IconProps> = ({
       fill='currentColor'
     />
   </svg>
+)
+
+export const CheckmarkIcon: React.FC<IconProps> = ({
+  color = '#1CC400',
+  size = 27,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={(size * 21) / 27}
+    viewBox='0 0 27 21'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M25.235 0.341283C25.5909 -0.0640896 26.2219 -0.115686 26.6442 0.225963C27.0664 0.567654 27.1201 1.17343 26.7643 1.57886L10.0094 20.6667L0.253533 10.1585C-0.11396 9.76268 -0.0776687 9.15652 0.334587 8.8037C0.746855 8.45088 1.37822 8.48572 1.74572 8.88152L9.96642 17.7358L25.235 0.341283Z'
+      fill='currentColor'
+    />
+  </svg>
 ) 
