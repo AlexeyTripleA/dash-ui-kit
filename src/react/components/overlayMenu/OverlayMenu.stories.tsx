@@ -1,14 +1,11 @@
 import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 import { OverlayMenu, OverlayMenuProps } from './index'
 
 const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ThemeProvider>
-    <div style={{ padding: '20px', minHeight: '400px' }}>
-      {children}
-    </div>
-  </ThemeProvider>
+  <div style={{ padding: '20px', minHeight: '400px' }}>
+    {children}
+  </div>
 )
 
 // Kebab Menu Icon for examples

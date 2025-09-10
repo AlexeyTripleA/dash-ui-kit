@@ -1,18 +1,15 @@
 import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
 import { ValueCard, ValueCardProps } from './index'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 
 const meta: Meta<ValueCardProps> = {
   title: 'Components/ValueCard',
   component: ValueCard,
   decorators: [
     (Story) => (
-      <ThemeProvider>
-        <div className="p-4">
-          <Story />
-        </div>
-      </ThemeProvider>
+      <div className="p-4">
+        <Story />
+      </div>
     )
   ],
   argTypes: {

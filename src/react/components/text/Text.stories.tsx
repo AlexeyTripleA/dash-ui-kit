@@ -1,18 +1,10 @@
 import React from 'react'
 import type { Meta, StoryFn } from '@storybook/react'
-import { ThemeProvider } from '../../contexts/ThemeContext'
 import { Text, TextProps } from './index'
 
 const meta: Meta<TextProps> = {
   title: 'Components/Text',
   component: Text,
-  decorators: [
-    (Story) => (
-      <ThemeProvider>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
   argTypes: {
     size: {
       control: { type: 'inline-radio' },
