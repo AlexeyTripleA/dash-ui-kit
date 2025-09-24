@@ -41,7 +41,6 @@ export {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-
   PlusIcon,
   FilterIcon,
   EditIcon,
@@ -56,6 +55,8 @@ export {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

@@ -32,7 +32,9 @@ import {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon
 } from './index'
 
 // Test suite for all icons
@@ -68,7 +70,9 @@ const icons = [
   { Component: SettingsIcon, name: 'SettingsIcon', defaultSize: 17, defaultColor: '#0C1C33' },
   { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' },
   { Component: QuestionMessageIcon, name: 'QuestionMessageIcon', defaultSize: 17, defaultColor: '#0C1C33' },
-  { Component: CheckmarkIcon, name: 'CheckmarkIcon', defaultSize: 27, defaultColor: '#1CC400' }
+  { Component: CheckmarkIcon, name: 'CheckmarkIcon', defaultSize: 27, defaultColor: '#1CC400' },
+  { Component: FingerprintIcon, name: 'FingerprintIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: FaceIcon, name: 'FaceIcon', defaultSize: 16, defaultColor: '#4C7EFF' }
 ]
 
 describe('Icons', () => {
@@ -404,6 +408,30 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('height', '21') // 27 * 21 / 27
       expect(svg).toHaveAttribute('viewBox', '0 0 27 21')
       expect(svg.querySelector('path')).toBeInTheDocument()
+    })
+
+    it('FingerprintIcon has correct aspect ratio', () => {
+      render(<FingerprintIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '18') // 16 * 18 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 18')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('FaceIcon has correct aspect ratio and renders correctly', () => {
+      render(<FaceIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
     })
   })
 

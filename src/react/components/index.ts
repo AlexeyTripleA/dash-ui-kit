@@ -54,5 +54,7 @@ export {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon
 } from './icons'

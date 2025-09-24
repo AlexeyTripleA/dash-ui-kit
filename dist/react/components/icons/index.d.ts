@@ -36,3 +36,5 @@ export declare const SettingsIcon: React.FC<IconProps>;
 export declare const ShieldSmallIcon: React.FC<IconProps>;
 export declare const QuestionMessageIcon: React.FC<IconProps>;
 export declare const CheckmarkIcon: React.FC<IconProps>;
+export declare const FingerprintIcon: React.FC<IconProps>;
+export declare const FaceIcon: React.FC<IconProps>;

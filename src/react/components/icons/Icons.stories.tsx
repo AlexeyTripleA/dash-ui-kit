@@ -32,7 +32,9 @@ import {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon
 } from './index'
 
 const meta: Meta = {
@@ -191,6 +193,14 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <CheckmarkIcon />
         <span className="text-sm">CheckmarkIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FingerprintIcon />
+        <span className="text-sm">FingerprintIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FaceIcon />
+        <span className="text-sm">FaceIcon</span>
       </div>
     </div>
   ),
@@ -545,6 +555,26 @@ export const Checkmark: StoryObj = {
   args: {
     size: 27,
     color: '#1CC400',
+    className: ''
+  }
+}
+
+// Fingerprint Icon
+export const Fingerprint: StoryObj = {
+  render: (args) => <FingerprintIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Face Icon
+export const Face: StoryObj = {
+  render: (args) => <FaceIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
     className: ''
   }
 }
