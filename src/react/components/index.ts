@@ -1,4 +1,5 @@
 export { Accordion, type AccordionProps } from './accordion'
+export { Badge, type BadgeProps } from './badge'
 export { Button, type ButtonProps } from './button'
 export { Input, type InputProps } from './input'
 export { Textarea, type TextareaProps } from './textarea'

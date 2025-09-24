@@ -2024,6 +2024,75 @@ const Accordion = ({
   });
 };
 
+const Badge = ({
+  children,
+  variant = 'default',
+  color = 'blue',
+  size = 'small',
+  className = ''
+}) => {
+  const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
+  // Size classes
+  const sizeClasses = {
+    xxs: 'px-1 py-1 text-xs gap-2',
+    small: 'px-[35px] py-[10px] text-xs',
+    big: 'px-[35px] py-[15px] text-lg'
+  };
+  // Color and variant combination classes
+  const getVariantClasses = () => {
+    const colorMap = {
+      blue: {
+        default: 'text-[#4C7EFF]',
+        flat: 'bg-[rgba(76,126,255,0.15)] text-[#4C7EFF]',
+        solid: 'bg-[#4C7EFF] text-white',
+        bordered: 'outline outline-1 outline-[#4C7EFF] text-[#4C7EFF]'
+      },
+      white: {
+        default: 'text-white',
+        flat: 'bg-[rgba(255,255,255,0.15)] text-white',
+        solid: 'bg-white text-[#0C1C33]',
+        bordered: 'outline outline-1 outline-white text-white'
+      },
+      gray: {
+        default: 'text-[#0C1C33]',
+        flat: 'bg-[rgba(12,28,51,0.15)] text-[#0C1C33]',
+        solid: 'bg-[#0C1C33] text-white',
+        bordered: 'outline outline-1 outline-[#0C1C33] text-[#0C1C33]'
+      },
+      'light-gray': {
+        default: 'text-[#6B7280]',
+        flat: 'bg-[rgba(107,114,128,0.15)] text-[#0C1C33]',
+        solid: 'bg-[#6B7280] text-white',
+        bordered: 'outline outline-1 outline-[#6B7280] text-[#6B7280]'
+      },
+      turquoise: {
+        default: 'text-[#60F6D2]',
+        flat: 'bg-[rgba(96,246,210,0.15)] text-[#60F6D2]',
+        solid: 'bg-[#60F6D2] text-[#0C1C33]',
+        bordered: 'outline outline-1 outline-[#60F6D2] text-[#60F6D2]'
+      },
+      red: {
+        default: 'text-[#CD2E00]',
+        flat: 'bg-[rgba(205,46,0,0.15)] text-[#CD2E00]',
+        solid: 'bg-[#CD2E00] text-white',
+        bordered: 'outline outline-1 outline-[#CD2E00] text-[#CD2E00]'
+      },
+      orange: {
+        default: 'text-[#F98F12]',
+        flat: 'bg-[rgba(249,143,18,0.15)] text-[#F98F12]',
+        solid: 'bg-[#F98F12] text-white',
+        bordered: 'outline outline-1 outline-[#F98F12] text-[#F98F12]'
+      }
+    };
+    return colorMap[color][variant];
+  };
+  const classes = [baseClasses, sizeClasses[size], getVariantClasses(), className].filter(Boolean).join(' ');
+  return jsxRuntime.jsx("span", {
+    className: classes,
+    children: children
+  });
+};
+
 const styles = classVarianceAuthority.cva(`
     dash-btn-base
     select-none
@@ -11236,6 +11305,7 @@ const Tabs = ({
 exports.Accordion = Accordion;
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
+exports.Badge = Badge;
 exports.BigNumber = BigNumber;
 exports.BroadcastedIcon = BroadcastedIcon;
 exports.BurgerMenuIcon = BurgerMenuIcon;
