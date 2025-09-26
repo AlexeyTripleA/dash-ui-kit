@@ -1,4 +1,5 @@
 export { Accordion, type AccordionProps } from './components/accordion'
+export { Badge, type BadgeProps } from './components/badge'
 export { Button, type ButtonProps } from './components/button'
 export { Input, type InputProps } from './components/input'
 export { Textarea, type TextareaProps } from './components/textarea'
@@ -41,7 +42,6 @@ export {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-
   PlusIcon,
   FilterIcon,
   EditIcon,
@@ -56,6 +56,12 @@ export {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon,
+  PendingIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

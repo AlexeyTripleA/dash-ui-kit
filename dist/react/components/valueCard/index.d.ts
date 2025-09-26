@@ -3,7 +3,7 @@ import { VariantProps } from 'class-variance-authority';
 declare const valueCard: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     colorScheme?: "white" | "default" | "lightBlue" | "lightGray" | "green" | "transparent" | "yellow" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     clickable?: boolean | null | undefined;
     loading?: boolean | null | undefined;
     border?: boolean | null | undefined;

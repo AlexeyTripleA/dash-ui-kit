@@ -2,7 +2,7 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const switchContainer: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type SwitchVariants = VariantProps<typeof switchContainer>;

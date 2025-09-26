@@ -32,7 +32,13 @@ import {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon,
+  PendingIcon
 } from './index'
 
 const meta: Meta = {
@@ -191,6 +197,30 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <CheckmarkIcon />
         <span className="text-sm">CheckmarkIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FingerprintIcon />
+        <span className="text-sm">FingerprintIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <FaceIcon />
+        <span className="text-sm">FaceIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SignIcon />
+        <span className="text-sm">SignIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SignLockIcon />
+        <span className="text-sm">SignLockIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <LockIcon />
+        <span className="text-sm">LockIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <PendingIcon />
+        <span className="text-sm">PendingIcon</span>
       </div>
     </div>
   ),
@@ -545,6 +575,66 @@ export const Checkmark: StoryObj = {
   args: {
     size: 27,
     color: '#1CC400',
+    className: ''
+  }
+}
+
+// Fingerprint Icon
+export const Fingerprint: StoryObj = {
+  render: (args) => <FingerprintIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Face Icon
+export const Face: StoryObj = {
+  render: (args) => <FaceIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Sign Icon
+export const Sign: StoryObj = {
+  render: (args) => <SignIcon {...args} />,
+  args: {
+    size: 18,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Sign Lock Icon
+export const SignLock: StoryObj = {
+  render: (args) => <SignLockIcon {...args} />,
+  args: {
+    size: 18,
+    color: '#E93636',
+    className: ''
+  }
+}
+
+// Lock Icon
+export const Lock: StoryObj = {
+  render: (args) => <LockIcon {...args} />,
+  args: {
+    size: 8,
+    color: '#E93636',
+    className: ''
+  }
+}
+
+// Pending Icon
+export const Pending: StoryObj = {
+  render: (args) => <PendingIcon {...args} />,
+  args: {
+    size: 11,
+    color: '#F49A58',
     className: ''
   }
 }

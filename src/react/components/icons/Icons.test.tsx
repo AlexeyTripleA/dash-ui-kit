@@ -32,7 +32,13 @@ import {
   SettingsIcon,
   ShieldSmallIcon,
   QuestionMessageIcon,
-  CheckmarkIcon
+  CheckmarkIcon,
+  FingerprintIcon,
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon,
+  PendingIcon
 } from './index'
 
 // Test suite for all icons
@@ -68,7 +74,13 @@ const icons = [
   { Component: SettingsIcon, name: 'SettingsIcon', defaultSize: 17, defaultColor: '#0C1C33' },
   { Component: ShieldSmallIcon, name: 'ShieldSmallIcon', defaultSize: 15, defaultColor: '#0C1C33' },
   { Component: QuestionMessageIcon, name: 'QuestionMessageIcon', defaultSize: 17, defaultColor: '#0C1C33' },
-  { Component: CheckmarkIcon, name: 'CheckmarkIcon', defaultSize: 27, defaultColor: '#1CC400' }
+  { Component: CheckmarkIcon, name: 'CheckmarkIcon', defaultSize: 27, defaultColor: '#1CC400' },
+  { Component: FingerprintIcon, name: 'FingerprintIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: FaceIcon, name: 'FaceIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
+  { Component: SignIcon, name: 'SignIcon', defaultSize: 18, defaultColor: '#4C7EFF' },
+  { Component: SignLockIcon, name: 'SignLockIcon', defaultSize: 18, defaultColor: '#E93636' },
+  { Component: LockIcon, name: 'LockIcon', defaultSize: 8, defaultColor: '#E93636' },
+  { Component: PendingIcon, name: 'PendingIcon', defaultSize: 11, defaultColor: '#F49A58' }
 ]
 
 describe('Icons', () => {
@@ -96,21 +108,21 @@ describe('Icons', () => {
     })
 
     it('applies custom color prop', () => {
-      render(<SuccessIcon color="#FF0000" />)
+      render(<SuccessIcon color='#FF0000' />)
       const svg = screen.getByRole('img', { hidden: true })
       
       expect(svg).toHaveAttribute('color', '#FF0000')
     })
 
     it('applies custom className prop', () => {
-      render(<CopyIcon className="custom-class" />)
+      render(<CopyIcon className='custom-class' />)
       const svg = screen.getByRole('img', { hidden: true })
       
       expect(svg).toHaveClass('custom-class')
     })
 
     it('combines multiple custom props', () => {
-      render(<ErrorIcon size={24} color="#00FF00" className="test-icon" />)
+      render(<ErrorIcon size={24} color='#00FF00' className='test-icon' />)
       const svg = screen.getByRole('img', { hidden: true })
       
       expect(svg).toHaveAttribute('width', '24')
@@ -405,6 +417,78 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('viewBox', '0 0 27 21')
       expect(svg.querySelector('path')).toBeInTheDocument()
     })
+
+    it('FingerprintIcon has correct aspect ratio', () => {
+      render(<FingerprintIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '18') // 16 * 18 / 16
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 18')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('FaceIcon has correct aspect ratio and renders correctly', () => {
+      render(<FaceIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('SignIcon has correct aspect ratio', () => {
+      render(<SignIcon size={18} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '18')
+      expect(svg).toHaveAttribute('height', '13') // 18 * 13 / 18
+      expect(svg).toHaveAttribute('viewBox', '0 0 18 13')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('SignLockIcon has correct aspect ratio', () => {
+      render(<SignLockIcon size={18} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '18')
+      expect(svg).toHaveAttribute('height', '14') // 18 * 14 / 18
+      expect(svg).toHaveAttribute('viewBox', '0 0 18 14')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('LockIcon has correct aspect ratio', () => {
+      render(<LockIcon size={8} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '8')
+      expect(svg).toHaveAttribute('height', '10') // 8 * 10 / 8
+      expect(svg).toHaveAttribute('viewBox', '0 0 8 10')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('PendingIcon has correct aspect ratio and renders correctly', () => {
+      render(<PendingIcon size={11} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '11')
+      expect(svg).toHaveAttribute('height', '11')
+      expect(svg).toHaveAttribute('viewBox', '0 0 11 11')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
   })
 
   describe('Accessibility', () => {
@@ -470,14 +554,14 @@ describe('Icons', () => {
     })
 
     it('handles empty string className', () => {
-      render(<CalendarIcon className="" />)
+      render(<CalendarIcon className='' />)
       const svg = screen.getByRole('img', { hidden: true })
       
       expect(svg).toBeInTheDocument()
     })
 
     it('handles transparent color', () => {
-      render(<EyeOpenIcon color="transparent" />)
+      render(<EyeOpenIcon color='transparent' />)
       const svg = screen.getByRole('img', { hidden: true })
       
       expect(svg).toHaveAttribute('color', 'transparent')

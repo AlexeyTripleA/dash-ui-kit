@@ -1,4 +1,5 @@
 export { Accordion, type AccordionProps } from './accordion';
+export { Badge, type BadgeProps } from './badge';
 export { Button, type ButtonProps } from './button';
 export { Input, type InputProps } from './input';
 export { Textarea, type TextareaProps } from './textarea';
@@ -23,4 +24,4 @@ export { DashLogo, type DashLogoProps } from './dashLogo';
 export { Dialog, type DialogProps } from './dialog';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
 export type { TimeDeltaFormat } from '../utils/datetime';
-export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon, CheckmarkIcon } from './icons';
+export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon, CheckmarkIcon, FingerprintIcon, FaceIcon, SignIcon, SignLockIcon, LockIcon, PendingIcon } from './icons';

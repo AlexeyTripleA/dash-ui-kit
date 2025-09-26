@@ -3,8 +3,8 @@ import { VariantProps } from 'class-variance-authority';
 declare const textStyles: (props?: ({
     reset?: boolean | null | undefined;
     theme?: "light" | "dark" | null | undefined;
-    color?: "default" | "red" | "blue" | "blue-dark" | null | undefined;
-    size?: "sm" | "md" | "xl" | "xs" | "lg" | null | undefined;
+    color?: "default" | "blue" | "red" | "blue-dark" | null | undefined;
+    size?: "sm" | "xl" | "md" | "xs" | "lg" | null | undefined;
     weight?: "bold" | "normal" | 500 | null | undefined;
     italic?: boolean | null | undefined;
     underline?: boolean | null | undefined;
