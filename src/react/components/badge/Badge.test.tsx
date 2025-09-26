@@ -57,11 +57,11 @@ describe('Badge', () => {
     const { rerender } = render(<Badge size='xxs'>XXS Badge</Badge>)
     expect(screen.getByText('XXS Badge')).toHaveClass('px-1 py-1 text-xs')
 
-    rerender(<Badge size='small'>Small Badge</Badge>)
-    expect(screen.getByText('Small Badge')).toHaveClass('px-[35px] py-[10px] text-xs')
+    rerender(<Badge size='sm'>SM Badge</Badge>)
+    expect(screen.getByText('SM Badge')).toHaveClass('px-[35px] py-[10px] text-xs')
 
-    rerender(<Badge size='big'>Big Badge</Badge>)
-    expect(screen.getByText('Big Badge')).toHaveClass('px-[35px] py-[15px] text-lg')
+    rerender(<Badge size='xl'>XL Badge</Badge>)
+    expect(screen.getByText('XL Badge')).toHaveClass('px-[35px] py-[15px] text-lg')
   })
 
   it('combines variant and color correctly', () => {

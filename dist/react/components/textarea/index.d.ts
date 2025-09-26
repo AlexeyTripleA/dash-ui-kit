@@ -4,7 +4,7 @@ declare const textareaContainer: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     hasValue?: boolean | null | undefined;
     colorScheme?: "default" | "brand" | "error" | "success" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     variant?: "outlined" | null | undefined;
     isValid?: boolean | "null" | null | undefined;
     disabled?: boolean | null | undefined;

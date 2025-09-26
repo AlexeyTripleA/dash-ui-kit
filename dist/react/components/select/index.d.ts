@@ -3,7 +3,7 @@ import { VariantProps } from 'class-variance-authority';
 declare const selectTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     colorScheme?: "default" | "brand" | "error" | "success" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;

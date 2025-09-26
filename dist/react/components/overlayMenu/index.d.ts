@@ -3,7 +3,7 @@ import { VariantProps } from 'class-variance-authority';
 declare const overlayMenuTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     colorScheme?: "default" | "gray" | "brand" | "lightGray" | "error" | "success" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
     filled?: boolean | null | undefined;

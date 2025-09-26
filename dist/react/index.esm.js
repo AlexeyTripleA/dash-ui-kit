@@ -2008,15 +2008,15 @@ const Badge = ({
   children,
   variant = 'default',
   color = 'blue',
-  size = 'small',
+  size = 'sm',
   className = ''
 }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
   // Size classes
   const sizeClasses = {
     xxs: 'px-1 py-1 text-xs gap-2',
-    small: 'px-[35px] py-[10px] text-xs',
-    big: 'px-[35px] py-[15px] text-lg'
+    sm: 'px-[35px] py-[10px] text-xs',
+    xl: 'px-[35px] py-[15px] text-lg'
   };
   // Color and variant combination classes
   const getVariantClasses = () => {
