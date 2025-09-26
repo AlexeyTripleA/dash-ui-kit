@@ -34,7 +34,10 @@ import {
   QuestionMessageIcon,
   CheckmarkIcon,
   FingerprintIcon,
-  FaceIcon
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon
 } from './index'
 
 const meta: Meta = {
@@ -201,6 +204,18 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <FaceIcon />
         <span className="text-sm">FaceIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SignIcon />
+        <span className="text-sm">SignIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <SignLockIcon />
+        <span className="text-sm">SignLockIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <LockIcon />
+        <span className="text-sm">LockIcon</span>
       </div>
     </div>
   ),
@@ -575,6 +590,36 @@ export const Face: StoryObj = {
   args: {
     size: 16,
     color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Sign Icon
+export const Sign: StoryObj = {
+  render: (args) => <SignIcon {...args} />,
+  args: {
+    size: 18,
+    color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Sign Lock Icon
+export const SignLock: StoryObj = {
+  render: (args) => <SignLockIcon {...args} />,
+  args: {
+    size: 18,
+    color: '#E93636',
+    className: ''
+  }
+}
+
+// Lock Icon
+export const Lock: StoryObj = {
+  render: (args) => <LockIcon {...args} />,
+  args: {
+    size: 8,
+    color: '#E93636',
     className: ''
   }
 }

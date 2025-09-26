@@ -57,5 +57,8 @@ export {
   QuestionMessageIcon,
   CheckmarkIcon,
   FingerprintIcon,
-  FaceIcon
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon
 } from './icons'

@@ -58,6 +58,9 @@ export {
   QuestionMessageIcon,
   CheckmarkIcon,
   FingerprintIcon,
-  FaceIcon
+  FaceIcon,
+  SignIcon,
+  SignLockIcon,
+  LockIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'
