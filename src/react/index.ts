@@ -61,6 +61,7 @@ export {
   FaceIcon,
   SignIcon,
   SignLockIcon,
-  LockIcon
+  LockIcon,
+  PendingIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

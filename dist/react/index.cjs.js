@@ -1960,6 +1960,38 @@ const LockIcon = ({
     })
   })]
 });
+const PendingIcon = ({
+  color = '#F49A58',
+  size = 11,
+  className = '',
+  onClick
+}) => jsxRuntime.jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 11 11',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsxRuntime.jsx("g", {
+    clipPath: 'url(#clip0_405_81)',
+    children: jsxRuntime.jsx("path", {
+      d: 'M7.74672 8.71921C7.90214 8.93112 8.20171 8.97852 8.3979 8.80367C9.20215 8.08688 9.7568 7.12601 9.97194 6.06176C10.2186 4.84138 10.0011 3.57287 9.362 2.50438C8.72286 1.43588 7.70807 0.644286 6.51614 0.284445C5.32422 -0.0753959 4.04092 0.0224086 2.91729 0.558725C1.79366 1.09504 0.910553 2.03128 0.440724 3.18429C-0.0291052 4.33731 -0.051851 5.62413 0.376936 6.79302C0.805723 7.96192 1.65519 8.92878 2.75916 9.50447C3.72191 10.0065 4.81779 10.1796 5.88088 10.0051C6.1402 9.96249 6.29175 9.69977 6.22474 9.44566C6.15772 9.19155 5.89743 9.04286 5.63721 9.07962C4.80466 9.19721 3.9517 9.05305 3.1992 8.66064C2.30536 8.19452 1.61757 7.41168 1.2704 6.46527C0.923226 5.51886 0.941642 4.47697 1.32205 3.54342C1.70245 2.60986 2.41747 1.85182 3.32723 1.41759C4.23699 0.983351 5.27603 0.904162 6.24109 1.19551C7.20615 1.48686 8.02779 2.12779 8.54528 2.99291C9.06277 3.85803 9.23887 4.8851 9.03913 5.87319C8.87097 6.70504 8.44663 7.45887 7.83162 8.03221C7.63939 8.21141 7.59129 8.50729 7.74672 8.71921Z',
+      fill: 'currentColor'
+    })
+  }), jsxRuntime.jsx("defs", {
+    children: jsxRuntime.jsx("clipPath", {
+      id: 'clip0_405_81',
+      children: jsxRuntime.jsx("rect", {
+        width: '10',
+        height: '10',
+        fill: 'white',
+        transform: 'translate(0.0710678 0.071064)'
+      })
+    })
+  })]
+});
 
 const accordionRootStyles = classVarianceAuthority.cva(`
     w-full
@@ -11437,6 +11469,7 @@ exports.LockIcon = LockIcon;
 exports.NotActive = NotActive;
 exports.OverlayMenu = OverlayMenu;
 exports.OverlaySelect = OverlaySelect;
+exports.PendingIcon = PendingIcon;
 exports.PlusIcon = PlusIcon;
 exports.PooledIcon = PooledIcon;
 exports.ProgressStepBar = ProgressStepBar;

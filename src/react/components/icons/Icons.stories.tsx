@@ -37,7 +37,8 @@ import {
   FaceIcon,
   SignIcon,
   SignLockIcon,
-  LockIcon
+  LockIcon,
+  PendingIcon
 } from './index'
 
 const meta: Meta = {
@@ -216,6 +217,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <LockIcon />
         <span className="text-sm">LockIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <PendingIcon />
+        <span className="text-sm">PendingIcon</span>
       </div>
     </div>
   ),
@@ -620,6 +625,16 @@ export const Lock: StoryObj = {
   args: {
     size: 8,
     color: '#E93636',
+    className: ''
+  }
+}
+
+// Pending Icon
+export const Pending: StoryObj = {
+  render: (args) => <PendingIcon {...args} />,
+  args: {
+    size: 11,
+    color: '#F49A58',
     className: ''
   }
 }

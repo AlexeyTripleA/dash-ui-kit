@@ -37,7 +37,8 @@ import {
   FaceIcon,
   SignIcon,
   SignLockIcon,
-  LockIcon
+  LockIcon,
+  PendingIcon
 } from './index'
 
 // Test suite for all icons
@@ -78,7 +79,8 @@ const icons = [
   { Component: FaceIcon, name: 'FaceIcon', defaultSize: 16, defaultColor: '#4C7EFF' },
   { Component: SignIcon, name: 'SignIcon', defaultSize: 18, defaultColor: '#4C7EFF' },
   { Component: SignLockIcon, name: 'SignLockIcon', defaultSize: 18, defaultColor: '#E93636' },
-  { Component: LockIcon, name: 'LockIcon', defaultSize: 8, defaultColor: '#E93636' }
+  { Component: LockIcon, name: 'LockIcon', defaultSize: 8, defaultColor: '#E93636' },
+  { Component: PendingIcon, name: 'PendingIcon', defaultSize: 11, defaultColor: '#F49A58' }
 ]
 
 describe('Icons', () => {
@@ -471,6 +473,18 @@ describe('Icons', () => {
       expect(svg).toHaveAttribute('width', '8')
       expect(svg).toHaveAttribute('height', '10') // 8 * 10 / 8
       expect(svg).toHaveAttribute('viewBox', '0 0 8 10')
+      expect(svg.querySelector('path')).toBeInTheDocument()
+      const clipPath = svg.querySelector('clipPath')
+      expect(clipPath).toBeInTheDocument()
+    })
+
+    it('PendingIcon has correct aspect ratio and renders correctly', () => {
+      render(<PendingIcon size={11} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '11')
+      expect(svg).toHaveAttribute('height', '11')
+      expect(svg).toHaveAttribute('viewBox', '0 0 11 11')
       expect(svg.querySelector('path')).toBeInTheDocument()
       const clipPath = svg.querySelector('clipPath')
       expect(clipPath).toBeInTheDocument()
