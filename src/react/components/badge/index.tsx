@@ -39,8 +39,8 @@ export const Badge: React.FC<BadgeProps> = ({
   // Size classes
   const sizeClasses = {
     xxs: 'px-1 py-1 text-xs gap-2',
-    sm: 'px-[35px] py-[10px] text-xs',
-    xl: 'px-[35px] py-[15px] text-lg',
+    sm: 'px-[2.125rem] py-[0.625rem] text-xs',
+    xl: 'px-[2.25rem] py-4 text-lg',
   };
   
   // Color and variant combination classes
