@@ -2189,8 +2189,8 @@ const Badge = ({
       },
       'light-gray': {
         default: 'text-[#6B7280]',
-        flat: 'bg-[rgba(107,114,128,0.15)] text-[#0C1C33]',
-        solid: 'bg-[#6B7280] text-white',
+        flat: 'bg-[#0C1C33]/5 text-[#0C1C33]',
+        solid: 'bg-[#0C1C33]/15 text-[#0C1C33]',
         bordered: 'outline outline-1 outline-[#6B7280] text-[#6B7280]'
       },
       turquoise: {
