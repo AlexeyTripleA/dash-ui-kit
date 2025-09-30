@@ -2626,13 +2626,16 @@ const Input = _a => {
       disabled = false,
       type,
       prefix,
+      prefixClassName = '',
       showPasswordToggle = true
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix", "showPasswordToggle"]);
+    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix", "prefixClassName", "showPasswordToggle"]);
   const {
     theme
   } = useTheme();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [prefixWidth, setPrefixWidth] = React.useState(0);
+  const prefixRef = React.useRef(null);
   // Determine color scheme based on state
   let finalColorScheme = colorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
@@ -2649,25 +2652,26 @@ const Input = _a => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  // Calculate padding based on prefix length
-  const getPrefixPadding = () => {
-    if (!prefix) return 0;
-    const prefixLength = typeof prefix === 'string' ? prefix.length : 4; // default for React nodes
-    // Base padding (1rem) + prefix width estimation (0.6rem per character) + extra space (0.5rem)
-    return prefixLength * 0.6 + 1.5;
-  };
+  // Measure actual prefix width
+  React.useEffect(() => {
+    if (prefixRef.current) {
+      const width = prefixRef.current.offsetWidth;
+      // Convert px to rem (assuming 16px base) and add base padding (1rem) + extra space (0.5rem)
+      setPrefixWidth(width / 16 + 1.5);
+    }
+  }, [prefix]);
   // Render with prefix
   if (hasPrefix) {
-    const leftPadding = getPrefixPadding();
     return jsxRuntime.jsxs("div", {
       className: 'relative',
       children: [jsxRuntime.jsx("div", {
-        className: 'absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none',
+        ref: prefixRef,
+        className: `absolute left-4 top-1/2 -translate-y-1/2 z-10 text-[0.875rem] opacity-60 pointer-events-none select-none ${prefixClassName}`,
         children: prefix
       }), jsxRuntime.jsx("input", Object.assign({
         className: `${classes}${isPassword && showPasswordToggle ? ' pr-12' : ''}`,
         style: {
-          paddingLeft: `${leftPadding}rem`
+          paddingLeft: prefixWidth ? `${prefixWidth}rem` : '1rem'
         },
         disabled: disabled,
         type: inputType
