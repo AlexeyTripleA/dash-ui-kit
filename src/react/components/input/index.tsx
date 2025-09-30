@@ -8,14 +8,15 @@ const input = cva(
   {
     variants: {
       theme: {
-        light: 'text-[#111111] placeholder:text-[rgba(17,17,17,0.6)] bg-white',
-        dark: 'text-white placeholder:text-gray-400 bg-gray-800'
+        light: 'text-[#111111] placeholder:text-[rgba(17,17,17,0.6)]',
+        dark: 'text-white placeholder:text-gray-400'
       },
       colorScheme: {
         default: 'focus:ring-blue-500/20',
         brand: 'focus:ring-dash-brand/20',
         error: 'focus:ring-red-500/20',
-        success: 'focus:ring-green-500/20'
+        success: 'focus:ring-green-500/20',
+        'light-gray': 'focus:ring-[#6B7280]/20'
       },
       size: {
         sm: 'dash-block-sm font-light',
@@ -23,7 +24,8 @@ const input = cva(
         xl: 'dash-block-xl font-light'
       },
       variant: {
-        outlined: 'outline outline-1 outline-offset-[-1px]'
+        outlined: 'outline outline-1 outline-offset-[-1px]',
+        filled: 'border-none'
       },
       disabled: {
         false: '',
@@ -52,9 +54,56 @@ const input = cva(
         colorScheme: 'success',
         class: 'outline-green-500 focus:outline-green-500'
       },
+      {
+        variant: 'outlined',
+        colorScheme: 'light-gray',
+        class: 'outline-[#6B7280]/50 focus:outline-[#6B7280]'
+      },
       // Outlined variant with focus ring
       {
         variant: 'outlined',
+        class: 'focus:ring-2'
+      },
+      // Outlined variant background
+      {
+        variant: 'outlined',
+        theme: 'light',
+        class: 'bg-white'
+      },
+      {
+        variant: 'outlined',
+        theme: 'dark',
+        class: 'bg-gray-800'
+      },
+      // Filled variant colors
+      {
+        variant: 'filled',
+        colorScheme: 'default',
+        class: 'bg-[rgba(76,126,255,0.15)] focus:bg-[rgba(76,126,255,0.2)]'
+      },
+      {
+        variant: 'filled',
+        colorScheme: 'brand',
+        class: 'bg-dash-brand/15 focus:bg-dash-brand/20'
+      },
+      {
+        variant: 'filled',
+        colorScheme: 'error',
+        class: 'bg-red-500/15 focus:bg-red-500/20'
+      },
+      {
+        variant: 'filled',
+        colorScheme: 'success',
+        class: 'bg-green-500/15 focus:bg-green-500/20'
+      },
+      {
+        variant: 'filled',
+        colorScheme: 'light-gray',
+        class: 'bg-[#0C1C33]/5 focus:bg-[#0C1C33]/10'
+      },
+      // Filled variant with focus ring
+      {
+        variant: 'filled',
         class: 'focus:ring-2'
       }
     ],

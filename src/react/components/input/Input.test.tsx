@@ -302,6 +302,93 @@ describe('Input', () => {
       const input = screen.getByPlaceholderText('Default input')
       expect(input).toHaveClass('focus:ring-blue-500/20')
     })
+
+    it('applies light-gray color scheme', () => {
+      renderWithTheme(<Input colorScheme="light-gray" placeholder="Light gray input" />)
+      const input = screen.getByPlaceholderText('Light gray input')
+      expect(input).toHaveClass('focus:ring-[#6B7280]/20')
+    })
+
+    it('applies light-gray color scheme with outlined variant', () => {
+      renderWithTheme(<Input colorScheme="light-gray" variant="outlined" placeholder="Light gray outlined" />)
+      const input = screen.getByPlaceholderText('Light gray outlined')
+      expect(input).toHaveClass('outline-[#6B7280]/50', 'focus:outline-[#6B7280]')
+    })
+  })
+
+  describe('Variants', () => {
+    it('applies outlined variant by default', () => {
+      renderWithTheme(<Input placeholder="Outlined input" />)
+      const input = screen.getByPlaceholderText('Outlined input')
+      expect(input).toHaveClass('outline', 'outline-1', 'outline-offset-[-1px]')
+    })
+
+    it('applies filled variant', () => {
+      renderWithTheme(<Input variant="filled" placeholder="Filled input" />)
+      const input = screen.getByPlaceholderText('Filled input')
+      expect(input).toHaveClass('border-none')
+    })
+
+    it('applies filled variant with default color scheme', () => {
+      renderWithTheme(<Input variant="filled" colorScheme="default" placeholder="Filled default" />)
+      const input = screen.getByPlaceholderText('Filled default')
+      expect(input).toHaveClass('bg-[rgba(76,126,255,0.15)]', 'focus:bg-[rgba(76,126,255,0.2)]')
+    })
+
+    it('applies filled variant with brand color scheme', () => {
+      renderWithTheme(<Input variant="filled" colorScheme="brand" placeholder="Filled brand" />)
+      const input = screen.getByPlaceholderText('Filled brand')
+      expect(input).toHaveClass('bg-dash-brand/15', 'focus:bg-dash-brand/20')
+    })
+
+    it('applies filled variant with light-gray color scheme', () => {
+      renderWithTheme(<Input variant="filled" colorScheme="light-gray" placeholder="Filled light-gray" />)
+      const input = screen.getByPlaceholderText('Filled light-gray')
+      expect(input).toHaveClass('bg-[#0C1C33]/5', 'focus:bg-[#0C1C33]/10')
+    })
+
+    it('applies filled variant with error state', () => {
+      renderWithTheme(<Input variant="filled" error placeholder="Filled error" />)
+      const input = screen.getByPlaceholderText('Filled error')
+      expect(input).toHaveClass('bg-red-500/15', 'focus:bg-red-500/20')
+    })
+
+    it('applies filled variant with success state', () => {
+      renderWithTheme(<Input variant="filled" success placeholder="Filled success" />)
+      const input = screen.getByPlaceholderText('Filled success')
+      expect(input).toHaveClass('bg-green-500/15', 'focus:bg-green-500/20')
+    })
+
+    it('applies focus ring to filled variant', () => {
+      renderWithTheme(<Input variant="filled" placeholder="Filled with focus" />)
+      const input = screen.getByPlaceholderText('Filled with focus')
+      expect(input).toHaveClass('focus:ring-2')
+    })
+
+    it('works with prefix and filled variant', () => {
+      renderWithTheme(<Input variant="filled" prefix="$" placeholder="Amount" />)
+      const input = screen.getByPlaceholderText('Amount')
+      const prefix = screen.getByText('$')
+      
+      expect(input).toHaveClass('border-none')
+      expect(prefix).toBeInTheDocument()
+    })
+
+    it('works with password and filled variant', async () => {
+      const user = userEvent.setup()
+      renderWithTheme(<Input variant="filled" type="password" placeholder="Password" />)
+      
+      const input = screen.getByPlaceholderText('Password')
+      const toggleButton = screen.getByRole('button')
+      
+      expect(input).toHaveAttribute('type', 'password')
+      expect(input).toHaveClass('border-none')
+      expect(toggleButton).toBeInTheDocument()
+      
+      // Toggle should still work
+      await user.click(toggleButton)
+      expect(input).toHaveAttribute('type', 'text')
+    })
   })
 
   describe('Different input types', () => {
