@@ -1,5 +1,5 @@
 import React from 'react';
-export interface BadgeProps {
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     /**
      * Content of the badge
      */
@@ -20,6 +20,10 @@ export interface BadgeProps {
      * Additional CSS class name
      */
     className?: string;
+    /**
+     * Click handler
+     */
+    onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 export declare const Badge: React.FC<BadgeProps>;
 export default Badge;

@@ -2152,13 +2152,16 @@ const Accordion = ({
   });
 };
 
-const Badge = ({
-  children,
-  variant = 'default',
-  color = 'blue',
-  size = 'sm',
-  className = ''
-}) => {
+const Badge = _a => {
+  var {
+      children,
+      variant = 'default',
+      color = 'blue',
+      size = 'sm',
+      className = '',
+      onClick
+    } = _a,
+    props = tslib.__rest(_a, ["children", "variant", "color", "size", "className", "onClick"]);
   const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
   // Size classes
   const sizeClasses = {
@@ -2215,10 +2218,12 @@ const Badge = ({
     return colorMap[color][variant];
   };
   const classes = [baseClasses, sizeClasses[size], getVariantClasses(), className].filter(Boolean).join(' ');
-  return jsxRuntime.jsx("span", {
+  return jsxRuntime.jsx("span", Object.assign({
     className: classes,
+    onClick: onClick
+  }, props, {
     children: children
-  });
+  }));
 };
 
 const styles = classVarianceAuthority.cva(`
