@@ -1,30 +1,35 @@
 import React from 'react';
 
-export interface BadgeProps {
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * Content of the badge
    */
   children: React.ReactNode;
-  
+
   /**
    * Visual style variant
    */
   variant?: 'default' | 'flat' | 'solid' | 'bordered';
-  
+
   /**
    * Color theme
    */
   color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
-  
+
   /**
    * Size of the badge
    */
   size?: 'xxs' | 'sm' | 'xl';
-  
+
   /**
    * Additional CSS class name
    */
   className?: string;
+
+  /**
+   * Click handler
+   */
+  onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -33,14 +38,16 @@ export const Badge: React.FC<BadgeProps> = ({
   color = 'blue',
   size = 'sm',
   className = '',
+  onClick,
+  ...props
 }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
   
   // Size classes
   const sizeClasses = {
     xxs: 'px-1 py-1 text-xs gap-2',
-    sm: 'px-[35px] py-[10px] text-xs',
-    xl: 'px-[35px] py-[15px] text-lg',
+    sm: 'px-[2.125rem] py-[0.625rem] text-xs',
+    xl: 'px-[2.25rem] py-4 text-lg',
   };
   
   // Color and variant combination classes
@@ -66,8 +73,8 @@ export const Badge: React.FC<BadgeProps> = ({
       },
       'light-gray': {
         default: 'text-[#6B7280]',
-        flat: 'bg-[rgba(107,114,128,0.15)] text-[#0C1C33]',
-        solid: 'bg-[#6B7280] text-white',
+        flat: 'bg-[#0C1C33]/5 text-[#0C1C33]',
+        solid: 'bg-[#0C1C33]/15 text-[#0C1C33]',
         bordered: 'outline outline-1 outline-[#6B7280] text-[#6B7280]',
       },
       turquoise: {
@@ -101,7 +108,7 @@ export const Badge: React.FC<BadgeProps> = ({
   ].filter(Boolean).join(' ');
   
   return (
-    <span className={classes}>
+    <span className={classes} onClick={onClick} {...props}>
       {children}
     </span>
   );

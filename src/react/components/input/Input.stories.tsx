@@ -12,7 +12,7 @@ const meta: Meta<typeof Input> = {
   argTypes: {
     colorScheme: {
       control: { type: 'inline-radio' },
-      options: ['default', 'brand', 'error', 'success'],
+      options: ['default', 'brand', 'error', 'success', 'light-gray'],
     },
     size: {
       control: { type: 'inline-radio' },
@@ -20,7 +20,7 @@ const meta: Meta<typeof Input> = {
     },
     variant: {
       control: { type: 'inline-radio' },
-      options: ['outlined'],
+      options: ['outlined', 'filled'],
     },
     type: {
       control: { type: 'select' },
@@ -302,6 +302,79 @@ export const PasswordVariations: Story = {
       <Input type="password" placeholder="Password without toggle" showPasswordToggle={false} />
       <Input type="password" prefix="PIN:" placeholder="PIN with toggle" />
       <Input type="password" prefix="PIN:" placeholder="PIN without toggle" showPasswordToggle={false} />
+    </div>
+  ),
+}
+
+export const FilledVariant: Story = {
+  args: {
+    placeholder: 'Filled variant input',
+    variant: 'filled',
+    colorScheme: 'default',
+    size: 'xl',
+  },
+}
+
+export const FilledWithPrefix: Story = {
+  args: {
+    prefix: 'https://',
+    placeholder: 'example.com',
+    variant: 'filled',
+    colorScheme: 'brand',
+    size: 'xl',
+  },
+}
+
+export const LightGrayColorScheme: Story = {
+  args: {
+    placeholder: 'Light gray color scheme',
+    colorScheme: 'light-gray',
+    size: 'xl',
+  },
+}
+
+export const FilledVariants: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input variant="filled" colorScheme="default" placeholder="Filled default" />
+      <Input variant="filled" colorScheme="brand" placeholder="Filled brand" />
+      <Input variant="filled" colorScheme="light-gray" placeholder="Filled light-gray" />
+      <Input variant="filled" colorScheme="error" placeholder="Filled error" error />
+      <Input variant="filled" colorScheme="success" placeholder="Filled success" success />
+    </div>
+  ),
+}
+
+export const FilledWithStates: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input variant="filled" placeholder="Normal filled" />
+      <Input variant="filled" placeholder="Filled with prefix" prefix="$" />
+      <Input variant="filled" placeholder="Filled disabled" disabled />
+      <Input variant="filled" type="password" placeholder="Filled password" />
+    </div>
+  ),
+}
+
+export const AllColorSchemes: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input colorScheme="default" placeholder="Default color scheme" />
+      <Input colorScheme="brand" placeholder="Brand color scheme" />
+      <Input colorScheme="light-gray" placeholder="Light gray color scheme" />
+      <Input colorScheme="error" placeholder="Error color scheme" />
+      <Input colorScheme="success" placeholder="Success color scheme" />
+    </div>
+  ),
+}
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <Input variant="outlined" placeholder="Outlined variant" />
+      <Input variant="filled" placeholder="Filled variant" />
+      <Input variant="outlined" colorScheme="light-gray" placeholder="Outlined light-gray" />
+      <Input variant="filled" colorScheme="light-gray" placeholder="Filled light-gray" />
     </div>
   ),
 } 
