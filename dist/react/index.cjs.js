@@ -1992,6 +1992,25 @@ const PendingIcon = ({
     })
   })]
 });
+const SearchIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M14.569 14.0977L10.6623 10.191C11.5815 9.14938 12.0591 7.79092 11.9941 6.40327C11.9292 5.01564 11.3267 3.70776 10.3143 2.75659C9.30178 1.80542 7.95892 1.28563 6.56994 1.30729C5.18095 1.32895 3.85492 1.89036 2.87264 2.87264C1.89036 3.85492 1.32895 5.18095 1.30729 6.56994C1.28563 7.95892 1.80542 9.30178 2.75659 10.3143C3.70776 11.3267 5.01564 11.9292 6.40327 11.9941C7.79092 12.0591 9.14938 11.5815 10.191 10.6623L14.0977 14.569L14.569 14.0977ZM6.66665 11.3333C5.74364 11.3333 4.84138 11.0596 4.07396 10.5468C3.30653 10.0341 2.70839 9.30518 2.35518 8.45245C2.00197 7.59978 1.90956 6.66145 2.08962 5.7562C2.26968 4.85095 2.71414 4.01943 3.36678 3.36678C4.01943 2.71414 4.85095 2.26968 5.7562 2.08962C6.66145 1.90956 7.59978 2.00197 8.45245 2.35518C9.30518 2.70839 10.0341 3.30653 10.5468 4.07396C11.0596 4.84138 11.3333 5.74364 11.3333 6.66665C11.3319 7.90385 10.8398 9.09005 9.96492 9.96492C9.09005 10.8398 7.90385 11.3319 6.66665 11.3333Z',
+    fill: 'currentColor'
+  })
+});
 
 const accordionRootStyles = classVarianceAuthority.cva(`
     w-full
@@ -12460,6 +12479,7 @@ exports.ProgressStepBar = ProgressStepBar;
 exports.ProtectedMessageIcon = ProtectedMessageIcon;
 exports.QuestionMessageIcon = QuestionMessageIcon;
 exports.QueuedIcon = QueuedIcon;
+exports.SearchIcon = SearchIcon;
 exports.Select = Select;
 exports.SettingsIcon = SettingsIcon;
 exports.ShieldSmallIcon = ShieldSmallIcon;

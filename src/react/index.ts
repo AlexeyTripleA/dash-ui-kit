@@ -62,6 +62,7 @@ export {
   SignIcon,
   SignLockIcon,
   LockIcon,
-  PendingIcon
+  PendingIcon,
+  SearchIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'
