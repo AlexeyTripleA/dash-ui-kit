@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { cva } from 'class-variance-authority'
+import * as Popover from '@radix-ui/react-popover'
 import { CopyIcon } from '../icons'
 import { useTheme } from '../../contexts/ThemeContext'
 import copyToClipboard, { CopyResult } from '../../utils/copyToClipboard'
@@ -28,24 +29,43 @@ export interface CopyButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
 
 export const CopyButton: React.FC<CopyButtonProps> = ({ text, className, onCopy, ...props }) => {
   const { theme } = useTheme()
+  const [open, setOpen] = useState(false)
+
+  const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+    copyToClipboard(text, onCopy)
+    setOpen(true)
+    setTimeout(() => setOpen(false), 1000)
+  }
 
   return (
-    <button
-      type='button'
-      className={`${copyBtn({ theme })} ${className ?? ''} hover:cursor-pointer`}
-      onClick={e => {
-        e.stopPropagation()
-        e.preventDefault()
-        copyToClipboard(text, onCopy)
-      }}
-      {...props}
-    >
-      <CopyIcon 
-        className='w-4 h-4 transition' 
-        color={theme === 'light' ? '#000000' : '#ffffff'} 
-      />
-    </button>
+    <Popover.Root open={open}>
+      <Popover.Trigger asChild>
+        <button
+          type='button'
+          className={`${copyBtn({ theme })} ${className ?? ''} hover:cursor-pointer`}
+          onClick={handleCopy}
+          {...props}
+        >
+          <CopyIcon
+            className='w-4 h-4 transition'
+            color={theme === 'light' ? '#000000' : '#ffffff'}
+          />
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          className='bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg'
+          side='top'
+          sideOffset={5}
+        >
+          Copied
+          <Popover.Arrow className='fill-white' />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }
 
-export default CopyButton 
+export default CopyButton

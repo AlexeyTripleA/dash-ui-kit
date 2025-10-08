@@ -38,7 +38,8 @@ import {
   SignIcon,
   SignLockIcon,
   LockIcon,
-  PendingIcon
+  PendingIcon,
+  SearchIcon
 } from './index'
 
 // Test suite for all icons
@@ -80,7 +81,8 @@ const icons = [
   { Component: SignIcon, name: 'SignIcon', defaultSize: 18, defaultColor: '#4C7EFF' },
   { Component: SignLockIcon, name: 'SignLockIcon', defaultSize: 18, defaultColor: '#E93636' },
   { Component: LockIcon, name: 'LockIcon', defaultSize: 8, defaultColor: '#E93636' },
-  { Component: PendingIcon, name: 'PendingIcon', defaultSize: 11, defaultColor: '#F49A58' }
+  { Component: PendingIcon, name: 'PendingIcon', defaultSize: 11, defaultColor: '#F49A58' },
+  { Component: SearchIcon, name: 'SearchIcon', defaultSize: 16, defaultColor: '#0C1C33' }
 ]
 
 describe('Icons', () => {
@@ -488,6 +490,16 @@ describe('Icons', () => {
       expect(svg.querySelector('path')).toBeInTheDocument()
       const clipPath = svg.querySelector('clipPath')
       expect(clipPath).toBeInTheDocument()
+    })
+
+    it('SearchIcon has correct aspect ratio and renders correctly', () => {
+      render(<SearchIcon size={16} />)
+      const svg = screen.getByRole('img', { hidden: true })
+      
+      expect(svg).toHaveAttribute('width', '16')
+      expect(svg).toHaveAttribute('height', '16')
+      expect(svg).toHaveAttribute('viewBox', '0 0 16 16')
+      expect(svg.querySelector('path')).toBeInTheDocument()
     })
   })
 

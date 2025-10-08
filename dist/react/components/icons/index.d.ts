@@ -42,3 +42,4 @@ export declare const SignIcon: React.FC<IconProps>;
 export declare const SignLockIcon: React.FC<IconProps>;
 export declare const LockIcon: React.FC<IconProps>;
 export declare const PendingIcon: React.FC<IconProps>;
+export declare const SearchIcon: React.FC<IconProps>;
