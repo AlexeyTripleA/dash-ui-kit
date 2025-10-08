@@ -2,8 +2,8 @@ import React from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const overlaySelectTrigger: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "brand" | "error" | "success" | "gray" | "lightGray" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    colorScheme?: "default" | "gray" | "brand" | "lightGray" | "error" | "success" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     border?: boolean | null | undefined;
     disabled?: boolean | null | undefined;
     filled?: boolean | null | undefined;

@@ -2,8 +2,8 @@ import React, { InputHTMLAttributes } from 'react';
 import { VariantProps } from 'class-variance-authority';
 declare const input: (props?: ({
     theme?: "light" | "dark" | null | undefined;
-    colorScheme?: "default" | "brand" | "error" | "success" | "light-gray" | null | undefined;
-    size?: "sm" | "md" | "xl" | null | undefined;
+    colorScheme?: "default" | "light-gray" | "brand" | "error" | "success" | null | undefined;
+    size?: "sm" | "xl" | "md" | null | undefined;
     variant?: "outlined" | "filled" | null | undefined;
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
