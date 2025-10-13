@@ -20,6 +20,7 @@ const valueCard = cva(
         yellow: 'bg-dash-yellow-light !outline-dash-yellow'
       },
       size: {
+        xs: 'px-[0.5rem] py-[0.25rem] rounded-[0.25rem]',
         sm: 'dash-block-sm',
         md: 'dash-block-md',
         xl: 'dash-block-xl'

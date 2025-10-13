@@ -2177,16 +2177,22 @@ const Badge = _a => {
       variant = 'default',
       color = 'blue',
       size = 'sm',
+      borderRadius,
       className = '',
       onClick
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "color", "size", "className", "onClick"]);
-  const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
-  // Size classes
+    props = tslib.__rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "onClick"]);
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors';
+  // Size classes with default border radius
   const sizeClasses = {
-    xxs: 'px-1 py-1 text-xs gap-2',
-    sm: 'px-[2.125rem] py-[0.625rem] text-xs',
-    xl: 'px-[2.25rem] py-4 text-lg'
+    xxs: 'px-1 py-1 text-xs gap-2 rounded-full',
+    xs: 'px-[0.5rem] py-[0.25rem] text-xs rounded-full',
+    sm: 'px-[2.125rem] py-[0.625rem] text-xs rounded-full',
+    xl: 'px-[2.25rem] py-4 text-lg rounded-full'
+  };
+  // Border radius classes (overrides size border radius)
+  const borderRadiusClasses = {
+    xs: 'rounded-[0.25rem]'
   };
   // Color and variant combination classes
   const getVariantClasses = () => {
@@ -2236,7 +2242,7 @@ const Badge = _a => {
     };
     return colorMap[color][variant];
   };
-  const classes = [baseClasses, sizeClasses[size], getVariantClasses(), className].filter(Boolean).join(' ');
+  const classes = [baseClasses, sizeClasses[size], getVariantClasses(), borderRadius && borderRadiusClasses[borderRadius], className].filter(Boolean).join(' ');
   return jsxRuntime.jsx("span", Object.assign({
     className: classes,
     onClick: onClick
@@ -3107,6 +3113,7 @@ const valueCard = classVarianceAuthority.cva('flex items-center transition-all o
       yellow: 'bg-dash-yellow-light !outline-dash-yellow'
     },
     size: {
+      xs: 'px-[0.5rem] py-[0.25rem] rounded-[0.25rem]',
       sm: 'dash-block-sm',
       md: 'dash-block-md',
       xl: 'dash-block-xl'

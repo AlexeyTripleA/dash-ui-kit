@@ -19,7 +19,7 @@ const meta: Meta<ValueCardProps> = {
     },
     size: {
       control: { type: 'inline-radio' },
-      options: ['sm', 'md', 'xl'],
+      options: ['xs', 'sm', 'md', 'xl'],
     },
     clickable: { control: 'boolean' },
     loading: { control: 'boolean' },
@@ -83,6 +83,13 @@ Loading.args = {
   colorScheme: 'lightGray',
 }
 
+export const ExtraSmallSize = Template.bind({})
+ExtraSmallSize.args = {
+  children: 'Extra Small Card',
+  size: 'xs',
+  colorScheme: 'lightBlue',
+}
+
 export const SmallSize = Template.bind({})
 SmallSize.args = {
   children: 'Small Card',
@@ -127,6 +134,7 @@ export const AllVariants: StoryFn = () => (
     
     <h3 className="text-lg font-semibold">Sizes</h3>
     <div className="flex flex-wrap items-end gap-4">
+      <ValueCard size="xs" colorScheme="lightBlue">Extra Small</ValueCard>
       <ValueCard size="sm" colorScheme="lightBlue">Small</ValueCard>
       <ValueCard size="md" colorScheme="lightBlue">Medium</ValueCard>
       <ValueCard size="xl" colorScheme="lightBlue">Extra Large</ValueCard>
