@@ -57,11 +57,14 @@ describe('Badge', () => {
     const { rerender } = render(<Badge size='xxs'>XXS Badge</Badge>)
     expect(screen.getByText('XXS Badge')).toHaveClass('px-1 py-1 text-xs')
 
+    rerender(<Badge size='xs'>XS Badge</Badge>)
+    expect(screen.getByText('XS Badge')).toHaveClass('px-[0.5rem] py-[0.25rem] text-xs')
+
     rerender(<Badge size='sm'>SM Badge</Badge>)
-    expect(screen.getByText('SM Badge')).toHaveClass('px-[35px] py-[10px] text-xs')
+    expect(screen.getByText('SM Badge')).toHaveClass('px-[2.125rem] py-[0.625rem] text-xs')
 
     rerender(<Badge size='xl'>XL Badge</Badge>)
-    expect(screen.getByText('XL Badge')).toHaveClass('px-[35px] py-[15px] text-lg')
+    expect(screen.getByText('XL Badge')).toHaveClass('px-[2.25rem] py-4 text-lg')
   })
 
   it('combines variant and color correctly', () => {
@@ -114,5 +117,29 @@ describe('Badge', () => {
     )
     expect(screen.getByText('Complex')).toBeInTheDocument()
     expect(screen.getByText('Content')).toBeInTheDocument()
+  })
+
+  it('applies default border radius from size', () => {
+    render(<Badge size='sm'>Default Radius</Badge>)
+    expect(screen.getByText('Default Radius')).toHaveClass('rounded-full')
+  })
+
+  it('overrides border radius when borderRadius prop is provided', () => {
+    render(<Badge size='sm' borderRadius='xs'>Custom Radius</Badge>)
+    const badge = screen.getByText('Custom Radius')
+    expect(badge).toHaveClass('rounded-[0.25rem]')
+  })
+
+  it('combines size, variant, color and borderRadius correctly', () => {
+    render(
+      <Badge size='xs' variant='solid' color='blue' borderRadius='xs'>
+        Combined Badge
+      </Badge>
+    )
+    const badge = screen.getByText('Combined Badge')
+    expect(badge).toHaveClass('px-[0.5rem]')
+    expect(badge).toHaveClass('py-[0.25rem]')
+    expect(badge).toHaveClass('bg-[#4C7EFF]')
+    expect(badge).toHaveClass('rounded-[0.25rem]')
   })
 })

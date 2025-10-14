@@ -16,7 +16,11 @@ const meta: Meta<BadgeProps> = {
     },
     size: {
       control: { type: 'inline-radio' },
-      options: ['xxs', 'sm', 'xl'],
+      options: ['xxs', 'xs', 'sm', 'xl'],
+    },
+    borderRadius: {
+      control: { type: 'inline-radio' },
+      options: [undefined, 'xs'],
     },
     children: { control: 'text' },
     className: { control: 'text' },
@@ -62,6 +66,7 @@ Bordered.args = {
 export const Sizes: StoryFn<BadgeProps> = () => (
   <div className='flex gap-4 items-center'>
     <Badge size='xxs'>XXS</Badge>
+    <Badge size='xs'>XS</Badge>
     <Badge size='sm'>SM</Badge>
     <Badge size='xl'>XL</Badge>
   </div>
@@ -88,6 +93,22 @@ export const Colors: StoryFn<BadgeProps> = () => (
   </div>
 )
 
+export const BorderRadius: StoryFn<BadgeProps> = () => (
+  <div className='flex gap-4 items-center flex-wrap'>
+    <Badge variant='solid' color='blue'>Default (rounded-full)</Badge>
+    <Badge variant='solid' color='blue' borderRadius='xs'>Border Radius XS (0.25rem)</Badge>
+  </div>
+)
+
+export const XSSizeWithBorderRadius: StoryFn<BadgeProps> = () => (
+  <div className='flex gap-4 items-center flex-wrap'>
+    <Badge size='xs' variant='solid' color='blue'>XS Default</Badge>
+    <Badge size='xs' variant='solid' color='blue' borderRadius='xs'>XS with Border Radius</Badge>
+    <Badge size='xs' variant='flat' color='turquoise' borderRadius='xs'>XS Flat Turquoise</Badge>
+    <Badge size='xs' variant='bordered' color='red' borderRadius='xs'>XS Bordered Red</Badge>
+  </div>
+)
+
 export const BlueVariants: StoryFn<BadgeProps> = () => (
   <div className='space-y-4'>
     <div className='flex gap-4 items-center'>
@@ -96,6 +117,13 @@ export const BlueVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='flat' color='blue' size='xxs'>Label</Badge>
       <Badge variant='solid' color='blue' size='xxs'>Label</Badge>
       <Badge variant='bordered' color='blue' size='xxs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='blue' size='xs'>Label</Badge>
+      <Badge variant='flat' color='blue' size='xs'>Label</Badge>
+      <Badge variant='solid' color='blue' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='blue' size='xs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
@@ -124,6 +152,13 @@ export const RedVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='bordered' color='red' size='xxs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='red' size='xs'>Label</Badge>
+      <Badge variant='flat' color='red' size='xs'>Label</Badge>
+      <Badge variant='solid' color='red' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='red' size='xs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
       <Badge variant='default' color='red' size='sm'>Label</Badge>
       <Badge variant='flat' color='red' size='sm'>Label</Badge>
@@ -148,6 +183,13 @@ export const TurquoiseVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='flat' color='turquoise' size='xxs'>Label</Badge>
       <Badge variant='solid' color='turquoise' size='xxs'>Label</Badge>
       <Badge variant='bordered' color='turquoise' size='xxs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='turquoise' size='xs'>Label</Badge>
+      <Badge variant='flat' color='turquoise' size='xs'>Label</Badge>
+      <Badge variant='solid' color='turquoise' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='turquoise' size='xs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
@@ -176,6 +218,13 @@ export const OrangeVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='bordered' color='orange' size='xxs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='orange' size='xs'>Label</Badge>
+      <Badge variant='flat' color='orange' size='xs'>Label</Badge>
+      <Badge variant='solid' color='orange' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='orange' size='xs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
       <Badge variant='default' color='orange' size='sm'>Label</Badge>
       <Badge variant='flat' color='orange' size='sm'>Label</Badge>
@@ -200,6 +249,13 @@ export const WhiteVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='flat' color='white' size='xxs'>Label</Badge>
       <Badge variant='solid' color='white' size='xxs'>Label</Badge>
       <Badge variant='bordered' color='white' size='xxs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm text-white'>XS:</span>
+      <Badge variant='default' color='white' size='xs'>Label</Badge>
+      <Badge variant='flat' color='white' size='xs'>Label</Badge>
+      <Badge variant='solid' color='white' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='white' size='xs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm text-white'>SM:</span>
@@ -228,6 +284,13 @@ export const GrayVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='bordered' color='gray' size='xxs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='gray' size='xs'>Label</Badge>
+      <Badge variant='flat' color='gray' size='xs'>Label</Badge>
+      <Badge variant='solid' color='gray' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='gray' size='xs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
       <Badge variant='default' color='gray' size='sm'>Label</Badge>
       <Badge variant='flat' color='gray' size='sm'>Label</Badge>
@@ -252,6 +315,13 @@ export const LightGrayVariants: StoryFn<BadgeProps> = () => (
       <Badge variant='flat' color='light-gray' size='xxs'>Label</Badge>
       <Badge variant='solid' color='light-gray' size='xxs'>Label</Badge>
       <Badge variant='bordered' color='light-gray' size='xxs'>Label</Badge>
+    </div>
+    <div className='flex gap-4 items-center'>
+      <span className='w-20 text-sm'>XS:</span>
+      <Badge variant='default' color='light-gray' size='xs'>Label</Badge>
+      <Badge variant='flat' color='light-gray' size='xs'>Label</Badge>
+      <Badge variant='solid' color='light-gray' size='xs'>Label</Badge>
+      <Badge variant='bordered' color='light-gray' size='xs'>Label</Badge>
     </div>
     <div className='flex gap-4 items-center'>
       <span className='w-20 text-sm'>SM:</span>
@@ -283,6 +353,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='bordered' color='blue' size='xxs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='blue' size='xs'>Label</Badge>
+          <Badge variant='flat' color='blue' size='xs'>Label</Badge>
+          <Badge variant='solid' color='blue' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='blue' size='xs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
           <Badge variant='default' color='blue' size='sm'>Label</Badge>
           <Badge variant='flat' color='blue' size='sm'>Label</Badge>
@@ -308,6 +385,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='flat' color='red' size='xxs'>Label</Badge>
           <Badge variant='solid' color='red' size='xxs'>Label</Badge>
           <Badge variant='bordered' color='red' size='xxs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='red' size='xs'>Label</Badge>
+          <Badge variant='flat' color='red' size='xs'>Label</Badge>
+          <Badge variant='solid' color='red' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='red' size='xs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
@@ -337,6 +421,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='bordered' color='turquoise' size='xxs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='turquoise' size='xs'>Label</Badge>
+          <Badge variant='flat' color='turquoise' size='xs'>Label</Badge>
+          <Badge variant='solid' color='turquoise' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='turquoise' size='xs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
           <Badge variant='default' color='turquoise' size='sm'>Label</Badge>
           <Badge variant='flat' color='turquoise' size='sm'>Label</Badge>
@@ -362,6 +453,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='flat' color='orange' size='xxs'>Label</Badge>
           <Badge variant='solid' color='orange' size='xxs'>Label</Badge>
           <Badge variant='bordered' color='orange' size='xxs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='orange' size='xs'>Label</Badge>
+          <Badge variant='flat' color='orange' size='xs'>Label</Badge>
+          <Badge variant='solid' color='orange' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='orange' size='xs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
@@ -391,6 +489,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='bordered' color='gray' size='xxs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='gray' size='xs'>Label</Badge>
+          <Badge variant='flat' color='gray' size='xs'>Label</Badge>
+          <Badge variant='solid' color='gray' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='gray' size='xs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
           <Badge variant='default' color='gray' size='sm'>Label</Badge>
           <Badge variant='flat' color='gray' size='sm'>Label</Badge>
@@ -418,6 +523,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='bordered' color='light-gray' size='xxs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm'>XS:</span>
+          <Badge variant='default' color='light-gray' size='xs'>Label</Badge>
+          <Badge variant='flat' color='light-gray' size='xs'>Label</Badge>
+          <Badge variant='solid' color='light-gray' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='light-gray' size='xs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm'>SM:</span>
           <Badge variant='default' color='light-gray' size='sm'>Label</Badge>
           <Badge variant='flat' color='light-gray' size='sm'>Label</Badge>
@@ -443,6 +555,13 @@ export const AllVariants: StoryFn<BadgeProps> = () => (
           <Badge variant='flat' color='white' size='xxs'>Label</Badge>
           <Badge variant='solid' color='white' size='xxs'>Label</Badge>
           <Badge variant='bordered' color='white' size='xxs'>Label</Badge>
+        </div>
+        <div className='flex gap-4 items-center'>
+          <span className='w-20 text-sm text-white'>XS:</span>
+          <Badge variant='default' color='white' size='xs'>Label</Badge>
+          <Badge variant='flat' color='white' size='xs'>Label</Badge>
+          <Badge variant='solid' color='white' size='xs'>Label</Badge>
+          <Badge variant='bordered' color='white' size='xs'>Label</Badge>
         </div>
         <div className='flex gap-4 items-center'>
           <span className='w-20 text-sm text-white'>SM:</span>

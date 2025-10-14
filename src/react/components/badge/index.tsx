@@ -1,30 +1,40 @@
 import React from 'react';
 
-export interface BadgeProps {
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * Content of the badge
    */
   children: React.ReactNode;
-  
+
   /**
    * Visual style variant
    */
   variant?: 'default' | 'flat' | 'solid' | 'bordered';
-  
+
   /**
    * Color theme
    */
   color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
-  
+
   /**
    * Size of the badge
    */
-  size?: 'xxs' | 'sm' | 'xl';
-  
+  size?: 'xxs' | 'xs' | 'sm' | 'xl';
+
+  /**
+   * Border radius variant
+   */
+  borderRadius?: 'xs';
+
   /**
    * Additional CSS class name
    */
   className?: string;
+
+  /**
+   * Click handler
+   */
+  onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -32,16 +42,25 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = 'default',
   color = 'blue',
   size = 'sm',
+  borderRadius,
   className = '',
+  onClick,
+  ...props
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center rounded-full font-medium transition-colors';
+  const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors';
   
-  // Size classes
+  // Size classes with default border radius
   const sizeClasses = {
-    xxs: 'px-1 py-1 text-xs gap-2',
-    sm: 'px-[35px] py-[10px] text-xs',
-    xl: 'px-[35px] py-[15px] text-lg',
-  };
+    xxs: 'px-1 py-1 text-xs gap-2 rounded-full',
+    xs: 'px-[0.5rem] py-[0.25rem] text-xs rounded-full',
+    sm: 'px-[2.125rem] py-[0.625rem] text-xs rounded-full',
+    xl: 'px-[2.25rem] py-4 text-lg rounded-full',
+  }
+
+  // Border radius classes (overrides size border radius)
+  const borderRadiusClasses = {
+    xs: 'rounded-[0.25rem]',
+  }
   
   // Color and variant combination classes
   const getVariantClasses = () => {
@@ -66,8 +85,8 @@ export const Badge: React.FC<BadgeProps> = ({
       },
       'light-gray': {
         default: 'text-[#6B7280]',
-        flat: 'bg-[rgba(107,114,128,0.15)] text-[#0C1C33]',
-        solid: 'bg-[#6B7280] text-white',
+        flat: 'bg-[#0C1C33]/5 text-[#0C1C33]',
+        solid: 'bg-[#0C1C33]/15 text-[#0C1C33]',
         bordered: 'outline outline-1 outline-[#6B7280] text-[#6B7280]',
       },
       turquoise: {
@@ -88,23 +107,24 @@ export const Badge: React.FC<BadgeProps> = ({
         solid: 'bg-[#F98F12] text-white',
         bordered: 'outline outline-1 outline-[#F98F12] text-[#F98F12]',
       },
-    };
+    }
     
     return colorMap[color][variant];
-  };
+  }
   
   const classes = [
     baseClasses,
     sizeClasses[size],
     getVariantClasses(),
+    borderRadius && borderRadiusClasses[borderRadius],
     className,
-  ].filter(Boolean).join(' ');
+  ].filter(Boolean).join(' ')
   
   return (
-    <span className={classes}>
+    <span className={classes} onClick={onClick} {...props}>
       {children}
     </span>
-  );
-};
+  )
+}
 
-export default Badge;
+export default Badge

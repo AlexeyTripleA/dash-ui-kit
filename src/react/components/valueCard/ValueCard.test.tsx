@@ -99,6 +99,13 @@ describe('ValueCard', () => {
   it('applies different size variants', () => {
     const { rerender } = render(
       <TestWrapper>
+        <ValueCard size="xs" data-testid="value-card">Test</ValueCard>
+      </TestWrapper>
+    )
+    expect(screen.getByTestId('value-card')).toHaveClass('px-[0.5rem]', 'py-[0.25rem]', 'rounded-[0.25rem]')
+
+    rerender(
+      <TestWrapper>
         <ValueCard size="sm" data-testid="value-card">Test</ValueCard>
       </TestWrapper>
     )

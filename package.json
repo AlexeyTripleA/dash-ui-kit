@@ -47,6 +47,7 @@
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-select": "^2.2.5",
     "class-variance-authority": "^0.7.1",
     "minidenticons": "^4.2.1",
