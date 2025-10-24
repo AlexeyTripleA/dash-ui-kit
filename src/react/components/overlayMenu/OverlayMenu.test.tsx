@@ -400,4 +400,228 @@ describe('OverlayMenu', () => {
     // Should not have any label
     expect(screen.queryByText('Custom Label')).not.toBeInTheDocument()
   })
+
+  describe('Context Menu Variant', () => {
+    it('renders context menu with position', async () => {
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            variant="context-menu"
+            items={mockItems}
+            position={{ top: 100, left: 150 }}
+            headerContent={
+              <div className="flex items-center gap-2">
+                <span>🎯</span>
+                <span>Context Menu</span>
+              </div>
+            }
+          />
+        </TestWrapper>
+      )
+      
+      await waitFor(() => {
+        expect(screen.getByText('Context Menu')).toBeInTheDocument()
+        expect(screen.getByText('Item 1')).toBeInTheDocument()
+      })
+    })
+
+    it('shows close button in context menu header', async () => {
+      const onClose = jest.fn()
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            variant="context-menu"
+            items={mockItems}
+            position={{ top: 100, left: 150 }}
+            headerContent="Context Menu"
+            showCloseButton
+            onClose={onClose}
+          />
+        </TestWrapper>
+      )
+      
+      await waitFor(() => {
+        expect(screen.getByText('Context Menu')).toBeInTheDocument()
+      })
+
+      // Find and click close button
+      const closeButton = screen.getByLabelText('Close menu')
+      fireEvent.click(closeButton)
+      
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('applies custom width to context menu', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <OverlayMenu 
+            variant="context-menu"
+            items={mockItems}
+            position={{ top: 100, left: 150 }}
+            width={300}
+          />
+        </TestWrapper>
+      )
+      
+      await waitFor(() => {
+        const menu = container.querySelector('.fixed.z-50')
+        expect(menu).toBeInTheDocument()
+        expect(menu).toHaveStyle({ width: '300px' })
+      })
+    })
+
+    it('positions context menu correctly', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <OverlayMenu 
+            variant="context-menu"
+            items={mockItems}
+            position={{ top: 100, left: 150, right: 200 }}
+          />
+        </TestWrapper>
+      )
+      
+      await waitFor(() => {
+        const menu = container.querySelector('.fixed.z-50')
+        expect(menu).toBeInTheDocument()
+        expect(menu).toHaveStyle({ 
+          top: '100px', 
+          left: '150px',
+          right: '200px'
+        })
+      })
+    })
+
+    it('does not render trigger button for context menu', () => {
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            variant="context-menu"
+            items={mockItems}
+            position={{ top: 100, left: 150 }}
+          />
+        </TestWrapper>
+      )
+      
+      // Context menu should not have a trigger button
+      expect(screen.queryByRole('button', { name: /menu/i })).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Keyboard Navigation', () => {
+    it('closes menu when Escape key is pressed', async () => {
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            items={mockItems}
+            overlayLabel="Test Menu"
+          />
+        </TestWrapper>
+      )
+      
+      // Open menu
+      const trigger = screen.getByRole('button')
+      fireEvent.click(trigger)
+      
+      await waitFor(() => {
+        expect(screen.getByText('Test Menu')).toBeInTheDocument()
+      })
+      
+      // Press Escape
+      fireEvent.keyDown(document, { key: 'Escape' })
+      
+      await waitFor(() => {
+        expect(screen.queryByText('Test Menu')).not.toBeInTheDocument()
+      })
+    })
+
+    it('calls onClose when Escape is pressed', async () => {
+      const onClose = jest.fn()
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            items={mockItems}
+            overlayLabel="Test Menu"
+            onClose={onClose}
+          />
+        </TestWrapper>
+      )
+      
+      // Open menu
+      const trigger = screen.getByRole('button')
+      fireEvent.click(trigger)
+      
+      await waitFor(() => {
+        expect(screen.getByText('Test Menu')).toBeInTheDocument()
+      })
+      
+      // Press Escape
+      fireEvent.keyDown(document, { key: 'Escape' })
+      
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalledTimes(1)
+      })
+    })
+  })
+
+  describe('Header Content', () => {
+    it('renders custom headerContent', async () => {
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            items={mockItems}
+            headerContent={
+              <div className="flex items-center gap-2">
+                <span>🔧</span>
+                <span>Settings</span>
+              </div>
+            }
+            showCloseButton
+          />
+        </TestWrapper>
+      )
+      
+      // Open menu
+      const trigger = screen.getByRole('button')
+      fireEvent.click(trigger)
+      
+      await waitFor(() => {
+        expect(screen.getByText('Settings')).toBeInTheDocument()
+        expect(screen.getByText('🔧')).toBeInTheDocument()
+      })
+    })
+
+    it('shows close button when showCloseButton is true', async () => {
+      const onClose = jest.fn()
+      render(
+        <TestWrapper>
+          <OverlayMenu 
+            items={mockItems}
+            overlayLabel="Test Menu"
+            showCloseButton
+            onClose={onClose}
+          />
+        </TestWrapper>
+      )
+      
+      // Open menu
+      const trigger = screen.getByRole('button')
+      fireEvent.click(trigger)
+      
+      await waitFor(() => {
+        expect(screen.getByText('Test Menu')).toBeInTheDocument()
+      })
+
+      // Find and click close button
+      const closeButton = screen.getByLabelText('Close menu')
+      expect(closeButton).toBeInTheDocument()
+      fireEvent.click(closeButton)
+      
+      await waitFor(() => {
+        expect(onClose).toHaveBeenCalledTimes(1)
+      })
+    })
+  })
 })
