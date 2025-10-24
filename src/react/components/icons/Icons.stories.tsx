@@ -39,7 +39,9 @@ import {
   SignLockIcon,
   LockIcon,
   PendingIcon,
-  SearchIcon
+  SearchIcon,
+  AirplaneIcon,
+  ExternalLinkIcon
 } from './index'
 
 const meta: Meta = {
@@ -226,6 +228,14 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <SearchIcon />
         <span className="text-sm">SearchIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <AirplaneIcon />
+        <span className="text-sm">AirplaneIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ExternalLinkIcon />
+        <span className="text-sm">ExternalLinkIcon</span>
       </div>
     </div>
   ),
@@ -647,6 +657,26 @@ export const Pending: StoryObj = {
 // Search Icon
 export const Search: StoryObj = {
   render: (args) => <SearchIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Airplane Icon
+export const Airplane: StoryObj = {
+  render: (args) => <AirplaneIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// External Link Icon
+export const ExternalLink: StoryObj = {
+  render: (args) => <ExternalLinkIcon {...args} />,
   args: {
     size: 16,
     color: '#0C1C33',
