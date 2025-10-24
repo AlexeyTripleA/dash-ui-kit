@@ -8912,7 +8912,7 @@ const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none
     filled: false
   }
 });
-const overlayContent = cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+const overlayContent = cva('absolute z-50 overflow-hidden', {
   variants: {
     theme: {
       light: 'bg-white border border-[rgba(12,28,51,0.05)]',
@@ -8920,22 +8920,55 @@ const overlayContent = cva('absolute z-50 min-w-full overflow-hidden shadow-lg',
     },
     size: {
       sm: 'rounded-[0.625rem]',
-      md: 'rounded-[0.875rem]',
-      xl: 'rounded-[1rem]'
+      md: 'rounded-[0.75rem]',
+      xl: 'rounded-[0.9375rem]'
+    },
+    variant: {
+      dropdown: 'min-w-full',
+      'context-menu': 'w-[200px]'
+    },
+    hasShadow: {
+      true: 'shadow-[0px_0px_75px_0px_rgba(0,0,0,0.15)]',
+      false: 'shadow-lg'
     }
+  },
+  defaultVariants: {
+    variant: 'dropdown',
+    hasShadow: false
   }
 });
-const overlayItem = cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+const overlayHeader = cva('flex items-center justify-between border-b gap-2', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(12,28,51,0.05)]',
+      dark: 'border-[rgba(255,255,255,0.15)]'
+    },
+    size: {
+      sm: 'px-[0.875rem] py-[0.375rem]',
+      md: 'px-[1rem] py-[0.5rem]',
+      xl: 'px-[1.125rem] py-[0.5rem]'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
+  }
+});
+const overlayItem = cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none font-medium text-[0.75rem] leading-[1.416em]', {
   variants: {
     theme: {
       light: 'text-[#0C1C33] hover:bg-gray-50',
       dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
     },
     size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
+      sm: 'px-[0.875rem] py-[0.625rem]',
+      md: 'px-[1rem] py-[0.6875rem]',
+      xl: 'px-[1.125rem] py-[0.75rem]'
     }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
   }
 });
 // Arrow icon
@@ -8958,6 +8991,12 @@ const ChevronDownIcon = ({
 /**
  * Overlay menu component that opens above the trigger with overlay positioning.
  * Supports custom content items with onClick handlers.
+ *
+ * @param variant - 'dropdown' (default) or 'context-menu'
+ * @param headerContent - Custom header content (for context-menu variant)
+ * @param showCloseButton - Show close button in header
+ * @param position - Position object for context-menu variant
+ * @param width - Custom width (default: 200px for context-menu)
  */
 const OverlayMenu = _a => {
   var {
@@ -8976,9 +9015,15 @@ const OverlayMenu = _a => {
       maxHeight = '200px',
       triggerContent,
       placeholder = 'Menu',
-      showItemBorders = true
+      showItemBorders = true,
+      variant = 'dropdown',
+      headerContent,
+      showCloseButton = false,
+      position,
+      width,
+      onClose
     } = _a,
-    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+    props = __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
   const {
     theme
   } = useTheme();
@@ -8987,6 +9032,22 @@ const OverlayMenu = _a => {
   // Determine color scheme based on state
   let finalColorScheme = colorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const isContextMenu = variant === 'context-menu';
+  // Handle Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = e => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+  const handleClose = () => {
+    setIsOpen(false);
+    onClose === null || onClose === void 0 ? void 0 : onClose();
+  };
   const triggerClasses = overlayMenuTrigger({
     theme,
     colorScheme: finalColorScheme,
@@ -8996,6 +9057,12 @@ const OverlayMenu = _a => {
     disabled
   }) + ' ' + className;
   const contentClasses = overlayContent({
+    theme,
+    size,
+    variant,
+    hasShadow: isContextMenu
+  });
+  const headerClasses = overlayHeader({
     theme,
     size
   });
@@ -9007,11 +9074,28 @@ const OverlayMenu = _a => {
     if (!item.disabled && item.onClick) {
       item.onClick();
     }
-    setIsOpen(false);
+    handleClose();
+  };
+  // For context-menu variant, show menu immediately if position is provided
+  useEffect(() => {
+    if (isContextMenu && position) {
+      setIsOpen(true);
+    }
+  }, [isContextMenu, position]);
+  // Calculate position styles for context-menu
+  const getPositionStyles = () => {
+    if (!isContextMenu || !position) return {};
+    const styles = {};
+    if (position.top !== undefined) styles.top = position.top;
+    if (position.left !== undefined) styles.left = position.left;
+    if (position.right !== undefined) styles.right = position.right;
+    if (position.bottom !== undefined) styles.bottom = position.bottom;
+    if (width) styles.width = typeof width === 'number' ? `${width}px` : width;
+    return styles;
   };
   return jsxs("div", {
-    className: 'relative',
-    children: [jsxs("button", Object.assign({
+    className: isContextMenu ? '' : 'relative',
+    children: [!isContextMenu && jsxs("button", Object.assign({
       ref: triggerRef,
       type: 'button',
       className: triggerClasses,
@@ -9030,35 +9114,33 @@ const OverlayMenu = _a => {
       })]
     })), isOpen && jsxs(Fragment, {
       children: [jsx("div", {
-        className: 'fixed inset-0 z-40',
-        onClick: () => setIsOpen(false)
+        className: `${isContextMenu ? 'fixed' : 'fixed'} inset-0 z-40`,
+        onClick: handleClose
       }), jsxs("div", {
-        className: `${contentClasses} top-0 left-0 right-0 overflow-y-auto`,
-        style: {
+        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? 'top-0 left-0 right-0' : ''} overflow-y-auto`,
+        style: Object.assign({
           maxHeight
-        },
-        children: [overlayLabel && jsxs("div", {
-          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          onClick: () => setIsOpen(false),
+        }, getPositionStyles()),
+        children: [(headerContent || overlayLabel) && jsxs("div", {
+          className: `${headerClasses} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`,
+          onClick: !showCloseButton && !isContextMenu ? handleClose : undefined,
           children: [jsx("div", {
             className: 'w-full flex-1',
-            children: overlayLabel
-          }), jsx("div", {
-            className: 'flex items-center pl-1',
+            children: headerContent || overlayLabel
+          }), (showCloseButton || isContextMenu && headerContent) && jsx("button", {
+            className: 'flex items-center cursor-pointer hover:opacity-70 transition-opacity',
+            onClick: handleClose,
+            "aria-label": 'Close menu',
             children: jsx(CrossIcon, {
               size: 16,
-              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
-              className: 'cursor-pointer'
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33'
             })
           })]
         }), jsx("div", {
           children: items.map((item, index) => jsx("div", {
-            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
             onClick: () => handleItemClick(item),
-            children: jsx("div", {
-              className: 'w-full flex-1',
-              children: item.content
-            })
+            children: item.content
           }, item.id))
         })]
       })]

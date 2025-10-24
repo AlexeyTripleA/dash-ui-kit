@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
 import { CrossIcon } from '../icons'
@@ -204,7 +204,7 @@ const overlayMenuTrigger = cva(
 )
 
 const overlayContent = cva(
-  'absolute z-50 min-w-full overflow-hidden shadow-lg',
+  'absolute z-50 overflow-hidden',
   {
     variants: {
       theme: {
@@ -213,15 +213,48 @@ const overlayContent = cva(
       },
       size: {
         sm: 'rounded-[0.625rem]',
-        md: 'rounded-[0.875rem]', 
-        xl: 'rounded-[1rem]'
+        md: 'rounded-[0.75rem]', 
+        xl: 'rounded-[0.9375rem]'
+      },
+      variant: {
+        dropdown: 'min-w-full',
+        'context-menu': 'w-[200px]'
+      },
+      hasShadow: {
+        true: 'shadow-[0px_0px_75px_0px_rgba(0,0,0,0.15)]',
+        false: 'shadow-lg'
       }
+    },
+    defaultVariants: {
+      variant: 'dropdown',
+      hasShadow: false
+    }
+  }
+)
+
+const overlayHeader = cva(
+  'flex items-center justify-between border-b gap-2',
+  {
+    variants: {
+      theme: {
+        light: 'border-[rgba(12,28,51,0.05)]',
+        dark: 'border-[rgba(255,255,255,0.15)]'
+      },
+      size: {
+        sm: 'px-[0.875rem] py-[0.375rem]',
+        md: 'px-[1rem] py-[0.5rem]',
+        xl: 'px-[1.125rem] py-[0.5rem]'
+      }
+    },
+    defaultVariants: {
+      theme: 'light',
+      size: 'xl'
     }
   }
 )
 
 const overlayItem = cva(
-  'relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none',
+  'relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none font-medium text-[0.75rem] leading-[1.416em]',
   {
     variants: {
       theme: {
@@ -229,10 +262,14 @@ const overlayItem = cva(
         dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
       },
       size: {
-        sm: 'dash-block-sm',
-        md: 'dash-block-md',
-        xl: 'dash-block-xl'
+        sm: 'px-[0.875rem] py-[0.625rem]',
+        md: 'px-[1rem] py-[0.6875rem]',
+        xl: 'px-[1.125rem] py-[0.75rem]'
       }
+    },
+    defaultVariants: {
+      theme: 'light',
+      size: 'xl'
     }
   }
 )
@@ -265,6 +302,13 @@ export interface OverlayMenuItem {
   disabled?: boolean
 }
 
+export interface OverlayMenuPosition {
+  top?: number
+  left?: number
+  right?: number
+  bottom?: number
+}
+
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
   className?: string
   error?: boolean
@@ -280,11 +324,23 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
   triggerContent?: React.ReactNode
   placeholder?: string
   showItemBorders?: boolean
+  variant?: 'dropdown' | 'context-menu'
+  headerContent?: React.ReactNode
+  showCloseButton?: boolean
+  position?: OverlayMenuPosition
+  width?: string | number
+  onClose?: () => void
 }
 
 /**
  * Overlay menu component that opens above the trigger with overlay positioning.
  * Supports custom content items with onClick handlers.
+ * 
+ * @param variant - 'dropdown' (default) or 'context-menu'
+ * @param headerContent - Custom header content (for context-menu variant)
+ * @param showCloseButton - Show close button in header
+ * @param position - Position object for context-menu variant
+ * @param width - Custom width (default: 200px for context-menu)
  */
 export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   className = '',
@@ -303,6 +359,12 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   triggerContent,
   placeholder = 'Menu',
   showItemBorders = true,
+  variant = 'dropdown',
+  headerContent,
+  showCloseButton = false,
+  position,
+  width,
+  onClose,
   ...props
 }) => {
   const { theme } = useTheme()
@@ -314,6 +376,27 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 
+  const isContextMenu = variant === 'context-menu'
+
+  // Handle Escape key
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen])
+
+  const handleClose = () => {
+    setIsOpen(false)
+    onClose?.()
+  }
+
   const triggerClasses = overlayMenuTrigger({
     theme,
     colorScheme: finalColorScheme,
@@ -323,74 +406,112 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
     disabled
   }) + ' ' + className
 
-  const contentClasses = overlayContent({ theme, size })
+  const contentClasses = overlayContent({ 
+    theme, 
+    size, 
+    variant,
+    hasShadow: isContextMenu 
+  })
+  const headerClasses = overlayHeader({ theme, size })
   const itemClasses = overlayItem({ theme, size })
 
   const handleItemClick = (item: OverlayMenuItem) => {
     if (!item.disabled && item.onClick) {
       item.onClick()
     }
-    setIsOpen(false)
+    handleClose()
+  }
+
+  // For context-menu variant, show menu immediately if position is provided
+  useEffect(() => {
+    if (isContextMenu && position) {
+      setIsOpen(true)
+    }
+  }, [isContextMenu, position])
+
+  // Calculate position styles for context-menu
+  const getPositionStyles = (): React.CSSProperties => {
+    if (!isContextMenu || !position) return {}
+    
+    const styles: React.CSSProperties = {}
+    if (position.top !== undefined) styles.top = position.top
+    if (position.left !== undefined) styles.left = position.left
+    if (position.right !== undefined) styles.right = position.right
+    if (position.bottom !== undefined) styles.bottom = position.bottom
+    if (width) styles.width = typeof width === 'number' ? `${width}px` : width
+    
+    return styles
   }
 
   return (
-    <div className='relative'>
-      <button
-        ref={triggerRef}
-        type='button'
-        className={triggerClasses}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
-        disabled={disabled}
-        name={name}
-        {...props}
-      >
-        <div className='w-full flex-1 text-left'>
-          {triggerContent || (
-            <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}>
-              {placeholder}
-            </span>
+    <div className={isContextMenu ? '' : 'relative'}>
+      {/* Trigger button - only for dropdown variant */}
+      {!isContextMenu && (
+        <button
+          ref={triggerRef}
+          type='button'
+          className={triggerClasses}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          disabled={disabled}
+          name={name}
+          {...props}
+        >
+          <div className='w-full flex-1 text-left'>
+            {triggerContent || (
+              <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}>
+                {placeholder}
+              </span>
+            )}
+          </div>
+          {showArrow && (
+            <ChevronDownIcon 
+              className={`transition-transform ${isOpen ? 'rotate-180' : ''} ${
+                size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'
+              }`} 
+            />
           )}
-        </div>
-        {showArrow && (
-          <ChevronDownIcon 
-            className={`transition-transform ${isOpen ? 'rotate-180' : ''} ${
-              size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'
-            }`} 
-          />
-        )}
-      </button>
+        </button>
+      )}
 
       {isOpen && (
         <>
           {/* Backdrop */}
           <div 
-            className='fixed inset-0 z-40' 
-            onClick={() => setIsOpen(false)}
+            className={`${isContextMenu ? 'fixed' : 'fixed'} inset-0 z-40`}
+            onClick={handleClose}
           />
 
           {/* Overlay content */}
           <div
-            className={`${contentClasses} top-0 left-0 right-0 overflow-y-auto`}
-            style={{ maxHeight }}
+            className={`${contentClasses} ${isContextMenu ? 'fixed' : ''} ${
+              !isContextMenu ? 'top-0 left-0 right-0' : ''
+            } overflow-y-auto`}
+            style={{ 
+              maxHeight,
+              ...getPositionStyles()
+            }}
           >
-            {/* Overlay label */}
-            {overlayLabel && (
+            {/* Custom header for context-menu or overlayLabel for dropdown */}
+            {(headerContent || overlayLabel) && (
               <div 
-                className={`${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${
-                  theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'
-                }`}
-                onClick={() => setIsOpen(false)}
+                className={`${headerClasses} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`}
+                onClick={!showCloseButton && !isContextMenu ? handleClose : undefined}
               >
                 <div className='w-full flex-1'>
-                  {overlayLabel}
+                  {headerContent || overlayLabel}
                 </div>
-                <div className='flex items-center pl-1'>
-                  <CrossIcon 
-                    size={16} 
-                    color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
-                    className='cursor-pointer'
-                  />
-                </div>
+                {(showCloseButton || (isContextMenu && headerContent)) && (
+                  <button
+                    className='flex items-center cursor-pointer hover:opacity-70 transition-opacity'
+                    onClick={handleClose}
+                    aria-label='Close menu'
+                  >
+                    <CrossIcon 
+                      size={16} 
+                      color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
+                    />
+                  </button>
+                )}
               </div>
             )}
 
@@ -400,15 +521,13 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
                 <div
                   key={item.id}
                   className={`${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
-                    index < items.length - 1 
+                    showItemBorders && index < items.length - 1 
                       ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`
                       : ''
                   }`}
                   onClick={() => handleItemClick(item)}
                 >
-                  <div className='w-full flex-1'>
-                    {item.content}
-                  </div>
+                  {item.content}
                 </div>
               ))}
             </div>
