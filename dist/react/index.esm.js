@@ -12077,14 +12077,11 @@ const DashDialog = ({
         position
       })} ${className}`,
       style: customStyles,
-      children: [!title && jsx(Title, {
-        asChild: true,
-        children: jsx(VisuallyHidden, {
-          children: "Dialog"
-        })
-      }), (title || showCloseButton) && jsxs("div", {
+      children: [title ?
+      // Render visible title in header if provided
+      jsxs("div", {
         className: headerStyles(),
-        children: [title && jsx(Title, {
+        children: [jsx(Title, {
           className: titleStyles({
             theme
           }),
@@ -12102,6 +12099,30 @@ const DashDialog = ({
             className: 'sr-only',
             children: "Close"
           })]
+        })]
+      }) :
+      // No title provided - render visually hidden title for accessibility
+      jsxs(Fragment, {
+        children: [jsx(Title, {
+          children: jsx(VisuallyHidden, {
+            children: "Dialog"
+          })
+        }), showCloseButton && jsx("div", {
+          className: headerStyles(),
+          children: jsxs(Close, {
+            className: closeButtonStyles({
+              theme
+            }),
+            children: [jsx("div", {
+              className: 'w-8 h-8 flex items-center justify-center',
+              children: jsx(CrossIcon, {
+                size: 16
+              })
+            }), jsx("span", {
+              className: 'sr-only',
+              children: "Close"
+            })]
+          })
         })]
       }), children]
     })]

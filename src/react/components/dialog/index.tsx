@@ -244,20 +244,13 @@ export const DashDialog: React.FC<DialogProps> = ({
         className={`${contentStyles({ theme, size, position })} ${className}`}
         style={customStyles}
       >
-        {/* Accessibility: Always provide a title, even if visually hidden */}
-        {!title && (
-          <Dialog.Title asChild>
-            <VisuallyHidden>Dialog</VisuallyHidden>
-          </Dialog.Title>
-        )}
-        
-        {(title || showCloseButton) && (
+        {/* Accessibility: Always provide a title */}
+        {title ? (
+          // Render visible title in header if provided
           <div className={headerStyles()}>
-            {title && (
-              <Dialog.Title className={titleStyles({ theme })}>
-                {title}
-              </Dialog.Title>
-            )}
+            <Dialog.Title className={titleStyles({ theme })}>
+              {title}
+            </Dialog.Title>
             {showCloseButton && (
               <Dialog.Close className={closeButtonStyles({ theme })}>
                 <div className='w-8 h-8 flex items-center justify-center'>
@@ -267,6 +260,23 @@ export const DashDialog: React.FC<DialogProps> = ({
               </Dialog.Close>
             )}
           </div>
+        ) : (
+          // No title provided - render visually hidden title for accessibility
+          <>
+            <Dialog.Title>
+              <VisuallyHidden>Dialog</VisuallyHidden>
+            </Dialog.Title>
+            {showCloseButton && (
+              <div className={headerStyles()}>
+                <Dialog.Close className={closeButtonStyles({ theme })}>
+                  <div className='w-8 h-8 flex items-center justify-center'>
+                      <CrossIcon size={16} />
+                  </div>
+                  <span className='sr-only'>Close</span>
+                </Dialog.Close>
+              </div>
+            )}
+          </>
         )}
         {children}
       </Dialog.Content>
