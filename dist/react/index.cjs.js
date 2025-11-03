@@ -6339,7 +6339,7 @@ var VISUALLY_HIDDEN_STYLES = Object.freeze({
   wordWrap: "normal"
 });
 var NAME = "VisuallyHidden";
-var VisuallyHidden = React__namespace.forwardRef(
+var VisuallyHidden$1 = React__namespace.forwardRef(
   (props, forwardedRef) => {
     return /* @__PURE__ */ jsxRuntime.jsx(
       Primitive.span,
@@ -6351,7 +6351,7 @@ var VisuallyHidden = React__namespace.forwardRef(
     );
   }
 );
-VisuallyHidden.displayName = NAME;
+VisuallyHidden$1.displayName = NAME;
 
 var getDefaultParent = function (originalTarget) {
     if (typeof document === 'undefined') {
@@ -11905,6 +11905,24 @@ var Content$1 = DialogContent;
 var Title = DialogTitle;
 var Close = DialogClose;
 
+// Visually hidden component for accessibility
+const VisuallyHidden = ({
+  children
+}) => jsxRuntime.jsx("span", {
+  style: {
+    position: 'absolute',
+    border: 0,
+    width: 1,
+    height: 1,
+    padding: 0,
+    margin: -1,
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal'
+  },
+  children: children
+});
 const overlayStyles = classVarianceAuthority.cva(`
     fixed
     inset-0
@@ -11925,11 +11943,9 @@ const overlayStyles = classVarianceAuthority.cva(`
 const contentStyles = classVarianceAuthority.cva(`
     fixed
     left-[50%]
-    top-[50%]
     z-50
     w-full
     translate-x-[-50%]
-    translate-y-[-50%]
     flex
     flex-col
     gap-4
@@ -11942,10 +11958,6 @@ const contentStyles = classVarianceAuthority.cva(`
     data-[state=open]:fade-in-0
     data-[state=closed]:zoom-out-95
     data-[state=open]:zoom-in-95
-    data-[state=closed]:slide-out-to-left-1/2
-    data-[state=closed]:slide-out-to-top-[48%]
-    data-[state=open]:slide-in-from-left-1/2
-    data-[state=open]:slide-in-from-top-[48%]
     sm:rounded-lg
     font-dash-main
   `, {
@@ -11958,10 +11970,27 @@ const contentStyles = classVarianceAuthority.cva(`
       sm: 'dash-block-sm',
       md: 'dash-block-md',
       xl: 'dash-block-xl'
+    },
+    position: {
+      center: `
+          top-[50%]
+          translate-y-[-50%]
+          data-[state=closed]:slide-out-to-left-1/2
+          data-[state=closed]:slide-out-to-top-[48%]
+          data-[state=open]:slide-in-from-left-1/2
+          data-[state=open]:slide-in-from-top-[48%]
+        `,
+      bottom: `
+          data-[state=closed]:slide-out-to-left-1/2
+          data-[state=closed]:slide-out-to-bottom-full
+          data-[state=open]:slide-in-from-left-1/2
+          data-[state=open]:slide-in-from-bottom-full
+        `
     }
   },
   defaultVariants: {
-    size: 'md'
+    size: 'md',
+    position: 'center'
   }
 });
 const headerStyles = classVarianceAuthority.cva(`
@@ -12010,6 +12039,10 @@ const DashDialog = ({
   title,
   showCloseButton = true,
   size = 'md',
+  position = 'center',
+  bottomOffset = 24,
+  maxWidth,
+  horizontalMargin,
   children,
   className = '',
   trigger
@@ -12017,6 +12050,40 @@ const DashDialog = ({
   const {
     theme
   } = useTheme();
+  // Calculate position and sizing styles
+  const customStyles = {};
+  if (position === 'bottom') {
+    customStyles.bottom = `${bottomOffset}px`;
+  }
+  if (maxWidth) {
+    // Check if it's a Tailwind size (sm, md, lg, xl, 2xl, etc.) or a CSS value
+    const tailwindSizes = {
+      'xs': '320px',
+      'sm': '384px',
+      'md': '448px',
+      'lg': '512px',
+      'xl': '576px',
+      '2xl': '672px',
+      '3xl': '768px',
+      '4xl': '896px',
+      '5xl': '1024px',
+      '6xl': '1152px',
+      '7xl': '1280px'
+    };
+    customStyles.maxWidth = tailwindSizes[maxWidth] || maxWidth;
+  }
+  if (horizontalMargin !== undefined) {
+    // Set max width to viewport width minus margins on both sides
+    const marginConstraint = `calc(100vw - ${horizontalMargin * 2}px)`;
+    if (customStyles.maxWidth) {
+      // If maxWidth is already set, use the smaller of the two
+      customStyles.maxWidth = `min(${customStyles.maxWidth}, ${marginConstraint})`;
+    } else {
+      customStyles.maxWidth = marginConstraint;
+    }
+    // Keep the dialog centered but constrained by the calculated maxWidth
+    // The existing left-[50%] translate-x-[-50%] will handle centering
+  }
   const DialogContent = jsxRuntime.jsxs(Portal, {
     children: [jsxRuntime.jsx(Overlay, {
       className: overlayStyles({
@@ -12026,9 +12093,16 @@ const DashDialog = ({
       "aria-describedby": undefined,
       className: `${contentStyles({
         theme,
-        size
+        size,
+        position
       })} ${className}`,
-      children: [(title || showCloseButton) && jsxRuntime.jsxs("div", {
+      style: customStyles,
+      children: [!title && jsxRuntime.jsx(Title, {
+        asChild: true,
+        children: jsxRuntime.jsx(VisuallyHidden, {
+          children: "Dialog"
+        })
+      }), (title || showCloseButton) && jsxRuntime.jsxs("div", {
         className: headerStyles(),
         children: [title && jsxRuntime.jsx(Title, {
           className: titleStyles({
