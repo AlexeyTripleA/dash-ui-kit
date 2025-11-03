@@ -38,7 +38,7 @@ export const List: React.FC<ListProps> = ({
             color={theme === 'dark' ? '#4C7EFF' : '#4C7EFF'}
           />
           <div className='flex flex-col gap-1'>
-            <Text size={size} weight={500}>
+            <Text size={size} weight="medium">
               {item.text}
             </Text>
             {item.description && (
