@@ -1079,4 +1079,39 @@ export const ExternalLinkIcon: React.FC<IconProps> = ({
       strokeLinejoin='round'
     />
   </svg>
+)
+
+export const InfoCircleIcon: React.FC<IconProps> = ({
+  color = '#4C7EFF',
+  size = 19,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 19 19'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <g clipPath='url(#clip0_1166_258)'>
+      <path
+        d='M9.5 5.5H9.51ZM9.5 8.5V13.5ZM18.5 9.5C18.5 14.4706 14.4706 18.5 9.5 18.5C4.52944 18.5 0.5 14.4706 0.5 9.5C0.5 4.52944 4.52944 0.5 9.5 0.5C14.4706 0.5 18.5 4.52944 18.5 9.5Z'
+        fill='currentColor'
+        fillOpacity='0.05'
+      />
+      <path
+        d='M18 9.5C18 4.80558 14.1945 1 9.5 1C4.80558 1 1 4.80558 1 9.5C1 14.1945 4.80558 18 9.5 18C14.1945 18 18 14.1945 18 9.5ZM9 13.5V8.5C9 8.22386 9.22386 8 9.5 8C9.77614 8 10 8.22386 10 8.5V13.5C10 13.7761 9.77614 14 9.5 14C9.22386 14 9 13.7761 9 13.5ZM9.50977 5C9.78591 5 10.0098 5.22386 10.0098 5.5C10.0098 5.77614 9.78591 6 9.50977 6H9.5C9.22386 6 9 5.77614 9 5.5C9 5.22386 9.22386 5 9.5 5H9.50977ZM19 9.5C19 14.7467 14.7467 19 9.5 19C4.2533 19 0 14.7467 0 9.5C0 4.2533 4.2533 0 9.5 0C14.7467 0 19 4.2533 19 9.5Z'
+        fill='currentColor'
+      />
+    </g>
+    <defs>
+      <clipPath id='clip0_1166_258'>
+        <rect width='19' height='19' fill='white' />
+      </clipPath>
+    </defs>
+  </svg>
 ) 

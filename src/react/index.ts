@@ -65,6 +65,7 @@ export {
   PendingIcon,
   SearchIcon,
   AirplaneIcon,
-  ExternalLinkIcon
+  ExternalLinkIcon,
+  InfoCircleIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

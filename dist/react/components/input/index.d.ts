@@ -4,7 +4,7 @@ declare const input: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     colorScheme?: "default" | "brand" | "error" | "success" | "light-gray" | null | undefined;
     size?: "sm" | "md" | "xl" | null | undefined;
-    variant?: "filled" | "outlined" | null | undefined;
+    variant?: "outlined" | "filled" | null | undefined;
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type InputVariants = VariantProps<typeof input>;

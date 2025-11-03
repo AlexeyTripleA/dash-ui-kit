@@ -64,5 +64,6 @@ export {
   PendingIcon,
   SearchIcon,
   AirplaneIcon,
-  ExternalLinkIcon
+  ExternalLinkIcon,
+  InfoCircleIcon
 } from './icons'
