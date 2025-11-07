@@ -65,7 +65,7 @@ const selectTrigger = cva(
 )
 
 const selectContent = cva(
-  'overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full',
+  'overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full max-h-[var(--radix-select-content-available-height)]',
   {
     variants: {
       theme: {
@@ -74,6 +74,10 @@ const selectContent = cva(
       }
     }
   }
+)
+
+const selectViewport = cva(
+  'overflow-y-auto max-h-[inherit]'
 )
 
 const selectItem = cva(
@@ -197,6 +201,7 @@ export const Select: React.FC<SelectProps> = ({
   }) + ' ' + className
 
   const contentClasses = selectContent({ theme })
+  const viewportClasses = selectViewport({})
   const itemClasses = selectItem({ theme, size })
   const iconClasses = selectIcon({ size })
 
@@ -221,7 +226,7 @@ export const Select: React.FC<SelectProps> = ({
 
       <RadixSelect.Portal>
         <RadixSelect.Content className={contentClasses} position='popper' sideOffset={5}>
-          <RadixSelect.Viewport>
+          <RadixSelect.Viewport className={viewportClasses}>
             {options.map((option) => (
               <RadixSelect.Item
                 key={option.value}

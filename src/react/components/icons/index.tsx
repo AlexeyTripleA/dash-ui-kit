@@ -1029,4 +1029,89 @@ export const SearchIcon: React.FC<IconProps> = ({
       fill='currentColor'
     />
   </svg>
+)
+
+export const AirplaneIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 16 16'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M7.68459 8.00182H3.34214M3.21905 8.57088L2.50162 10.7134C2.10869 11.8867 1.91222 12.4734 2.05322 12.8347C2.17565 13.1485 2.43862 13.3863 2.76311 13.4769C3.13678 13.5811 3.70115 13.3272 4.82989 12.8195L12.0662 9.56409C13.1679 9.06841 13.7188 8.82064 13.889 8.47637C14.037 8.17727 14.037 7.82629 13.889 7.5272C13.7188 7.18299 13.1679 6.93515 12.0662 6.4395L4.81741 3.17853C3.69206 2.67227 3.1294 2.41914 2.75611 2.52298C2.43192 2.61316 2.16898 2.8504 2.04612 3.16358C1.90464 3.5242 2.09901 4.10962 2.48775 5.28048L3.22045 7.48736C3.28721 7.68845 3.3206 7.78903 3.33377 7.89182C3.34547 7.98311 3.34534 8.07548 3.33342 8.16671C3.31997 8.2695 3.28634 8.36994 3.21905 8.57088Z'
+      stroke='currentColor'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
+)
+
+export const ExternalLinkIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 16 16'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M10.2499 9.125V5.75M10.2499 5.75H6.87491M10.2499 5.75L5.75001 10.2499M4.40001 14H11.6C12.4401 14 12.8601 14 13.181 13.8365C13.4632 13.6927 13.6927 13.4632 13.8366 13.181C14 12.8602 14 12.4401 14 11.6V4.4C14 3.55992 14 3.13988 13.8366 2.81902C13.6927 2.53677 13.4632 2.3073 13.181 2.16349C12.8601 2 12.4401 2 11.6 2H4.40001C3.55993 2 3.13989 2 2.81902 2.16349C2.53678 2.3073 2.30731 2.53677 2.16349 2.81902C2 3.13988 2 3.55992 2 4.4V11.6C2 12.4401 2 12.8602 2.16349 13.181C2.30731 13.4632 2.53678 13.6927 2.81902 13.8365C3.13989 14 3.55993 14 4.40001 14Z'
+      stroke='currentColor'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
+)
+
+export const InfoCircleIcon: React.FC<IconProps> = ({
+  color = '#4C7EFF',
+  size = 19,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 19 19'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <g clipPath='url(#clip0_1166_258)'>
+      <path
+        d='M9.5 5.5H9.51ZM9.5 8.5V13.5ZM18.5 9.5C18.5 14.4706 14.4706 18.5 9.5 18.5C4.52944 18.5 0.5 14.4706 0.5 9.5C0.5 4.52944 4.52944 0.5 9.5 0.5C14.4706 0.5 18.5 4.52944 18.5 9.5Z'
+        fill='currentColor'
+        fillOpacity='0.05'
+      />
+      <path
+        d='M18 9.5C18 4.80558 14.1945 1 9.5 1C4.80558 1 1 4.80558 1 9.5C1 14.1945 4.80558 18 9.5 18C14.1945 18 18 14.1945 18 9.5ZM9 13.5V8.5C9 8.22386 9.22386 8 9.5 8C9.77614 8 10 8.22386 10 8.5V13.5C10 13.7761 9.77614 14 9.5 14C9.22386 14 9 13.7761 9 13.5ZM9.50977 5C9.78591 5 10.0098 5.22386 10.0098 5.5C10.0098 5.77614 9.78591 6 9.50977 6H9.5C9.22386 6 9 5.77614 9 5.5C9 5.22386 9.22386 5 9.5 5H9.50977ZM19 9.5C19 14.7467 14.7467 19 9.5 19C4.2533 19 0 14.7467 0 9.5C0 4.2533 4.2533 0 9.5 0C14.7467 0 19 4.2533 19 9.5Z'
+        fill='currentColor'
+      />
+    </g>
+    <defs>
+      <clipPath id='clip0_1166_258'>
+        <rect width='19' height='19' fill='white' />
+      </clipPath>
+    </defs>
+  </svg>
 ) 

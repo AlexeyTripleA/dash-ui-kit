@@ -62,5 +62,8 @@ export {
   SignLockIcon,
   LockIcon,
   PendingIcon,
-  SearchIcon
+  SearchIcon,
+  AirplaneIcon,
+  ExternalLinkIcon,
+  InfoCircleIcon
 } from './icons'

@@ -15,8 +15,15 @@ export interface OverlayMenuItem {
     onClick?: () => void;
     disabled?: boolean;
 }
+export interface OverlayMenuPosition {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+}
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
     className?: string;
+    contentClassName?: string;
     error?: boolean;
     success?: boolean;
     border?: boolean;
@@ -30,10 +37,22 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
     triggerContent?: React.ReactNode;
     placeholder?: string;
     showItemBorders?: boolean;
+    variant?: 'dropdown' | 'context-menu';
+    headerContent?: React.ReactNode;
+    showCloseButton?: boolean;
+    position?: OverlayMenuPosition;
+    width?: string | number;
+    onClose?: () => void;
 }
 /**
  * Overlay menu component that opens above the trigger with overlay positioning.
  * Supports custom content items with onClick handlers.
+ *
+ * @param variant - 'dropdown' (default) or 'context-menu'
+ * @param headerContent - Custom header content (for context-menu variant)
+ * @param showCloseButton - Show close button in header
+ * @param position - Position object for context-menu variant
+ * @param width - Custom width (default: 200px for context-menu)
  */
 export declare const OverlayMenu: React.FC<OverlayMenuProps>;
 export default OverlayMenu;

@@ -39,7 +39,10 @@ import {
   SignLockIcon,
   LockIcon,
   PendingIcon,
-  SearchIcon
+  SearchIcon,
+  AirplaneIcon,
+  ExternalLinkIcon,
+  InfoCircleIcon
 } from './index'
 
 const meta: Meta = {
@@ -226,6 +229,18 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <SearchIcon />
         <span className="text-sm">SearchIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <AirplaneIcon />
+        <span className="text-sm">AirplaneIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <ExternalLinkIcon />
+        <span className="text-sm">ExternalLinkIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <InfoCircleIcon />
+        <span className="text-sm">InfoCircleIcon</span>
       </div>
     </div>
   ),
@@ -650,6 +665,36 @@ export const Search: StoryObj = {
   args: {
     size: 16,
     color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Airplane Icon
+export const Airplane: StoryObj = {
+  render: (args) => <AirplaneIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// External Link Icon
+export const ExternalLink: StoryObj = {
+  render: (args) => <ExternalLinkIcon {...args} />,
+  args: {
+    size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Info Circle Icon
+export const InfoCircle: StoryObj = {
+  render: (args) => <InfoCircleIcon {...args} />,
+  args: {
+    size: 19,
+    color: '#4C7EFF',
     className: ''
   }
 }

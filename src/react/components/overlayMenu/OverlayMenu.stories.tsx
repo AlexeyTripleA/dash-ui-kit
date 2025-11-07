@@ -554,3 +554,352 @@ export const FilledVariants: StoryFn<OverlayMenuProps> = () => {
     </div>
   )
 }
+
+// Context Menu Icons
+const WalletIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    width='16'
+    height='16'
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+  >
+    <rect x='3' y='6' width='18' height='13' rx='2' stroke='currentColor' strokeWidth='2' />
+    <path d='M3 10h18' stroke='currentColor' strokeWidth='2' />
+    <circle cx='17' cy='15' r='1' fill='currentColor' />
+  </svg>
+)
+
+const SettingsIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    width='16'
+    height='16'
+    viewBox='0 0 24 24'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+  >
+    <circle cx='12' cy='12' r='3' stroke='currentColor' strokeWidth='2' />
+    <path
+      d='M12 1v3m0 16v3M4.22 4.22l2.12 2.12m11.32 11.32l2.12 2.12M1 12h3m16 0h3M4.22 19.78l2.12-2.12m11.32-11.32l2.12-2.12'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+    />
+  </svg>
+)
+
+const contextMenuItems = [
+  {
+    id: 'view',
+    content: (
+      <div className='flex items-center gap-2'>
+        <EditIcon className='w-4 h-4' />
+        <span>View Details</span>
+      </div>
+    ),
+    onClick: () => console.log('View details')
+  },
+  {
+    id: 'copy',
+    content: (
+      <div className='flex items-center gap-2'>
+        <ShareIcon className='w-4 h-4' />
+        <span>Copy Address</span>
+      </div>
+    ),
+    onClick: () => console.log('Copy address')
+  },
+  {
+    id: 'settings',
+    content: (
+      <div className='flex items-center gap-2'>
+        <SettingsIcon className='w-4 h-4' />
+        <span>Settings</span>
+      </div>
+    ),
+    onClick: () => console.log('Settings')
+  },
+  {
+    id: 'delete',
+    content: (
+      <div className='flex items-center gap-2 text-red-500'>
+        <DeleteIcon className='w-4 h-4' />
+        <span>Delete</span>
+      </div>
+    ),
+    onClick: () => console.log('Delete')
+  }
+]
+
+export const ContextMenuBasic: StoryFn<OverlayMenuProps> = () => {
+  const [showMenu, setShowMenu] = React.useState(true)
+  
+  return (
+    <div style={{ position: 'relative', height: '500px', padding: '20px' }}>
+      <p className='mb-4 text-sm text-gray-600'>
+        Context menu positioned at top: 100px, left: 150px
+      </p>
+      
+      <button 
+        className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        {showMenu ? 'Hide' : 'Show'} Context Menu
+      </button>
+
+      {showMenu && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 100, left: 150 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <WalletIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Wallet Actions</span>
+            </div>
+          }
+          size='md'
+          onClose={() => setShowMenu(false)}
+        />
+      )}
+    </div>
+  )
+}
+
+export const ContextMenuSizes: StoryFn<OverlayMenuProps> = () => {
+  const [activeMenu, setActiveMenu] = React.useState<string | null>('sm')
+  
+  return (
+    <div style={{ position: 'relative', height: '600px', padding: '20px' }}>
+      <div className='space-x-4 mb-4'>
+        <button 
+          className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+          onClick={() => setActiveMenu(activeMenu === 'sm' ? null : 'sm')}
+        >
+          Small
+        </button>
+        <button 
+          className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+          onClick={() => setActiveMenu(activeMenu === 'md' ? null : 'md')}
+        >
+          Medium
+        </button>
+        <button 
+          className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+          onClick={() => setActiveMenu(activeMenu === 'xl' ? null : 'xl')}
+        >
+          Extra Large
+        </button>
+      </div>
+
+      {activeMenu === 'sm' && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 80, left: 50 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <SettingsIcon className='w-4 h-4' />
+              <span className='font-medium text-xs'>Small Menu</span>
+            </div>
+          }
+          size='sm'
+          onClose={() => setActiveMenu(null)}
+        />
+      )}
+
+      {activeMenu === 'md' && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 80, left: 280 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <SettingsIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Medium Menu</span>
+            </div>
+          }
+          size='md'
+          onClose={() => setActiveMenu(null)}
+        />
+      )}
+
+      {activeMenu === 'xl' && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 80, left: 510 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <SettingsIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Large Menu</span>
+            </div>
+          }
+          size='xl'
+          onClose={() => setActiveMenu(null)}
+        />
+      )}
+    </div>
+  )
+}
+
+export const ContextMenuCustomWidth: StoryFn<OverlayMenuProps> = () => {
+  const [showMenu, setShowMenu] = React.useState(true)
+  
+  return (
+    <div style={{ position: 'relative', height: '500px', padding: '20px' }}>
+      <p className='mb-4 text-sm text-gray-600'>
+        Context menu with custom width (300px)
+      </p>
+      
+      <button 
+        className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        {showMenu ? 'Hide' : 'Show'} Context Menu
+      </button>
+
+      {showMenu && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={[
+            {
+              id: 'wallet-info',
+              content: (
+                <div className='flex flex-col'>
+                  <span className='font-medium'>Main Wallet</span>
+                  <span className='text-xs text-gray-500'>0x1234...5678</span>
+                </div>
+              ),
+              onClick: () => console.log('Wallet info')
+            },
+            ...contextMenuItems
+          ]}
+          position={{ top: 100, left: 150 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <WalletIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Wallet Menu</span>
+            </div>
+          }
+          width={300}
+          size='md'
+          onClose={() => setShowMenu(false)}
+        />
+      )}
+    </div>
+  )
+}
+
+export const ContextMenuRightAligned: StoryFn<OverlayMenuProps> = () => {
+  const [showMenu, setShowMenu] = React.useState(true)
+  
+  return (
+    <div style={{ position: 'relative', height: '500px', padding: '20px' }}>
+      <p className='mb-4 text-sm text-gray-600'>
+        Context menu positioned from right (right: 50px, top: 100px)
+      </p>
+      
+      <button 
+        className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        {showMenu ? 'Hide' : 'Show'} Context Menu
+      </button>
+
+      {showMenu && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 100, right: 50 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <KebabMenuIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Options</span>
+            </div>
+          }
+          size='md'
+          onClose={() => setShowMenu(false)}
+        />
+      )}
+    </div>
+  )
+}
+
+export const ContextMenuWithCloseButton: StoryFn<OverlayMenuProps> = () => {
+  const [showMenu, setShowMenu] = React.useState(true)
+  
+  return (
+    <div style={{ position: 'relative', height: '500px', padding: '20px' }}>
+      <p className='mb-4 text-sm text-gray-600'>
+        Context menu with close button (showCloseButton=true)
+      </p>
+      
+      <button 
+        className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        {showMenu ? 'Hide' : 'Show'} Context Menu
+      </button>
+
+      {showMenu && (
+        <OverlayMenu 
+          variant='context-menu'
+          items={contextMenuItems}
+          position={{ top: 100, left: 150 }}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <SettingsIcon className='w-4 h-4' />
+              <span className='font-medium text-sm'>Settings</span>
+            </div>
+          }
+          showCloseButton
+          size='md'
+          onClose={() => {
+            console.log('Menu closed')
+            setShowMenu(false)
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+export const HeaderContentVariants: StoryFn<OverlayMenuProps> = () => {
+  return (
+    <div className='space-y-8'>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Dropdown with Custom Header Content</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          headerContent={
+            <div className='flex items-center gap-2'>
+              <div className='w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xs'>
+                A
+              </div>
+              <div className='flex-1'>
+                <div className='font-medium text-sm'>Alexey</div>
+                <div className='text-xs text-gray-500'>alexey@example.com</div>
+              </div>
+            </div>
+          }
+          showCloseButton
+          size='xl'
+        />
+      </div>
+      <div>
+        <label className='block text-sm font-medium mb-1'>Dropdown with Simple Header</label>
+        <OverlayMenu 
+          items={basicMenuItems}
+          headerContent={
+            <span className='font-medium text-sm'>Actions Menu</span>
+          }
+          showCloseButton
+          size='md'
+        />
+      </div>
+    </div>
+  )
+}

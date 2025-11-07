@@ -2011,6 +2011,83 @@ const SearchIcon = ({
     fill: 'currentColor'
   })
 });
+const AirplaneIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M7.68459 8.00182H3.34214M3.21905 8.57088L2.50162 10.7134C2.10869 11.8867 1.91222 12.4734 2.05322 12.8347C2.17565 13.1485 2.43862 13.3863 2.76311 13.4769C3.13678 13.5811 3.70115 13.3272 4.82989 12.8195L12.0662 9.56409C13.1679 9.06841 13.7188 8.82064 13.889 8.47637C14.037 8.17727 14.037 7.82629 13.889 7.5272C13.7188 7.18299 13.1679 6.93515 12.0662 6.4395L4.81741 3.17853C3.69206 2.67227 3.1294 2.41914 2.75611 2.52298C2.43192 2.61316 2.16898 2.8504 2.04612 3.16358C1.90464 3.5242 2.09901 4.10962 2.48775 5.28048L3.22045 7.48736C3.28721 7.68845 3.3206 7.78903 3.33377 7.89182C3.34547 7.98311 3.34534 8.07548 3.33342 8.16671C3.31997 8.2695 3.28634 8.36994 3.21905 8.57088Z',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
+const ExternalLinkIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M10.2499 9.125V5.75M10.2499 5.75H6.87491M10.2499 5.75L5.75001 10.2499M4.40001 14H11.6C12.4401 14 12.8601 14 13.181 13.8365C13.4632 13.6927 13.6927 13.4632 13.8366 13.181C14 12.8602 14 12.4401 14 11.6V4.4C14 3.55992 14 3.13988 13.8366 2.81902C13.6927 2.53677 13.4632 2.3073 13.181 2.16349C12.8601 2 12.4401 2 11.6 2H4.40001C3.55993 2 3.13989 2 2.81902 2.16349C2.53678 2.3073 2.30731 2.53677 2.16349 2.81902C2 3.13988 2 3.55992 2 4.4V11.6C2 12.4401 2 12.8602 2.16349 13.181C2.30731 13.4632 2.53678 13.6927 2.81902 13.8365C3.13989 14 3.55993 14 4.40001 14Z',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
+const InfoCircleIcon = ({
+  color = '#4C7EFF',
+  size = 19,
+  className = '',
+  onClick
+}) => jsxRuntime.jsxs("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 19 19',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: [jsxRuntime.jsxs("g", {
+    clipPath: 'url(#clip0_1166_258)',
+    children: [jsxRuntime.jsx("path", {
+      d: 'M9.5 5.5H9.51ZM9.5 8.5V13.5ZM18.5 9.5C18.5 14.4706 14.4706 18.5 9.5 18.5C4.52944 18.5 0.5 14.4706 0.5 9.5C0.5 4.52944 4.52944 0.5 9.5 0.5C14.4706 0.5 18.5 4.52944 18.5 9.5Z',
+      fill: 'currentColor',
+      fillOpacity: '0.05'
+    }), jsxRuntime.jsx("path", {
+      d: 'M18 9.5C18 4.80558 14.1945 1 9.5 1C4.80558 1 1 4.80558 1 9.5C1 14.1945 4.80558 18 9.5 18C14.1945 18 18 14.1945 18 9.5ZM9 13.5V8.5C9 8.22386 9.22386 8 9.5 8C9.77614 8 10 8.22386 10 8.5V13.5C10 13.7761 9.77614 14 9.5 14C9.22386 14 9 13.7761 9 13.5ZM9.50977 5C9.78591 5 10.0098 5.22386 10.0098 5.5C10.0098 5.77614 9.78591 6 9.50977 6H9.5C9.22386 6 9 5.77614 9 5.5C9 5.22386 9.22386 5 9.5 5H9.50977ZM19 9.5C19 14.7467 14.7467 19 9.5 19C4.2533 19 0 14.7467 0 9.5C0 4.2533 4.2533 0 9.5 0C14.7467 0 19 4.2533 19 9.5Z',
+      fill: 'currentColor'
+    })]
+  }), jsxRuntime.jsx("defs", {
+    children: jsxRuntime.jsx("clipPath", {
+      id: 'clip0_1166_258',
+      children: jsxRuntime.jsx("rect", {
+        width: '19',
+        height: '19',
+        fill: 'white'
+      })
+    })
+  })]
+});
 
 const accordionRootStyles = classVarianceAuthority.cva(`
     w-full
@@ -3016,7 +3093,7 @@ const textStyles = classVarianceAuthority.cva('', {
     },
     weight: {
       normal: 'font-normal',
-      500: 'font-medium',
+      medium: 'font-medium',
       bold: 'font-bold'
     },
     italic: {
@@ -6262,7 +6339,7 @@ var VISUALLY_HIDDEN_STYLES = Object.freeze({
   wordWrap: "normal"
 });
 var NAME = "VisuallyHidden";
-var VisuallyHidden = React__namespace.forwardRef(
+var VisuallyHidden$1 = React__namespace.forwardRef(
   (props, forwardedRef) => {
     return /* @__PURE__ */ jsxRuntime.jsx(
       Primitive.span,
@@ -6274,7 +6351,7 @@ var VisuallyHidden = React__namespace.forwardRef(
     );
   }
 );
-VisuallyHidden.displayName = NAME;
+VisuallyHidden$1.displayName = NAME;
 
 var getDefaultParent = function (originalTarget) {
     if (typeof document === 'undefined') {
@@ -8285,7 +8362,7 @@ const selectTrigger = classVarianceAuthority.cva('w-full transition-all font-int
     disabled: false
   }
 });
-const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full', {
+const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full max-h-[var(--radix-select-content-available-height)]', {
   variants: {
     theme: {
       light: 'bg-white border border-gray-200',
@@ -8293,6 +8370,7 @@ const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-m
     }
   }
 });
+const selectViewport = classVarianceAuthority.cva('overflow-y-auto max-h-[inherit]');
 const selectItem = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', {
   variants: {
     theme: {
@@ -8381,6 +8459,7 @@ const Select = _a => {
   const contentClasses = selectContent({
     theme
   });
+  const viewportClasses = selectViewport({});
   const itemClasses = selectItem({
     theme,
     size
@@ -8413,6 +8492,7 @@ const Select = _a => {
         position: 'popper',
         sideOffset: 5,
         children: jsxRuntime.jsx(Viewport, {
+          className: viewportClasses,
           children: options.map(option => jsxRuntime.jsx(Item$1, {
             value: option.value,
             className: itemClasses,
@@ -8932,7 +9012,7 @@ const overlayMenuTrigger = classVarianceAuthority.cva('w-full transition-all fon
     filled: false
   }
 });
-const overlayContent = classVarianceAuthority.cva('absolute z-50 min-w-full overflow-hidden shadow-lg', {
+const overlayContent = classVarianceAuthority.cva('absolute z-50 overflow-hidden', {
   variants: {
     theme: {
       light: 'bg-white border border-[rgba(12,28,51,0.05)]',
@@ -8940,22 +9020,55 @@ const overlayContent = classVarianceAuthority.cva('absolute z-50 min-w-full over
     },
     size: {
       sm: 'rounded-[0.625rem]',
-      md: 'rounded-[0.875rem]',
-      xl: 'rounded-[1rem]'
+      md: 'rounded-[0.75rem]',
+      xl: 'rounded-[0.9375rem]'
+    },
+    variant: {
+      dropdown: 'min-w-full',
+      'context-menu': 'w-[200px]'
+    },
+    hasShadow: {
+      true: 'shadow-[0px_0px_75px_0px_rgba(0,0,0,0.15)]',
+      false: 'shadow-lg'
     }
+  },
+  defaultVariants: {
+    variant: 'dropdown',
+    hasShadow: false
   }
 });
-const overlayItem = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none', {
+const overlayHeader = classVarianceAuthority.cva('flex items-center justify-between border-b gap-2', {
+  variants: {
+    theme: {
+      light: 'border-[rgba(12,28,51,0.05)]',
+      dark: 'border-[rgba(255,255,255,0.15)]'
+    },
+    size: {
+      sm: 'px-[0.875rem] py-[0.375rem]',
+      md: 'px-[1rem] py-[0.5rem]',
+      xl: 'px-[1.125rem] py-[0.5rem]'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
+  }
+});
+const overlayItem = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 rounded-none font-medium text-[0.75rem] leading-[1.416em]', {
   variants: {
     theme: {
       light: 'text-[#0C1C33] hover:bg-gray-50',
       dark: 'text-white hover:bg-[rgba(255,255,255,0.1)]'
     },
     size: {
-      sm: 'dash-block-sm',
-      md: 'dash-block-md',
-      xl: 'dash-block-xl'
+      sm: 'px-[0.875rem] py-[0.625rem]',
+      md: 'px-[1rem] py-[0.6875rem]',
+      xl: 'px-[1.125rem] py-[0.75rem]'
     }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
   }
 });
 // Arrow icon
@@ -8978,10 +9091,17 @@ const ChevronDownIcon = ({
 /**
  * Overlay menu component that opens above the trigger with overlay positioning.
  * Supports custom content items with onClick handlers.
+ *
+ * @param variant - 'dropdown' (default) or 'context-menu'
+ * @param headerContent - Custom header content (for context-menu variant)
+ * @param showCloseButton - Show close button in header
+ * @param position - Position object for context-menu variant
+ * @param width - Custom width (default: 200px for context-menu)
  */
 const OverlayMenu = _a => {
   var {
       className = '',
+      contentClassName = '',
       colorScheme,
       size,
       error = false,
@@ -8996,9 +9116,15 @@ const OverlayMenu = _a => {
       maxHeight = '200px',
       triggerContent,
       placeholder = 'Menu',
-      showItemBorders = true
+      showItemBorders = true,
+      variant = 'dropdown',
+      headerContent,
+      showCloseButton = false,
+      position,
+      width,
+      onClose
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders"]);
+    props = tslib.__rest(_a, ["className", "contentClassName", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
   const {
     theme
   } = useTheme();
@@ -9007,6 +9133,22 @@ const OverlayMenu = _a => {
   // Determine color scheme based on state
   let finalColorScheme = colorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const isContextMenu = variant === 'context-menu';
+  // Handle Escape key
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = e => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+  const handleClose = () => {
+    setIsOpen(false);
+    onClose === null || onClose === void 0 ? void 0 : onClose();
+  };
   const triggerClasses = overlayMenuTrigger({
     theme,
     colorScheme: finalColorScheme,
@@ -9016,6 +9158,12 @@ const OverlayMenu = _a => {
     disabled
   }) + ' ' + className;
   const contentClasses = overlayContent({
+    theme,
+    size,
+    variant,
+    hasShadow: isContextMenu
+  });
+  const headerClasses = overlayHeader({
     theme,
     size
   });
@@ -9027,11 +9175,28 @@ const OverlayMenu = _a => {
     if (!item.disabled && item.onClick) {
       item.onClick();
     }
-    setIsOpen(false);
+    handleClose();
+  };
+  // For context-menu variant, show menu immediately if position is provided
+  React.useEffect(() => {
+    if (isContextMenu && position) {
+      setIsOpen(true);
+    }
+  }, [isContextMenu, position]);
+  // Calculate position styles for context-menu
+  const getPositionStyles = () => {
+    if (!isContextMenu || !position) return {};
+    const styles = {};
+    if (position.top !== undefined) styles.top = position.top;
+    if (position.left !== undefined) styles.left = position.left;
+    if (position.right !== undefined) styles.right = position.right;
+    if (position.bottom !== undefined) styles.bottom = position.bottom;
+    if (width) styles.width = typeof width === 'number' ? `${width}px` : width;
+    return styles;
   };
   return jsxRuntime.jsxs("div", {
-    className: 'relative',
-    children: [jsxRuntime.jsxs("button", Object.assign({
+    className: isContextMenu ? '' : 'relative',
+    children: [!isContextMenu && jsxRuntime.jsxs("button", Object.assign({
       ref: triggerRef,
       type: 'button',
       className: triggerClasses,
@@ -9050,35 +9215,33 @@ const OverlayMenu = _a => {
       })]
     })), isOpen && jsxRuntime.jsxs(jsxRuntime.Fragment, {
       children: [jsxRuntime.jsx("div", {
-        className: 'fixed inset-0 z-40',
-        onClick: () => setIsOpen(false)
+        className: `${isContextMenu ? 'fixed' : 'fixed'} inset-0 z-40`,
+        onClick: handleClose
       }), jsxRuntime.jsxs("div", {
-        className: `${contentClasses} top-0 left-0 right-0 overflow-y-auto`,
-        style: {
+        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? 'top-0 left-0 right-0' : ''} overflow-y-auto ${contentClassName}`,
+        style: Object.assign({
           maxHeight
-        },
-        children: [overlayLabel && jsxRuntime.jsxs("div", {
-          className: `${itemClasses} font-medium border-b rounded-b-none cursor-pointer ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`,
-          onClick: () => setIsOpen(false),
+        }, getPositionStyles()),
+        children: [(headerContent || overlayLabel) && jsxRuntime.jsxs("div", {
+          className: `${headerClasses} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`,
+          onClick: !showCloseButton && !isContextMenu ? handleClose : undefined,
           children: [jsxRuntime.jsx("div", {
             className: 'w-full flex-1',
-            children: overlayLabel
-          }), jsxRuntime.jsx("div", {
-            className: 'flex items-center pl-1',
+            children: headerContent || overlayLabel
+          }), (showCloseButton || isContextMenu && headerContent) && jsxRuntime.jsx("button", {
+            className: 'flex items-center cursor-pointer hover:opacity-70 transition-opacity',
+            onClick: handleClose,
+            "aria-label": 'Close menu',
             children: jsxRuntime.jsx(CrossIcon, {
               size: 16,
-              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33',
-              className: 'cursor-pointer'
+              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33'
             })
           })]
         }), jsxRuntime.jsx("div", {
           children: items.map((item, index) => jsxRuntime.jsx("div", {
-            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
+            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
             onClick: () => handleItemClick(item),
-            children: jsxRuntime.jsx("div", {
-              className: 'w-full flex-1',
-              children: item.content
-            })
+            children: item.content
           }, item.id))
         })]
       })]
@@ -9370,7 +9533,7 @@ const List$1 = ({
         className: 'flex flex-col gap-1',
         children: [jsxRuntime.jsx(Text, {
           size: size,
-          weight: 500,
+          weight: "medium",
           children: item.text
         }), item.description && jsxRuntime.jsx(Text, {
           size: 'xs',
@@ -11746,6 +11909,24 @@ var Content$1 = DialogContent;
 var Title = DialogTitle;
 var Close = DialogClose;
 
+// Visually hidden component for accessibility
+const VisuallyHidden = ({
+  children
+}) => jsxRuntime.jsx("span", {
+  style: {
+    position: 'absolute',
+    border: 0,
+    width: 1,
+    height: 1,
+    padding: 0,
+    margin: -1,
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal'
+  },
+  children: children
+});
 const overlayStyles = classVarianceAuthority.cva(`
     fixed
     inset-0
@@ -11766,11 +11947,9 @@ const overlayStyles = classVarianceAuthority.cva(`
 const contentStyles = classVarianceAuthority.cva(`
     fixed
     left-[50%]
-    top-[50%]
     z-50
     w-full
     translate-x-[-50%]
-    translate-y-[-50%]
     flex
     flex-col
     gap-4
@@ -11783,10 +11962,6 @@ const contentStyles = classVarianceAuthority.cva(`
     data-[state=open]:fade-in-0
     data-[state=closed]:zoom-out-95
     data-[state=open]:zoom-in-95
-    data-[state=closed]:slide-out-to-left-1/2
-    data-[state=closed]:slide-out-to-top-[48%]
-    data-[state=open]:slide-in-from-left-1/2
-    data-[state=open]:slide-in-from-top-[48%]
     sm:rounded-lg
     font-dash-main
   `, {
@@ -11799,10 +11974,27 @@ const contentStyles = classVarianceAuthority.cva(`
       sm: 'dash-block-sm',
       md: 'dash-block-md',
       xl: 'dash-block-xl'
+    },
+    position: {
+      center: `
+          top-[50%]
+          translate-y-[-50%]
+          data-[state=closed]:slide-out-to-left-1/2
+          data-[state=closed]:slide-out-to-top-[48%]
+          data-[state=open]:slide-in-from-left-1/2
+          data-[state=open]:slide-in-from-top-[48%]
+        `,
+      bottom: `
+          data-[state=closed]:slide-out-to-left-1/2
+          data-[state=closed]:slide-out-to-bottom-full
+          data-[state=open]:slide-in-from-left-1/2
+          data-[state=open]:slide-in-from-bottom-full
+        `
     }
   },
   defaultVariants: {
-    size: 'md'
+    size: 'md',
+    position: 'center'
   }
 });
 const headerStyles = classVarianceAuthority.cva(`
@@ -11851,6 +12043,10 @@ const DashDialog = ({
   title,
   showCloseButton = true,
   size = 'md',
+  position = 'center',
+  bottomOffset = 24,
+  maxWidth,
+  horizontalMargin,
   children,
   className = '',
   trigger
@@ -11858,6 +12054,40 @@ const DashDialog = ({
   const {
     theme
   } = useTheme();
+  // Calculate position and sizing styles
+  const customStyles = {};
+  if (position === 'bottom') {
+    customStyles.bottom = `${bottomOffset}px`;
+  }
+  if (maxWidth) {
+    // Check if it's a Tailwind size (sm, md, lg, xl, 2xl, etc.) or a CSS value
+    const tailwindSizes = {
+      'xs': '320px',
+      'sm': '384px',
+      'md': '448px',
+      'lg': '512px',
+      'xl': '576px',
+      '2xl': '672px',
+      '3xl': '768px',
+      '4xl': '896px',
+      '5xl': '1024px',
+      '6xl': '1152px',
+      '7xl': '1280px'
+    };
+    customStyles.maxWidth = tailwindSizes[maxWidth] || maxWidth;
+  }
+  if (horizontalMargin !== undefined) {
+    // Set max width to viewport width minus margins on both sides
+    const marginConstraint = `calc(100vw - ${horizontalMargin * 2}px)`;
+    if (customStyles.maxWidth) {
+      // If maxWidth is already set, use the smaller of the two
+      customStyles.maxWidth = `min(${customStyles.maxWidth}, ${marginConstraint})`;
+    } else {
+      customStyles.maxWidth = marginConstraint;
+    }
+    // Keep the dialog centered but constrained by the calculated maxWidth
+    // The existing left-[50%] translate-x-[-50%] will handle centering
+  }
   const DialogContent = jsxRuntime.jsxs(Portal, {
     children: [jsxRuntime.jsx(Overlay, {
       className: overlayStyles({
@@ -11867,11 +12097,15 @@ const DashDialog = ({
       "aria-describedby": undefined,
       className: `${contentStyles({
         theme,
-        size
+        size,
+        position
       })} ${className}`,
-      children: [(title || showCloseButton) && jsxRuntime.jsxs("div", {
+      style: customStyles,
+      children: [title ?
+      // Render visible title in header if provided
+      jsxRuntime.jsxs("div", {
         className: headerStyles(),
-        children: [title && jsxRuntime.jsx(Title, {
+        children: [jsxRuntime.jsx(Title, {
           className: titleStyles({
             theme
           }),
@@ -11889,6 +12123,30 @@ const DashDialog = ({
             className: 'sr-only',
             children: "Close"
           })]
+        })]
+      }) :
+      // No title provided - render visually hidden title for accessibility
+      jsxRuntime.jsxs(jsxRuntime.Fragment, {
+        children: [jsxRuntime.jsx(Title, {
+          children: jsxRuntime.jsx(VisuallyHidden, {
+            children: "Dialog"
+          })
+        }), showCloseButton && jsxRuntime.jsx("div", {
+          className: headerStyles(),
+          children: jsxRuntime.jsxs(Close, {
+            className: closeButtonStyles({
+              theme
+            }),
+            children: [jsxRuntime.jsx("div", {
+              className: 'w-8 h-8 flex items-center justify-center',
+              children: jsxRuntime.jsx(CrossIcon, {
+                size: 16
+              })
+            }), jsxRuntime.jsx("span", {
+              className: 'sr-only',
+              children: "Close"
+            })]
+          })
         })]
       }), children]
     })]
@@ -12441,6 +12699,7 @@ const Tabs = ({
 };
 
 exports.Accordion = Accordion;
+exports.AirplaneIcon = AirplaneIcon;
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.Badge = Badge;
@@ -12464,6 +12723,7 @@ exports.DeleteIcon = DeleteIcon;
 exports.Dialog = DashDialog;
 exports.EditIcon = EditIcon;
 exports.ErrorIcon = ErrorIcon;
+exports.ExternalLinkIcon = ExternalLinkIcon;
 exports.EyeClosedIcon = EyeClosedIcon;
 exports.EyeOpenIcon = EyeOpenIcon;
 exports.FaceIcon = FaceIcon;
@@ -12471,6 +12731,7 @@ exports.FilterIcon = FilterIcon;
 exports.FingerprintIcon = FingerprintIcon;
 exports.Heading = Heading;
 exports.Identifier = Identifier;
+exports.InfoCircleIcon = InfoCircleIcon;
 exports.Input = Input;
 exports.KebabMenuIcon = KebabMenuIcon;
 exports.KeyIcon = KeyIcon;

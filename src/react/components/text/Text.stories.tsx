@@ -12,7 +12,7 @@ const meta: Meta<TextProps> = {
     },
     weight: {
       control: { type: 'inline-radio' },
-      options: ['normal', '500', 'bold'],
+      options: ['normal', 'medium', 'bold'],
     },
     color: {
       control: { type: 'inline-radio' },

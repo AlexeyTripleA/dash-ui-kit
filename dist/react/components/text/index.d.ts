@@ -5,7 +5,7 @@ declare const textStyles: (props?: ({
     theme?: "light" | "dark" | null | undefined;
     color?: "default" | "blue" | "red" | "blue-dark" | null | undefined;
     size?: "xs" | "sm" | "xl" | "md" | "lg" | null | undefined;
-    weight?: "bold" | "normal" | 500 | null | undefined;
+    weight?: "bold" | "normal" | "medium" | null | undefined;
     italic?: boolean | null | undefined;
     underline?: boolean | null | undefined;
     lineThrough?: boolean | null | undefined;
