@@ -311,6 +311,7 @@ export interface OverlayMenuPosition {
 
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
   className?: string
+  contentClassName?: string
   error?: boolean
   success?: boolean
   border?: boolean
@@ -344,6 +345,7 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
  */
 export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   className = '',
+  contentClassName = '',
   colorScheme,
   size,
   error = false,
@@ -485,7 +487,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
           <div
             className={`${contentClasses} ${isContextMenu ? 'fixed' : ''} ${
               !isContextMenu ? 'top-0 left-0 right-0' : ''
-            } overflow-y-auto`}
+            } overflow-y-auto ${contentClassName}`}
             style={{ 
               maxHeight,
               ...getPositionStyles()

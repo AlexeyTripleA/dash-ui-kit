@@ -23,6 +23,7 @@ export interface OverlayMenuPosition {
 }
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
     className?: string;
+    contentClassName?: string;
     error?: boolean;
     success?: boolean;
     border?: boolean;

@@ -8362,7 +8362,7 @@ const selectTrigger = classVarianceAuthority.cva('w-full transition-all font-int
     disabled: false
   }
 });
-const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full', {
+const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-md shadow-lg min-w-[var(--radix-select-trigger-width)] w-full max-h-[var(--radix-select-content-available-height)]', {
   variants: {
     theme: {
       light: 'bg-white border border-gray-200',
@@ -8370,6 +8370,7 @@ const selectContent = classVarianceAuthority.cva('overflow-hidden z-50 rounded-m
     }
   }
 });
+const selectViewport = classVarianceAuthority.cva('overflow-y-auto max-h-[inherit]');
 const selectItem = classVarianceAuthority.cva('relative flex cursor-pointer select-none items-center outline-none focus:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50', {
   variants: {
     theme: {
@@ -8458,6 +8459,7 @@ const Select = _a => {
   const contentClasses = selectContent({
     theme
   });
+  const viewportClasses = selectViewport({});
   const itemClasses = selectItem({
     theme,
     size
@@ -8490,6 +8492,7 @@ const Select = _a => {
         position: 'popper',
         sideOffset: 5,
         children: jsxRuntime.jsx(Viewport, {
+          className: viewportClasses,
           children: options.map(option => jsxRuntime.jsx(Item$1, {
             value: option.value,
             className: itemClasses,
@@ -9098,6 +9101,7 @@ const ChevronDownIcon = ({
 const OverlayMenu = _a => {
   var {
       className = '',
+      contentClassName = '',
       colorScheme,
       size,
       error = false,
@@ -9120,7 +9124,7 @@ const OverlayMenu = _a => {
       width,
       onClose
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
+    props = tslib.__rest(_a, ["className", "contentClassName", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
   const {
     theme
   } = useTheme();
@@ -9214,7 +9218,7 @@ const OverlayMenu = _a => {
         className: `${isContextMenu ? 'fixed' : 'fixed'} inset-0 z-40`,
         onClick: handleClose
       }), jsxRuntime.jsxs("div", {
-        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? 'top-0 left-0 right-0' : ''} overflow-y-auto`,
+        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? 'top-0 left-0 right-0' : ''} overflow-y-auto ${contentClassName}`,
         style: Object.assign({
           maxHeight
         }, getPositionStyles()),
@@ -9529,7 +9533,7 @@ const List$1 = ({
         className: 'flex flex-col gap-1',
         children: [jsxRuntime.jsx(Text, {
           size: size,
-          weight: 500,
+          weight: "medium",
           children: item.text
         }), item.description && jsxRuntime.jsx(Text, {
           size: 'xs',
