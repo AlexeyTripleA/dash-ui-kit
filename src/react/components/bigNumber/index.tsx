@@ -37,26 +37,35 @@ const bigNumberStyles = cva(
  */
 export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '' }) => {
   const { theme } = useTheme()
-  
+
   if (children === undefined || children === null) return null
   const str = children.toString()
 
   if (variant === 'space') {
-    // group digits every 3, right to left
-    const groups = str
+    // Split into integer and decimal parts
+    const [intPart, fracPart] = str.split('.')
+
+    // group digits every 3, right to left (only for integer part)
+    const groups = intPart
       .split('')
       .reverse()
       .reduce<string[]>((acc, char, idx) => {
-      if (idx % 3 === 0) acc.unshift('')
-      acc[0] = char + acc[0]
-      return acc
-    }, [])
+        if (idx % 3 === 0) acc.unshift('')
+        acc[0] = char + acc[0]
+        return acc
+      }, [])
 
     return (
       <span className={`${bigNumberStyles({ theme })} ${className}`}>
         {groups.map((grp, i) => (
           <span key={i}>{grp}</span>
         ))}
+        {fracPart != null && (
+          <>
+            <span>.</span>
+            <span>{fracPart}</span>
+          </>
+        )}
       </span>
     )
   } else {
@@ -66,10 +75,10 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
       .split('')
       .reverse()
       .reduce<string[]>((acc, char, idx) => {
-      if (idx % 3 === 0) acc.unshift('')
-      acc[0] = char + acc[0]
-      return acc
-    }, [])
+        if (idx % 3 === 0) acc.unshift('')
+        acc[0] = char + acc[0]
+        return acc
+      }, [])
 
     return (
       <span className={`${bigNumberStyles({ theme })} ${className}`}>
