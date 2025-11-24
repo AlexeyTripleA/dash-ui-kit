@@ -11,6 +11,8 @@ export interface BigNumberProps {
   variant?: BigNumberVariant
   /** Extra class names to apply to the wrapper. Use gap-* classes for spacing between groups. */
   className?: string
+  /** Horizontal spacing (in pixels) around the decimal point. Negative values reduce spacing. @default -2 */
+  decimalPointSpacing?: number
 }
 
 const bigNumberStyles = cva(
@@ -35,8 +37,13 @@ const bigNumberStyles = cva(
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */
-export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '' }) => {
+export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '', decimalPointSpacing = -2 }) => {
   const { theme } = useTheme()
+
+  const decimalPointStyle: React.CSSProperties = {
+    marginLeft: `${decimalPointSpacing}px`,
+    marginRight: `${decimalPointSpacing}px`
+  }
 
   if (children === undefined || children === null) return null
   const str = children.toString()
@@ -62,7 +69,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
         ))}
         {fracPart != null && (
           <>
-            <span>.</span>
+            <span style={decimalPointStyle}>.</span>
             <span>{fracPart}</span>
           </>
         )}
@@ -90,7 +97,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
         ))}
         {fracPart != null && (
           <>
-            <span>.</span>
+            <span style={decimalPointStyle}>.</span>
             <span>{fracPart}</span>
           </>
         )}
