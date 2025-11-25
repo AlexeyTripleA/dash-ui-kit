@@ -7,6 +7,8 @@ export interface BigNumberProps {
     variant?: BigNumberVariant;
     /** Extra class names to apply to the wrapper. Use gap-* classes for spacing between groups. */
     className?: string;
+    /** Horizontal spacing (in pixels) around the decimal point. Negative values reduce spacing. @default -2 */
+    decimalPointSpacing?: number;
 }
 /**
  * Splits a numeric string into groups of three characters for display.

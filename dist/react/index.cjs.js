@@ -9567,27 +9567,41 @@ const bigNumberStyles = classVarianceAuthority.cva('inline-flex whitespace-nowra
 const BigNumber = ({
   children,
   variant = 'space',
-  className = ''
+  className = '',
+  decimalPointSpacing = -2
 }) => {
   const {
     theme
   } = useTheme();
+  const decimalPointStyle = {
+    marginLeft: `${decimalPointSpacing}px`,
+    marginRight: `${decimalPointSpacing}px`
+  };
   if (children === undefined || children === null) return null;
   const str = children.toString();
   if (variant === 'space') {
-    // group digits every 3, right to left
-    const groups = str.split('').reverse().reduce((acc, char, idx) => {
+    // Split into integer and decimal parts
+    const [intPart, fracPart] = str.split('.');
+    // group digits every 3, right to left (only for integer part)
+    const groups = intPart.split('').reverse().reduce((acc, char, idx) => {
       if (idx % 3 === 0) acc.unshift('');
       acc[0] = char + acc[0];
       return acc;
     }, []);
-    return jsxRuntime.jsx("span", {
+    return jsxRuntime.jsxs("span", {
       className: `${bigNumberStyles({
         theme
       })} ${className}`,
-      children: groups.map((grp, i) => jsxRuntime.jsx("span", {
+      children: [groups.map((grp, i) => jsxRuntime.jsx("span", {
         children: grp
-      }, i))
+      }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
+        children: [jsxRuntime.jsx("span", {
+          style: decimalPointStyle,
+          children: "."
+        }), jsxRuntime.jsx("span", {
+          children: fracPart
+        })]
+      })]
     });
   } else {
     // comma variant
@@ -9609,6 +9623,7 @@ const BigNumber = ({
         })]
       }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
         children: [jsxRuntime.jsx("span", {
+          style: decimalPointStyle,
           children: "."
         }), jsxRuntime.jsx("span", {
           children: fracPart

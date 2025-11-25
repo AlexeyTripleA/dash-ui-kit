@@ -11,6 +11,8 @@ export interface BigNumberProps {
   variant?: BigNumberVariant
   /** Extra class names to apply to the wrapper. Use gap-* classes for spacing between groups. */
   className?: string
+  /** Horizontal spacing (in pixels) around the decimal point. Negative values reduce spacing. @default -2 */
+  decimalPointSpacing?: number
 }
 
 const bigNumberStyles = cva(
@@ -35,28 +37,42 @@ const bigNumberStyles = cva(
  * - `comma`: groups separated by commas, with decimal part after `.`
  * Supports light/dark theme.
  */
-export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '' }) => {
+export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space', className = '', decimalPointSpacing = -2 }) => {
   const { theme } = useTheme()
-  
+
+  const decimalPointStyle: React.CSSProperties = {
+    marginLeft: `${decimalPointSpacing}px`,
+    marginRight: `${decimalPointSpacing}px`
+  }
+
   if (children === undefined || children === null) return null
   const str = children.toString()
 
   if (variant === 'space') {
-    // group digits every 3, right to left
-    const groups = str
+    // Split into integer and decimal parts
+    const [intPart, fracPart] = str.split('.')
+
+    // group digits every 3, right to left (only for integer part)
+    const groups = intPart
       .split('')
       .reverse()
       .reduce<string[]>((acc, char, idx) => {
-      if (idx % 3 === 0) acc.unshift('')
-      acc[0] = char + acc[0]
-      return acc
-    }, [])
+        if (idx % 3 === 0) acc.unshift('')
+        acc[0] = char + acc[0]
+        return acc
+      }, [])
 
     return (
       <span className={`${bigNumberStyles({ theme })} ${className}`}>
         {groups.map((grp, i) => (
           <span key={i}>{grp}</span>
         ))}
+        {fracPart != null && (
+          <>
+            <span style={decimalPointStyle}>.</span>
+            <span>{fracPart}</span>
+          </>
+        )}
       </span>
     )
   } else {
@@ -66,10 +82,10 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
       .split('')
       .reverse()
       .reduce<string[]>((acc, char, idx) => {
-      if (idx % 3 === 0) acc.unshift('')
-      acc[0] = char + acc[0]
-      return acc
-    }, [])
+        if (idx % 3 === 0) acc.unshift('')
+        acc[0] = char + acc[0]
+        return acc
+      }, [])
 
     return (
       <span className={`${bigNumberStyles({ theme })} ${className}`}>
@@ -81,7 +97,7 @@ export const BigNumber: React.FC<BigNumberProps> = ({ children, variant = 'space
         ))}
         {fracPart != null && (
           <>
-            <span>.</span>
+            <span style={decimalPointStyle}>.</span>
             <span>{fracPart}</span>
           </>
         )}
