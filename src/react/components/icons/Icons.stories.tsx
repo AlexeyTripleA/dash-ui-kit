@@ -17,11 +17,11 @@ import {
   SmartphoneIcon,
   CrossIcon,
   WalletIcon,
-
   PlusIcon,
   FilterIcon,
   EditIcon,
   DeleteIcon,
+  DocumentIcon,
   ChevronIcon,
   BurgerMenuIcon,
   KebabMenuIcon,
@@ -157,6 +157,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <DeleteIcon />
         <span className="text-sm">DeleteIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <DocumentIcon />
+        <span className="text-sm">DocumentIcon</span>
       </div>
       <div className="flex flex-col items-center gap-2">
         <ChevronIcon />
@@ -485,6 +489,16 @@ export const Delete: StoryObj = {
   args: {
     size: 16,
     color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Document Icon
+export const Document: StoryObj = {
+  render: (args) => <DocumentIcon {...args} />,
+  args: {
+    size: 14,
+    color: '#4C7EFF',
     className: ''
   }
 }

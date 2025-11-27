@@ -45,6 +45,7 @@ export {
   FilterIcon,
   EditIcon,
   DeleteIcon,
+  DocumentIcon,
   ChevronIcon,
   BurgerMenuIcon,
   KebabMenuIcon,
