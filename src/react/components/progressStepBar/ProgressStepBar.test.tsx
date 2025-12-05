@@ -157,5 +157,38 @@ describe('ProgressStepBar', () => {
       expect(steps[2]).toHaveClass('bg-gray-700')
       expect(steps[3]).toHaveClass('bg-gray-700')
     })
+
+    it('renders with orange color when specified', () => {
+      const { container } = renderWithTheme(
+        <ProgressStepBar currentStep={2} totalSteps={4} color="orange" />
+      )
+      
+      const steps = container.querySelectorAll('.h-1\\.5')
+      
+      // Active steps should have orange variant class
+      expect(steps[0].className).toContain('bg-[var(--color-dash-orange)]')
+      expect(steps[1].className).toContain('bg-[var(--color-dash-orange)]')
+      
+      // Inactive steps should have orange inactive variant
+      expect(steps[2].className).toContain('bg-[var(--color-dash-orange-15)]')
+      expect(steps[3].className).toContain('bg-[var(--color-dash-orange-15)]')
+    })
+
+    it('renders orange color in dark theme', () => {
+      const { container } = renderWithTheme(
+        <ProgressStepBar currentStep={2} totalSteps={4} color="orange" />,
+        'dark'
+      )
+      
+      const steps = container.querySelectorAll('.h-1\\.5')
+      
+      // Active steps should have orange dark variant class
+      expect(steps[0].className).toContain('bg-[var(--color-dash-orange-75)]')
+      expect(steps[1].className).toContain('bg-[var(--color-dash-orange-75)]')
+      
+      // Inactive steps should have gray background in dark mode
+      expect(steps[2]).toHaveClass('bg-gray-700')
+      expect(steps[3]).toHaveClass('bg-gray-700')
+    })
   })
 }) 

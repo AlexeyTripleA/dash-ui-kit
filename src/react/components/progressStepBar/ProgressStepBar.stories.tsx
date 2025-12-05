@@ -25,7 +25,7 @@ const meta = {
     },
     color: {
       control: 'select',
-      options: ['blue', 'red'],
+      options: ['blue', 'red', 'orange'],
       description: 'Color variant of the progress bar'
     },
     className: {
@@ -189,6 +189,21 @@ export const RedColorDarkTheme: Story = {
   ]
 }
 
+export const OrangeColor: Story = {
+  args: {
+    currentStep: 2,
+    totalSteps: 4,
+    color: 'orange'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'ProgressStepBar with orange color variant.'
+      }
+    }
+  }
+}
+
 export const ColorComparison: Story = {
   render: () => (
     <div className="space-y-6 flex flex-col items-center">
@@ -204,12 +219,18 @@ export const ColorComparison: Story = {
           <ProgressStepBar currentStep={3} totalSteps={5} color="red" />
         </div>
       </div>
+      <div className="text-center">
+        <h3 className="text-sm font-medium mb-4">Orange</h3>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} color="orange" />
+        </div>
+      </div>
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Comparison of blue and red color variants.'
+        story: 'Comparison of all color variants.'
       }
     }
   }

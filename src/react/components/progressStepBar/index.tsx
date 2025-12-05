@@ -5,7 +5,7 @@ interface ProgressStepBarProps {
   currentStep: number
   totalSteps: number
   className?: string
-  color?: 'blue' | 'red'
+  color?: 'blue' | 'red' | 'orange'
 }
 
 const colorConfig = {
@@ -19,6 +19,12 @@ const colorConfig = {
     active: 'bg-[var(--color-dash-red)]',
     activeDark: 'bg-[var(--color-dash-red-75)]',
     inactive: 'bg-[var(--color-dash-red-15)]',
+    inactiveDark: 'bg-gray-700',
+  },
+  orange: {
+    active: 'bg-[var(--color-dash-orange)]',
+    activeDark: 'bg-[var(--color-dash-orange-75)]',
+    inactive: 'bg-[var(--color-dash-orange-15)]',
     inactiveDark: 'bg-gray-700',
   },
 }

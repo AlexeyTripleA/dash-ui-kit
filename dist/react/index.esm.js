@@ -11439,6 +11439,12 @@ const colorConfig = {
     activeDark: 'bg-[var(--color-dash-red-75)]',
     inactive: 'bg-[var(--color-dash-red-15)]',
     inactiveDark: 'bg-gray-700'
+  },
+  orange: {
+    active: 'bg-[var(--color-dash-orange)]',
+    activeDark: 'bg-[var(--color-dash-orange-75)]',
+    inactive: 'bg-[var(--color-dash-orange-15)]',
+    inactiveDark: 'bg-gray-700'
   }
 };
 function ProgressStepBar({
