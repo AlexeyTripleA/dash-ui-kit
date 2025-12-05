@@ -107,4 +107,55 @@ describe('ProgressStepBar', () => {
     expect(steps[2]).toHaveClass('bg-dash-brand-inactive')
     expect(steps[3]).toHaveClass('bg-dash-brand-inactive')
   })
+
+  describe('color variants', () => {
+    it('renders with blue color by default', () => {
+      const { container } = renderWithTheme(
+        <ProgressStepBar currentStep={2} totalSteps={4} />
+      )
+      
+      const steps = container.querySelectorAll('.h-1\\.5')
+      
+      // Active steps should have blue variant class
+      expect(steps[0].className).toContain('bg-[var(--color-dash-brand)]')
+      expect(steps[1].className).toContain('bg-[var(--color-dash-brand)]')
+      
+      // Inactive steps should have blue inactive variant
+      expect(steps[2].className).toContain('bg-[rgba(76,126,255,0.16)]')
+      expect(steps[3].className).toContain('bg-[rgba(76,126,255,0.16)]')
+    })
+
+    it('renders with red color when specified', () => {
+      const { container } = renderWithTheme(
+        <ProgressStepBar currentStep={2} totalSteps={4} color="red" />
+      )
+      
+      const steps = container.querySelectorAll('.h-1\\.5')
+      
+      // Active steps should have red variant class
+      expect(steps[0].className).toContain('bg-[var(--color-dash-red)]')
+      expect(steps[1].className).toContain('bg-[var(--color-dash-red)]')
+      
+      // Inactive steps should have red inactive variant
+      expect(steps[2].className).toContain('bg-[var(--color-dash-red-15)]')
+      expect(steps[3].className).toContain('bg-[var(--color-dash-red-15)]')
+    })
+
+    it('renders red color in dark theme', () => {
+      const { container } = renderWithTheme(
+        <ProgressStepBar currentStep={2} totalSteps={4} color="red" />,
+        'dark'
+      )
+      
+      const steps = container.querySelectorAll('.h-1\\.5')
+      
+      // Active steps should have red dark variant class
+      expect(steps[0].className).toContain('bg-[var(--color-dash-red-75)]')
+      expect(steps[1].className).toContain('bg-[var(--color-dash-red-75)]')
+      
+      // Inactive steps should have gray background in dark mode
+      expect(steps[2]).toHaveClass('bg-gray-700')
+      expect(steps[3]).toHaveClass('bg-gray-700')
+    })
+  })
 }) 
