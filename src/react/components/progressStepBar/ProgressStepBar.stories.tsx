@@ -23,6 +23,11 @@ const meta = {
       control: { type: 'number', min: 1, max: 10 },
       description: 'Total number of steps'
     },
+    color: {
+      control: 'select',
+      options: ['blue', 'red', 'orange'],
+      description: 'Color variant of the progress bar'
+    },
     className: {
       control: 'text',
       description: 'Additional CSS classes'
@@ -139,6 +144,93 @@ export const ThemeComparison: Story = {
     docs: {
       description: {
         story: 'Comparison of ProgressStepBar in light and dark themes.'
+      }
+    }
+  }
+}
+
+export const RedColor: Story = {
+  args: {
+    currentStep: 2,
+    totalSteps: 4,
+    color: 'red'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'ProgressStepBar with red color variant.'
+      }
+    }
+  }
+}
+
+export const RedColorDarkTheme: Story = {
+  args: {
+    currentStep: 3,
+    totalSteps: 5,
+    color: 'red'
+  },
+  parameters: {
+    globals: {
+      theme: 'dark'
+    },
+    docs: {
+      description: {
+        story: 'ProgressStepBar with red color in dark theme.'
+      }
+    }
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-gray-900 p-6 rounded-lg" style={{ width: '400px' }}>
+        <Story />
+      </div>
+    )
+  ]
+}
+
+export const OrangeColor: Story = {
+  args: {
+    currentStep: 2,
+    totalSteps: 4,
+    color: 'orange'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'ProgressStepBar with orange color variant.'
+      }
+    }
+  }
+}
+
+export const ColorComparison: Story = {
+  render: () => (
+    <div className="space-y-6 flex flex-col items-center">
+      <div className="text-center">
+        <h3 className="text-sm font-medium mb-4">Blue (default)</h3>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} color="blue" />
+        </div>
+      </div>
+      <div className="text-center">
+        <h3 className="text-sm font-medium mb-4">Red</h3>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} color="red" />
+        </div>
+      </div>
+      <div className="text-center">
+        <h3 className="text-sm font-medium mb-4">Orange</h3>
+        <div style={{ width: '400px' }}>
+          <ProgressStepBar currentStep={3} totalSteps={5} color="orange" />
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Comparison of all color variants.'
       }
     }
   }
