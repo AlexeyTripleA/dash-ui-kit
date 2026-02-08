@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { cva } from 'class-variance-authority'
 import { NotActive } from '../notActive'
-import { getTimeDelta, type TimeDeltaFormat } from '../../utils/datetime'
+import { getTimeDelta, type TimeDeltaFormat } from '../../../shared/utils/datetime'
 import { useTheme } from '../../contexts/ThemeContext'
 
 const wrapperStyles = cva(

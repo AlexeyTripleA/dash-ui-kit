@@ -14,7 +14,8 @@
   "type": "module",
   "author": "pshenmic.dev",
   "files": [
-    "dist"
+    "dist",
+    "tailwind.config.rn.js"
   ],
   "exports": {
     "./react": {
@@ -23,6 +24,18 @@
       "import": "./dist/react/index.esm.js",
       "require": "./dist/react/index.cjs.js",
       "default": "./dist/react/index.cjs.js"
+    },
+    "./react-native": {
+      "types": "./dist/react-native/index.d.ts",
+      "import": "./dist/react-native/index.esm.js",
+      "require": "./dist/react-native/index.cjs.js",
+      "default": "./dist/react-native/index.cjs.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "import": "./dist/shared/index.esm.js",
+      "require": "./dist/shared/index.cjs.js",
+      "default": "./dist/shared/index.cjs.js"
     },
     "./styles": "./dist/styles.css",
     "./theme": "./dist/theme.css",
@@ -34,9 +47,10 @@
       "default": "./dist/react/*/index.cjs.js"
     }
   },
+  "react-native": "./dist/react-native/index.js",
   "scripts": {
-    "types": "tsc -p tsconfig.build.json",
-    "build": "rm -rf dist && rollup -c && npm run types",
+    "types": "tsc -p tsconfig.react.json && tsc -p tsconfig.react-native.json && tsc -p tsconfig.shared.json",
+    "build": "rm -rf dist && mkdir -p dist && rollup -c && npm run types",
     "prepare": "rollup -c && npm run types",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -51,7 +65,8 @@
     "@radix-ui/react-select": "^2.2.5",
     "class-variance-authority": "^0.7.1",
     "minidenticons": "^4.2.1",
-    "radix-ui": "^1.4.2"
+    "radix-ui": "^1.4.2",
+    "twrnc": "^4.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
@@ -88,6 +103,7 @@
     "eslint-config-next": "15.3.2",
     "eslint-plugin-storybook": "^0.12.0",
     "jsdom": "^26.1.0",
+    "nativewind": "^4.2.1",
     "playwright": "^1.52.0",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
@@ -105,8 +121,18 @@
     "vitest": "^3.1.4"
   },
   "peerDependencies": {
+    "expo-blur": ">=13.0.0",
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react-dom": "^19.2.3",
+    "react-native": ">=0.70.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    },
+    "expo-blur": {
+      "optional": true
+    }
   },
   "eslintConfig": {
     "extends": [

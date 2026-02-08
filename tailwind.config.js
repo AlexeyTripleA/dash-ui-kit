@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/**/*.{js,jsx,ts,tsx,html,pcss}'
+    './src/react/**/*.{js,jsx,ts,tsx}',
+    './src/react-native/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{html,pcss}'
   ],
   theme: {
     extend: {

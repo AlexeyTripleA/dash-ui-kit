@@ -23,7 +23,7 @@ export { ProgressStepBar, type ProgressStepBarProps } from './components/progres
 export { DashLogo, type DashLogoProps } from './components/dashLogo'
 export { Dialog, type DialogProps } from './components/dialog'
 export { Tabs, type TabsProps, type TabItem } from './components/tabs'
-export type { TimeDeltaFormat } from './utils/datetime'
+export type { TimeDeltaFormat } from '../shared/utils/datetime'
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext'
 export {
   ArrowIcon,

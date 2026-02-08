@@ -7,14 +7,27 @@ import postcssImport from 'postcss-import'
 import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
-const inputFiles = {
-  index: 'src/react/index.ts'  // Только один главный entry point
+// React - preserve module structure
+const reactInputFiles = [
+  'src/react/index.ts',
+  ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
+  ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
+]
+
+// React Native - single bundle for now
+const reactNativeInputFiles = {
+  index: 'src/react-native/index.ts'
 }
-const dir = 'dist/react'
+
+// Shared - single bundle
+const sharedInputFiles = {
+  index: 'src/shared/index.ts'
+}
 
 const external = [
   'react',
   'react-dom',
+  'react-native',
   'tslib',
   'class-variance-authority'
 ]
@@ -53,49 +66,121 @@ const sharedPlugins = [
 const banner = `"use client";\n`
 
 export default [
-  // ESM
+  // React ESM (preserve modules)
   {
-    input: inputFiles,
+    input: reactInputFiles,
     external: isExternal,
     output: {
-      dir: dir,
+      dir: 'dist/react',
       format: 'esm',
-      preserveModules: false, // ← include all in bundle
+      preserveModules: true,
+      preserveModulesRoot: 'src/react',
       entryFileNames: '[name].esm.js',
-      inlineDynamicImports: true,
       sourcemap: true,
       banner: banner
     },
     plugins: [
       typescript({
-        tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        tsconfig: './tsconfig.rollup.json'
       }),
       ...sharedPlugins
     ]
   },
-  // CJS
+  // React CJS (preserve modules)
   {
-    input: inputFiles,
+    input: reactInputFiles,
     external: isExternal,
     output: {
-      dir: dir,
+      dir: 'dist/react',
       format: 'cjs',
-      preserveModules: false,  // ← Встраиваем все в bundle
+      preserveModules: true,
+      preserveModulesRoot: 'src/react',
       entryFileNames: '[name].cjs.js',
-      inlineDynamicImports: true,  // ← Встраиваем всё в один файл
       exports: 'named',
       sourcemap: true,
       banner: banner
     },
     plugins: [
       typescript({
-        tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // React Native ESM
+  {
+    input: reactNativeInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/react-native',
+      format: 'esm',
+      preserveModules: false,
+      entryFileNames: '[name].esm.js',
+      inlineDynamicImports: true,
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // React Native CJS
+  {
+    input: reactNativeInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/react-native',
+      format: 'cjs',
+      preserveModules: false,
+      entryFileNames: '[name].cjs.js',
+      inlineDynamicImports: true,
+      exports: 'named',
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // Shared ESM
+  {
+    input: sharedInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/shared',
+      format: 'esm',
+      preserveModules: false,
+      entryFileNames: '[name].esm.js',
+      inlineDynamicImports: true,
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // Shared CJS
+  {
+    input: sharedInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/shared',
+      format: 'cjs',
+      preserveModules: false,
+      entryFileNames: '[name].cjs.js',
+      inlineDynamicImports: true,
+      exports: 'named',
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
       }),
       ...sharedPlugins
     ]

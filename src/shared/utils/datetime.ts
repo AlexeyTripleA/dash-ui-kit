@@ -99,4 +99,4 @@ export function getTimeDelta (
   }
 
   return 'Invalid format'
-} 
+}
