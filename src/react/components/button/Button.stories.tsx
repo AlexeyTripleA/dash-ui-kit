@@ -18,6 +18,10 @@ const meta: Meta<ButtonProps> = {
       control: { type: 'inline-radio' },
       options: ['sm', 'md'],
     },
+    rounded: {
+      control: { type: 'inline-radio' },
+      options: ['default', 'full'],
+    },
     disabled: { control: 'boolean' },
     onClick: { action: 'clicked' },
   },
@@ -54,6 +58,16 @@ Disabled.args = {
   disabled: true,
 }
 
+export const RoundedFull = Template.bind({})
+RoundedFull.args = {
+  children: 'Pill Button',
+  variant: 'solid',
+  colorScheme: 'brand',
+  size: 'md',
+  rounded: 'full',
+  disabled: false,
+}
+
 export const Sizes: StoryFn<ButtonProps> = () => (
   <>
     <Button size={'sm'}>Small Button</Button>
@@ -77,6 +91,15 @@ export const Colors: StoryFn<ButtonProps> = () => (
   </>
 )
 
+export const Rounded: StoryFn<ButtonProps> = () => (
+  <>
+    <Button rounded={'default'}>Default Rounded</Button>
+    <Button rounded={'full'}>Pill Button</Button>
+    <Button rounded={'full'} variant={'outline'}>Pill Outline</Button>
+    <Button rounded={'full'} size={'sm'}>Small Pill</Button>
+  </>
+)
+
 export const All: StoryFn<ButtonProps> = () => (
   <>
     {/* Variants */}
@@ -90,5 +113,8 @@ export const All: StoryFn<ButtonProps> = () => (
     <Button colorScheme={'mint'}>Mint Button</Button>
     <Button colorScheme={'gray'}>Gray Button</Button>
     <Button colorScheme={'lightGray'}>Light Gray Button</Button>
+    {/* Rounded */}
+    <Button rounded={'default'}>Default Rounded</Button>
+    <Button rounded={'full'}>Pill Button</Button>
   </>
 )
