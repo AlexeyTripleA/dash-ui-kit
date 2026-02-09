@@ -5,6 +5,7 @@ declare const buttonStyles: (props?: ({
     variant?: "solid" | "outline" | "ghost" | null | undefined;
     colorScheme?: "red" | "gray" | "brand" | "mint" | "lightBlue" | "lightGray" | null | undefined;
     size?: "sm" | "md" | "lg" | "xl" | null | undefined;
+    rounded?: "default" | "full" | null | undefined;
     disabled?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type ButtonVariants = Omit<VariantProps<typeof buttonStyles>, 'disabled'>;
@@ -15,6 +16,8 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
     colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray';
     /** Size of the button */
     size?: 'sm' | 'md' | 'lg' | 'xl';
+    /** Border radius style */
+    rounded?: 'default' | 'full';
     /** Whether the button is disabled */
     disabled?: boolean;
     /** Whether to show loading indicator */

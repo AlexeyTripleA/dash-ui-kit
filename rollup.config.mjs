@@ -28,6 +28,8 @@ const external = [
   'react',
   'react-dom',
   'react-native',
+  'react-native-svg',
+  'expo-blur',
   'tslib',
   'class-variance-authority'
 ]

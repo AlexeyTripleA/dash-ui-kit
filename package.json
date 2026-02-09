@@ -109,6 +109,9 @@
     "postcss-import": "^16.1.0",
     "postcss-loader": "^8.1.1",
     "postcss-simple-vars": "^7.0.1",
+    "react-native-svg": "^15.15.2",
+    "react-native-svg-web": "^1.0.9",
+    "react-native-web": "^0.21.2",
     "rollup": "^4.41.0",
     "rollup-plugin-multi-input": "^1.5.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -122,15 +125,19 @@
   },
   "peerDependencies": {
     "expo-blur": ">=13.0.0",
-    "react": ">=18.0.0",
-    "react-dom": "^19.2.3",
-    "react-native": ">=0.70.0"
+    "react": ">=19.1.0",
+    "react-dom": ">=19.1.0",
+    "react-native": ">=0.70.0",
+    "react-native-svg": ">=13.0.0"
   },
   "peerDependenciesMeta": {
     "react-native": {
       "optional": true
     },
     "expo-blur": {
+      "optional": true
+    },
+    "react-native-svg": {
       "optional": true
     }
   },

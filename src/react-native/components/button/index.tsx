@@ -28,10 +28,14 @@ const buttonStyles = cva(
         lightGray: '',
       },
       size: {
-        sm: 'px-3 py-2 rounded-[10px]',      // 0.625rem = 10px
-        md: 'px-[18px] py-3 rounded-[14px]', // 1.125rem = 18px, 0.875rem = 14px
-        lg: 'px-6 py-4 rounded-[14px]',      // kept as is
-        xl: 'px-[25px] py-5 rounded-[16px]', // 1.5625rem = 25px, 1rem = 16px
+        sm: 'px-3 py-2',
+        md: 'px-[18px] py-3',
+        lg: 'px-6 py-4',
+        xl: 'px-[25px] py-5',
+      },
+      rounded: {
+        default: '',
+        full: 'rounded-full',
       },
       disabled: {
         false: '',
@@ -39,6 +43,27 @@ const buttonStyles = cva(
       },
     },
     compoundVariants: [
+      // Border radius per size (when rounded is default)
+      {
+        size: 'sm',
+        rounded: 'default',
+        class: 'rounded-[10px]',
+      },
+      {
+        size: 'md',
+        rounded: 'default',
+        class: 'rounded-[14px]',
+      },
+      {
+        size: 'lg',
+        rounded: 'default',
+        class: 'rounded-[14px]',
+      },
+      {
+        size: 'xl',
+        rounded: 'default',
+        class: 'rounded-[16px]',
+      },
       // Solid variants - brand
       {
         variant: 'solid',
@@ -102,6 +127,7 @@ const buttonStyles = cva(
       variant: 'solid',
       colorScheme: 'brand',
       size: 'md',
+      rounded: 'default',
       disabled: false,
     },
   }
@@ -205,6 +231,8 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
   colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray'
   /** Size of the button */
   size?: 'sm' | 'md' | 'lg' | 'xl'
+  /** Border radius style */
+  rounded?: 'default' | 'full'
   /** Whether the button is disabled */
   disabled?: boolean
   /** Whether to show loading indicator */
@@ -225,6 +253,7 @@ export const Button: React.FC<ButtonProps> = ({
   variant,
   colorScheme,
   size,
+  rounded,
   disabled = false,
   loading = false,
   className = '',
@@ -240,6 +269,7 @@ export const Button: React.FC<ButtonProps> = ({
       variant,
       colorScheme,
       size,
+      rounded,
       disabled: isDisabled,
     }) + (className ? ` ${className}` : '')
 
@@ -255,7 +285,10 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <Pressable
-      style={buttonStyle}
+      style={({ pressed }) => [
+        ...buttonStyle,
+        pressed && !isDisabled && { opacity: 0.7 },
+      ]}
       disabled={isDisabled}
       onPress={onPress}
       {...props}

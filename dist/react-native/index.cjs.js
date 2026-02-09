@@ -4,7 +4,8 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var reactNative = require('react-native');
 var classVarianceAuthority = require('class-variance-authority');
-require('react');
+var react = require('react');
+var Svg = require('react-native-svg');
 
 function getAddedUtilities(plugins) {
     var _a;
@@ -7301,13 +7302,14 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
       lightGray: ''
     },
     size: {
-      sm: 'px-3 py-2 rounded-[10px]',
-      // 0.625rem = 10px
-      md: 'px-[18px] py-3 rounded-[14px]',
-      // 1.125rem = 18px, 0.875rem = 14px
-      lg: 'px-6 py-4 rounded-[14px]',
-      // kept as is
-      xl: 'px-[25px] py-5 rounded-[16px]' // 1.5625rem = 25px, 1rem = 16px
+      sm: 'px-3 py-2',
+      md: 'px-[18px] py-3',
+      lg: 'px-6 py-4',
+      xl: 'px-[25px] py-5'
+    },
+    rounded: {
+      default: '',
+      full: 'rounded-full'
     },
     disabled: {
       false: '',
@@ -7315,6 +7317,24 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
     }
   },
   compoundVariants: [
+  // Border radius per size (when rounded is default)
+  {
+    size: 'sm',
+    rounded: 'default',
+    class: 'rounded-[10px]'
+  }, {
+    size: 'md',
+    rounded: 'default',
+    class: 'rounded-[14px]'
+  }, {
+    size: 'lg',
+    rounded: 'default',
+    class: 'rounded-[14px]'
+  }, {
+    size: 'xl',
+    rounded: 'default',
+    class: 'rounded-[16px]'
+  },
   // Solid variants - brand
   {
     variant: 'solid',
@@ -7369,6 +7389,7 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
     variant: 'solid',
     colorScheme: 'brand',
     size: 'md',
+    rounded: 'default',
     disabled: false
   }
 });
@@ -7463,6 +7484,7 @@ const Button = _a => {
       variant,
       colorScheme,
       size,
+      rounded,
       disabled = false,
       loading = false,
       className = '',
@@ -7470,12 +7492,13 @@ const Button = _a => {
       children,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["variant", "colorScheme", "size", "disabled", "loading", "className", "style", "children", "onPress"]);
+    props = tslib.__rest(_a, ["variant", "colorScheme", "size", "rounded", "disabled", "loading", "className", "style", "children", "onPress"]);
   const isDisabled = disabled || loading;
   const buttonClasses = buttonStyles({
     variant,
     colorScheme,
     size,
+    rounded,
     disabled: isDisabled
   }) + (className ? ` ${className}` : '');
   const textClasses = textStyles({
@@ -7487,7 +7510,11 @@ const Button = _a => {
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
   const textStyle = cn(textClasses);
   return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
-    style: buttonStyle,
+    style: ({
+      pressed
+    }) => [...buttonStyle, pressed && !isDisabled && {
+      opacity: 0.7
+    }],
     disabled: isDisabled,
     onPress: onPress
   }, props, {
@@ -7501,8 +7528,581 @@ const Button = _a => {
   }));
 };
 
+const ArrowIcon = ({
+  color = 'white',
+  size = 14,
+  onPress
+}) => {
+  return jsxRuntime.jsx(Svg, {
+    width: size,
+    height: size,
+    viewBox: '0 0 9 14',
+    fill: 'none',
+    onPress: onPress,
+    color: color,
+    children: jsxRuntime.jsx(Svg.Path, {
+      d: 'M7.29297 0.292893C7.68349 -0.0976311 8.31651 -0.0976311 8.70703 0.292893C9.09756 0.683418 9.09756 1.31643 8.70703 1.70696L3.41406 6.99992L8.70703 12.2929L8.77539 12.3691C9.09574 12.7618 9.07315 13.3408 8.70703 13.707C8.34092 14.0731 7.76191 14.0957 7.36914 13.7753L7.29297 13.707L0.585938 6.99992L7.29297 0.292893Z',
+      fill: color
+    })
+  });
+};
+const CopyIcon = ({
+  color = 'white',
+  size = 16,
+  onPress
+}) => {
+  return jsxRuntime.jsxs(Svg, {
+    width: size,
+    height: size,
+    viewBox: '0 0 16 16',
+    fill: 'none',
+    onPress: onPress,
+    color: color,
+    children: [jsxRuntime.jsx(Svg.G, {
+      clipPath: 'url(#clip0_3876_6767)',
+      children: jsxRuntime.jsx(Svg.G, {
+        clipPath: 'url(#clip1_3876_6767)',
+        children: jsxRuntime.jsx(Svg.G, {
+          clipPath: 'url(#clip2_3876_6767)',
+          children: jsxRuntime.jsx(Svg.Path, {
+            d: 'M11.4512 10.5645H5.28516V1.75586H9.32335L11.4512 3.88369V10.5645ZM12.332 3.51758L9.68945 0.875H5.28516H4.4043V1.75586V10.5645V11.4453H5.28516H11.4512H12.332V10.5645V3.51758ZM0.880859 4.39844H0V5.2793V14.0879V14.9688H0.880859H7.04688H7.92773V14.0879V12.3262H7.04688V14.0879H0.880859V5.2793H3.52344V4.39844H0.880859Z',
+            fill: color
+          })
+        })
+      })
+    }), jsxRuntime.jsxs(Svg.Defs, {
+      children: [jsxRuntime.jsx(Svg.ClipPath, {
+        id: 'clip0_3876_6767',
+        children: jsxRuntime.jsx(Svg.Rect, {
+          width: '16',
+          height: '16',
+          fill: 'white'
+        })
+      }), jsxRuntime.jsx(Svg.ClipPath, {
+        id: 'clip1_3876_6767',
+        children: jsxRuntime.jsx(Svg.Rect, {
+          width: '16',
+          height: '14.25',
+          fill: 'white',
+          transform: 'translate(0 0.875)'
+        })
+      }), jsxRuntime.jsx(Svg.ClipPath, {
+        id: 'clip2_3876_6767',
+        children: jsxRuntime.jsx(Svg.Rect, {
+          width: '12.332',
+          height: '14.0938',
+          fill: 'white',
+          transform: 'translate(0 0.875)'
+        })
+      })]
+    })]
+  });
+};
+const SuccessIcon = ({
+  color = '#1CC400',
+  size = 18,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsx(Svg.Circle, {
+    cx: '9',
+    cy: '9',
+    r: '9',
+    fill: color,
+    fillOpacity: '.2'
+  }), jsxRuntime.jsx(Svg.Path, {
+    d: 'M5 8.5L8 11.5L13.5 6',
+    stroke: color,
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  })]
+});
+const ErrorIcon = ({
+  color = '#F45858',
+  size = 18,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 18 18',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsx(Svg.Rect, {
+    width: '18',
+    height: '18',
+    rx: '4',
+    fill: color,
+    fillOpacity: '.2'
+  }), jsxRuntime.jsx(Svg.Path, {
+    d: 'M9.06951 10L9.0695 4.86092',
+    stroke: color,
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  }), jsxRuntime.jsx(Svg.Path, {
+    d: 'M9.06951 13L9.06951 13.0102',
+    stroke: color,
+    strokeWidth: '2',
+    strokeLinecap: 'round'
+  })]
+});
+const CheckIcon = ({
+  color = '#4C7EFF',
+  size = 20,
+  onPress
+}) => {
+  return jsxRuntime.jsxs(Svg, {
+    width: size,
+    height: size,
+    viewBox: '0 0 20 20',
+    fill: 'none',
+    onPress: onPress,
+    children: [jsxRuntime.jsx(Svg.Circle, {
+      cx: '10',
+      cy: '10',
+      r: '10',
+      fill: 'rgba(12, 28, 51, 0.05)'
+    }), jsxRuntime.jsx(Svg.Path, {
+      d: 'M6.33 10L8.83 12.5L13.67 7.67',
+      stroke: color,
+      strokeWidth: '1.5',
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round'
+    })]
+  });
+};
+const CrossIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size * 17 / 16,
+  viewBox: '0 0 16 17',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M13.5693 3.40266L13.0973 2.93066L8 8.02866L2.90266 2.93066L2.43066 3.40266L7.52866 8.5L2.43066 13.5973L2.90266 14.0693L8 8.97133L13.0973 14.0693L13.5693 13.5973L8.47133 8.5L13.5693 3.40266Z',
+    fill: color
+  })
+});
+const PlusIcon = ({
+  color = '#4C7EFF',
+  size = 17,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size * 16 / 17,
+  viewBox: '0 0 17 16',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M15.1667 7.66665H8.83337V1.33331H8.16671V7.66665H1.83337V8.33331H8.16671V14.6666H8.83337V8.33331H15.1667V7.66665Z',
+    fill: color
+  })
+});
+const ChevronIcon = ({
+  color = '#0C1C33',
+  size = 12,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 12 12',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M6 8.9395L1.65149 4.59099L2.18149 4.06049L6 7.879L9.8185 4.06049L10.3485 4.59099L6 8.9395Z',
+    fill: color
+  })
+});
+const SearchIcon = ({
+  color = '#0C1C33',
+  size = 16,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M14.569 14.0977L10.6623 10.191C11.5815 9.14938 12.0591 7.79092 11.9941 6.40327C11.9292 5.01564 11.3267 3.70776 10.3143 2.75659C9.30178 1.80542 7.95892 1.28563 6.56994 1.30729C5.18095 1.32895 3.85492 1.89036 2.87264 2.87264C1.89036 3.85492 1.32895 5.18095 1.30729 6.56994C1.28563 7.95892 1.80542 9.30178 2.75659 10.3143C3.70776 11.3267 5.01564 11.9292 6.40327 11.9941C7.79092 12.0591 9.14938 11.5815 10.191 10.6623L14.0977 14.569L14.569 14.0977ZM6.66665 11.3333C5.74364 11.3333 4.84138 11.0596 4.07396 10.5468C3.30653 10.0341 2.70839 9.30518 2.35518 8.45245C2.00197 7.59978 1.90956 6.66145 2.08962 5.7562C2.26968 4.85095 2.71414 4.01943 3.36678 3.36678C4.01943 2.71414 4.85095 2.26968 5.7562 2.08962C6.66145 1.90956 7.59978 2.00197 8.45245 2.35518C9.30518 2.70839 10.0341 3.30653 10.5468 4.07396C11.0596 4.84138 11.3333 5.74364 11.3333 6.66665C11.3319 7.90385 10.8398 9.09005 9.96492 9.96492C9.09005 10.8398 7.90385 11.3319 6.66665 11.3333Z',
+    fill: color
+  })
+});
+const InfoCircleIcon = ({
+  color = '#4C7EFF',
+  size = 19,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 19 19',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsxs(Svg.G, {
+    clipPath: 'url(#clip0_1166_258)',
+    children: [jsxRuntime.jsx(Svg.Path, {
+      d: 'M9.5 5.5H9.51ZM9.5 8.5V13.5ZM18.5 9.5C18.5 14.4706 14.4706 18.5 9.5 18.5C4.52944 18.5 0.5 14.4706 0.5 9.5C0.5 4.52944 4.52944 0.5 9.5 0.5C14.4706 0.5 18.5 4.52944 18.5 9.5Z',
+      fill: color,
+      fillOpacity: '0.05'
+    }), jsxRuntime.jsx(Svg.Path, {
+      d: 'M18 9.5C18 4.80558 14.1945 1 9.5 1C4.80558 1 1 4.80558 1 9.5C1 14.1945 4.80558 18 9.5 18C14.1945 18 18 14.1945 18 9.5ZM9 13.5V8.5C9 8.22386 9.22386 8 9.5 8C9.77614 8 10 8.22386 10 8.5V13.5C10 13.7761 9.77614 14 9.5 14C9.22386 14 9 13.7761 9 13.5ZM9.50977 5C9.78591 5 10.0098 5.22386 10.0098 5.5C10.0098 5.77614 9.78591 6 9.50977 6H9.5C9.22386 6 9 5.77614 9 5.5C9 5.22386 9.22386 5 9.5 5H9.50977ZM19 9.5C19 14.7467 14.7467 19 9.5 19C4.2533 19 0 14.7467 0 9.5C0 4.2533 4.2533 0 9.5 0C14.7467 0 19 4.2533 19 9.5Z',
+      fill: color
+    })]
+  }), jsxRuntime.jsx(Svg.Defs, {
+    children: jsxRuntime.jsx(Svg.ClipPath, {
+      id: 'clip0_1166_258',
+      children: jsxRuntime.jsx(Svg.Rect, {
+        width: '19',
+        height: '19',
+        fill: 'white'
+      })
+    })
+  })]
+});
+const EyeOpenIcon = ({
+  color = 'currentColor',
+  size = 16,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size * 10 / 16,
+  viewBox: '0 0 16 10',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M7.89888 0C6.24409 0.000806406 4.62351 0.471042 3.22533 1.35609C1.82715 2.24114 0.708743 3.50469 0 5C0.708092 6.49578 1.82635 7.75974 3.22468 8.64489C4.623 9.53004 6.24392 9.99999 7.89888 9.99999C9.55378 9.99999 11.1747 9.53004 12.573 8.64489C13.9713 7.75974 15.0896 6.49578 15.7977 5C15.089 3.50469 13.9706 2.24114 12.5724 1.35609C11.1742 0.471042 9.55364 0.000806406 7.89888 0ZM7.89888 8.98344C6.52084 8.97755 5.16914 8.60565 3.98212 7.90571C2.79509 7.20576 1.81538 6.20297 1.14327 5C1.81083 3.7931 2.78951 2.78709 3.97757 2.08654C5.16561 1.38601 6.51964 1.01653 7.89888 1.01653C9.27804 1.01653 10.6321 1.38601 11.8201 2.08654C13.0082 2.78709 13.9868 3.7931 14.6545 5C13.9823 6.20297 13.0026 7.20576 11.8156 7.90571C10.6285 8.60565 9.27689 8.97755 7.89888 8.98344ZM7.89888 2.51693C7.40772 2.51693 6.92767 2.66256 6.51934 2.93541C6.11101 3.20825 5.79274 3.59605 5.60481 4.0498C5.41687 4.50349 5.3677 5.00271 5.46351 5.48439C5.55932 5.96606 5.7958 6.4085 6.14306 6.7558C6.49033 7.10303 6.93275 7.33953 7.41443 7.43535C7.8961 7.53117 8.39533 7.48197 8.84909 7.29406C9.30277 7.10608 9.69059 6.78785 9.96342 6.3795C10.2362 5.97114 10.3819 5.4911 10.3819 5C10.3819 4.34146 10.1203 3.70989 9.65461 3.24421C9.189 2.77854 8.55742 2.51693 7.89888 2.51693ZM7.89888 6.46658C7.60878 6.46658 7.32525 6.38058 7.08407 6.21937C6.8429 6.05822 6.65492 5.82918 6.54392 5.56123C6.43291 5.29322 6.40387 4.99837 6.46045 4.7139C6.51704 4.42942 6.65675 4.16805 6.8618 3.96299C7.06693 3.75786 7.32823 3.61818 7.61271 3.5616C7.89726 3.50501 8.1921 3.53405 8.46011 3.64504C8.72806 3.75603 8.9571 3.94402 9.11825 4.18519C9.27939 4.42637 9.36546 4.7099 9.36546 5C9.36498 5.38884 9.21034 5.76161 8.93542 6.03654C8.66043 6.31146 8.28765 6.4661 7.89888 6.46658Z',
+    fill: color
+  })
+});
+const EyeClosedIcon = ({
+  color = 'currentColor',
+  size = 16,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsx(Svg.Path, {
+    d: 'M7.89888 3C6.24409 3.00081 4.62351 3.47104 3.22533 4.35609C1.82715 5.24114 0.708743 6.50469 0 8C0.708092 9.49578 1.82635 10.7597 3.22468 11.6449C4.623 12.53 6.24392 13 7.89888 13C9.55378 13 11.1747 12.53 12.573 11.6449C13.9713 10.7597 15.0896 9.49578 15.7977 8C15.089 6.50469 13.9706 5.24114 12.5724 4.35609C11.1742 3.47104 9.55364 3.00081 7.89888 3ZM7.89888 11.9834C6.52084 11.9776 5.16914 11.6056 3.98212 10.9057C2.79509 10.2058 1.81538 9.20297 1.14327 8C1.81083 6.7931 2.78951 5.78709 3.97757 5.08654C5.16561 4.38601 6.51964 4.01653 7.89888 4.01653C9.27804 4.01653 10.6321 4.38601 11.8201 5.08654C13.0082 5.78709 13.9868 6.7931 14.6545 8C13.9823 9.20297 13.0026 10.2058 11.8156 10.9057C10.6285 11.6056 9.27689 11.9776 7.89888 11.9834Z',
+    fill: color
+  }), jsxRuntime.jsx(Svg.Line, {
+    x1: '1',
+    y1: '15',
+    x2: '15',
+    y2: '1',
+    stroke: color,
+    strokeWidth: '1.5',
+    strokeLinecap: 'round'
+  })]
+});
+// Export all icons as a collection
+const Icons = {
+  ArrowIcon,
+  CopyIcon,
+  SuccessIcon,
+  ErrorIcon,
+  CheckIcon,
+  CrossIcon,
+  PlusIcon,
+  ChevronIcon,
+  SearchIcon,
+  InfoCircleIcon,
+  EyeOpenIcon,
+  EyeClosedIcon
+};
+
+const inputStyles = classVarianceAuthority.cva('w-full font-normal text-sm leading-[17px]', {
+  variants: {
+    colorScheme: {
+      default: '',
+      brand: '',
+      error: '',
+      success: '',
+      'light-gray': ''
+    },
+    size: {
+      sm: 'px-3 py-2 rounded-[10px]',
+      md: 'px-4 py-3 rounded-[12px]',
+      xl: 'px-4 py-[18px] rounded-[14px]'
+    },
+    variant: {
+      outlined: 'border',
+      filled: 'border-0'
+    },
+    disabled: {
+      false: '',
+      true: 'opacity-60'
+    }
+  },
+  compoundVariants: [
+  // Outlined variant colors
+  {
+    variant: 'outlined',
+    colorScheme: 'default',
+    class: 'border-[rgba(17,17,17,0.32)] bg-white'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'brand',
+    class: 'border-dash-brand/30 bg-white'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'error',
+    class: 'border-red-500 bg-white'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'success',
+    class: 'border-green-500 bg-white'
+  }, {
+    variant: 'outlined',
+    colorScheme: 'light-gray',
+    class: 'border-gray-500/50 bg-white'
+  },
+  // Filled variant colors
+  {
+    variant: 'filled',
+    colorScheme: 'default',
+    class: 'bg-dash-brand/15'
+  }, {
+    variant: 'filled',
+    colorScheme: 'brand',
+    class: 'bg-dash-brand/15'
+  }, {
+    variant: 'filled',
+    colorScheme: 'error',
+    class: 'bg-red-500/15'
+  }, {
+    variant: 'filled',
+    colorScheme: 'success',
+    class: 'bg-green-500/15'
+  }, {
+    variant: 'filled',
+    colorScheme: 'light-gray',
+    class: 'bg-gray-100'
+  }],
+  defaultVariants: {
+    colorScheme: 'default',
+    size: 'xl',
+    variant: 'outlined',
+    disabled: false
+  }
+});
+/**
+ * React Native Input component that adapts to various color schemes, sizes, variants, and states.
+ * For password inputs (secureTextEntry), includes a toggleable eye icon.
+ * Supports prefix text or elements before input content.
+ *
+ * @example
+ * <Input
+ *   secureTextEntry
+ *   placeholder="Enter password"
+ *   colorScheme="brand"
+ *   size="xl"
+ *   prefix="https://"
+ * />
+ */
+const Input = _a => {
+  var {
+      className = '',
+      colorScheme,
+      size,
+      variant,
+      error = false,
+      success = false,
+      disabled = false,
+      secureTextEntry = false,
+      prefix,
+      prefixStyle,
+      showPasswordToggle = true,
+      style,
+      textStyle
+    } = _a,
+    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "secureTextEntry", "prefix", "prefixStyle", "showPasswordToggle", "style", "textStyle"]);
+  const [showPassword, setShowPassword] = react.useState(false);
+  // Determine color scheme based on state
+  let finalColorScheme = colorScheme;
+  if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
+  const classes = inputStyles({
+    colorScheme: finalColorScheme,
+    size,
+    variant,
+    disabled
+  }) + (className ? ` ${className}` : '');
+  const isPassword = secureTextEntry;
+  const shouldShowToggle = isPassword && showPasswordToggle;
+  const hasPrefix = Boolean(prefix);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  // Convert Tailwind classes to React Native style objects
+  const inputStyle = [cn(classes), style].filter(Boolean);
+  const inputTextStyle = [{
+    color: '#111111',
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '300'
+  }, textStyle].filter(Boolean);
+  // Adjust padding for password toggle button and prefix
+  const containerStyle = {};
+  if (shouldShowToggle) containerStyle.paddingRight = 40;
+  if (hasPrefix) containerStyle.paddingLeft = 70; // Extra space for prefix
+  // Default prefix style
+  const defaultPrefixStyle = {
+    color: 'rgba(17, 17, 17, 0.6)',
+    fontSize: 14,
+    lineHeight: 17
+  };
+  // Render prefix element
+  const renderPrefix = () => {
+    if (!hasPrefix) return null;
+    return jsxRuntime.jsx(reactNative.View, {
+      style: {
+        position: 'absolute',
+        left: 16,
+        height: '100%',
+        justifyContent: 'center',
+        zIndex: 10,
+        pointerEvents: 'none'
+      },
+      children: typeof prefix === 'string' ? jsxRuntime.jsx(reactNative.Text, {
+        style: [defaultPrefixStyle, prefixStyle],
+        children: prefix
+      }) : prefix
+    });
+  };
+  if (isPassword || hasPrefix) {
+    return jsxRuntime.jsxs(reactNative.View, {
+      style: {
+        position: 'relative'
+      },
+      children: [renderPrefix(), jsxRuntime.jsx(reactNative.TextInput, Object.assign({
+        style: [inputStyle, containerStyle, inputTextStyle],
+        editable: !disabled,
+        secureTextEntry: isPassword && !showPassword,
+        placeholderTextColor: "rgba(17, 17, 17, 0.6)"
+      }, props)), shouldShowToggle && jsxRuntime.jsx(reactNative.TouchableOpacity, {
+        style: {
+          position: 'absolute',
+          right: 16,
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          opacity: 0.5
+        },
+        onPress: togglePasswordVisibility,
+        activeOpacity: 0.7,
+        children: showPassword ? jsxRuntime.jsx(EyeClosedIcon, {
+          size: 16,
+          color: '#0C1C33'
+        }) : jsxRuntime.jsx(EyeOpenIcon, {
+          size: 16,
+          color: '#0C1C33'
+        })
+      })]
+    });
+  }
+  // Regular input without prefix or password
+  return jsxRuntime.jsx(reactNative.TextInput, Object.assign({
+    style: [inputStyle, inputTextStyle],
+    editable: !disabled,
+    placeholderTextColor: "rgba(17, 17, 17, 0.6)"
+  }, props));
+};
+
+/**
+ * Dash Logo component for React Native with customizable size and color
+ * Original aspect ratio: 30:25 (1.2:1)
+ *
+ * Color can be set via:
+ * - color prop (default: #4C7EFF)
+ *
+ * Container supports:
+ * - containerPadding: padding around the logo
+ * - containerSize: width/height of the container
+ * - containerClassName: Tailwind classes for the container
+ * - containerStyle: Additional style object for the container
+ */
+const DashLogo = ({
+  color = '#4C7EFF',
+  size,
+  width,
+  height,
+  className = '',
+  onPress,
+  containerPadding,
+  containerSize,
+  containerClassName = '',
+  containerStyle
+}) => {
+  const logoWidth = width || size || 30;
+  const logoHeight = height || (size ? size * 25 / 30 : 25);
+  const baseContainerClasses = 'flex justify-center items-center';
+  const containerClasses = containerClassName ? `${baseContainerClasses} ${containerClassName}` : baseContainerClasses;
+  const inlineContainerStyle = Object.assign({
+    padding: containerPadding,
+    width: containerSize,
+    height: containerSize
+  }, containerStyle);
+  const combinedContainerStyle = [cn(containerClasses), inlineContainerStyle].filter(Boolean);
+  const logoElement = jsxRuntime.jsxs(Svg, {
+    width: logoWidth,
+    height: logoHeight,
+    viewBox: '0 0 30 25',
+    fill: 'none',
+    children: [jsxRuntime.jsx(Svg.Path, {
+      d: 'M19.6465 0C29.2466 2.13767e-05 30.9542 5.2464 29.585 12.6006C28.6773 17.5547 26.3845 21.3391 22.5537 23.1084C20.8153 23.9084 19.1848 24.3555 15.3389 24.3555H4.44629L5.33887 19.293H14.9229C20.6921 19.3084 22.2159 16.8009 22.9697 14.6162C23.2467 13.8008 23.9084 11.2619 23.9238 9.76953C23.9699 6.84642 22.5383 5.07715 17.6768 5.07715L7.81543 5.06152L8.72363 0H19.6465Z',
+      fill: color
+    }), jsxRuntime.jsx(Svg.Path, {
+      d: 'M15.2002 9.63184C15.2002 9.63184 15.0775 10.232 14.7236 11.709C14.4621 12.8321 14.0462 14.6934 11.1846 14.6934H0C0.00327153 14.6775 0.12745 14.0734 0.476562 12.6162C0.73811 11.493 1.15435 9.63184 4.01562 9.63184H15.2002Z',
+      fill: color
+    })]
+  });
+  if (onPress) {
+    return jsxRuntime.jsx(reactNative.Pressable, {
+      style: combinedContainerStyle,
+      onPress: onPress,
+      children: logoElement
+    });
+  }
+  return jsxRuntime.jsx(reactNative.View, {
+    style: combinedContainerStyle,
+    children: logoElement
+  });
+};
+
+exports.ArrowIcon = ArrowIcon;
 exports.Button = Button;
+exports.CheckIcon = CheckIcon;
+exports.ChevronIcon = ChevronIcon;
+exports.CopyIcon = CopyIcon;
+exports.CrossIcon = CrossIcon;
+exports.DashLogo = DashLogo;
+exports.ErrorIcon = ErrorIcon;
+exports.EyeClosedIcon = EyeClosedIcon;
+exports.EyeOpenIcon = EyeOpenIcon;
 exports.Heading = Heading;
+exports.Icons = Icons;
+exports.InfoCircleIcon = InfoCircleIcon;
+exports.Input = Input;
+exports.PlusIcon = PlusIcon;
+exports.SearchIcon = SearchIcon;
+exports.SuccessIcon = SuccessIcon;
 exports.Text = Text;
 exports.cn = cn;
 exports.tw = tw;
