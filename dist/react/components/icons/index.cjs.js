@@ -1084,6 +1084,28 @@ const DocumentIcon = ({
     })
   })]
 });
+const TopRightArrowIcon = ({
+  color = '#0C1C33',
+  size = 25,
+  className = '',
+  onClick
+}) => jsxRuntime.jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 25 25',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsxRuntime.jsx("path", {
+    d: 'M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
 
 exports.AirplaneIcon = AirplaneIcon;
 exports.ArrowIcon = ArrowIcon;
@@ -1125,6 +1147,7 @@ exports.SignIcon = SignIcon;
 exports.SignLockIcon = SignLockIcon;
 exports.SmartphoneIcon = SmartphoneIcon;
 exports.SuccessIcon = SuccessIcon;
+exports.TopRightArrowIcon = TopRightArrowIcon;
 exports.WalletIcon = WalletIcon;
 exports.WebIcon = WebIcon;
 //# sourceMappingURL=index.cjs.js.map

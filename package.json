@@ -127,6 +127,7 @@
   "peerDependencies": {
     "@react-native-clipboard/clipboard": ">=1.0.0",
     "expo-blur": ">=13.0.0",
+    "expo-clipboard": ">=6.0.0",
     "react": ">=19.1.0",
     "react-dom": ">=19.1.0",
     "react-native": ">=0.70.0",
@@ -134,6 +135,9 @@
   },
   "peerDependenciesMeta": {
     "@react-native-clipboard/clipboard": {
+      "optional": true
+    },
+    "expo-clipboard": {
       "optional": true
     },
     "react-native": {

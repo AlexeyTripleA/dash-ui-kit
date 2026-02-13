@@ -26,6 +26,9 @@ const buttonStyles = cva(
         red: '',
         lightBlue: '',
         lightGray: '',
+        white: '',
+        halfWhite: '',
+        halfBlue: '',
       },
       size: {
         sm: 'px-3 py-2',
@@ -101,6 +104,24 @@ const buttonStyles = cva(
         disabled: false,
         class: 'bg-gray-100 dark:bg-gray-700/20',
       },
+      {
+        variant: 'solid',
+        colorScheme: 'white',
+        disabled: false,
+        class: 'bg-white',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfWhite',
+        disabled: false,
+        class: 'bg-white/15',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfBlue',
+        disabled: false,
+        class: 'bg-dash-brand/15',
+      },
       // Outline variants
       {
         variant: 'outline',
@@ -121,6 +142,21 @@ const buttonStyles = cva(
         variant: 'outline',
         colorScheme: 'red',
         class: 'border-red-700 dark:border-red-400',
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'white',
+        class: 'border-white',
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfWhite',
+        class: 'border-white/50',
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfBlue',
+        class: 'border-dash-brand/50',
       },
     ],
     defaultVariants: {
@@ -147,6 +183,9 @@ const textStyles = cva('font-medium', {
       red: '',
       lightBlue: '',
       lightGray: '',
+      white: '',
+      halfWhite: '',
+      halfBlue: '',
     },
     size: {
       sm: 'text-sm',    // 14px
@@ -187,6 +226,21 @@ const textStyles = cva('font-medium', {
       colorScheme: 'lightGray',
       class: 'text-gray-900 dark:text-gray-300',
     },
+    {
+      variant: 'solid',
+      colorScheme: 'white',
+      class: 'text-dash-brand',
+    },
+    {
+      variant: 'solid',
+      colorScheme: 'halfWhite',
+      class: 'text-white',
+    },
+    {
+      variant: 'solid',
+      colorScheme: 'halfBlue',
+      class: 'text-dash-brand',
+    },
     // Outline text colors
     {
       variant: 'outline',
@@ -208,6 +262,21 @@ const textStyles = cva('font-medium', {
       colorScheme: 'red',
       class: 'text-red-700 dark:text-red-400',
     },
+    {
+      variant: 'outline',
+      colorScheme: 'white',
+      class: 'text-white',
+    },
+    {
+      variant: 'outline',
+      colorScheme: 'halfWhite',
+      class: 'text-white',
+    },
+    {
+      variant: 'outline',
+      colorScheme: 'halfBlue',
+      class: 'text-dash-brand',
+    },
     // Ghost text colors
     {
       variant: 'ghost',
@@ -228,7 +297,7 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
   /** Solid, outline, or ghost style */
   variant?: 'solid' | 'outline' | 'ghost'
   /** Color scheme for the button */
-  colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray'
+  colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
   /** Size of the button */
   size?: 'sm' | 'md' | 'lg' | 'xl'
   /** Border radius style */

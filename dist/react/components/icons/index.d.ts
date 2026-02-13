@@ -47,3 +47,4 @@ export declare const AirplaneIcon: React.FC<IconProps>;
 export declare const ExternalLinkIcon: React.FC<IconProps>;
 export declare const InfoCircleIcon: React.FC<IconProps>;
 export declare const DocumentIcon: React.FC<IconProps>;
+export declare const TopRightArrowIcon: React.FC<IconProps>;

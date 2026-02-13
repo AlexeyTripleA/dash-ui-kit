@@ -2,9 +2,9 @@
 
 var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
-var require$$0 = require('react-native');
+var reactNative = require('react-native');
 var classVarianceAuthority = require('class-variance-authority');
-var require$$0$1 = require('react');
+var react = require('react');
 var Svg = require('react-native-svg');
 
 function getAddedUtilities(plugins) {
@@ -7078,10 +7078,10 @@ function patchCustomFontUtils(customConfig, customStyleUtils, config) {
 // Apply default config and inject RN Platform and RN version
 const create = (twConfig = {}) => {
     var _a;
-    return create$1(twConfig, require$$0.Platform.OS, 
+    return create$1(twConfig, reactNative.Platform.OS, 
     // react-native-web does not expose a constants object
     // @see https://github.com/necolas/react-native-web/blob/master/packages/react-native-web/src/exports/Platform/index.js
-    (_a = require$$0.Platform.constants) === null || _a === void 0 ? void 0 : _a.reactNativeVersion);
+    (_a = reactNative.Platform.constants) === null || _a === void 0 ? void 0 : _a.reactNativeVersion);
 };
 const tailwind = create();
 tailwind.style;
@@ -7219,7 +7219,7 @@ const Text = _a => {
   }) + (className ? ` ${className}` : '');
   // Convert Tailwind classes to React Native style object
   const textStyle = [cn(classes), style].filter(Boolean);
-  return jsxRuntime.jsx(require$$0.Text, Object.assign({
+  return jsxRuntime.jsx(reactNative.Text, Object.assign({
     style: textStyle
   }, props, {
     children: children
@@ -7279,7 +7279,7 @@ const Heading = _a => {
   }) + (className ? ` ${className}` : '');
   // Convert Tailwind classes to React Native style object
   const headingStyle = [cn(classes), style].filter(Boolean);
-  return jsxRuntime.jsx(require$$0.Text, Object.assign({
+  return jsxRuntime.jsx(reactNative.Text, Object.assign({
     style: headingStyle
   }, props, {
     children: children
@@ -7299,7 +7299,10 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
       gray: '',
       red: '',
       lightBlue: '',
-      lightGray: ''
+      lightGray: '',
+      white: '',
+      halfWhite: '',
+      halfBlue: ''
     },
     size: {
       sm: 'px-3 py-2',
@@ -7366,6 +7369,21 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
     colorScheme: 'lightGray',
     disabled: false,
     class: 'bg-gray-100 dark:bg-gray-700/20'
+  }, {
+    variant: 'solid',
+    colorScheme: 'white',
+    disabled: false,
+    class: 'bg-white'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfWhite',
+    disabled: false,
+    class: 'bg-white/15'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfBlue',
+    disabled: false,
+    class: 'bg-dash-brand/15'
   },
   // Outline variants
   {
@@ -7384,6 +7402,18 @@ const buttonStyles = classVarianceAuthority.cva('items-center justify-center fle
     variant: 'outline',
     colorScheme: 'red',
     class: 'border-red-700 dark:border-red-400'
+  }, {
+    variant: 'outline',
+    colorScheme: 'white',
+    class: 'border-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfWhite',
+    class: 'border-white/50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfBlue',
+    class: 'border-dash-brand/50'
   }],
   defaultVariants: {
     variant: 'solid',
@@ -7406,7 +7436,10 @@ const textStyles$1 = classVarianceAuthority.cva('font-medium', {
       gray: '',
       red: '',
       lightBlue: '',
-      lightGray: ''
+      lightGray: '',
+      white: '',
+      halfWhite: '',
+      halfBlue: ''
     },
     size: {
       sm: 'text-sm',
@@ -7444,6 +7477,18 @@ const textStyles$1 = classVarianceAuthority.cva('font-medium', {
     variant: 'solid',
     colorScheme: 'lightGray',
     class: 'text-gray-900 dark:text-gray-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'white',
+    class: 'text-dash-brand'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfWhite',
+    class: 'text-white'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfBlue',
+    class: 'text-dash-brand'
   },
   // Outline text colors
   {
@@ -7462,6 +7507,18 @@ const textStyles$1 = classVarianceAuthority.cva('font-medium', {
     variant: 'outline',
     colorScheme: 'red',
     class: 'text-red-700 dark:text-red-400'
+  }, {
+    variant: 'outline',
+    colorScheme: 'white',
+    class: 'text-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfWhite',
+    class: 'text-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfBlue',
+    class: 'text-dash-brand'
   },
   // Ghost text colors
   {
@@ -7509,7 +7566,7 @@ const Button = _a => {
   // Convert Tailwind classes to React Native style objects
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
   const textStyle = cn(textClasses);
-  return jsxRuntime.jsx(require$$0.Pressable, Object.assign({
+  return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
     style: ({
       pressed
     }) => [...buttonStyle, pressed && !isDisabled && {
@@ -7518,10 +7575,10 @@ const Button = _a => {
     disabled: isDisabled,
     onPress: onPress
   }, props, {
-    children: loading ? jsxRuntime.jsx(require$$0.ActivityIndicator, {
+    children: loading ? jsxRuntime.jsx(reactNative.ActivityIndicator, {
       size: "small",
       color: variant === 'solid' && colorScheme === 'brand' ? '#fff' : '#3B82F6'
-    }) : typeof children === 'string' ? jsxRuntime.jsx(require$$0.Text, {
+    }) : typeof children === 'string' ? jsxRuntime.jsx(reactNative.Text, {
       style: textStyle,
       children: children
     }) : children
@@ -7812,6 +7869,25 @@ const EyeClosedIcon = ({
     strokeLinecap: 'round'
   })]
 });
+const TopRightArrowIcon = ({
+  color = '#0C1C33',
+  size = 25,
+  onPress
+}) => jsxRuntime.jsx(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 25 25',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsxRuntime.jsx(Svg.Path, {
+    d: 'M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388',
+    stroke: color,
+    strokeWidth: '2',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
 // Export all icons as a collection
 const Icons = {
   ArrowIcon,
@@ -7825,7 +7901,8 @@ const Icons = {
   SearchIcon,
   InfoCircleIcon,
   EyeOpenIcon,
-  EyeClosedIcon
+  EyeClosedIcon,
+  TopRightArrowIcon
 };
 
 const inputStyles = classVarianceAuthority.cva('w-full font-normal text-sm leading-[17px]', {
@@ -7934,7 +8011,7 @@ const Input = _a => {
       textStyle
     } = _a,
     props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "secureTextEntry", "prefix", "prefixStyle", "showPasswordToggle", "style", "textStyle"]);
-  const [showPassword, setShowPassword] = require$$0$1.useState(false);
+  const [showPassword, setShowPassword] = react.useState(false);
   // Determine color scheme based on state
   let finalColorScheme = colorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
@@ -7971,7 +8048,7 @@ const Input = _a => {
   // Render prefix element
   const renderPrefix = () => {
     if (!hasPrefix) return null;
-    return jsxRuntime.jsx(require$$0.View, {
+    return jsxRuntime.jsx(reactNative.View, {
       style: {
         position: 'absolute',
         left: 16,
@@ -7980,23 +8057,23 @@ const Input = _a => {
         zIndex: 10,
         pointerEvents: 'none'
       },
-      children: typeof prefix === 'string' ? jsxRuntime.jsx(require$$0.Text, {
+      children: typeof prefix === 'string' ? jsxRuntime.jsx(reactNative.Text, {
         style: [defaultPrefixStyle, prefixStyle],
         children: prefix
       }) : prefix
     });
   };
   if (isPassword || hasPrefix) {
-    return jsxRuntime.jsxs(require$$0.View, {
+    return jsxRuntime.jsxs(reactNative.View, {
       style: {
         position: 'relative'
       },
-      children: [renderPrefix(), jsxRuntime.jsx(require$$0.TextInput, Object.assign({
+      children: [renderPrefix(), jsxRuntime.jsx(reactNative.TextInput, Object.assign({
         style: [inputStyle, containerStyle, inputTextStyle],
         editable: !disabled,
         secureTextEntry: isPassword && !showPassword,
         placeholderTextColor: "rgba(17, 17, 17, 0.6)"
-      }, props)), shouldShowToggle && jsxRuntime.jsx(require$$0.TouchableOpacity, {
+      }, props)), shouldShowToggle && jsxRuntime.jsx(reactNative.TouchableOpacity, {
         style: {
           position: 'absolute',
           right: 16,
@@ -8018,7 +8095,7 @@ const Input = _a => {
     });
   }
   // Regular input without prefix or password
-  return jsxRuntime.jsx(require$$0.TextInput, Object.assign({
+  return jsxRuntime.jsx(reactNative.TextInput, Object.assign({
     style: [inputStyle, inputTextStyle],
     editable: !disabled,
     placeholderTextColor: "rgba(17, 17, 17, 0.6)"
@@ -8124,7 +8201,7 @@ const Tabs = ({
   contentStyle
 }) => {
   var _a;
-  const [internalValue, setInternalValue] = require$$0$1.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
+  const [internalValue, setInternalValue] = react.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;
   const handleValueChange = newValue => {
@@ -8149,13 +8226,13 @@ const Tabs = ({
   // Border color based on theme
   const borderColor = theme === 'light' ? 'rgba(12, 28, 51, 0.15)' : 'rgba(156, 163, 175, 0.5)';
   const activeBorderColor = '#4C7EFF';
-  return jsxRuntime.jsxs(require$$0.View, {
+  return jsxRuntime.jsxs(reactNative.View, {
     style: rootStyle,
-    children: [jsxRuntime.jsxs(require$$0.View, {
+    children: [jsxRuntime.jsxs(reactNative.View, {
       style: {
         position: 'relative'
       },
-      children: [jsxRuntime.jsx(require$$0.ScrollView, {
+      children: [jsxRuntime.jsx(reactNative.ScrollView, {
         horizontal: true,
         showsHorizontalScrollIndicator: false,
         style: listStyleCombined,
@@ -8195,15 +8272,15 @@ const Tabs = ({
             color: textColor,
             fontWeight: isActive ? '500' : '300'
           };
-          return jsxRuntime.jsxs(require$$0.TouchableOpacity, {
+          return jsxRuntime.jsxs(reactNative.TouchableOpacity, {
             disabled: item.disabled,
             onPress: () => !item.disabled && handleValueChange(item.value),
             activeOpacity: 0.8,
             style: triggerStyleCombined,
-            children: [jsxRuntime.jsx(require$$0.Text, {
+            children: [jsxRuntime.jsx(reactNative.Text, {
               style: textStyle,
               children: item.label
-            }), isActive && jsxRuntime.jsx(require$$0.View, {
+            }), isActive && jsxRuntime.jsx(reactNative.View, {
               style: {
                 position: 'absolute',
                 bottom: 0,
@@ -8216,7 +8293,7 @@ const Tabs = ({
             })]
           }, item.value);
         })
-      }), jsxRuntime.jsx(require$$0.View, {
+      }), jsxRuntime.jsx(reactNative.View, {
         style: {
           position: 'absolute',
           bottom: 0,
@@ -8228,7 +8305,7 @@ const Tabs = ({
       })]
     }), items.map(item => {
       if (currentValue !== item.value) return null;
-      return jsxRuntime.jsx(require$$0.View, {
+      return jsxRuntime.jsx(reactNative.View, {
         style: contentStyleCombined,
         children: item.content
       }, item.value);
@@ -8317,9 +8394,9 @@ const Avatar = _a => {
     } = _a,
     props = tslib.__rest(_a, ["username", "className", "saturation", "lightness", "width", "height", "style"]);
   // Generate SVG string directly (no data URI needed for SvgXml)
-  const svgString = require$$0$1.useMemo(() => minidenticon(username, saturation, lightness), [username, saturation, lightness]);
+  const svgString = react.useMemo(() => minidenticon(username, saturation, lightness), [username, saturation, lightness]);
   const containerClasses = `relative ${className}`.trim();
-  return jsxRuntime.jsx(require$$0.View, Object.assign({
+  return jsxRuntime.jsx(reactNative.View, Object.assign({
     className: containerClasses,
     style: style
   }, props, {
@@ -8589,13 +8666,13 @@ const Badge = _a => {
   const badgeStyleArray = [cn(combinedClasses), style].filter(Boolean);
   const textStyle = cn(textClasses);
   // Render content (string children wrapped in Text, custom content as-is)
-  const content = typeof children === 'string' ? jsxRuntime.jsx(require$$0.Text, {
+  const content = typeof children === 'string' ? jsxRuntime.jsx(reactNative.Text, {
     style: textStyle,
     children: children
   }) : children;
   // If onPress is provided, wrap in Pressable
   if (onPress) {
-    return jsxRuntime.jsx(require$$0.Pressable, Object.assign({
+    return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
       style: ({
         pressed
       }) => pressed ? [...badgeStyleArray, {
@@ -8607,7 +8684,7 @@ const Badge = _a => {
     }));
   }
   // Otherwise, just render as View
-  return jsxRuntime.jsx(require$$0.View, {
+  return jsxRuntime.jsx(reactNative.View, {
     style: badgeStyleArray,
     children: content
   });
@@ -8653,16 +8730,16 @@ const BigNumber = ({
     const [intPart, fracPart] = str.split('.');
     // group digits every 3, right to left (only for integer part)
     const groups = groupDigits(intPart);
-    return jsxRuntime.jsxs(require$$0.View, {
+    return jsxRuntime.jsxs(reactNative.View, {
       style: containerStyle,
-      children: [groups.map((grp, i) => jsxRuntime.jsx(require$$0.Text, {
+      children: [groups.map((grp, i) => jsxRuntime.jsx(reactNative.Text, {
         style: textStyle,
         children: grp
       }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
-        children: [jsxRuntime.jsx(require$$0.Text, {
+        children: [jsxRuntime.jsx(reactNative.Text, {
           style: [textStyle, decimalPointStyle],
           children: "."
-        }), jsxRuntime.jsx(require$$0.Text, {
+        }), jsxRuntime.jsx(reactNative.Text, {
           style: textStyle,
           children: fracPart
         })]
@@ -8672,22 +8749,22 @@ const BigNumber = ({
     // comma variant
     const [intPart, fracPart] = str.split('.');
     const groups = groupDigits(intPart);
-    return jsxRuntime.jsxs(require$$0.View, {
+    return jsxRuntime.jsxs(reactNative.View, {
       style: containerStyle,
-      children: [groups.map((grp, i) => jsxRuntime.jsxs(require$$0.View, {
+      children: [groups.map((grp, i) => jsxRuntime.jsxs(reactNative.View, {
         style: cn('flex-row'),
-        children: [jsxRuntime.jsx(require$$0.Text, {
+        children: [jsxRuntime.jsx(reactNative.Text, {
           style: textStyle,
           children: grp
-        }), i < groups.length - 1 && jsxRuntime.jsx(require$$0.Text, {
+        }), i < groups.length - 1 && jsxRuntime.jsx(reactNative.Text, {
           style: textStyle,
           children: ","
         })]
       }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
-        children: [jsxRuntime.jsx(require$$0.Text, {
+        children: [jsxRuntime.jsx(reactNative.Text, {
           style: [textStyle, decimalPointStyle],
           children: "."
-        }), jsxRuntime.jsx(require$$0.Text, {
+        }), jsxRuntime.jsx(reactNative.Text, {
           style: textStyle,
           children: fracPart
         })]
@@ -8696,357 +8773,89 @@ const BigNumber = ({
   }
 };
 
-var dist = {};
-
-var Clipboard$1 = {};
-
-var NativeClipboardModule = {};
-
-var hasRequiredNativeClipboardModule;
-
-function requireNativeClipboardModule () {
-	if (hasRequiredNativeClipboardModule) return NativeClipboardModule;
-	hasRequiredNativeClipboardModule = 1;
-	Object.defineProperty(NativeClipboardModule, "__esModule", { value: true });
-	NativeClipboardModule.removeAllListeners = NativeClipboardModule.addListener = void 0;
-	const react_native_1 = require$$0;
-	const ClipboardTurboModule = react_native_1.TurboModuleRegistry.getEnforcing("RNCClipboard");
-	NativeClipboardModule.default = ClipboardTurboModule;
-	const EVENT_NAME = "RNCClipboard_TEXT_CHANGED";
-	const eventEmitter = new react_native_1.NativeEventEmitter(ClipboardTurboModule);
-	let listenerCount = eventEmitter.listenerCount;
-	// listenerCount is only available from RN 0.64
-	// Older versions only have `listeners`
-	if (!listenerCount) {
-	    listenerCount = (eventType) => {
-	        // @ts-ignore
-	        return eventEmitter.listeners(eventType).length;
-	    };
-	}
-	else {
-	    listenerCount = eventEmitter.listenerCount.bind(eventEmitter);
-	}
-	const addListener = (callback) => {
-	    if (listenerCount(EVENT_NAME) === 0) {
-	        ClipboardTurboModule.setListener();
-	    }
-	    const res = eventEmitter.addListener(EVENT_NAME, callback);
-	    // Path the remove call to also remove the native listener
-	    // if we no longer have listeners
-	    // @ts-ignore
-	    res._remove = res.remove;
-	    res.remove = function () {
-	        // @ts-ignore
-	        this._remove();
-	        if (listenerCount(EVENT_NAME) === 0) {
-	            ClipboardTurboModule.removeListener();
-	        }
-	    };
-	    return res;
-	};
-	NativeClipboardModule.addListener = addListener;
-	const removeAllListeners = () => {
-	    eventEmitter.removeAllListeners(EVENT_NAME);
-	    ClipboardTurboModule.removeListener();
-	};
-	NativeClipboardModule.removeAllListeners = removeAllListeners;
-	return NativeClipboardModule;
+/**
+ * Universal Clipboard utility for React Native and Expo
+ *
+ * Supports both:
+ * - @react-native-clipboard/clipboard (React Native)
+ * - expo-clipboard (Expo)
+ *
+ * Automatically detects which one is available and uses it.
+ */
+let clipboardInstance = null;
+/**
+ * Get the clipboard instance
+ * Tries to load expo-clipboard first, then falls back to @react-native-clipboard/clipboard
+ */
+function getClipboard() {
+  if (clipboardInstance) {
+    return clipboardInstance;
+  }
+  try {
+    // Try expo-clipboard first (most common in Expo projects)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const ExpoClipboard = require('expo-clipboard');
+    if ((ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.setStringAsync) && (ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.getStringAsync)) {
+      clipboardInstance = {
+        setString: text => {
+          ExpoClipboard.setStringAsync(text).catch(err => {
+            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+          });
+        },
+        getString: () => ExpoClipboard.getStringAsync()
+      };
+      return clipboardInstance;
+    }
+  } catch (err) {
+    // expo-clipboard not available, continue to try React Native clipboard
+  }
+  try {
+    // Try @react-native-clipboard/clipboard (React Native)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const RNClipboard = require('@react-native-clipboard/clipboard');
+    if ((RNClipboard === null || RNClipboard === void 0 ? void 0 : RNClipboard.default) || (RNClipboard === null || RNClipboard === void 0 ? void 0 : RNClipboard.Clipboard)) {
+      const clipboard = RNClipboard.default || RNClipboard.Clipboard;
+      clipboardInstance = {
+        setString: text => clipboard.setString(text),
+        getString: () => clipboard.getString()
+      };
+      return clipboardInstance;
+    }
+  } catch (err) {
+    // @react-native-clipboard/clipboard not available
+  }
+  // No clipboard available - return stub
+  console.warn('[dash-ui-kit] No clipboard library found. Please install either:\n' + '  - expo-clipboard (for Expo projects): npx expo install expo-clipboard\n' + '  - @react-native-clipboard/clipboard (for React Native): npm install @react-native-clipboard/clipboard');
+  clipboardInstance = {
+    setString: () => {
+      console.warn('[dash-ui-kit] Clipboard not available');
+    },
+    getString: async () => ''
+  };
+  return clipboardInstance;
 }
-
-var hasRequiredClipboard;
-
-function requireClipboard () {
-	if (hasRequiredClipboard) return Clipboard$1;
-	hasRequiredClipboard = 1;
-	var __createBinding = (Clipboard$1 && Clipboard$1.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-	    if (k2 === undefined) k2 = k;
-	    var desc = Object.getOwnPropertyDescriptor(m, k);
-	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-	      desc = { enumerable: true, get: function() { return m[k]; } };
-	    }
-	    Object.defineProperty(o, k2, desc);
-	}) : (function(o, m, k, k2) {
-	    if (k2 === undefined) k2 = k;
-	    o[k2] = m[k];
-	}));
-	var __setModuleDefault = (Clipboard$1 && Clipboard$1.__setModuleDefault) || (Object.create ? (function(o, v) {
-	    Object.defineProperty(o, "default", { enumerable: true, value: v });
-	}) : function(o, v) {
-	    o["default"] = v;
-	});
-	var __importStar = (Clipboard$1 && Clipboard$1.__importStar) || function (mod) {
-	    if (mod && mod.__esModule) return mod;
-	    var result = {};
-	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-	    __setModuleDefault(result, mod);
-	    return result;
-	};
-	Object.defineProperty(Clipboard$1, "__esModule", { value: true });
-	Clipboard$1.Clipboard = void 0;
-	const react_native_1 = require$$0;
-	const NativeClipboardModule_1 = __importStar(requireNativeClipboardModule());
-	/**
-	 * `Clipboard` gives you an interface for setting and getting content from Clipboard on both iOS and Android
-	 */
-	Clipboard$1.Clipboard = {
-	    /**
-	     * Get content of string type, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getString();
-	     * }
-	     * ```
-	     */
-	    getString() {
-	        return NativeClipboardModule_1.default.getString();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Get contents of string array type, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getStrings();
-	     * }
-	     * ```
-	     */
-	    getStrings() {
-	        return NativeClipboardModule_1.default.getStrings();
-	    },
-	    /**
-	     * Get clipboard image as PNG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImagePNG();
-	     * }
-	     * ```
-	     */
-	    getImagePNG() {
-	        return NativeClipboardModule_1.default.getImagePNG();
-	    },
-	    /**
-	     * Get clipboard image as JPG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImageJPG();
-	     * }
-	     * ```
-	     */
-	    getImageJPG() {
-	        return NativeClipboardModule_1.default.getImageJPG();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Set content of base64 image type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setImage(...);
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setImage(content) {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        NativeClipboardModule_1.default.setImage(content);
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Get clipboard image in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImage();
-	     * }
-	     * ```
-	     */
-	    getImage() {
-	        return NativeClipboardModule_1.default.getImage();
-	    },
-	    /**
-	     * Set content of string type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setString('hello world');
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setString(content) {
-	        NativeClipboardModule_1.default.setString(content);
-	    },
-	    /**
-	     * Set content of string array type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setStrings(['hello world', 'second string']);
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setStrings(content) {
-	        NativeClipboardModule_1.default.setStrings(content);
-	    },
-	    /**
-	     * Returns whether the clipboard has content or is empty.
-	     * This method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _hasContent() {
-	     *   var hasContent = await Clipboard.hasString();
-	     * }
-	     * ```
-	     */
-	    hasString() {
-	        return NativeClipboardModule_1.default.hasString();
-	    },
-	    /**
-	     * Returns whether the clipboard has an image or is empty.
-	     * This method returns a `Promise`, so you can use following code to check clipboard content
-	     * ```javascript
-	     * async _hasContent() {
-	     *   var hasContent = await Clipboard.hasImage();
-	     * }
-	     * ```
-	     */
-	    hasImage() {
-	        return NativeClipboardModule_1.default.hasImage();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Returns whether the clipboard has a URL content. Can check
-	     * if there is a URL content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for url content in clipboard.
-	     * ```javascript
-	     * async _hasURL() {
-	     *   var hasURL = await Clipboard.hasURL();
-	     * }
-	     * ```
-	     */
-	    hasURL() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasURL();
-	    },
-	    /**
-	     * (iOS 14+ Only)
-	     * Returns whether the clipboard has a Number(UIPasteboardDetectionPatternNumber) content. Can check
-	     * if there is a Number content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for Number content in clipboard.
-	     * ```javascript
-	     * async _hasNumber() {
-	     *   var hasNumber = await Clipboard.hasNumber();
-	     * }
-	     * ```
-	     */
-	    hasNumber() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasNumber();
-	    },
-	    /**
-	     * (iOS 14+ Only)
-	     * Returns whether the clipboard has a WebURL(UIPasteboardDetectionPatternProbableWebURL) content. Can check
-	     * if there is a WebURL content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for WebURL content in clipboard.
-	     * ```javascript
-	     * async _hasWebURL() {
-	     *   var hasWebURL = await Clipboard.hasWebURL();
-	     * }
-	     * ```
-	     */
-	    hasWebURL() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasWebURL();
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Adds a listener to get notifications when the clipboard has changed.
-	     * If this is the first listener, turns on clipboard notifications on the native side.
-	     * It returns EmitterSubscription where you can call "remove" to remove listener
-	     * ```javascript
-	     * const listener = () => console.log("changed!");
-	     * Clipboard.addListener(listener);
-	     * ```
-	     */
-	    addListener(callback) {
-	        return (0, NativeClipboardModule_1.addListener)(callback);
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Removes all previously registered listeners and turns off notifications on the native side.
-	     * ```javascript
-	     * Clipboard.removeAllListeners();
-	     * ```
-	     */
-	    removeAllListeners() {
-	        (0, NativeClipboardModule_1.removeAllListeners)();
-	    },
-	};
-	return Clipboard$1;
-}
-
-var useClipboard = {};
-
-var hasRequiredUseClipboard;
-
-function requireUseClipboard () {
-	if (hasRequiredUseClipboard) return useClipboard;
-	hasRequiredUseClipboard = 1;
-	/**
-	 * useClipboard.ts
-	 * This code is inspired from the @react-native-community/hooks package
-	 * All credit goes to author of the useClipboard custom hooks.
-	 * https://github.com/react-native-community/hooks
-	 */
-	Object.defineProperty(useClipboard, "__esModule", { value: true });
-	useClipboard.useClipboard = void 0;
-	const react_1 = require$$0$1;
-	const Clipboard_1 = requireClipboard();
-	const listeners = new Set();
-	function setString(content) {
-	    Clipboard_1.Clipboard.setString(content);
-	    for (const listener of listeners) {
-	        listener(content);
-	    }
-	}
-	const useClipboard$1 = () => {
-	    const [data, updateClipboardData] = (0, react_1.useState)("");
-	    (0, react_1.useEffect)(() => {
-	        Clipboard_1.Clipboard.getString().then(updateClipboardData);
-	    }, []);
-	    (0, react_1.useEffect)(() => {
-	        listeners.add(updateClipboardData);
-	        return () => {
-	            listeners.delete(updateClipboardData);
-	        };
-	    }, []);
-	    return [data, setString];
-	};
-	useClipboard.useClipboard = useClipboard$1;
-	return useClipboard;
-}
-
-var hasRequiredDist;
-
-function requireDist () {
-	if (hasRequiredDist) return dist;
-	hasRequiredDist = 1;
-	(function (exports) {
-		Object.defineProperty(exports, "__esModule", { value: true });
-		exports.useClipboard = void 0;
-		const Clipboard_1 = requireClipboard();
-		var useClipboard_1 = requireUseClipboard();
-		Object.defineProperty(exports, "useClipboard", { enumerable: true, get: function () { return useClipboard_1.useClipboard; } });
-		exports.default = Clipboard_1.Clipboard; 
-	} (dist));
-	return dist;
-}
-
-var distExports = requireDist();
-var Clipboard = /*@__PURE__*/getDefaultExportFromCjs(distExports);
+/**
+ * Universal Clipboard object
+ * Compatible with both expo-clipboard and @react-native-clipboard/clipboard
+ */
+const Clipboard = {
+  /**
+   * Set string to clipboard
+   * @param text - Text to copy
+   */
+  setString: text => {
+    const clipboard = getClipboard();
+    clipboard.setString(text);
+  },
+  /**
+   * Get string from clipboard
+   * @returns Promise with clipboard content
+   */
+  getString: () => {
+    const clipboard = getClipboard();
+    return clipboard.getString();
+  }
+};
 
 const FEEDBACK_DURATION_MS = 1000;
 /**
@@ -9060,23 +8869,23 @@ const CopyButton = ({
   style,
   accessibilityLabel = 'Copy to clipboard'
 }) => {
-  const [copied, setCopied] = require$$0$1.useState(false);
-  const timeoutRef = require$$0$1.useRef(null);
-  const handlePress = require$$0$1.useCallback(() => {
+  const [copied, setCopied] = react.useState(false);
+  const timeoutRef = react.useRef(null);
+  const handlePress = react.useCallback(() => {
     Clipboard.setString(text);
     setCopied(true);
     onCopy === null || onCopy === void 0 ? void 0 : onCopy(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS);
   }, [text, onCopy]);
-  require$$0$1.useEffect(() => {
+  react.useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
   const buttonStyle = cn(buttonClasses);
-  return jsxRuntime.jsx(require$$0.Pressable, {
+  return jsxRuntime.jsx(reactNative.Pressable, {
     onPress: handlePress,
     style: ({
       pressed
@@ -9085,9 +8894,9 @@ const CopyButton = ({
     }].filter(Boolean),
     accessibilityLabel: accessibilityLabel,
     accessibilityRole: "button",
-    children: copied ? jsxRuntime.jsx(require$$0.View, {
+    children: copied ? jsxRuntime.jsx(reactNative.View, {
       style: cn('items-center justify-center min-w-4 min-h-4'),
-      children: jsxRuntime.jsx(require$$0.Text, {
+      children: jsxRuntime.jsx(reactNative.Text, {
         style: cn('text-xs text-dash-brand font-medium'),
         children: "Copied!"
       })
@@ -9112,7 +8921,7 @@ function NotActive(_a) {
     props = tslib.__rest(_a, ["children", "className", "theme", "style"]);
   const themeColor = theme === 'dark' ? 'text-gray-500' : 'text-gray-400';
   const textClasses = `text-sm ${themeColor} ${className}`.trim();
-  return jsxRuntime.jsx(require$$0.Text, Object.assign({
+  return jsxRuntime.jsx(reactNative.Text, Object.assign({
     style: [cn(textClasses), style].filter(Boolean)
   }, props, {
     children: children !== null && children !== void 0 ? children : 'n/a'
@@ -9207,7 +9016,7 @@ const HighlightedID = ({
   const count = 5;
   const minLength = count * 2 + 1; // 11
   if (text.length < minLength) {
-    return jsxRuntime.jsx(require$$0.Text, {
+    return jsxRuntime.jsx(reactNative.Text, {
       style: cn(symbol({
         dim: cfg.middle
       })),
@@ -9217,18 +9026,18 @@ const HighlightedID = ({
   const first = text.slice(0, count);
   const middle = text.slice(count, text.length - count);
   const last = text.slice(-5);
-  return jsxRuntime.jsxs(require$$0.Text, {
-    children: [jsxRuntime.jsx(require$$0.Text, {
+  return jsxRuntime.jsxs(reactNative.Text, {
+    children: [jsxRuntime.jsx(reactNative.Text, {
       style: cn(symbol({
         dim: !cfg.first
       })),
       children: first
-    }), jsxRuntime.jsx(require$$0.Text, {
+    }), jsxRuntime.jsx(reactNative.Text, {
       style: cn(symbol({
         dim: !cfg.middle
       })),
       children: middle
-    }), jsxRuntime.jsx(require$$0.Text, {
+    }), jsxRuntime.jsx(reactNative.Text, {
       style: cn(symbol({
         dim: !cfg.last
       })),
@@ -9250,19 +9059,19 @@ const MiddleEllipsisText = ({
   });
   const text = String(children);
   if (text.length <= edgeChars * 2) {
-    return jsxRuntime.jsx(require$$0.Text, {
+    return jsxRuntime.jsx(reactNative.Text, {
       children: text
     });
   }
   const first = text.slice(0, edgeChars);
   const last = text.slice(-edgeChars);
-  return jsxRuntime.jsxs(require$$0.Text, {
-    children: [jsxRuntime.jsx(require$$0.Text, {
+  return jsxRuntime.jsxs(reactNative.Text, {
+    children: [jsxRuntime.jsx(reactNative.Text, {
       children: first
-    }), jsxRuntime.jsx(require$$0.Text, {
+    }), jsxRuntime.jsx(reactNative.Text, {
       style: cn('opacity-50'),
       children: "\u2026"
-    }), jsxRuntime.jsx(require$$0.Text, {
+    }), jsxRuntime.jsx(reactNative.Text, {
       children: last
     })]
   });
@@ -9301,9 +9110,9 @@ const Identifier = _a => {
       style
     } = _a,
     props = tslib.__rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style"]);
-  const [containerWidth, setContainerWidth] = require$$0$1.useState(0);
+  const [containerWidth, setContainerWidth] = react.useState(0);
   // Handle container layout changes
-  const handleLayout = require$$0$1.useCallback(event => {
+  const handleLayout = react.useCallback(event => {
     const {
       width
     } = event.nativeEvent.layout;
@@ -9319,7 +9128,7 @@ const Identifier = _a => {
   const useMaxLines = maxLines > 0 && !middleEllipsis;
   // Symbol container classes
   const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden' : 'flex-1';
-  return jsxRuntime.jsxs(require$$0.View, Object.assign({
+  return jsxRuntime.jsxs(reactNative.View, Object.assign({
     style: [cn(rootClasses), style].filter(Boolean),
     onLayout: handleLayout
   }, props, {
@@ -9328,7 +9137,7 @@ const Identifier = _a => {
       className: "mr-2",
       width: 24,
       height: 24
-    }), jsxRuntime.jsx(require$$0.View, {
+    }), jsxRuntime.jsx(reactNative.View, {
       style: cn(symbolContainerClass),
       children: children != null && children !== '' && middleEllipsis ? jsxRuntime.jsx(MiddleEllipsisText, {
         edgeChars: edgeChars,
@@ -9338,7 +9147,7 @@ const Identifier = _a => {
         mode: highlight,
         theme: theme,
         children: children
-      }) : children != null && children !== '' ? jsxRuntime.jsx(require$$0.Text, {
+      }) : children != null && children !== '' ? jsxRuntime.jsx(reactNative.Text, {
         numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
         ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
         style: cn('leading-4'),
@@ -9431,13 +9240,13 @@ const ValueCard = _a => {
   });
   const combinedClasses = className ? `${classes} ${className}` : classes;
   const containerStyle = [cn(combinedClasses), style].filter(Boolean);
-  const content = loading ? jsxRuntime.jsx(require$$0.ActivityIndicator, {
+  const content = loading ? jsxRuntime.jsx(reactNative.ActivityIndicator, {
     testID: "value-card-loading",
     size: "small",
     color: colorScheme === 'green' ? '#22c55e' : colorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'
   }) : children;
   if (isClickable && !isDisabled) {
-    return jsxRuntime.jsx(require$$0.Pressable, Object.assign({
+    return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
       style: ({
         pressed
       }) => [...containerStyle, pressed && {
@@ -9449,7 +9258,7 @@ const ValueCard = _a => {
       children: content
     }));
   }
-  return jsxRuntime.jsx(require$$0.View, Object.assign({
+  return jsxRuntime.jsx(reactNative.View, Object.assign({
     style: containerStyle
   }, props, {
     children: content
@@ -9505,13 +9314,13 @@ const DashLogo = ({
     })]
   });
   if (onPress) {
-    return jsxRuntime.jsx(require$$0.Pressable, {
+    return jsxRuntime.jsx(reactNative.Pressable, {
       style: combinedContainerStyle,
       onPress: onPress,
       children: logoElement
     });
   }
-  return jsxRuntime.jsx(require$$0.View, {
+  return jsxRuntime.jsx(reactNative.View, {
     style: combinedContainerStyle,
     children: logoElement
   });
@@ -9535,24 +9344,24 @@ const useDebounce = (value, options) => {
     callback,
     immediate = false
   } = config;
-  const [debouncedValue, setDebouncedValue] = require$$0$1.useState(value);
-  const [isPending, setIsPending] = require$$0$1.useState(false);
-  const timeoutRef = require$$0$1.useRef(null);
-  const isFirstRun = require$$0$1.useRef(true);
-  const cancel = require$$0$1.useCallback(() => {
+  const [debouncedValue, setDebouncedValue] = react.useState(value);
+  const [isPending, setIsPending] = react.useState(false);
+  const timeoutRef = react.useRef(null);
+  const isFirstRun = react.useRef(true);
+  const cancel = react.useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
       setIsPending(false);
     }
   }, []);
-  const flush = require$$0$1.useCallback(() => {
+  const flush = react.useCallback(() => {
     cancel();
     setDebouncedValue(value);
     callback === null || callback === void 0 ? void 0 : callback(value);
     setIsPending(false);
   }, [value, callback, cancel]);
-  require$$0$1.useEffect(() => {
+  react.useEffect(() => {
     // If immediate === true and this is first run, set value immediately
     if (immediate && isFirstRun.current) {
       setDebouncedValue(value);
@@ -9575,7 +9384,7 @@ const useDebounce = (value, options) => {
     };
   }, [value, delay, callback, immediate]);
   // Cleanup on unmount
-  require$$0$1.useEffect(() => {
+  react.useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -9597,6 +9406,7 @@ exports.BigNumber = BigNumber;
 exports.Button = Button;
 exports.CheckIcon = CheckIcon;
 exports.ChevronIcon = ChevronIcon;
+exports.Clipboard = Clipboard;
 exports.CopyButton = CopyButton;
 exports.CopyIcon = CopyIcon;
 exports.CrossIcon = CrossIcon;
@@ -9615,6 +9425,7 @@ exports.SearchIcon = SearchIcon;
 exports.SuccessIcon = SuccessIcon;
 exports.Tabs = Tabs;
 exports.Text = Text;
+exports.TopRightArrowIcon = TopRightArrowIcon;
 exports.ValueCard = ValueCard;
 exports.cn = cn;
 exports.tw = tw;

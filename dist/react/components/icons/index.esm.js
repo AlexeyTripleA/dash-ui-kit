@@ -1082,6 +1082,28 @@ const DocumentIcon = ({
     })
   })]
 });
+const TopRightArrowIcon = ({
+  color = '#0C1C33',
+  size = 25,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 25 25',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388',
+    stroke: 'currentColor',
+    strokeWidth: '2',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
 
-export { AirplaneIcon, ArrowIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, WalletIcon, WebIcon };
+export { AirplaneIcon, ArrowIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, TopRightArrowIcon, WalletIcon, WebIcon };
 //# sourceMappingURL=index.esm.js.map

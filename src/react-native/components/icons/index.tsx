@@ -289,6 +289,29 @@ export const EyeClosedIcon: React.FC<IconProps> = ({
   </Svg>
 )
 
+export const TopRightArrowIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 25,
+  onPress
+}) => (
+  <Svg
+    width={size}
+    height={size}
+    viewBox='0 0 25 25'
+    fill='none'
+    onPress={onPress}
+    color={color}
+  >
+    <Path
+      d='M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388'
+      stroke={color}
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </Svg>
+)
+
 // Export all icons as a collection
 export const Icons = {
   ArrowIcon,
@@ -303,4 +326,5 @@ export const Icons = {
   InfoCircleIcon,
   EyeOpenIcon,
   EyeClosedIcon,
+  TopRightArrowIcon,
 }

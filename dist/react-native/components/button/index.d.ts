@@ -3,7 +3,7 @@ import { PressableProps, ViewStyle } from 'react-native';
 import { VariantProps } from 'class-variance-authority';
 declare const buttonStyles: (props?: ({
     variant?: "solid" | "outline" | "ghost" | null | undefined;
-    colorScheme?: "red" | "gray" | "brand" | "mint" | "lightBlue" | "lightGray" | null | undefined;
+    colorScheme?: "red" | "gray" | "brand" | "mint" | "lightBlue" | "lightGray" | "white" | "halfWhite" | "halfBlue" | null | undefined;
     size?: "sm" | "md" | "lg" | "xl" | null | undefined;
     rounded?: "default" | "full" | null | undefined;
     disabled?: boolean | null | undefined;
@@ -13,7 +13,7 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
     /** Solid, outline, or ghost style */
     variant?: 'solid' | 'outline' | 'ghost';
     /** Color scheme for the button */
-    colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray';
+    colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
     /** Size of the button */
     size?: 'sm' | 'md' | 'lg' | 'xl';
     /** Border radius style */

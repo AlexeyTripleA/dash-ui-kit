@@ -18,7 +18,7 @@ const meta: Meta<typeof Button> = {
     },
     colorScheme: {
       control: 'select',
-      options: ['brand', 'mint', 'gray', 'red', 'lightBlue', 'lightGray'],
+      options: ['brand', 'mint', 'gray', 'red', 'lightBlue', 'lightGray', 'white', 'halfWhite', 'halfBlue'],
       description: 'Color scheme for the button',
     },
     size: {
@@ -102,6 +102,9 @@ export const ColorSchemes: Story = {
       <Button colorScheme="red">Red</Button>
       <Button colorScheme="lightBlue">Light Blue</Button>
       <Button colorScheme="lightGray">Light Gray</Button>
+      <Button colorScheme="white">White</Button>
+      <Button colorScheme="halfWhite">Half White</Button>
+      <Button colorScheme="halfBlue">Half Blue</Button>
     </View>
   ),
 }
@@ -153,6 +156,26 @@ export const WithCustomContent: Story = {
         </Text>
       </View>
     </Button>
+  ),
+}
+
+// Glassmorphism buttons (best viewed on gradient background)
+export const GlassmorphismButtons: Story = {
+  render: () => (
+    <View style={{ 
+      gap: 12, 
+      alignItems: 'flex-start', 
+      padding: 20, 
+      backgroundColor: '#4D5895',
+      borderRadius: 16
+    }}>
+      <Button colorScheme="white" rounded="full">White Button</Button>
+      <Button colorScheme="halfWhite" rounded="full">Half White Button</Button>
+      <Button colorScheme="halfBlue" rounded="full">Half Blue Button</Button>
+      <Button colorScheme="white" rounded="full" variant="outline">White Outline</Button>
+      <Button colorScheme="halfWhite" rounded="full" variant="outline">Half White Outline</Button>
+      <Button colorScheme="halfBlue" rounded="full" variant="outline">Half Blue Outline</Button>
+    </View>
   ),
 }
 

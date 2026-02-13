@@ -42,7 +42,8 @@ import {
   SearchIcon,
   AirplaneIcon,
   ExternalLinkIcon,
-  InfoCircleIcon
+  InfoCircleIcon,
+  TopRightArrowIcon
 } from './index'
 
 const meta: Meta = {
@@ -245,6 +246,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <InfoCircleIcon />
         <span className="text-sm">InfoCircleIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <TopRightArrowIcon />
+        <span className="text-sm">TopRightArrowIcon</span>
       </div>
     </div>
   ),
@@ -709,6 +714,16 @@ export const InfoCircle: StoryObj = {
   args: {
     size: 19,
     color: '#4C7EFF',
+    className: ''
+  }
+}
+
+// Top Right Arrow Icon
+export const TopRightArrow: StoryObj = {
+  render: (args) => <TopRightArrowIcon {...args} />,
+  args: {
+    size: 25,
+    color: '#0C1C33',
     className: ''
   }
 }

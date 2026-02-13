@@ -32,6 +32,9 @@ const styles = cva(
         red: '',
         lightBlue: '',
         lightGray: '',
+        white: '',
+        halfWhite: '',
+        halfBlue: '',
       },
       state: {
         active: 'active:-translate-y-[-1px]',
@@ -91,6 +94,27 @@ const styles = cva(
         theme: 'light',
         class: 'bg-[rgba(12,28,51,0.03)] text-[#0C1C33] hover:bg-[rgba(12,28,51,0.06)]'
       },
+      {
+        variant: 'solid',
+        colorScheme: 'white',
+        state: 'active',
+        theme: 'light',
+        class: 'bg-white text-dash-brand hover:bg-white/90 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfWhite',
+        state: 'active',
+        theme: 'light',
+        class: 'bg-white/15 text-white hover:bg-white/25 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfBlue',
+        state: 'active',
+        theme: 'light',
+        class: 'bg-dash-brand/15 text-dash-brand hover:bg-dash-brand/25 backdrop-blur-[10px]'
+      },
       // solid variant color schemes - dark theme
       {
         variant: 'solid',
@@ -133,6 +157,27 @@ const styles = cva(
         state: 'active',
         theme: 'dark',
         class: 'bg-gray-700/20 text-gray-300 hover:bg-gray-600/30'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'white',
+        state: 'active',
+        theme: 'dark',
+        class: 'bg-white text-dash-brand hover:bg-white/90 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfWhite',
+        state: 'active',
+        theme: 'dark',
+        class: 'bg-white/15 text-white hover:bg-white/25 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfBlue',
+        state: 'active',
+        theme: 'dark',
+        class: 'bg-dash-brand/15 text-dash-brand hover:bg-dash-brand/25 backdrop-blur-[10px]'
       },
       // outline variant - active state
       {
@@ -214,10 +259,52 @@ const styles = cva(
       },
       {
         variant: 'outline',
+        colorScheme: 'white',
+        state: 'active',
+        theme: 'light',
+        class: 'text-white border-white hover:bg-white/10'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfWhite',
+        state: 'active',
+        theme: 'light',
+        class: 'text-white border-white/50 hover:bg-white/10'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfBlue',
+        state: 'active',
+        theme: 'light',
+        class: 'text-dash-brand border-dash-brand/50 hover:bg-dash-brand/10'
+      },
+      {
+        variant: 'outline',
         colorScheme: 'lightGray',
         state: 'active',
         theme: 'dark',
         class: 'text-gray-300 border-gray-600/50 hover:bg-gray-700/10'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'white',
+        state: 'active',
+        theme: 'dark',
+        class: 'text-white border-white hover:bg-white/10'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfWhite',
+        state: 'active',
+        theme: 'dark',
+        class: 'text-white border-white/50 hover:bg-white/10'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfBlue',
+        state: 'active',
+        theme: 'dark',
+        class: 'text-dash-brand border-dash-brand/50 hover:bg-dash-brand/10'
       },
       // solid variant - light theme
       {
@@ -285,10 +372,52 @@ const styles = cva(
       },
       {
         variant: 'solid',
+        colorScheme: 'white',
+        state: 'disabled',
+        theme: 'light',
+        class: 'bg-white/50 text-dash-brand/40 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfWhite',
+        state: 'disabled',
+        theme: 'light',
+        class: 'bg-white/10 text-white/40 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfBlue',
+        state: 'disabled',
+        theme: 'light',
+        class: 'bg-dash-brand/10 text-dash-brand/40 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
         colorScheme: 'lightGray',
         state: 'disabled',
         theme: 'dark',
         class: 'bg-gray-700/20 text-gray-500'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'white',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'bg-white/50 text-dash-brand/40 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfWhite',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'bg-white/10 text-white/40 backdrop-blur-[10px]'
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'halfBlue',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'bg-dash-brand/10 text-dash-brand/40 backdrop-blur-[10px]'
       },
       // outline variant - disabled state
       {
@@ -370,10 +499,52 @@ const styles = cva(
       },
       {
         variant: 'outline',
+        colorScheme: 'white',
+        state: 'disabled',
+        theme: 'light',
+        class: 'text-white/40 border-white/40'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfWhite',
+        state: 'disabled',
+        theme: 'light',
+        class: 'text-white/30 border-white/30'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfBlue',
+        state: 'disabled',
+        theme: 'light',
+        class: 'text-dash-brand/30 border-dash-brand/30'
+      },
+      {
+        variant: 'outline',
         colorScheme: 'lightGray',
         state: 'disabled',
         theme: 'dark',
         class: 'text-gray-300/40 border-gray-600/30'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'white',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'text-white/40 border-white/40'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfWhite',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'text-white/30 border-white/30'
+      },
+      {
+        variant: 'outline',
+        colorScheme: 'halfBlue',
+        state: 'disabled',
+        theme: 'dark',
+        class: 'text-dash-brand/30 border-dash-brand/30'
       }
     ],
     defaultVariants: {
@@ -391,7 +562,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   /** Solid or outline style */
   variant?: 'solid' | 'outline'
   /** Color scheme for the button */
-  colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray'
+  colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
   /** Size of the button */
   size?: 'sm' | 'md' | 'xl'
   /** Border radius style */

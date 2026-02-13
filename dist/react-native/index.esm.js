@@ -1,8 +1,8 @@
 import { __rest } from 'tslib';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import require$$0, { Platform, Text as Text$1, Pressable, ActivityIndicator, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Platform, Text as Text$1, Pressable, ActivityIndicator, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { cva } from 'class-variance-authority';
-import require$$0$1, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import Svg, { Path, G, Defs, ClipPath, Rect, Circle, Line, SvgXml } from 'react-native-svg';
 
 function getAddedUtilities(plugins) {
@@ -7297,7 +7297,10 @@ const buttonStyles = cva('items-center justify-center flex-row min-h-11 transiti
       gray: '',
       red: '',
       lightBlue: '',
-      lightGray: ''
+      lightGray: '',
+      white: '',
+      halfWhite: '',
+      halfBlue: ''
     },
     size: {
       sm: 'px-3 py-2',
@@ -7364,6 +7367,21 @@ const buttonStyles = cva('items-center justify-center flex-row min-h-11 transiti
     colorScheme: 'lightGray',
     disabled: false,
     class: 'bg-gray-100 dark:bg-gray-700/20'
+  }, {
+    variant: 'solid',
+    colorScheme: 'white',
+    disabled: false,
+    class: 'bg-white'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfWhite',
+    disabled: false,
+    class: 'bg-white/15'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfBlue',
+    disabled: false,
+    class: 'bg-dash-brand/15'
   },
   // Outline variants
   {
@@ -7382,6 +7400,18 @@ const buttonStyles = cva('items-center justify-center flex-row min-h-11 transiti
     variant: 'outline',
     colorScheme: 'red',
     class: 'border-red-700 dark:border-red-400'
+  }, {
+    variant: 'outline',
+    colorScheme: 'white',
+    class: 'border-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfWhite',
+    class: 'border-white/50'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfBlue',
+    class: 'border-dash-brand/50'
   }],
   defaultVariants: {
     variant: 'solid',
@@ -7404,7 +7434,10 @@ const textStyles$1 = cva('font-medium', {
       gray: '',
       red: '',
       lightBlue: '',
-      lightGray: ''
+      lightGray: '',
+      white: '',
+      halfWhite: '',
+      halfBlue: ''
     },
     size: {
       sm: 'text-sm',
@@ -7442,6 +7475,18 @@ const textStyles$1 = cva('font-medium', {
     variant: 'solid',
     colorScheme: 'lightGray',
     class: 'text-gray-900 dark:text-gray-300'
+  }, {
+    variant: 'solid',
+    colorScheme: 'white',
+    class: 'text-dash-brand'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfWhite',
+    class: 'text-white'
+  }, {
+    variant: 'solid',
+    colorScheme: 'halfBlue',
+    class: 'text-dash-brand'
   },
   // Outline text colors
   {
@@ -7460,6 +7505,18 @@ const textStyles$1 = cva('font-medium', {
     variant: 'outline',
     colorScheme: 'red',
     class: 'text-red-700 dark:text-red-400'
+  }, {
+    variant: 'outline',
+    colorScheme: 'white',
+    class: 'text-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfWhite',
+    class: 'text-white'
+  }, {
+    variant: 'outline',
+    colorScheme: 'halfBlue',
+    class: 'text-dash-brand'
   },
   // Ghost text colors
   {
@@ -7810,6 +7867,25 @@ const EyeClosedIcon = ({
     strokeLinecap: 'round'
   })]
 });
+const TopRightArrowIcon = ({
+  color = '#0C1C33',
+  size = 25,
+  onPress
+}) => jsx(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 25 25',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: jsx(Path, {
+    d: 'M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388',
+    stroke: color,
+    strokeWidth: '2',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  })
+});
 // Export all icons as a collection
 const Icons = {
   ArrowIcon,
@@ -7823,7 +7899,8 @@ const Icons = {
   SearchIcon,
   InfoCircleIcon,
   EyeOpenIcon,
-  EyeClosedIcon
+  EyeClosedIcon,
+  TopRightArrowIcon
 };
 
 const inputStyles = cva('w-full font-normal text-sm leading-[17px]', {
@@ -8694,357 +8771,89 @@ const BigNumber = ({
   }
 };
 
-var dist = {};
-
-var Clipboard$1 = {};
-
-var NativeClipboardModule = {};
-
-var hasRequiredNativeClipboardModule;
-
-function requireNativeClipboardModule () {
-	if (hasRequiredNativeClipboardModule) return NativeClipboardModule;
-	hasRequiredNativeClipboardModule = 1;
-	Object.defineProperty(NativeClipboardModule, "__esModule", { value: true });
-	NativeClipboardModule.removeAllListeners = NativeClipboardModule.addListener = void 0;
-	const react_native_1 = require$$0;
-	const ClipboardTurboModule = react_native_1.TurboModuleRegistry.getEnforcing("RNCClipboard");
-	NativeClipboardModule.default = ClipboardTurboModule;
-	const EVENT_NAME = "RNCClipboard_TEXT_CHANGED";
-	const eventEmitter = new react_native_1.NativeEventEmitter(ClipboardTurboModule);
-	let listenerCount = eventEmitter.listenerCount;
-	// listenerCount is only available from RN 0.64
-	// Older versions only have `listeners`
-	if (!listenerCount) {
-	    listenerCount = (eventType) => {
-	        // @ts-ignore
-	        return eventEmitter.listeners(eventType).length;
-	    };
-	}
-	else {
-	    listenerCount = eventEmitter.listenerCount.bind(eventEmitter);
-	}
-	const addListener = (callback) => {
-	    if (listenerCount(EVENT_NAME) === 0) {
-	        ClipboardTurboModule.setListener();
-	    }
-	    const res = eventEmitter.addListener(EVENT_NAME, callback);
-	    // Path the remove call to also remove the native listener
-	    // if we no longer have listeners
-	    // @ts-ignore
-	    res._remove = res.remove;
-	    res.remove = function () {
-	        // @ts-ignore
-	        this._remove();
-	        if (listenerCount(EVENT_NAME) === 0) {
-	            ClipboardTurboModule.removeListener();
-	        }
-	    };
-	    return res;
-	};
-	NativeClipboardModule.addListener = addListener;
-	const removeAllListeners = () => {
-	    eventEmitter.removeAllListeners(EVENT_NAME);
-	    ClipboardTurboModule.removeListener();
-	};
-	NativeClipboardModule.removeAllListeners = removeAllListeners;
-	return NativeClipboardModule;
+/**
+ * Universal Clipboard utility for React Native and Expo
+ *
+ * Supports both:
+ * - @react-native-clipboard/clipboard (React Native)
+ * - expo-clipboard (Expo)
+ *
+ * Automatically detects which one is available and uses it.
+ */
+let clipboardInstance = null;
+/**
+ * Get the clipboard instance
+ * Tries to load expo-clipboard first, then falls back to @react-native-clipboard/clipboard
+ */
+function getClipboard() {
+  if (clipboardInstance) {
+    return clipboardInstance;
+  }
+  try {
+    // Try expo-clipboard first (most common in Expo projects)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const ExpoClipboard = require('expo-clipboard');
+    if ((ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.setStringAsync) && (ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.getStringAsync)) {
+      clipboardInstance = {
+        setString: text => {
+          ExpoClipboard.setStringAsync(text).catch(err => {
+            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+          });
+        },
+        getString: () => ExpoClipboard.getStringAsync()
+      };
+      return clipboardInstance;
+    }
+  } catch (err) {
+    // expo-clipboard not available, continue to try React Native clipboard
+  }
+  try {
+    // Try @react-native-clipboard/clipboard (React Native)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const RNClipboard = require('@react-native-clipboard/clipboard');
+    if ((RNClipboard === null || RNClipboard === void 0 ? void 0 : RNClipboard.default) || (RNClipboard === null || RNClipboard === void 0 ? void 0 : RNClipboard.Clipboard)) {
+      const clipboard = RNClipboard.default || RNClipboard.Clipboard;
+      clipboardInstance = {
+        setString: text => clipboard.setString(text),
+        getString: () => clipboard.getString()
+      };
+      return clipboardInstance;
+    }
+  } catch (err) {
+    // @react-native-clipboard/clipboard not available
+  }
+  // No clipboard available - return stub
+  console.warn('[dash-ui-kit] No clipboard library found. Please install either:\n' + '  - expo-clipboard (for Expo projects): npx expo install expo-clipboard\n' + '  - @react-native-clipboard/clipboard (for React Native): npm install @react-native-clipboard/clipboard');
+  clipboardInstance = {
+    setString: () => {
+      console.warn('[dash-ui-kit] Clipboard not available');
+    },
+    getString: async () => ''
+  };
+  return clipboardInstance;
 }
-
-var hasRequiredClipboard;
-
-function requireClipboard () {
-	if (hasRequiredClipboard) return Clipboard$1;
-	hasRequiredClipboard = 1;
-	var __createBinding = (Clipboard$1 && Clipboard$1.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-	    if (k2 === undefined) k2 = k;
-	    var desc = Object.getOwnPropertyDescriptor(m, k);
-	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-	      desc = { enumerable: true, get: function() { return m[k]; } };
-	    }
-	    Object.defineProperty(o, k2, desc);
-	}) : (function(o, m, k, k2) {
-	    if (k2 === undefined) k2 = k;
-	    o[k2] = m[k];
-	}));
-	var __setModuleDefault = (Clipboard$1 && Clipboard$1.__setModuleDefault) || (Object.create ? (function(o, v) {
-	    Object.defineProperty(o, "default", { enumerable: true, value: v });
-	}) : function(o, v) {
-	    o["default"] = v;
-	});
-	var __importStar = (Clipboard$1 && Clipboard$1.__importStar) || function (mod) {
-	    if (mod && mod.__esModule) return mod;
-	    var result = {};
-	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-	    __setModuleDefault(result, mod);
-	    return result;
-	};
-	Object.defineProperty(Clipboard$1, "__esModule", { value: true });
-	Clipboard$1.Clipboard = void 0;
-	const react_native_1 = require$$0;
-	const NativeClipboardModule_1 = __importStar(requireNativeClipboardModule());
-	/**
-	 * `Clipboard` gives you an interface for setting and getting content from Clipboard on both iOS and Android
-	 */
-	Clipboard$1.Clipboard = {
-	    /**
-	     * Get content of string type, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getString();
-	     * }
-	     * ```
-	     */
-	    getString() {
-	        return NativeClipboardModule_1.default.getString();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Get contents of string array type, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getStrings();
-	     * }
-	     * ```
-	     */
-	    getStrings() {
-	        return NativeClipboardModule_1.default.getStrings();
-	    },
-	    /**
-	     * Get clipboard image as PNG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImagePNG();
-	     * }
-	     * ```
-	     */
-	    getImagePNG() {
-	        return NativeClipboardModule_1.default.getImagePNG();
-	    },
-	    /**
-	     * Get clipboard image as JPG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImageJPG();
-	     * }
-	     * ```
-	     */
-	    getImageJPG() {
-	        return NativeClipboardModule_1.default.getImageJPG();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Set content of base64 image type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setImage(...);
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setImage(content) {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        NativeClipboardModule_1.default.setImage(content);
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Get clipboard image in base64, this method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _getContent() {
-	     *   var content = await Clipboard.getImage();
-	     * }
-	     * ```
-	     */
-	    getImage() {
-	        return NativeClipboardModule_1.default.getImage();
-	    },
-	    /**
-	     * Set content of string type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setString('hello world');
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setString(content) {
-	        NativeClipboardModule_1.default.setString(content);
-	    },
-	    /**
-	     * Set content of string array type. You can use following code to set clipboard content
-	     * ```javascript
-	     * _setContent() {
-	     *   Clipboard.setStrings(['hello world', 'second string']);
-	     * }
-	     * ```
-	     * @param the content to be stored in the clipboard.
-	     */
-	    setStrings(content) {
-	        NativeClipboardModule_1.default.setStrings(content);
-	    },
-	    /**
-	     * Returns whether the clipboard has content or is empty.
-	     * This method returns a `Promise`, so you can use following code to get clipboard content
-	     * ```javascript
-	     * async _hasContent() {
-	     *   var hasContent = await Clipboard.hasString();
-	     * }
-	     * ```
-	     */
-	    hasString() {
-	        return NativeClipboardModule_1.default.hasString();
-	    },
-	    /**
-	     * Returns whether the clipboard has an image or is empty.
-	     * This method returns a `Promise`, so you can use following code to check clipboard content
-	     * ```javascript
-	     * async _hasContent() {
-	     *   var hasContent = await Clipboard.hasImage();
-	     * }
-	     * ```
-	     */
-	    hasImage() {
-	        return NativeClipboardModule_1.default.hasImage();
-	    },
-	    /**
-	     * (iOS Only)
-	     * Returns whether the clipboard has a URL content. Can check
-	     * if there is a URL content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for url content in clipboard.
-	     * ```javascript
-	     * async _hasURL() {
-	     *   var hasURL = await Clipboard.hasURL();
-	     * }
-	     * ```
-	     */
-	    hasURL() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasURL();
-	    },
-	    /**
-	     * (iOS 14+ Only)
-	     * Returns whether the clipboard has a Number(UIPasteboardDetectionPatternNumber) content. Can check
-	     * if there is a Number content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for Number content in clipboard.
-	     * ```javascript
-	     * async _hasNumber() {
-	     *   var hasNumber = await Clipboard.hasNumber();
-	     * }
-	     * ```
-	     */
-	    hasNumber() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasNumber();
-	    },
-	    /**
-	     * (iOS 14+ Only)
-	     * Returns whether the clipboard has a WebURL(UIPasteboardDetectionPatternProbableWebURL) content. Can check
-	     * if there is a WebURL content in clipboard without triggering PasteBoard notification for iOS 14+
-	     * This method returns a `Promise`, so you can use following code to check for WebURL content in clipboard.
-	     * ```javascript
-	     * async _hasWebURL() {
-	     *   var hasWebURL = await Clipboard.hasWebURL();
-	     * }
-	     * ```
-	     */
-	    hasWebURL() {
-	        if (react_native_1.Platform.OS !== "ios") {
-	            return;
-	        }
-	        return NativeClipboardModule_1.default.hasWebURL();
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Adds a listener to get notifications when the clipboard has changed.
-	     * If this is the first listener, turns on clipboard notifications on the native side.
-	     * It returns EmitterSubscription where you can call "remove" to remove listener
-	     * ```javascript
-	     * const listener = () => console.log("changed!");
-	     * Clipboard.addListener(listener);
-	     * ```
-	     */
-	    addListener(callback) {
-	        return (0, NativeClipboardModule_1.addListener)(callback);
-	    },
-	    /**
-	     * (iOS and Android Only)
-	     * Removes all previously registered listeners and turns off notifications on the native side.
-	     * ```javascript
-	     * Clipboard.removeAllListeners();
-	     * ```
-	     */
-	    removeAllListeners() {
-	        (0, NativeClipboardModule_1.removeAllListeners)();
-	    },
-	};
-	return Clipboard$1;
-}
-
-var useClipboard = {};
-
-var hasRequiredUseClipboard;
-
-function requireUseClipboard () {
-	if (hasRequiredUseClipboard) return useClipboard;
-	hasRequiredUseClipboard = 1;
-	/**
-	 * useClipboard.ts
-	 * This code is inspired from the @react-native-community/hooks package
-	 * All credit goes to author of the useClipboard custom hooks.
-	 * https://github.com/react-native-community/hooks
-	 */
-	Object.defineProperty(useClipboard, "__esModule", { value: true });
-	useClipboard.useClipboard = void 0;
-	const react_1 = require$$0$1;
-	const Clipboard_1 = requireClipboard();
-	const listeners = new Set();
-	function setString(content) {
-	    Clipboard_1.Clipboard.setString(content);
-	    for (const listener of listeners) {
-	        listener(content);
-	    }
-	}
-	const useClipboard$1 = () => {
-	    const [data, updateClipboardData] = (0, react_1.useState)("");
-	    (0, react_1.useEffect)(() => {
-	        Clipboard_1.Clipboard.getString().then(updateClipboardData);
-	    }, []);
-	    (0, react_1.useEffect)(() => {
-	        listeners.add(updateClipboardData);
-	        return () => {
-	            listeners.delete(updateClipboardData);
-	        };
-	    }, []);
-	    return [data, setString];
-	};
-	useClipboard.useClipboard = useClipboard$1;
-	return useClipboard;
-}
-
-var hasRequiredDist;
-
-function requireDist () {
-	if (hasRequiredDist) return dist;
-	hasRequiredDist = 1;
-	(function (exports) {
-		Object.defineProperty(exports, "__esModule", { value: true });
-		exports.useClipboard = void 0;
-		const Clipboard_1 = requireClipboard();
-		var useClipboard_1 = requireUseClipboard();
-		Object.defineProperty(exports, "useClipboard", { enumerable: true, get: function () { return useClipboard_1.useClipboard; } });
-		exports.default = Clipboard_1.Clipboard; 
-	} (dist));
-	return dist;
-}
-
-var distExports = requireDist();
-var Clipboard = /*@__PURE__*/getDefaultExportFromCjs(distExports);
+/**
+ * Universal Clipboard object
+ * Compatible with both expo-clipboard and @react-native-clipboard/clipboard
+ */
+const Clipboard = {
+  /**
+   * Set string to clipboard
+   * @param text - Text to copy
+   */
+  setString: text => {
+    const clipboard = getClipboard();
+    clipboard.setString(text);
+  },
+  /**
+   * Get string from clipboard
+   * @returns Promise with clipboard content
+   */
+  getString: () => {
+    const clipboard = getClipboard();
+    return clipboard.getString();
+  }
+};
 
 const FEEDBACK_DURATION_MS = 1000;
 /**
@@ -9588,5 +9397,5 @@ const useDebounce = (value, options) => {
   };
 };
 
-export { ArrowIcon, Avatar, Badge, BigNumber, Button, CheckIcon, ChevronIcon, CopyButton, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, Identifier, InfoCircleIcon, Input, NotActive, PlusIcon, SearchIcon, SuccessIcon, Tabs, Text, ValueCard, cn, tw, useDebounce };
+export { ArrowIcon, Avatar, Badge, BigNumber, Button, CheckIcon, ChevronIcon, Clipboard, CopyButton, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, Identifier, InfoCircleIcon, Input, NotActive, PlusIcon, SearchIcon, SuccessIcon, Tabs, Text, TopRightArrowIcon, ValueCard, cn, tw, useDebounce };
 //# sourceMappingURL=index.esm.js.map
