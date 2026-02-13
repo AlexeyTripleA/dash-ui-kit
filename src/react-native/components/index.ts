@@ -8,6 +8,9 @@ export * from './button'
 // Form components
 export * from './input'
 
+// Navigation components
+export * from './tabs'
+
 // Icons
 export * from './icons'
 

@@ -8025,6 +8025,217 @@ const Input = _a => {
   }, props));
 };
 
+const tabsRootStyles = classVarianceAuthority.cva('flex-col w-full', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsListStyles = classVarianceAuthority.cva('flex-row relative', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light'
+  }
+});
+const tabsTriggerStyles = classVarianceAuthority.cva(['flex-row items-center justify-center relative', 'font-light transition-all'], {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    active: {
+      true: '',
+      false: ''
+    },
+    size: {
+      sm: 'text-sm px-0 pr-3 pb-2',
+      lg: 'text-xl px-0 pr-4 pb-3',
+      xl: 'text-2xl px-0 pr-[14px] pb-[10px]'
+    }
+  },
+  compoundVariants: [{
+    theme: 'light',
+    active: true,
+    class: 'text-dash-primary-dark-blue'
+  }, {
+    theme: 'light',
+    active: false,
+    class: 'text-[rgba(12,28,51,0.35)]'
+  }, {
+    theme: 'dark',
+    active: true,
+    class: 'text-white'
+  }, {
+    theme: 'dark',
+    active: false,
+    class: 'text-gray-400'
+  }],
+  defaultVariants: {
+    theme: 'light',
+    active: false,
+    size: 'xl'
+  }
+});
+const tabsContentStyles = classVarianceAuthority.cva('', {
+  variants: {
+    theme: {
+      light: '',
+      dark: ''
+    },
+    size: {
+      sm: 'mt-2',
+      lg: 'mt-3',
+      xl: 'mt-4'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'xl'
+  }
+});
+/**
+ * React Native Tabs component with sleek underline style matching Figma design.
+ * Features horizontal scrolling, light/dark theme support, and touch interactions.
+ */
+const Tabs = ({
+  items,
+  value,
+  defaultValue,
+  onValueChange,
+  size = 'xl',
+  theme = 'light',
+  className = '',
+  listClassName = '',
+  triggerClassName = '',
+  contentClassName = '',
+  style,
+  listStyle,
+  triggerStyle,
+  contentStyle
+}) => {
+  var _a;
+  const [internalValue, setInternalValue] = react.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
+  // Use controlled value if provided, otherwise use internal state
+  const currentValue = value !== undefined ? value : internalValue;
+  const handleValueChange = newValue => {
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onValueChange === null || onValueChange === void 0 ? void 0 : onValueChange(newValue);
+  };
+  const rootClasses = tabsRootStyles({
+    theme
+  }) + (className ? ` ${className}` : '');
+  const listClasses = tabsListStyles({
+    theme
+  }) + (listClassName ? ` ${listClassName}` : '');
+  const contentClasses = tabsContentStyles({
+    theme,
+    size
+  }) + (contentClassName ? ` ${contentClassName}` : '');
+  const rootStyle = [cn(rootClasses), style].filter(Boolean);
+  const listStyleCombined = [cn(listClasses), listStyle].filter(Boolean);
+  const contentStyleCombined = [cn(contentClasses), contentStyle].filter(Boolean);
+  // Border color based on theme
+  const borderColor = theme === 'light' ? 'rgba(12, 28, 51, 0.15)' : 'rgba(156, 163, 175, 0.5)';
+  const activeBorderColor = '#4C7EFF';
+  return jsxRuntime.jsxs(reactNative.View, {
+    style: rootStyle,
+    children: [jsxRuntime.jsxs(reactNative.View, {
+      style: {
+        position: 'relative'
+      },
+      children: [jsxRuntime.jsx(reactNative.ScrollView, {
+        horizontal: true,
+        showsHorizontalScrollIndicator: false,
+        style: listStyleCombined,
+        contentContainerStyle: {
+          flexDirection: 'row'
+        },
+        children: items.map(item => {
+          const isActive = currentValue === item.value;
+          const triggerClasses = tabsTriggerStyles({
+            theme,
+            active: isActive,
+            size
+          }) + (triggerClassName ? ` ${triggerClassName}` : '');
+          const triggerStyleCombined = [cn(triggerClasses), triggerStyle].filter(Boolean);
+          // Get text size based on size prop
+          let fontSize = 24; // xl
+          let lineHeight = 33; // xl (1.366)
+          if (size === 'sm') {
+            fontSize = 14;
+            lineHeight = 18; // 1.25
+          } else if (size === 'lg') {
+            fontSize = 20;
+            lineHeight = 26; // 1.3
+          }
+          // Text color based on theme and active state
+          let textColor = 'rgba(12, 28, 51, 0.35)'; // light inactive
+          if (theme === 'light' && isActive) {
+            textColor = '#0C1C33'; // light active
+          } else if (theme === 'dark' && isActive) {
+            textColor = '#FFFFFF'; // dark active
+          } else if (theme === 'dark' && !isActive) {
+            textColor = 'rgba(156, 163, 175, 1)'; // dark inactive
+          }
+          const textStyle = {
+            fontSize,
+            lineHeight,
+            color: textColor,
+            fontWeight: isActive ? '500' : '300'
+          };
+          return jsxRuntime.jsxs(reactNative.TouchableOpacity, {
+            disabled: item.disabled,
+            onPress: () => !item.disabled && handleValueChange(item.value),
+            activeOpacity: 0.8,
+            style: triggerStyleCombined,
+            children: [jsxRuntime.jsx(reactNative.Text, {
+              style: textStyle,
+              children: item.label
+            }), isActive && jsxRuntime.jsx(reactNative.View, {
+              style: {
+                position: 'absolute',
+                bottom: 0,
+                left: -4,
+                right: size === 'sm' ? 12 : size === 'lg' ? 16 : 14,
+                height: 1,
+                backgroundColor: activeBorderColor,
+                zIndex: 10
+              }
+            })]
+          }, item.value);
+        })
+      }), jsxRuntime.jsx(reactNative.View, {
+        style: {
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 1,
+          backgroundColor: borderColor
+        }
+      })]
+    }), items.map(item => {
+      if (currentValue !== item.value) return null;
+      return jsxRuntime.jsx(reactNative.View, {
+        style: contentStyleCombined,
+        children: item.content
+      }, item.value);
+    })]
+  });
+};
+
 /**
  * Dash Logo component for React Native with customizable size and color
  * Original aspect ratio: 30:25 (1.2:1)
@@ -8103,6 +8314,7 @@ exports.Input = Input;
 exports.PlusIcon = PlusIcon;
 exports.SearchIcon = SearchIcon;
 exports.SuccessIcon = SuccessIcon;
+exports.Tabs = Tabs;
 exports.Text = Text;
 exports.cn = cn;
 exports.tw = tw;
