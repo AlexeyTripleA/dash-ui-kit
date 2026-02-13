@@ -75,6 +75,7 @@
     "@chromatic-com/storybook": "^3.2.6",
     "@eslint/eslintrc": "^3",
     "@react-hook/resize-observer": "^2.0.2",
+    "@react-native-clipboard/clipboard": "^1.16.3",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
@@ -124,6 +125,7 @@
     "vitest": "^3.1.4"
   },
   "peerDependencies": {
+    "@react-native-clipboard/clipboard": ">=1.0.0",
     "expo-blur": ">=13.0.0",
     "react": ">=19.1.0",
     "react-dom": ">=19.1.0",
@@ -131,6 +133,9 @@
     "react-native-svg": ">=13.0.0"
   },
   "peerDependenciesMeta": {
+    "@react-native-clipboard/clipboard": {
+      "optional": true
+    },
     "react-native": {
       "optional": true
     },

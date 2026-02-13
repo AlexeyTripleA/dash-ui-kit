@@ -1,9 +1,9 @@
 import { __rest } from 'tslib';
-import { jsx, jsxs } from 'react/jsx-runtime';
-import { Platform, Text as Text$1, Pressable, ActivityIndicator, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import require$$0, { Platform, Text as Text$1, Pressable, ActivityIndicator, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { cva } from 'class-variance-authority';
-import { useState } from 'react';
-import Svg, { Path, G, Defs, ClipPath, Rect, Circle, Line } from 'react-native-svg';
+import require$$0$1, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import Svg, { Path, G, Defs, ClipPath, Rect, Circle, Line, SvgXml } from 'react-native-svg';
 
 function getAddedUtilities(plugins) {
     var _a;
@@ -7132,7 +7132,7 @@ const tw = create(tailwindConfig);
  */
 const cn = className => tw`${className}`;
 
-const textStyles$1 = cva('', {
+const textStyles$2 = cva('', {
   variants: {
     variant: {
       body: 'text-base',
@@ -7205,7 +7205,7 @@ const Text = _a => {
       children
     } = _a,
     props = __rest(_a, ["variant", "weight", "color", "italic", "underline", "lineThrough", "transform", "opacity", "className", "style", "children"]);
-  const classes = textStyles$1({
+  const classes = textStyles$2({
     variant,
     weight,
     color,
@@ -7391,7 +7391,7 @@ const buttonStyles = cva('items-center justify-center flex-row min-h-11 transiti
     disabled: false
   }
 });
-const textStyles = cva('font-medium', {
+const textStyles$1 = cva('font-medium', {
   variants: {
     variant: {
       solid: '',
@@ -7499,7 +7499,7 @@ const Button = _a => {
     rounded,
     disabled: isDisabled
   }) + (className ? ` ${className}` : '');
-  const textClasses = textStyles({
+  const textClasses = textStyles$1({
     variant,
     colorScheme,
     size
@@ -8234,6 +8234,1226 @@ const Tabs = ({
   });
 };
 
+// 9 different colors only for easy distinction (also a sweet spot for collisions)
+const COLORS_NB = 9;
+const DEFAULT_SATURATION = 95;
+const DEFAULT_LIGHTNESS = 45;
+
+const MAGIC_NUMBER = 5;
+
+
+/**
+ * @type {(str: string) => number}
+ */
+function simpleHash(str) {
+    return str.split('')
+        .reduce((hash, char) => (hash ^ char.charCodeAt(0)) * -5, MAGIC_NUMBER)
+        >>> 2 // 32 bit unsigned integer conversion disregarding last 2 bits for better randomness
+}
+
+/**
+ * @type {import('.').minidenticon}
+ */
+function minidenticon(seed="", saturation=DEFAULT_SATURATION, lightness=DEFAULT_LIGHTNESS, hashFn=simpleHash) {
+    const hash = hashFn(seed);
+    // console.log("%c" + hash.toString(2).padStart(32, "0"), "font-family:monospace") // uncomment to debug
+    const hue = (hash % COLORS_NB) * (360 / COLORS_NB);
+    return [...Array(seed ? 25 : 0)].reduce((acc, e, i) =>
+        // testing the 15 lowest weight bits of the hash
+        hash & (1 << (i % 15)) ?
+            acc + `<rect x="${i > 14 ? 7 - ~~(i / 5) : ~~(i / 5)}" y="${i % 5}" width="1" height="1"/>`
+        : acc,
+        // xmlns attribute added in case of SVG file generation https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg#sect1
+        `<svg viewBox="-1.5 -1.5 8 8" xmlns="http://www.w3.org/2000/svg" fill="hsl(${hue} ${saturation}% ${lightness}%)">`
+    )
+    + '</svg>'
+}
+
+/**
+ * @type {void}
+ */
+// declared as a pure function to be tree-shaken by the bundler
+    /*@__PURE__*/globalThis.customElements?.get('minidenticon-svg') ? null :
+        globalThis.customElements?.define('minidenticon-svg',
+            class MinidenticonSvg extends HTMLElement {
+                static observedAttributes = ['username', 'saturation', 'lightness']
+                // private fields to allow Terser mangling
+                static #memoized = {}
+                #isConnected = false
+                connectedCallback() {
+                    this.#setContent();
+                    this.#isConnected = true;
+                }
+                // attributeChangedCallback() is called for every observed attribute before connectedCallback()
+                attributeChangedCallback() { if (this.#isConnected) this.#setContent(); }
+                #setContent() {
+                    const args = MinidenticonSvg.observedAttributes
+                                    .map(key => this.getAttribute(key) || undefined);
+                    const memoKey = args.join(',');
+                    this.innerHTML = MinidenticonSvg.#memoized[memoKey] ??=
+                        // @ts-ignore
+                        minidenticon(...args);
+                }
+            }
+        );
+
+/**
+ * Avatar component that creates unique identicons from usernames
+ * with customizable appearance.
+ *
+ * This is the React Native version that uses SvgXml instead of img tag.
+ */
+const Avatar = _a => {
+  var {
+      username,
+      className = '',
+      saturation = 50,
+      lightness = 50,
+      width = 40,
+      height = 40,
+      style
+    } = _a,
+    props = __rest(_a, ["username", "className", "saturation", "lightness", "width", "height", "style"]);
+  // Generate SVG string directly (no data URI needed for SvgXml)
+  const svgString = useMemo(() => minidenticon(username, saturation, lightness), [username, saturation, lightness]);
+  const containerClasses = `relative ${className}`.trim();
+  return jsx(View, Object.assign({
+    className: containerClasses,
+    style: style
+  }, props, {
+    children: jsx(SvgXml, {
+      xml: svgString,
+      width: width,
+      height: height
+    })
+  }));
+};
+
+// Base badge container styles
+const badgeStyles = cva('inline-flex items-center justify-center font-medium', {
+  variants: {
+    size: {
+      xxs: 'px-1 py-1 text-xs rounded-full',
+      xs: 'px-2 py-1 text-xs rounded-full',
+      sm: 'px-[34px] py-[10px] text-xs rounded-full',
+      xl: 'px-9 py-4 text-lg rounded-full'
+    },
+    borderRadius: {
+      default: '',
+      xs: 'rounded-[4px]'
+    },
+    // Color and variant combinations - blue
+    color_variant_blue_default: {
+      true: ''
+    },
+    color_variant_blue_flat: {
+      true: 'bg-[rgba(76,126,255,0.15)]'
+    },
+    color_variant_blue_solid: {
+      true: 'bg-[#4C7EFF]'
+    },
+    color_variant_blue_bordered: {
+      true: 'border border-[#4C7EFF]'
+    },
+    // Color and variant combinations - white
+    color_variant_white_default: {
+      true: ''
+    },
+    color_variant_white_flat: {
+      true: 'bg-[rgba(255,255,255,0.15)]'
+    },
+    color_variant_white_solid: {
+      true: 'bg-white'
+    },
+    color_variant_white_bordered: {
+      true: 'border border-white'
+    },
+    // Color and variant combinations - gray
+    color_variant_gray_default: {
+      true: ''
+    },
+    color_variant_gray_flat: {
+      true: 'bg-[rgba(12,28,51,0.15)]'
+    },
+    color_variant_gray_solid: {
+      true: 'bg-[#0C1C33]'
+    },
+    color_variant_gray_bordered: {
+      true: 'border border-[#0C1C33]'
+    },
+    // Color and variant combinations - light-gray
+    color_variant_lightgray_default: {
+      true: ''
+    },
+    color_variant_lightgray_flat: {
+      true: 'bg-[rgba(12,28,51,0.05)]'
+    },
+    color_variant_lightgray_solid: {
+      true: 'bg-[rgba(12,28,51,0.15)]'
+    },
+    color_variant_lightgray_bordered: {
+      true: 'border border-[#6B7280]'
+    },
+    // Color and variant combinations - turquoise
+    color_variant_turquoise_default: {
+      true: ''
+    },
+    color_variant_turquoise_flat: {
+      true: 'bg-[rgba(96,246,210,0.15)]'
+    },
+    color_variant_turquoise_solid: {
+      true: 'bg-[#60F6D2]'
+    },
+    color_variant_turquoise_bordered: {
+      true: 'border border-[#60F6D2]'
+    },
+    // Color and variant combinations - red
+    color_variant_red_default: {
+      true: ''
+    },
+    color_variant_red_flat: {
+      true: 'bg-[rgba(205,46,0,0.15)]'
+    },
+    color_variant_red_solid: {
+      true: 'bg-[#CD2E00]'
+    },
+    color_variant_red_bordered: {
+      true: 'border border-[#CD2E00]'
+    },
+    // Color and variant combinations - orange
+    color_variant_orange_default: {
+      true: ''
+    },
+    color_variant_orange_flat: {
+      true: 'bg-[rgba(249,143,18,0.15)]'
+    },
+    color_variant_orange_solid: {
+      true: 'bg-[#F98F12]'
+    },
+    color_variant_orange_bordered: {
+      true: 'border border-[#F98F12]'
+    }
+  },
+  defaultVariants: {
+    size: 'sm',
+    borderRadius: 'default'
+  }
+});
+// Text color styles
+const textStyles = cva('font-medium', {
+  variants: {
+    size: {
+      xxs: 'text-xs',
+      xs: 'text-xs',
+      sm: 'text-xs',
+      xl: 'text-lg'
+    },
+    // Text colors for each color and variant combination
+    color_variant_blue_default: {
+      true: 'text-[#4C7EFF]'
+    },
+    color_variant_blue_flat: {
+      true: 'text-[#4C7EFF]'
+    },
+    color_variant_blue_solid: {
+      true: 'text-white'
+    },
+    color_variant_blue_bordered: {
+      true: 'text-[#4C7EFF]'
+    },
+    color_variant_white_default: {
+      true: 'text-white'
+    },
+    color_variant_white_flat: {
+      true: 'text-white'
+    },
+    color_variant_white_solid: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_white_bordered: {
+      true: 'text-white'
+    },
+    color_variant_gray_default: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_gray_flat: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_gray_solid: {
+      true: 'text-white'
+    },
+    color_variant_gray_bordered: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_lightgray_default: {
+      true: 'text-[#6B7280]'
+    },
+    color_variant_lightgray_flat: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_lightgray_solid: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_lightgray_bordered: {
+      true: 'text-[#6B7280]'
+    },
+    color_variant_turquoise_default: {
+      true: 'text-[#60F6D2]'
+    },
+    color_variant_turquoise_flat: {
+      true: 'text-[#60F6D2]'
+    },
+    color_variant_turquoise_solid: {
+      true: 'text-[#0C1C33]'
+    },
+    color_variant_turquoise_bordered: {
+      true: 'text-[#60F6D2]'
+    },
+    color_variant_red_default: {
+      true: 'text-[#CD2E00]'
+    },
+    color_variant_red_flat: {
+      true: 'text-[#CD2E00]'
+    },
+    color_variant_red_solid: {
+      true: 'text-white'
+    },
+    color_variant_red_bordered: {
+      true: 'text-[#CD2E00]'
+    },
+    color_variant_orange_default: {
+      true: 'text-[#F98F12]'
+    },
+    color_variant_orange_flat: {
+      true: 'text-[#F98F12]'
+    },
+    color_variant_orange_solid: {
+      true: 'text-white'
+    },
+    color_variant_orange_bordered: {
+      true: 'text-[#F98F12]'
+    }
+  },
+  defaultVariants: {
+    size: 'sm'
+  }
+});
+// Mapping object for color key normalization (handles dashes)
+const COLOR_KEY_MAP = {
+  'blue': 'blue',
+  'white': 'white',
+  'gray': 'gray',
+  'light-gray': 'lightgray',
+  'turquoise': 'turquoise',
+  'red': 'red',
+  'orange': 'orange'
+};
+/**
+ * React Native Badge component with multiple variants, colors, sizes, and border radius options.
+ * Uses CVA for variant management and twrnc for Tailwind styling.
+ *
+ * Supports 28 style combinations (7 colors × 4 variants) with 4 sizes and optional custom border radius.
+ */
+const Badge = _a => {
+  var {
+      children,
+      variant = 'default',
+      color = 'blue',
+      size = 'sm',
+      borderRadius,
+      className = '',
+      style,
+      onPress
+    } = _a,
+    props = __rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "style", "onPress"]);
+  // Generate the color_variant key for CVA using explicit mapping
+  const normalizedColor = COLOR_KEY_MAP[color] || color;
+  const colorVariantKey = `color_variant_${normalizedColor}_${variant}`;
+  // Build the badge container classes with proper typing
+  const badgeVariantProps = {
+    size,
+    borderRadius: borderRadius || 'default',
+    [colorVariantKey]: true
+  };
+  const badgeClasses = badgeStyles(badgeVariantProps);
+  // Build the text classes with proper typing
+  const textVariantProps = {
+    size,
+    [colorVariantKey]: true
+  };
+  const textClasses = textStyles(textVariantProps);
+  // Convert Tailwind classes to React Native style objects
+  const combinedClasses = className ? `${badgeClasses} ${className}` : badgeClasses;
+  const badgeStyleArray = [cn(combinedClasses), style].filter(Boolean);
+  const textStyle = cn(textClasses);
+  // Render content (string children wrapped in Text, custom content as-is)
+  const content = typeof children === 'string' ? jsx(Text$1, {
+    style: textStyle,
+    children: children
+  }) : children;
+  // If onPress is provided, wrap in Pressable
+  if (onPress) {
+    return jsx(Pressable, Object.assign({
+      style: ({
+        pressed
+      }) => pressed ? [...badgeStyleArray, {
+        opacity: 0.7
+      }] : badgeStyleArray,
+      onPress: onPress
+    }, props, {
+      children: content
+    }));
+  }
+  // Otherwise, just render as View
+  return jsx(View, {
+    style: badgeStyleArray,
+    children: content
+  });
+};
+
+/**
+ * Groups digits into chunks of three, right to left.
+ * Used for formatting large numbers with thousand separators.
+ */
+const groupDigits = intPart => {
+  return intPart.split('').reverse().reduce((acc, char, idx) => {
+    if (idx % 3 === 0) acc.unshift('');
+    acc[0] = char + acc[0];
+    return acc;
+  }, []);
+};
+/**
+ * Splits a numeric string into groups of three characters for display.
+ * Supports two variants:
+ * - `space`: groups separated by gap
+ * - `comma`: groups separated by commas, with decimal part after `.`
+ * Supports light/dark theme via dark: variants.
+ */
+const BigNumber = ({
+  children,
+  variant = 'space',
+  className = '',
+  decimalPointSpacing = -2
+}) => {
+  const decimalPointStyle = {
+    marginLeft: decimalPointSpacing,
+    marginRight: decimalPointSpacing
+  };
+  if (children === undefined || children === null) return null;
+  const str = children.toString();
+  // Combine base styles with optional className
+  const containerClasses = `flex-row flex-wrap gap-1 ${className || ''}`;
+  const textClasses = 'dark:text-gray-100';
+  const containerStyle = cn(containerClasses);
+  const textStyle = cn(textClasses);
+  if (variant === 'space') {
+    // Split into integer and decimal parts
+    const [intPart, fracPart] = str.split('.');
+    // group digits every 3, right to left (only for integer part)
+    const groups = groupDigits(intPart);
+    return jsxs(View, {
+      style: containerStyle,
+      children: [groups.map((grp, i) => jsx(Text$1, {
+        style: textStyle,
+        children: grp
+      }, i)), fracPart != null && jsxs(Fragment, {
+        children: [jsx(Text$1, {
+          style: [textStyle, decimalPointStyle],
+          children: "."
+        }), jsx(Text$1, {
+          style: textStyle,
+          children: fracPart
+        })]
+      })]
+    });
+  } else {
+    // comma variant
+    const [intPart, fracPart] = str.split('.');
+    const groups = groupDigits(intPart);
+    return jsxs(View, {
+      style: containerStyle,
+      children: [groups.map((grp, i) => jsxs(View, {
+        style: cn('flex-row'),
+        children: [jsx(Text$1, {
+          style: textStyle,
+          children: grp
+        }), i < groups.length - 1 && jsx(Text$1, {
+          style: textStyle,
+          children: ","
+        })]
+      }, i)), fracPart != null && jsxs(Fragment, {
+        children: [jsx(Text$1, {
+          style: [textStyle, decimalPointStyle],
+          children: "."
+        }), jsx(Text$1, {
+          style: textStyle,
+          children: fracPart
+        })]
+      })]
+    });
+  }
+};
+
+var dist = {};
+
+var Clipboard$1 = {};
+
+var NativeClipboardModule = {};
+
+var hasRequiredNativeClipboardModule;
+
+function requireNativeClipboardModule () {
+	if (hasRequiredNativeClipboardModule) return NativeClipboardModule;
+	hasRequiredNativeClipboardModule = 1;
+	Object.defineProperty(NativeClipboardModule, "__esModule", { value: true });
+	NativeClipboardModule.removeAllListeners = NativeClipboardModule.addListener = void 0;
+	const react_native_1 = require$$0;
+	const ClipboardTurboModule = react_native_1.TurboModuleRegistry.getEnforcing("RNCClipboard");
+	NativeClipboardModule.default = ClipboardTurboModule;
+	const EVENT_NAME = "RNCClipboard_TEXT_CHANGED";
+	const eventEmitter = new react_native_1.NativeEventEmitter(ClipboardTurboModule);
+	let listenerCount = eventEmitter.listenerCount;
+	// listenerCount is only available from RN 0.64
+	// Older versions only have `listeners`
+	if (!listenerCount) {
+	    listenerCount = (eventType) => {
+	        // @ts-ignore
+	        return eventEmitter.listeners(eventType).length;
+	    };
+	}
+	else {
+	    listenerCount = eventEmitter.listenerCount.bind(eventEmitter);
+	}
+	const addListener = (callback) => {
+	    if (listenerCount(EVENT_NAME) === 0) {
+	        ClipboardTurboModule.setListener();
+	    }
+	    const res = eventEmitter.addListener(EVENT_NAME, callback);
+	    // Path the remove call to also remove the native listener
+	    // if we no longer have listeners
+	    // @ts-ignore
+	    res._remove = res.remove;
+	    res.remove = function () {
+	        // @ts-ignore
+	        this._remove();
+	        if (listenerCount(EVENT_NAME) === 0) {
+	            ClipboardTurboModule.removeListener();
+	        }
+	    };
+	    return res;
+	};
+	NativeClipboardModule.addListener = addListener;
+	const removeAllListeners = () => {
+	    eventEmitter.removeAllListeners(EVENT_NAME);
+	    ClipboardTurboModule.removeListener();
+	};
+	NativeClipboardModule.removeAllListeners = removeAllListeners;
+	return NativeClipboardModule;
+}
+
+var hasRequiredClipboard;
+
+function requireClipboard () {
+	if (hasRequiredClipboard) return Clipboard$1;
+	hasRequiredClipboard = 1;
+	var __createBinding = (Clipboard$1 && Clipboard$1.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    var desc = Object.getOwnPropertyDescriptor(m, k);
+	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+	      desc = { enumerable: true, get: function() { return m[k]; } };
+	    }
+	    Object.defineProperty(o, k2, desc);
+	}) : (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    o[k2] = m[k];
+	}));
+	var __setModuleDefault = (Clipboard$1 && Clipboard$1.__setModuleDefault) || (Object.create ? (function(o, v) {
+	    Object.defineProperty(o, "default", { enumerable: true, value: v });
+	}) : function(o, v) {
+	    o["default"] = v;
+	});
+	var __importStar = (Clipboard$1 && Clipboard$1.__importStar) || function (mod) {
+	    if (mod && mod.__esModule) return mod;
+	    var result = {};
+	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+	    __setModuleDefault(result, mod);
+	    return result;
+	};
+	Object.defineProperty(Clipboard$1, "__esModule", { value: true });
+	Clipboard$1.Clipboard = void 0;
+	const react_native_1 = require$$0;
+	const NativeClipboardModule_1 = __importStar(requireNativeClipboardModule());
+	/**
+	 * `Clipboard` gives you an interface for setting and getting content from Clipboard on both iOS and Android
+	 */
+	Clipboard$1.Clipboard = {
+	    /**
+	     * Get content of string type, this method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _getContent() {
+	     *   var content = await Clipboard.getString();
+	     * }
+	     * ```
+	     */
+	    getString() {
+	        return NativeClipboardModule_1.default.getString();
+	    },
+	    /**
+	     * (iOS Only)
+	     * Get contents of string array type, this method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _getContent() {
+	     *   var content = await Clipboard.getStrings();
+	     * }
+	     * ```
+	     */
+	    getStrings() {
+	        return NativeClipboardModule_1.default.getStrings();
+	    },
+	    /**
+	     * Get clipboard image as PNG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _getContent() {
+	     *   var content = await Clipboard.getImagePNG();
+	     * }
+	     * ```
+	     */
+	    getImagePNG() {
+	        return NativeClipboardModule_1.default.getImagePNG();
+	    },
+	    /**
+	     * Get clipboard image as JPG in base64, this method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _getContent() {
+	     *   var content = await Clipboard.getImageJPG();
+	     * }
+	     * ```
+	     */
+	    getImageJPG() {
+	        return NativeClipboardModule_1.default.getImageJPG();
+	    },
+	    /**
+	     * (iOS Only)
+	     * Set content of base64 image type. You can use following code to set clipboard content
+	     * ```javascript
+	     * _setContent() {
+	     *   Clipboard.setImage(...);
+	     * }
+	     * ```
+	     * @param the content to be stored in the clipboard.
+	     */
+	    setImage(content) {
+	        if (react_native_1.Platform.OS !== "ios") {
+	            return;
+	        }
+	        NativeClipboardModule_1.default.setImage(content);
+	    },
+	    /**
+	     * (iOS and Android Only)
+	     * Get clipboard image in base64, this method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _getContent() {
+	     *   var content = await Clipboard.getImage();
+	     * }
+	     * ```
+	     */
+	    getImage() {
+	        return NativeClipboardModule_1.default.getImage();
+	    },
+	    /**
+	     * Set content of string type. You can use following code to set clipboard content
+	     * ```javascript
+	     * _setContent() {
+	     *   Clipboard.setString('hello world');
+	     * }
+	     * ```
+	     * @param the content to be stored in the clipboard.
+	     */
+	    setString(content) {
+	        NativeClipboardModule_1.default.setString(content);
+	    },
+	    /**
+	     * Set content of string array type. You can use following code to set clipboard content
+	     * ```javascript
+	     * _setContent() {
+	     *   Clipboard.setStrings(['hello world', 'second string']);
+	     * }
+	     * ```
+	     * @param the content to be stored in the clipboard.
+	     */
+	    setStrings(content) {
+	        NativeClipboardModule_1.default.setStrings(content);
+	    },
+	    /**
+	     * Returns whether the clipboard has content or is empty.
+	     * This method returns a `Promise`, so you can use following code to get clipboard content
+	     * ```javascript
+	     * async _hasContent() {
+	     *   var hasContent = await Clipboard.hasString();
+	     * }
+	     * ```
+	     */
+	    hasString() {
+	        return NativeClipboardModule_1.default.hasString();
+	    },
+	    /**
+	     * Returns whether the clipboard has an image or is empty.
+	     * This method returns a `Promise`, so you can use following code to check clipboard content
+	     * ```javascript
+	     * async _hasContent() {
+	     *   var hasContent = await Clipboard.hasImage();
+	     * }
+	     * ```
+	     */
+	    hasImage() {
+	        return NativeClipboardModule_1.default.hasImage();
+	    },
+	    /**
+	     * (iOS Only)
+	     * Returns whether the clipboard has a URL content. Can check
+	     * if there is a URL content in clipboard without triggering PasteBoard notification for iOS 14+
+	     * This method returns a `Promise`, so you can use following code to check for url content in clipboard.
+	     * ```javascript
+	     * async _hasURL() {
+	     *   var hasURL = await Clipboard.hasURL();
+	     * }
+	     * ```
+	     */
+	    hasURL() {
+	        if (react_native_1.Platform.OS !== "ios") {
+	            return;
+	        }
+	        return NativeClipboardModule_1.default.hasURL();
+	    },
+	    /**
+	     * (iOS 14+ Only)
+	     * Returns whether the clipboard has a Number(UIPasteboardDetectionPatternNumber) content. Can check
+	     * if there is a Number content in clipboard without triggering PasteBoard notification for iOS 14+
+	     * This method returns a `Promise`, so you can use following code to check for Number content in clipboard.
+	     * ```javascript
+	     * async _hasNumber() {
+	     *   var hasNumber = await Clipboard.hasNumber();
+	     * }
+	     * ```
+	     */
+	    hasNumber() {
+	        if (react_native_1.Platform.OS !== "ios") {
+	            return;
+	        }
+	        return NativeClipboardModule_1.default.hasNumber();
+	    },
+	    /**
+	     * (iOS 14+ Only)
+	     * Returns whether the clipboard has a WebURL(UIPasteboardDetectionPatternProbableWebURL) content. Can check
+	     * if there is a WebURL content in clipboard without triggering PasteBoard notification for iOS 14+
+	     * This method returns a `Promise`, so you can use following code to check for WebURL content in clipboard.
+	     * ```javascript
+	     * async _hasWebURL() {
+	     *   var hasWebURL = await Clipboard.hasWebURL();
+	     * }
+	     * ```
+	     */
+	    hasWebURL() {
+	        if (react_native_1.Platform.OS !== "ios") {
+	            return;
+	        }
+	        return NativeClipboardModule_1.default.hasWebURL();
+	    },
+	    /**
+	     * (iOS and Android Only)
+	     * Adds a listener to get notifications when the clipboard has changed.
+	     * If this is the first listener, turns on clipboard notifications on the native side.
+	     * It returns EmitterSubscription where you can call "remove" to remove listener
+	     * ```javascript
+	     * const listener = () => console.log("changed!");
+	     * Clipboard.addListener(listener);
+	     * ```
+	     */
+	    addListener(callback) {
+	        return (0, NativeClipboardModule_1.addListener)(callback);
+	    },
+	    /**
+	     * (iOS and Android Only)
+	     * Removes all previously registered listeners and turns off notifications on the native side.
+	     * ```javascript
+	     * Clipboard.removeAllListeners();
+	     * ```
+	     */
+	    removeAllListeners() {
+	        (0, NativeClipboardModule_1.removeAllListeners)();
+	    },
+	};
+	return Clipboard$1;
+}
+
+var useClipboard = {};
+
+var hasRequiredUseClipboard;
+
+function requireUseClipboard () {
+	if (hasRequiredUseClipboard) return useClipboard;
+	hasRequiredUseClipboard = 1;
+	/**
+	 * useClipboard.ts
+	 * This code is inspired from the @react-native-community/hooks package
+	 * All credit goes to author of the useClipboard custom hooks.
+	 * https://github.com/react-native-community/hooks
+	 */
+	Object.defineProperty(useClipboard, "__esModule", { value: true });
+	useClipboard.useClipboard = void 0;
+	const react_1 = require$$0$1;
+	const Clipboard_1 = requireClipboard();
+	const listeners = new Set();
+	function setString(content) {
+	    Clipboard_1.Clipboard.setString(content);
+	    for (const listener of listeners) {
+	        listener(content);
+	    }
+	}
+	const useClipboard$1 = () => {
+	    const [data, updateClipboardData] = (0, react_1.useState)("");
+	    (0, react_1.useEffect)(() => {
+	        Clipboard_1.Clipboard.getString().then(updateClipboardData);
+	    }, []);
+	    (0, react_1.useEffect)(() => {
+	        listeners.add(updateClipboardData);
+	        return () => {
+	            listeners.delete(updateClipboardData);
+	        };
+	    }, []);
+	    return [data, setString];
+	};
+	useClipboard.useClipboard = useClipboard$1;
+	return useClipboard;
+}
+
+var hasRequiredDist;
+
+function requireDist () {
+	if (hasRequiredDist) return dist;
+	hasRequiredDist = 1;
+	(function (exports) {
+		Object.defineProperty(exports, "__esModule", { value: true });
+		exports.useClipboard = void 0;
+		const Clipboard_1 = requireClipboard();
+		var useClipboard_1 = requireUseClipboard();
+		Object.defineProperty(exports, "useClipboard", { enumerable: true, get: function () { return useClipboard_1.useClipboard; } });
+		exports.default = Clipboard_1.Clipboard; 
+	} (dist));
+	return dist;
+}
+
+var distExports = requireDist();
+var Clipboard = /*@__PURE__*/getDefaultExportFromCjs(distExports);
+
+const FEEDBACK_DURATION_MS = 1000;
+/**
+ * React Native CopyButton component. Copies text to clipboard on press
+ * and shows "Copied!" feedback briefly.
+ */
+const CopyButton = ({
+  text,
+  onCopy,
+  className = '',
+  style,
+  accessibilityLabel = 'Copy to clipboard'
+}) => {
+  const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef(null);
+  const handlePress = useCallback(() => {
+    Clipboard.setString(text);
+    setCopied(true);
+    onCopy === null || onCopy === void 0 ? void 0 : onCopy(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS);
+  }, [text, onCopy]);
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+  const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
+  const buttonStyle = cn(buttonClasses);
+  return jsx(Pressable, {
+    onPress: handlePress,
+    style: ({
+      pressed
+    }) => [buttonStyle, style, pressed && {
+      opacity: 0.7
+    }].filter(Boolean),
+    accessibilityLabel: accessibilityLabel,
+    accessibilityRole: "button",
+    children: copied ? jsx(View, {
+      style: cn('items-center justify-center min-w-4 min-h-4'),
+      children: jsx(Text$1, {
+        style: cn('text-xs text-dash-brand font-medium'),
+        children: "Copied!"
+      })
+    }) : jsx(CopyIcon, {
+      color: "#0C1C33",
+      size: 16
+    })
+  });
+};
+
+/**
+ * NotActive component for React Native
+ * Shows "n/a" text with theme-aware styling
+ */
+function NotActive(_a) {
+  var {
+      children,
+      className = '',
+      theme = 'light',
+      style
+    } = _a,
+    props = __rest(_a, ["children", "className", "theme", "style"]);
+  const themeColor = theme === 'dark' ? 'text-gray-500' : 'text-gray-400';
+  const textClasses = `text-sm ${themeColor} ${className}`.trim();
+  return jsx(Text$1, Object.assign({
+    style: [cn(textClasses), style].filter(Boolean)
+  }, props, {
+    children: children !== null && children !== void 0 ? children : 'n/a'
+  }));
+}
+
+/** CVA for the root container with light/dark theme */
+const identifier = cva('flex flex-row items-center font-dash-grotesque text-sm font-normal', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-white'
+    },
+    ellipsis: {
+      false: '',
+      true: 'overflow-hidden'
+    },
+    highlight: {
+      default: '',
+      dim: '',
+      highlight: '',
+      first: '',
+      last: '',
+      both: ''
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    ellipsis: false,
+    highlight: 'default'
+  }
+});
+/** CVA for each symbol text: inherits root color or dims */
+const symbol = cva('flex-1', {
+  variants: {
+    dim: {
+      false: '',
+      true: 'opacity-50'
+    }
+  },
+  defaultVariants: {
+    dim: false
+  }
+});
+/** Highlight modes configuration */
+const highlightModes = {
+  default: {
+    first: true,
+    middle: false,
+    last: true
+  },
+  dim: {
+    first: false,
+    middle: false,
+    last: false
+  },
+  highlight: {
+    first: true,
+    middle: true,
+    last: true
+  },
+  first: {
+    first: true,
+    middle: false,
+    last: false
+  },
+  last: {
+    first: false,
+    middle: false,
+    last: true
+  },
+  both: {
+    first: true,
+    middle: false,
+    last: true
+  }
+};
+/**
+ * HighlightedID subcomponent
+ * Renders text with highlighting based on mode
+ */
+const HighlightedID = ({
+  children,
+  mode,
+  theme = 'light'
+}) => {
+  if (children == null || children === '') return jsx(NotActive, {
+    theme: theme
+  });
+  const text = String(children);
+  const cfg = highlightModes[mode];
+  const count = 5;
+  const minLength = count * 2 + 1; // 11
+  if (text.length < minLength) {
+    return jsx(Text$1, {
+      style: cn(symbol({
+        dim: cfg.middle
+      })),
+      children: text
+    });
+  }
+  const first = text.slice(0, count);
+  const middle = text.slice(count, text.length - count);
+  const last = text.slice(-5);
+  return jsxs(Text$1, {
+    children: [jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.first
+      })),
+      children: first
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: middle
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.last
+      })),
+      children: last
+    })]
+  });
+};
+/**
+ * MiddleEllipsisText subcomponent
+ * Renders text with ellipsis in the middle
+ */
+const MiddleEllipsisText = ({
+  children,
+  edgeChars,
+  theme = 'light'
+}) => {
+  if (children == null || children === '') return jsx(NotActive, {
+    theme: theme
+  });
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsx(Text$1, {
+      children: text
+    });
+  }
+  const first = text.slice(0, edgeChars);
+  const last = text.slice(-edgeChars);
+  return jsxs(Text$1, {
+    children: [jsx(Text$1, {
+      children: first
+    }), jsx(Text$1, {
+      style: cn('opacity-50'),
+      children: "\u2026"
+    }), jsx(Text$1, {
+      children: last
+    })]
+  });
+};
+/**
+ * Identifier component for React Native
+ * Shows an ID string with optional highlighting, avatar, copy button, and ellipsis modes.
+ *
+ * Features:
+ * - Highlight modes: default, dim, highlight, first, last, both
+ * - Ellipsis modes: standard (tail), middle, maxLines
+ * - Avatar integration
+ * - Copy button integration
+ * - Theme support (light/dark)
+ *
+ * @example
+ * ```tsx
+ * <Identifier highlight="both">0x1234567890abcdef</Identifier>
+ * <Identifier avatar copyButton>alice@example.com</Identifier>
+ * <Identifier middleEllipsis edgeChars={6}>very-long-identifier</Identifier>
+ * <Identifier maxLines={2}>Multi-line\nidentifier\ntext</Identifier>
+ * ```
+ */
+const Identifier = _a => {
+  var {
+      children,
+      ellipsis = false,
+      highlight = undefined,
+      avatar = false,
+      copyButton = false,
+      maxLines = 0,
+      className = '',
+      middleEllipsis = false,
+      edgeChars = 4,
+      theme = 'light',
+      style
+    } = _a,
+    props = __rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style"]);
+  const [containerWidth, setContainerWidth] = useState(0);
+  // Handle container layout changes
+  const handleLayout = useCallback(event => {
+    const {
+      width
+    } = event.nativeEvent.layout;
+    setContainerWidth(width);
+  }, []);
+  const rootClasses = `${identifier({
+    theme: theme,
+    ellipsis,
+    highlight
+  })} ${className}`.trim();
+  // Determine if we should use standard ellipsis with numberOfLines
+  const useStandardEllipsis = ellipsis === true && !middleEllipsis && maxLines === 0;
+  const useMaxLines = maxLines > 0 && !middleEllipsis;
+  // Symbol container classes
+  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden' : 'flex-1';
+  return jsxs(View, Object.assign({
+    style: [cn(rootClasses), style].filter(Boolean),
+    onLayout: handleLayout
+  }, props, {
+    children: [avatar && children != null && children !== '' && jsx(Avatar, {
+      username: children,
+      className: "mr-2",
+      width: 24,
+      height: 24
+    }), jsx(View, {
+      style: cn(symbolContainerClass),
+      children: children != null && children !== '' && middleEllipsis ? jsx(MiddleEllipsisText, {
+        edgeChars: edgeChars,
+        theme: theme,
+        children: children
+      }) : children != null && children !== '' && highlight != null ? jsx(HighlightedID, {
+        mode: highlight,
+        theme: theme,
+        children: children
+      }) : children != null && children !== '' ? jsx(Text$1, {
+        numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
+        ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
+        style: cn('leading-4'),
+        children: children
+      }) : jsx(NotActive, {
+        theme: theme
+      })
+    }), copyButton && children != null && children !== '' && jsx(CopyButton, {
+      className: "ml-3",
+      text: children
+    })]
+  }));
+};
+
+/**
+ * ValueCard CVA - twrnc-compatible classes.
+ * dash-block-sm/md/xl expanded: px-3 py-2 rounded-[10px], px-[18px] py-3 rounded-[14px], px-[25px] py-5 rounded-[16px]
+ * hover: classes omitted (RN uses Pressable opacity for press feedback)
+ */
+const valueCardStyles = cva('flex flex-row items-center', {
+  variants: {
+    theme: {
+      light: 'border-gray-200',
+      dark: 'bg-gray-800/50 border-gray-400'
+    },
+    colorScheme: {
+      default: '',
+      transparent: 'bg-transparent',
+      green: 'text-green-500 bg-green-200 border-green-400',
+      lightBlue: 'bg-[rgba(150,167,255,0.1)] border-[rgba(76,126,255,0.2)]',
+      white: 'bg-white',
+      lightGray: 'bg-[#0c1c3308]',
+      yellow: 'bg-dash-yellow-light border-dash-yellow'
+    },
+    size: {
+      xs: 'px-2 py-1 rounded',
+      sm: 'px-3 py-2 rounded-[10px]',
+      md: 'px-[18px] py-3 rounded-[14px]',
+      xl: 'px-[25px] py-5 rounded-[16px]'
+    },
+    clickable: {
+      false: '',
+      true: ''
+    },
+    loading: {
+      false: '',
+      true: 'opacity-70'
+    },
+    border: {
+      false: 'border-0',
+      true: 'border'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    colorScheme: 'default',
+    size: 'md',
+    clickable: false,
+    loading: false,
+    border: true
+  }
+});
+/**
+ * React Native ValueCard - card container with theme, color schemes, sizes,
+ * clickability, loading state, and optional border.
+ */
+const ValueCard = _a => {
+  var {
+      theme = 'light',
+      colorScheme = 'default',
+      size = 'md',
+      clickable = false,
+      loading = false,
+      border = true,
+      className = '',
+      style,
+      children,
+      onPress
+    } = _a,
+    props = __rest(_a, ["theme", "colorScheme", "size", "clickable", "loading", "border", "className", "style", "children", "onPress"]);
+  const isClickable = Boolean(onPress !== null && onPress !== void 0 ? onPress : clickable);
+  const isDisabled = loading;
+  const classes = valueCardStyles({
+    theme,
+    colorScheme,
+    size,
+    clickable: isClickable,
+    loading,
+    border
+  });
+  const combinedClasses = className ? `${classes} ${className}` : classes;
+  const containerStyle = [cn(combinedClasses), style].filter(Boolean);
+  const content = loading ? jsx(ActivityIndicator, {
+    testID: "value-card-loading",
+    size: "small",
+    color: colorScheme === 'green' ? '#22c55e' : colorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'
+  }) : children;
+  if (isClickable && !isDisabled) {
+    return jsx(Pressable, Object.assign({
+      style: ({
+        pressed
+      }) => [...containerStyle, pressed && {
+        opacity: 0.9
+      }],
+      onPress: onPress,
+      disabled: isDisabled
+    }, props, {
+      children: content
+    }));
+  }
+  return jsx(View, Object.assign({
+    style: containerStyle
+  }, props, {
+    children: content
+  }));
+};
+
 /**
  * Dash Logo component for React Native with customizable size and color
  * Original aspect ratio: 30:25 (1.2:1)
@@ -8295,5 +9515,78 @@ const DashLogo = ({
   });
 };
 
-export { ArrowIcon, Button, CheckIcon, ChevronIcon, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, InfoCircleIcon, Input, PlusIcon, SearchIcon, SuccessIcon, Tabs, Text, cn, tw };
+/**
+ * Hook for debouncing values with extended functionality
+ * React Native compatible version
+ *
+ * @param value - Value to debounce
+ * @param options - Configuration options
+ * @returns Object with debounced value and control methods
+ */
+const useDebounce = (value, options) => {
+  // Backward compatibility support - if number is passed, it's delay
+  const config = typeof options === 'number' ? {
+    delay: options
+  } : options;
+  const {
+    delay,
+    callback,
+    immediate = false
+  } = config;
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [isPending, setIsPending] = useState(false);
+  const timeoutRef = useRef(null);
+  const isFirstRun = useRef(true);
+  const cancel = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+      setIsPending(false);
+    }
+  }, []);
+  const flush = useCallback(() => {
+    cancel();
+    setDebouncedValue(value);
+    callback === null || callback === void 0 ? void 0 : callback(value);
+    setIsPending(false);
+  }, [value, callback, cancel]);
+  useEffect(() => {
+    // If immediate === true and this is first run, set value immediately
+    if (immediate && isFirstRun.current) {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      isFirstRun.current = false;
+      return;
+    }
+    isFirstRun.current = false;
+    setIsPending(true);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+      callback === null || callback === void 0 ? void 0 : callback(value);
+      setIsPending(false);
+      timeoutRef.current = null;
+    }, delay);
+    timeoutRef.current = handler;
+    return () => {
+      clearTimeout(handler);
+      setIsPending(false);
+    };
+  }, [value, delay, callback, immediate]);
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+  return {
+    debouncedValue,
+    flush,
+    cancel,
+    isPending
+  };
+};
+
+export { ArrowIcon, Avatar, Badge, BigNumber, Button, CheckIcon, ChevronIcon, CopyButton, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, Identifier, InfoCircleIcon, Input, NotActive, PlusIcon, SearchIcon, SuccessIcon, Tabs, Text, ValueCard, cn, tw, useDebounce };
 //# sourceMappingURL=index.esm.js.map
