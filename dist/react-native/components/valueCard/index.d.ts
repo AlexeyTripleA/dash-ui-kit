@@ -30,7 +30,7 @@ export interface ValueCardProps extends Omit<PressableProps, 'style'>, Omit<Valu
     border?: boolean;
     /** Additional Tailwind classes */
     className?: string;
-    /** Additional style object */
+    /** Custom container style (overrides Tailwind classes) */
     style?: ViewStyle;
     /** Card content */
     children: React.ReactNode;

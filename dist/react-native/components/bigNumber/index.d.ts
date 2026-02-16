@@ -1,4 +1,5 @@
 import React from 'react';
+import { ViewStyle, TextStyle } from 'react-native';
 export type BigNumberVariant = 'space' | 'comma';
 export interface BigNumberProps {
     /** The numeric value (or string) to format. */
@@ -9,6 +10,10 @@ export interface BigNumberProps {
     className?: string;
     /** Horizontal spacing (in pixels) around the decimal point. Negative values reduce spacing. @default -2 */
     decimalPointSpacing?: number;
+    /** Custom container style (overrides Tailwind classes) */
+    style?: ViewStyle;
+    /** Custom text style (overrides Tailwind text classes) */
+    textStyle?: TextStyle;
 }
 /**
  * Splits a numeric string into groups of three characters for display.

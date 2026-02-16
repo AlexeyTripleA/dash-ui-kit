@@ -135,14 +135,16 @@ export interface TabsProps {
   triggerClassName?: string
   /** Additional CSS classes for tab content */
   contentClassName?: string
-  /** Additional style object for the root container */
+  /** Custom container style (overrides Tailwind classes) */
   style?: ViewStyle
-  /** Additional style object for the tabs list */
+  /** Custom tabs list style (overrides Tailwind classes) */
   listStyle?: ViewStyle
-  /** Additional style object for tab triggers */
+  /** Custom tab trigger style (overrides Tailwind classes) */
   triggerStyle?: ViewStyle
-  /** Additional style object for tab content */
+  /** Custom tab content style (overrides Tailwind classes) */
   contentStyle?: ViewStyle
+  /** Custom tab text style (overrides Tailwind text classes) */
+  textStyle?: TextStyle
 }
 
 /**
@@ -164,6 +166,7 @@ export const Tabs: React.FC<TabsProps> = ({
   listStyle,
   triggerStyle,
   contentStyle,
+  textStyle,
 }) => {
   const [internalValue, setInternalValue] = useState(
     defaultValue || items[0]?.value || ''
@@ -243,12 +246,14 @@ export const Tabs: React.FC<TabsProps> = ({
               textColor = 'rgba(156, 163, 175, 1)' // dark inactive
             }
 
-            const textStyle: TextStyle = {
+            const baseTextStyle: TextStyle = {
               fontSize,
               lineHeight,
               color: textColor,
               fontWeight: isActive ? '500' : '300',
             }
+
+            const finalTextStyle = [baseTextStyle, textStyle].filter(Boolean)
 
             return (
               <TouchableOpacity
@@ -258,7 +263,7 @@ export const Tabs: React.FC<TabsProps> = ({
                 activeOpacity={0.8}
                 style={triggerStyleCombined}
               >
-                <Text style={textStyle}>{item.label}</Text>
+                <Text style={finalTextStyle}>{item.label}</Text>
                 {/* Active indicator */}
                 {isActive && (
                   <View

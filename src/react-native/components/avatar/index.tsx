@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react'
-import { View, ViewProps } from 'react-native'
+import { View, ViewProps, ViewStyle } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 import { minidenticon } from 'minidenticons'
+import { cn } from '../../utils/tw'
 
-export interface AvatarProps extends ViewProps {
+export interface AvatarProps extends Omit<ViewProps, 'style'> {
   /** Username to generate identicon for */
   username: string
   /** Additional CSS class name (for NativeWind) */
@@ -16,6 +17,8 @@ export interface AvatarProps extends ViewProps {
   width?: number
   /** Height of the avatar (default: 40) */
   height?: number
+  /** Custom container style (overrides Tailwind classes) */
+  style?: ViewStyle
 }
 
 /**
@@ -41,9 +44,10 @@ export const Avatar: React.FC<AvatarProps> = ({
   )
 
   const containerClasses = `relative ${className}`.trim()
+  const containerStyle = [cn(containerClasses), style].filter(Boolean)
 
   return (
-    <View className={containerClasses} style={style} {...props}>
+    <View style={containerStyle} {...props}>
       <SvgXml 
         xml={svgString} 
         width={width} 

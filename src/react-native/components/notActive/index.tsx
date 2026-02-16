@@ -1,12 +1,14 @@
 import React from 'react'
-import { Text, TextProps } from 'react-native'
+import { Text, TextProps, TextStyle } from 'react-native'
 import { cn } from '../../utils/tw'
 
-export interface NotActiveProps extends TextProps {
+export interface NotActiveProps extends Omit<TextProps, 'style'> {
   children?: React.ReactNode
   className?: string
   /** Light or dark theme */
   theme?: 'light' | 'dark'
+  /** Custom text style (overrides Tailwind classes) */
+  style?: TextStyle
 }
 
 /**

@@ -329,7 +329,7 @@ function requireConfigurePlugins () {
 	return configurePlugins;
 }
 
-var colors = {};
+var colors$1 = {};
 
 var log = {};
 
@@ -420,7 +420,7 @@ function requireLog () {
 var hasRequiredColors;
 
 function requireColors () {
-	if (hasRequiredColors) return colors;
+	if (hasRequiredColors) return colors$1;
 	hasRequiredColors = 1;
 	(function (exports) {
 		Object.defineProperty(exports, "__esModule", {
@@ -777,8 +777,8 @@ function requireColors () {
 		        return this.slate;
 		    }
 		}; 
-	} (colors));
-	return colors;
+	} (colors$1));
+	return colors$1;
 }
 
 var defaults = {};
@@ -5308,7 +5308,7 @@ function calculateLineHeight(lineHeight, style) {
     return lineHeight;
 }
 
-function spacing(type, direction, value, context, config) {
+function spacing$1(type, direction, value, context, config) {
     let numericValue = ``;
     if (isArbitraryValue(value)) {
         numericValue = value.slice(1, -1);
@@ -5504,7 +5504,7 @@ function colorOpacity(type, value) {
 }
 function addOpacity(color, opacity) {
     if (color.startsWith(`#`)) {
-        color = hexToRgba(color);
+        color = hexToRgba$1(color);
     }
     else if (color.startsWith(`rgb(`) || color.startsWith(`hsl(`)) {
         color = color.replace(/^rgb\(/, `rgba(`).replace(/^hsl\(/, `hsla(`);
@@ -5537,7 +5537,7 @@ const STYLE_PROPS = {
     outline: { opacity: `__opacity_decoration`, color: `outlineColor` },
     tint: { opacity: `__opacity_tint`, color: `tintColor` },
 };
-function hexToRgba(hex) {
+function hexToRgba$1(hex) {
     var _a, _b, _c;
     const orig = hex;
     hex = hex.replace(MATCH_SHORT_HEX, (_, r, g, b) => r + r + g + g + b + b);
@@ -5582,7 +5582,7 @@ function border(value, theme) {
     const config = theme === null || theme === void 0 ? void 0 : theme.borderWidth;
     const key = rest.replace(/^-/, ``);
     if (config && (config[key] !== undefined || key.match(/^(-?(\d)+)?$/))) {
-        return borderWidth(key, direction, config);
+        return borderWidth$1(key, direction, config);
     }
     rest = rest.replace(/^-/, ``);
     if ([`dashed`, `solid`, `dotted`].includes(rest)) {
@@ -5619,7 +5619,7 @@ function border(value, theme) {
     }
     return arbitraryWidth;
 }
-function borderWidth(value, direction, config) {
+function borderWidth$1(value, direction, config) {
     if (!config) {
         return null;
     }
@@ -5632,7 +5632,7 @@ function borderWidth(value, direction, config) {
     const prop = `border${direction === `All` ? `` : direction}Width`;
     return getCompleteStyle(prop, configValue);
 }
-function borderRadius(value, config) {
+function borderRadius$1(value, config) {
     if (!config) {
         return null;
     }
@@ -5887,7 +5887,7 @@ function relativeLetterSpacing(ems) {
     };
 }
 
-function opacity(value, config) {
+function opacity$1(value, config) {
     const configValue = config === null || config === void 0 ? void 0 : config[value];
     if (configValue) {
         const parsedConfig = parseNumericValue(String(configValue));
@@ -6354,7 +6354,7 @@ class UtilityParser {
                     const prop = this.char === `m` ? `margin` : `padding`;
                     this.advance(((_b = (_a = match[0]) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) + 1);
                     const spacingDirection = getDirection(match[1]);
-                    const style = spacing(prop, spacingDirection, this.rest, this.context, (_c = this.config.theme) === null || _c === void 0 ? void 0 : _c[prop]);
+                    const style = spacing$1(prop, spacingDirection, this.rest, this.context, (_c = this.config.theme) === null || _c === void 0 ? void 0 : _c[prop]);
                     if (style)
                         return style;
                 }
@@ -6447,7 +6447,7 @@ class UtilityParser {
             }
         }
         if (this.consumePeeked(`rounded`)) {
-            style = borderRadius(this.rest, theme === null || theme === void 0 ? void 0 : theme.borderRadius);
+            style = borderRadius$1(this.rest, theme === null || theme === void 0 ? void 0 : theme.borderRadius);
             if (style)
                 return style;
         }
@@ -6544,7 +6544,7 @@ class UtilityParser {
             }
         }
         if (this.consumePeeked(`opacity-`)) {
-            style = opacity(this.rest, theme === null || theme === void 0 ? void 0 : theme.opacity);
+            style = opacity$1(this.rest, theme === null || theme === void 0 ? void 0 : theme.opacity);
             if (style)
                 return style;
         }
@@ -7546,10 +7546,11 @@ const Button = _a => {
       loading = false,
       className = '',
       style,
+      textStyle,
       children,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["variant", "colorScheme", "size", "rounded", "disabled", "loading", "className", "style", "children", "onPress"]);
+    props = tslib.__rest(_a, ["variant", "colorScheme", "size", "rounded", "disabled", "loading", "className", "style", "textStyle", "children", "onPress"]);
   const isDisabled = disabled || loading;
   const buttonClasses = buttonStyles({
     variant,
@@ -7565,7 +7566,7 @@ const Button = _a => {
   });
   // Convert Tailwind classes to React Native style objects
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
-  const textStyle = cn(textClasses);
+  const textStyleMerged = [cn(textClasses), textStyle].filter(Boolean);
   return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
     style: ({
       pressed
@@ -7579,7 +7580,7 @@ const Button = _a => {
       size: "small",
       color: variant === 'solid' && colorScheme === 'brand' ? '#fff' : '#3B82F6'
     }) : typeof children === 'string' ? jsxRuntime.jsx(reactNative.Text, {
-      style: textStyle,
+      style: textStyleMerged,
       children: children
     }) : children
   }));
@@ -8198,7 +8199,8 @@ const Tabs = ({
   style,
   listStyle,
   triggerStyle,
-  contentStyle
+  contentStyle,
+  textStyle
 }) => {
   var _a;
   const [internalValue, setInternalValue] = react.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
@@ -8266,19 +8268,20 @@ const Tabs = ({
           } else if (theme === 'dark' && !isActive) {
             textColor = 'rgba(156, 163, 175, 1)'; // dark inactive
           }
-          const textStyle = {
+          const baseTextStyle = {
             fontSize,
             lineHeight,
             color: textColor,
             fontWeight: isActive ? '500' : '300'
           };
+          const finalTextStyle = [baseTextStyle, textStyle].filter(Boolean);
           return jsxRuntime.jsxs(reactNative.TouchableOpacity, {
             disabled: item.disabled,
             onPress: () => !item.disabled && handleValueChange(item.value),
             activeOpacity: 0.8,
             style: triggerStyleCombined,
             children: [jsxRuntime.jsx(reactNative.Text, {
-              style: textStyle,
+              style: finalTextStyle,
               children: item.label
             }), isActive && jsxRuntime.jsx(reactNative.View, {
               style: {
@@ -8396,9 +8399,9 @@ const Avatar = _a => {
   // Generate SVG string directly (no data URI needed for SvgXml)
   const svgString = react.useMemo(() => minidenticon(username, saturation, lightness), [username, saturation, lightness]);
   const containerClasses = `relative ${className}`.trim();
+  const containerStyle = [cn(containerClasses), style].filter(Boolean);
   return jsxRuntime.jsx(reactNative.View, Object.assign({
-    className: containerClasses,
-    style: style
+    style: containerStyle
   }, props, {
     children: jsxRuntime.jsx(Svg.SvgXml, {
       xml: svgString,
@@ -8642,9 +8645,10 @@ const Badge = _a => {
       borderRadius,
       className = '',
       style,
+      textStyle,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "style", "onPress"]);
+    props = tslib.__rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "style", "textStyle", "onPress"]);
   // Generate the color_variant key for CVA using explicit mapping
   const normalizedColor = COLOR_KEY_MAP[color] || color;
   const colorVariantKey = `color_variant_${normalizedColor}_${variant}`;
@@ -8664,10 +8668,10 @@ const Badge = _a => {
   // Convert Tailwind classes to React Native style objects
   const combinedClasses = className ? `${badgeClasses} ${className}` : badgeClasses;
   const badgeStyleArray = [cn(combinedClasses), style].filter(Boolean);
-  const textStyle = cn(textClasses);
+  const textStyleMerged = [cn(textClasses), textStyle].filter(Boolean);
   // Render content (string children wrapped in Text, custom content as-is)
   const content = typeof children === 'string' ? jsxRuntime.jsx(reactNative.Text, {
-    style: textStyle,
+    style: textStyleMerged,
     children: children
   }) : children;
   // If onPress is provided, wrap in Pressable
@@ -8712,7 +8716,9 @@ const BigNumber = ({
   children,
   variant = 'space',
   className = '',
-  decimalPointSpacing = -2
+  decimalPointSpacing = -2,
+  style,
+  textStyle
 }) => {
   const decimalPointStyle = {
     marginLeft: decimalPointSpacing,
@@ -8723,8 +8729,8 @@ const BigNumber = ({
   // Combine base styles with optional className
   const containerClasses = `flex-row flex-wrap gap-1 ${className || ''}`;
   const textClasses = 'dark:text-gray-100';
-  const containerStyle = cn(containerClasses);
-  const textStyle = cn(textClasses);
+  const containerStyle = [cn(containerClasses), style].filter(Boolean);
+  const textStyleMerged = [cn(textClasses), textStyle].filter(Boolean);
   if (variant === 'space') {
     // Split into integer and decimal parts
     const [intPart, fracPart] = str.split('.');
@@ -8733,14 +8739,14 @@ const BigNumber = ({
     return jsxRuntime.jsxs(reactNative.View, {
       style: containerStyle,
       children: [groups.map((grp, i) => jsxRuntime.jsx(reactNative.Text, {
-        style: textStyle,
+        style: textStyleMerged,
         children: grp
       }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
         children: [jsxRuntime.jsx(reactNative.Text, {
-          style: [textStyle, decimalPointStyle],
+          style: [...textStyleMerged, decimalPointStyle],
           children: "."
         }), jsxRuntime.jsx(reactNative.Text, {
-          style: textStyle,
+          style: textStyleMerged,
           children: fracPart
         })]
       })]
@@ -8754,18 +8760,18 @@ const BigNumber = ({
       children: [groups.map((grp, i) => jsxRuntime.jsxs(reactNative.View, {
         style: cn('flex-row'),
         children: [jsxRuntime.jsx(reactNative.Text, {
-          style: textStyle,
+          style: textStyleMerged,
           children: grp
         }), i < groups.length - 1 && jsxRuntime.jsx(reactNative.Text, {
-          style: textStyle,
+          style: textStyleMerged,
           children: ","
         })]
       }, i)), fracPart != null && jsxRuntime.jsxs(jsxRuntime.Fragment, {
         children: [jsxRuntime.jsx(reactNative.Text, {
-          style: [textStyle, decimalPointStyle],
+          style: [...textStyleMerged, decimalPointStyle],
           children: "."
         }), jsxRuntime.jsx(reactNative.Text, {
-          style: textStyle,
+          style: textStyleMerged,
           children: fracPart
         })]
       })]
@@ -8867,6 +8873,7 @@ const CopyButton = ({
   onCopy,
   className = '',
   style,
+  textStyle,
   accessibilityLabel = 'Copy to clipboard'
 }) => {
   const [copied, setCopied] = react.useState(false);
@@ -8884,12 +8891,14 @@ const CopyButton = ({
     };
   }, []);
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
-  const buttonStyle = cn(buttonClasses);
+  const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
+  const copiedTextClasses = 'text-xs text-dash-brand font-medium';
+  const copiedTextStyle = [cn(copiedTextClasses), textStyle].filter(Boolean);
   return jsxRuntime.jsx(reactNative.Pressable, {
     onPress: handlePress,
     style: ({
       pressed
-    }) => [buttonStyle, style, pressed && {
+    }) => [buttonStyle, pressed && {
       opacity: 0.7
     }].filter(Boolean),
     accessibilityLabel: accessibilityLabel,
@@ -8897,7 +8906,7 @@ const CopyButton = ({
     children: copied ? jsxRuntime.jsx(reactNative.View, {
       style: cn('items-center justify-center min-w-4 min-h-4'),
       children: jsxRuntime.jsx(reactNative.Text, {
-        style: cn('text-xs text-dash-brand font-medium'),
+        style: copiedTextStyle,
         children: "Copied!"
       })
     }) : jsxRuntime.jsx(CopyIcon, {
@@ -9006,7 +9015,8 @@ const highlightModes = {
 const HighlightedID = ({
   children,
   mode,
-  theme = 'light'
+  theme = 'light',
+  textStyle
 }) => {
   if (children == null || children === '') return jsxRuntime.jsx(NotActive, {
     theme: theme
@@ -9016,31 +9026,35 @@ const HighlightedID = ({
   const count = 5;
   const minLength = count * 2 + 1; // 11
   if (text.length < minLength) {
+    const symbolStyle = [cn(symbol({
+      dim: cfg.middle
+    })), textStyle].filter(Boolean);
     return jsxRuntime.jsx(reactNative.Text, {
-      style: cn(symbol({
-        dim: cfg.middle
-      })),
+      style: symbolStyle,
       children: text
     });
   }
   const first = text.slice(0, count);
   const middle = text.slice(count, text.length - count);
   const last = text.slice(-5);
+  const firstStyle = [cn(symbol({
+    dim: !cfg.first
+  })), textStyle].filter(Boolean);
+  const middleStyle = [cn(symbol({
+    dim: !cfg.middle
+  })), textStyle].filter(Boolean);
+  const lastStyle = [cn(symbol({
+    dim: !cfg.last
+  })), textStyle].filter(Boolean);
   return jsxRuntime.jsxs(reactNative.Text, {
     children: [jsxRuntime.jsx(reactNative.Text, {
-      style: cn(symbol({
-        dim: !cfg.first
-      })),
+      style: firstStyle,
       children: first
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: cn(symbol({
-        dim: !cfg.middle
-      })),
+      style: middleStyle,
       children: middle
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: cn(symbol({
-        dim: !cfg.last
-      })),
+      style: lastStyle,
       children: last
     })]
   });
@@ -9052,26 +9066,32 @@ const HighlightedID = ({
 const MiddleEllipsisText = ({
   children,
   edgeChars,
-  theme = 'light'
+  theme = 'light',
+  textStyle
 }) => {
   if (children == null || children === '') return jsxRuntime.jsx(NotActive, {
     theme: theme
   });
   const text = String(children);
   if (text.length <= edgeChars * 2) {
+    const style = textStyle ? [textStyle] : undefined;
     return jsxRuntime.jsx(reactNative.Text, {
+      style: style,
       children: text
     });
   }
   const first = text.slice(0, edgeChars);
   const last = text.slice(-edgeChars);
+  const ellipsisStyle = [cn('opacity-50'), textStyle].filter(Boolean);
   return jsxRuntime.jsxs(reactNative.Text, {
     children: [jsxRuntime.jsx(reactNative.Text, {
+      style: textStyle,
       children: first
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: cn('opacity-50'),
+      style: ellipsisStyle,
       children: "\u2026"
     }), jsxRuntime.jsx(reactNative.Text, {
+      style: textStyle,
       children: last
     })]
   });
@@ -9107,9 +9127,10 @@ const Identifier = _a => {
       middleEllipsis = false,
       edgeChars = 4,
       theme = 'light',
-      style
+      style,
+      textStyle
     } = _a,
-    props = tslib.__rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style"]);
+    props = tslib.__rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style", "textStyle"]);
   const [containerWidth, setContainerWidth] = react.useState(0);
   // Handle container layout changes
   const handleLayout = react.useCallback(event => {
@@ -9128,6 +9149,8 @@ const Identifier = _a => {
   const useMaxLines = maxLines > 0 && !middleEllipsis;
   // Symbol container classes
   const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden' : 'flex-1';
+  // Merge text styles
+  const finalTextStyle = [cn('leading-4'), textStyle].filter(Boolean);
   return jsxRuntime.jsxs(reactNative.View, Object.assign({
     style: [cn(rootClasses), style].filter(Boolean),
     onLayout: handleLayout
@@ -9142,15 +9165,17 @@ const Identifier = _a => {
       children: children != null && children !== '' && middleEllipsis ? jsxRuntime.jsx(MiddleEllipsisText, {
         edgeChars: edgeChars,
         theme: theme,
+        textStyle: textStyle,
         children: children
       }) : children != null && children !== '' && highlight != null ? jsxRuntime.jsx(HighlightedID, {
         mode: highlight,
         theme: theme,
+        textStyle: textStyle,
         children: children
       }) : children != null && children !== '' ? jsxRuntime.jsx(reactNative.Text, {
         numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
         ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
-        style: cn('leading-4'),
+        style: finalTextStyle,
         children: children
       }) : jsxRuntime.jsx(NotActive, {
         theme: theme
@@ -9399,6 +9424,387 @@ const useDebounce = (value, options) => {
   };
 };
 
+/**
+ * Design tokens for React Native
+ *
+ * These tokens are derived from the web theme (src/styles/theme.pcss)
+ * and optimized for React Native StyleSheet usage.
+ *
+ * @example
+ * ```typescript
+ * import { colors, spacing, typography, borderRadius, shadows } from 'dash-ui-kit/react-native';
+ * import { StyleSheet, Platform } from 'react-native';
+ *
+ * const styles = StyleSheet.create({
+ *   container: {
+ *     backgroundColor: colors.brand,
+ *     padding: spacing[4],
+ *     borderRadius: borderRadius.md,
+ *     ...Platform.select({
+ *       ios: shadows.md.ios,
+ *       android: shadows.md.android,
+ *     }),
+ *   },
+ *   title: {
+ *     fontSize: typography.fontSize.xl,
+ *     fontWeight: typography.fontWeight.semibold,
+ *     lineHeight: typography.lineHeight.xl,
+ *   },
+ * });
+ * ```
+ */
+/**
+ * Color palette
+ * Derived from theme.pcss color variables
+ */
+const colors = {
+  // Brand colors
+  brand: '#4C7EFF',
+  brandDim: '#96A7FF',
+  brandDark: '#4D5895',
+  brandDarkness: '#13172A',
+  // Accent colors
+  mint: '#60F6D2',
+  mintHover: '#4DD4B1',
+  // Yellow variants
+  yellowLight: '#fef3c7',
+  yellow: '#fde68a',
+  // Primary colors
+  primaryDarkBlue: '#0C1C33',
+  primaryDieSubdued: 'rgba(12, 28, 51, 0.03)',
+  // State colors - Green
+  green: '#40BF40',
+  green75: 'rgba(64, 191, 64, 0.75)',
+  green15: 'rgba(64, 191, 64, 0.15)',
+  green5: 'rgba(64, 191, 64, 0.05)',
+  // State colors - Red
+  red: '#CD2E00',
+  red75: 'rgba(205, 46, 0, 0.75)',
+  red15: 'rgba(205, 46, 0, 0.15)',
+  red5: 'rgba(205, 46, 0, 0.05)',
+  // State colors - Orange
+  orange: '#F98F12',
+  orange75: 'rgba(249, 143, 18, 0.75)',
+  orange15: 'rgba(249, 143, 18, 0.15)',
+  orange5: 'rgba(249, 143, 18, 0.05)',
+  // Common colors
+  white: '#FFFFFF',
+  black: '#000000',
+  transparent: 'transparent'
+};
+/**
+ * Spacing scale
+ * Based on 4px base unit (Tailwind-compatible)
+ */
+const spacing = {
+  0: 0,
+  1: 4,
+  2: 8,
+  3: 12,
+  4: 16,
+  5: 20,
+  6: 24,
+  7: 28,
+  8: 32,
+  9: 36,
+  10: 40,
+  11: 44,
+  // 2.75rem from theme
+  12: 48,
+  14: 56,
+  16: 64,
+  18: 72,
+  20: 80,
+  24: 96,
+  28: 112,
+  32: 128,
+  36: 144,
+  40: 160,
+  44: 176,
+  48: 192,
+  52: 208,
+  56: 224,
+  60: 240,
+  64: 256
+};
+/**
+ * Typography scale
+ * Font sizes, weights, and line heights
+ */
+const typography = {
+  /**
+   * Font size scale
+   */
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    base: 16,
+    lg: 18,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 30,
+    '4xl': 36,
+    '5xl': 48,
+    '6xl': 60,
+    '7xl': 72,
+    '8xl': 96,
+    '9xl': 128
+  },
+  /**
+   * Font weight scale
+   * Values are strings for React Native compatibility
+   */
+  fontWeight: {
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+    extrabold: '800'
+  },
+  /**
+   * Line height scale (in pixels)
+   * Calculated based on common typography ratios
+   */
+  lineHeight: {
+    xs: 16,
+    // 1.33x
+    sm: 20,
+    // 1.43x
+    base: 24,
+    // 1.5x
+    lg: 28,
+    // 1.56x
+    xl: 28,
+    // 1.4x
+    '2xl': 32,
+    // 1.33x
+    '3xl': 36,
+    // 1.2x
+    '4xl': 40,
+    // 1.11x
+    '5xl': 56,
+    // 1.17x
+    '6xl': 72,
+    // 1.2x
+    '7xl': 84,
+    // 1.17x
+    '8xl': 112,
+    // 1.17x
+    '9xl': 144 // 1.13x
+  },
+  /**
+   * Letter spacing (tracking)
+   */
+  letterSpacing: {
+    tighter: -0.8,
+    tight: -0.4,
+    normal: 0,
+    wide: 0.4,
+    wider: 0.8,
+    widest: 1.6
+  }
+};
+/**
+ * Border radius scale
+ */
+const borderRadius = {
+  none: 0,
+  xs: 4,
+  sm: 10,
+  md: 12,
+  lg: 14,
+  xl: 16,
+  '2xl': 20,
+  '3xl': 24,
+  full: 9999
+};
+/**
+ * Shadow presets
+ * Platform-specific implementations for iOS and Android
+ *
+ * @example
+ * ```typescript
+ * import { Platform } from 'react-native';
+ *
+ * const shadowStyle = Platform.select({
+ *   ios: shadows.md.ios,
+ *   android: shadows.md.android,
+ * });
+ * ```
+ */
+const shadows = {
+  /**
+   * Small shadow - subtle elevation
+   */
+  sm: {
+    ios: {
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 1
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 2
+    },
+    android: {
+      elevation: 2
+    }
+  },
+  /**
+   * Medium shadow - standard elevation
+   */
+  md: {
+    ios: {
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 4
+    },
+    android: {
+      elevation: 4
+    }
+  },
+  /**
+   * Large shadow - prominent elevation
+   */
+  lg: {
+    ios: {
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 4
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 8
+    },
+    android: {
+      elevation: 8
+    }
+  },
+  /**
+   * Extra large shadow - maximum elevation
+   */
+  xl: {
+    ios: {
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 8
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 16
+    },
+    android: {
+      elevation: 12
+    }
+  }
+};
+/**
+ * Border width scale
+ */
+const borderWidth = {
+  0: 0,
+  1: 1,
+  2: 2,
+  4: 4,
+  8: 8
+};
+/**
+ * Opacity scale
+ */
+const opacity = {
+  0: 0,
+  5: 0.05,
+  10: 0.1,
+  15: 0.15,
+  20: 0.2,
+  25: 0.25,
+  30: 0.3,
+  40: 0.4,
+  50: 0.5,
+  60: 0.6,
+  70: 0.7,
+  75: 0.75,
+  80: 0.8,
+  90: 0.9,
+  95: 0.95,
+  100: 1
+};
+/**
+ * Z-index scale
+ */
+const zIndex = {
+  0: 0,
+  10: 10,
+  20: 20,
+  30: 30,
+  40: 40,
+  50: 50,
+  auto: 'auto'
+};
+
+/**
+ * Utility functions for React Native styles
+ */
+/**
+ * Creates an rgba color string from hex color and opacity
+ *
+ * @param hexColor - Hex color string (e.g., '#4C7EFF')
+ * @param alpha - Opacity value between 0 and 1
+ * @returns rgba color string
+ *
+ * @example
+ * ```typescript
+ * rgba('#4C7EFF', 0.5) // 'rgba(76, 126, 255, 0.5)'
+ * rgba('#40BF40', 0.15) // 'rgba(64, 191, 64, 0.15)'
+ * ```
+ */
+function rgba(hexColor, alpha) {
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+/**
+ * Converts hex color to rgba
+ * Alias for rgba() with more explicit naming
+ *
+ * @param hexColor - Hex color string
+ * @param alpha - Opacity value between 0 and 1
+ * @returns rgba color string
+ */
+function hexToRgba(hexColor, alpha) {
+  return rgba(hexColor, alpha);
+}
+/**
+ * Gets platform-specific shadow styles
+ *
+ * @param size - Shadow size: 'sm' | 'md' | 'lg' | 'xl'
+ * @returns Platform-specific shadow styles
+ *
+ * @example
+ * ```typescript
+ * const styles = StyleSheet.create({
+ *   card: {
+ *     ...getShadow('md'),
+ *   },
+ * });
+ * ```
+ */
+function getShadow(size) {
+  if (reactNative.Platform.OS === 'ios') {
+    return shadows[size].ios;
+  } else if (reactNative.Platform.OS === 'android') {
+    return shadows[size].android;
+  }
+  // Default to iOS shadow style for other platforms
+  return shadows[size].ios;
+}
+
 exports.ArrowIcon = ArrowIcon;
 exports.Avatar = Avatar;
 exports.Badge = Badge;
@@ -9427,7 +9833,18 @@ exports.Tabs = Tabs;
 exports.Text = Text;
 exports.TopRightArrowIcon = TopRightArrowIcon;
 exports.ValueCard = ValueCard;
+exports.borderRadius = borderRadius;
+exports.borderWidth = borderWidth;
 exports.cn = cn;
+exports.colors = colors;
+exports.getShadow = getShadow;
+exports.hexToRgba = hexToRgba;
+exports.opacity = opacity;
+exports.rgba = rgba;
+exports.shadows = shadows;
+exports.spacing = spacing;
 exports.tw = tw;
+exports.typography = typography;
 exports.useDebounce = useDebounce;
+exports.zIndex = zIndex;
 //# sourceMappingURL=index.cjs.js.map

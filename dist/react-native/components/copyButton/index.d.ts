@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 export interface CopyButtonProps {
     /** Text to copy into clipboard */
     text: string;
@@ -7,8 +7,10 @@ export interface CopyButtonProps {
     onCopy?: (success: boolean) => void;
     /** Additional Tailwind classes for styling */
     className?: string;
-    /** Additional style object */
+    /** Custom container style (overrides Tailwind classes) */
     style?: ViewStyle;
+    /** Custom text style for "Copied!" text (overrides Tailwind text classes) */
+    textStyle?: TextStyle;
     /** Accessible label for the button */
     accessibilityLabel?: string;
 }

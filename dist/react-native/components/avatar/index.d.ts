@@ -1,6 +1,6 @@
 import React from 'react';
-import { ViewProps } from 'react-native';
-export interface AvatarProps extends ViewProps {
+import { ViewProps, ViewStyle } from 'react-native';
+export interface AvatarProps extends Omit<ViewProps, 'style'> {
     /** Username to generate identicon for */
     username: string;
     /** Additional CSS class name (for NativeWind) */
@@ -13,6 +13,8 @@ export interface AvatarProps extends ViewProps {
     width?: number;
     /** Height of the avatar (default: 40) */
     height?: number;
+    /** Custom container style (overrides Tailwind classes) */
+    style?: ViewStyle;
 }
 /**
  * Avatar component that creates unique identicons from usernames

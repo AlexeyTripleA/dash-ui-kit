@@ -1,5 +1,5 @@
 import React from 'react';
-import { PressableProps, ViewStyle } from 'react-native';
+import { PressableProps, ViewStyle, TextStyle } from 'react-native';
 import { VariantProps } from 'class-variance-authority';
 declare const buttonStyles: (props?: ({
     variant?: "solid" | "outline" | "ghost" | null | undefined;
@@ -24,8 +24,10 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
     loading?: boolean;
     /** Additional Tailwind classes for styling */
     className?: string;
-    /** Additional style object (merged with className styles) */
+    /** Custom container style (overrides Tailwind classes) */
     style?: ViewStyle;
+    /** Custom text style (overrides Tailwind text classes) */
+    textStyle?: TextStyle;
     /** Button content */
     children: React.ReactNode;
 }

@@ -308,8 +308,10 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
   loading?: boolean
   /** Additional Tailwind classes for styling */
   className?: string
-  /** Additional style object (merged with className styles) */
+  /** Custom container style (overrides Tailwind classes) */
   style?: ViewStyle
+  /** Custom text style (overrides Tailwind text classes) */
+  textStyle?: TextStyle
   /** Button content */
   children: React.ReactNode
 }
@@ -327,6 +329,7 @@ export const Button: React.FC<ButtonProps> = ({
   loading = false,
   className = '',
   style,
+  textStyle,
   children,
   onPress,
   ...props
@@ -350,7 +353,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   // Convert Tailwind classes to React Native style objects
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean)
-  const textStyle = cn(textClasses)
+  const textStyleMerged = [cn(textClasses), textStyle].filter(Boolean)
 
   return (
     <Pressable
@@ -368,7 +371,7 @@ export const Button: React.FC<ButtonProps> = ({
           color={variant === 'solid' && colorScheme === 'brand' ? '#fff' : '#3B82F6'}
         />
       ) : typeof children === 'string' ? (
-        <Text style={textStyle}>{children}</Text>
+        <Text style={textStyleMerged}>{children}</Text>
       ) : (
         children
       )}

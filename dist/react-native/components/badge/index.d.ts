@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle, PressableProps } from 'react-native';
+import { ViewStyle, TextStyle, PressableProps } from 'react-native';
 /**
  * Badge component props
  */
@@ -29,9 +29,13 @@ export interface BadgeProps extends Omit<PressableProps, 'style'> {
      */
     className?: string;
     /**
-     * Additional style object (merged with className styles)
+     * Custom container style (overrides Tailwind classes)
      */
     style?: ViewStyle;
+    /**
+     * Custom text style (overrides Tailwind text classes)
+     */
+    textStyle?: TextStyle;
     /**
      * Press handler
      */

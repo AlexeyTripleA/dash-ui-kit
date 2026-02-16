@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { ViewStyle, TextStyle } from 'react-native';
 export interface TabItem {
     /** Unique identifier for the tab */
     value: string;
@@ -31,14 +31,16 @@ export interface TabsProps {
     triggerClassName?: string;
     /** Additional CSS classes for tab content */
     contentClassName?: string;
-    /** Additional style object for the root container */
+    /** Custom container style (overrides Tailwind classes) */
     style?: ViewStyle;
-    /** Additional style object for the tabs list */
+    /** Custom tabs list style (overrides Tailwind classes) */
     listStyle?: ViewStyle;
-    /** Additional style object for tab triggers */
+    /** Custom tab trigger style (overrides Tailwind classes) */
     triggerStyle?: ViewStyle;
-    /** Additional style object for tab content */
+    /** Custom tab content style (overrides Tailwind classes) */
     contentStyle?: ViewStyle;
+    /** Custom tab text style (overrides Tailwind text classes) */
+    textStyle?: TextStyle;
 }
 /**
  * React Native Tabs component with sleek underline style matching Figma design.

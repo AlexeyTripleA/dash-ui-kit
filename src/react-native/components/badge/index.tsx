@@ -38,9 +38,14 @@ export interface BadgeProps extends Omit<PressableProps, 'style'> {
   className?: string
 
   /**
-   * Additional style object (merged with className styles)
+   * Custom container style (overrides Tailwind classes)
    */
   style?: ViewStyle
+
+  /**
+   * Custom text style (overrides Tailwind text classes)
+   */
+  textStyle?: TextStyle
 
   /**
    * Press handler
@@ -296,6 +301,7 @@ export const Badge: React.FC<BadgeProps> = ({
   borderRadius,
   className = '',
   style,
+  textStyle,
   onPress,
   ...props
 }) => {
@@ -322,10 +328,10 @@ export const Badge: React.FC<BadgeProps> = ({
   const combinedClasses = className ? `${badgeClasses} ${className}` : badgeClasses
   const badgeStyleArray: ViewStyle[] = [cn(combinedClasses), style].filter(Boolean) as ViewStyle[]
 
-  const textStyle = cn(textClasses) as TextStyle
+  const textStyleMerged = [cn(textClasses), textStyle].filter(Boolean) as TextStyle[]
 
   // Render content (string children wrapped in Text, custom content as-is)
-  const content = typeof children === 'string' ? <Text style={textStyle}>{children}</Text> : children
+  const content = typeof children === 'string' ? <Text style={textStyleMerged}>{children}</Text> : children
 
   // If onPress is provided, wrap in Pressable
   if (onPress) {

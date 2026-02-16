@@ -10,6 +10,7 @@ export interface DashLogoProps {
     containerPadding?: number;
     containerSize?: number;
     containerClassName?: string;
+    /** Custom container style (overrides Tailwind classes) */
     containerStyle?: ViewStyle;
 }
 /**

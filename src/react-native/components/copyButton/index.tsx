@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, Text, View, ViewStyle } from 'react-native'
+import { Pressable, Text, View, ViewStyle, TextStyle } from 'react-native'
 import { Clipboard } from '../../utils/clipboard'
 import { cn } from '../../utils/tw'
 import { CopyIcon } from '../icons'
@@ -13,8 +13,10 @@ export interface CopyButtonProps {
   onCopy?: (success: boolean) => void
   /** Additional Tailwind classes for styling */
   className?: string
-  /** Additional style object */
+  /** Custom container style (overrides Tailwind classes) */
   style?: ViewStyle
+  /** Custom text style for "Copied!" text (overrides Tailwind text classes) */
+  textStyle?: TextStyle
   /** Accessible label for the button */
   accessibilityLabel?: string
 }
@@ -28,6 +30,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   onCopy,
   className = '',
   style,
+  textStyle,
   accessibilityLabel = 'Copy to clipboard',
 }) => {
   const [copied, setCopied] = useState(false)
@@ -48,20 +51,23 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   }, [])
 
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim()
-  const buttonStyle = cn(buttonClasses)
+  const buttonStyle = [cn(buttonClasses), style].filter(Boolean)
+
+  const copiedTextClasses = 'text-xs text-dash-brand font-medium'
+  const copiedTextStyle = [cn(copiedTextClasses), textStyle].filter(Boolean)
 
   return (
     <Pressable
       onPress={handlePress}
       style={({ pressed }) =>
-        [buttonStyle, style, pressed && { opacity: 0.7 }].filter(Boolean)
+        [buttonStyle, pressed && { opacity: 0.7 }].filter(Boolean)
       }
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
     >
       {copied ? (
         <View style={cn('items-center justify-center min-w-4 min-h-4')}>
-          <Text style={cn('text-xs text-dash-brand font-medium')}>Copied!</Text>
+          <Text style={copiedTextStyle}>Copied!</Text>
         </View>
       ) : (
         <CopyIcon color="#0C1C33" size={16} />

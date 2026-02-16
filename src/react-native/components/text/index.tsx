@@ -63,7 +63,7 @@ type TextVariants = VariantProps<typeof textStyles>
 export interface TextProps extends Omit<RNTextProps, 'style'>, TextVariants {
   /** Additional Tailwind classes for styling */
   className?: string
-  /** Additional style object (merged with className styles) */
+  /** Custom text style (overrides Tailwind classes) */
   style?: TextStyle
   /** Text children */
   children?: React.ReactNode

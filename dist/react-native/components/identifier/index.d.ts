@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewProps } from 'react-native';
+import { ViewProps, ViewStyle, TextStyle } from 'react-native';
 import { VariantProps } from 'class-variance-authority';
 /** CVA for the root container with light/dark theme */
 declare const identifier: (props?: ({
@@ -8,7 +8,7 @@ declare const identifier: (props?: ({
     highlight?: "default" | "highlight" | "dim" | "first" | "last" | "both" | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type IdentifierVariants = VariantProps<typeof identifier>;
-export interface IdentifierProps extends IdentifierVariants, ViewProps {
+export interface IdentifierProps extends IdentifierVariants, Omit<ViewProps, 'style'> {
     children?: string;
     avatar?: boolean;
     copyButton?: boolean;
@@ -18,6 +18,10 @@ export interface IdentifierProps extends IdentifierVariants, ViewProps {
     edgeChars?: number;
     /** Theme to use */
     theme?: 'light' | 'dark';
+    /** Custom container style (overrides Tailwind classes) */
+    style?: ViewStyle;
+    /** Custom text style (overrides Tailwind text classes) */
+    textStyle?: TextStyle;
 }
 /**
  * Identifier component for React Native

@@ -12,7 +12,7 @@ export interface HeadingProps extends Omit<RNTextProps, 'style'>, HeadingVariant
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     /** Additional Tailwind classes for styling */
     className?: string;
-    /** Additional style object (merged with className styles) */
+    /** Custom text style (overrides Tailwind classes) */
     style?: TextStyle;
     /** Text children */
     children: React.ReactNode;

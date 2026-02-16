@@ -27,11 +27,11 @@ export interface InputProps extends Omit<TextInputProps, 'editable'>, Omit<Input
      */
     showPasswordToggle?: boolean;
     /**
-     * Additional style object (merged with className styles)
+     * Custom container style (overrides Tailwind classes)
      */
     style?: ViewStyle;
     /**
-     * Style for the text inside the input
+     * Custom text style for input text (overrides Tailwind text classes)
      */
     textStyle?: TextStyle;
 }
