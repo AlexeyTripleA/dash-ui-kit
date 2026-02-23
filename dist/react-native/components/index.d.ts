@@ -12,3 +12,4 @@ export * from './notActive';
 export * from './valueCard';
 export * from './icons';
 export * from './dashLogo';
+export * from './transactionStatusIcon';
