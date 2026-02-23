@@ -17,7 +17,8 @@ import {
   TopRightArrowIcon,
   QueuedIcon,
   PooledIcon,
-  BroadcastedIcon
+  BroadcastedIcon,
+  AsteriskIcon
 } from './index'
 
 const meta: Meta = {
@@ -112,6 +113,10 @@ export const AllIcons: StoryObj = {
       <View style={styles.iconContainer}>
         <BroadcastedIcon />
         <Text style={styles.iconLabel}>BroadcastedIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <AsteriskIcon />
+        <Text style={styles.iconLabel}>AsteriskIcon</Text>
       </View>
     </View>
   )
@@ -350,6 +355,19 @@ export const Broadcasted: StoryObj = {
   args: {
     size: 18,
     color: '#008DE4'
+  }
+}
+
+// Asterisk Icon
+export const Asterisk: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <AsteriskIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 16,
+    color: '#0C1C33'
   }
 }
 
