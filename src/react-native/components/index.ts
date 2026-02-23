@@ -25,3 +25,6 @@ export * from './icons'
 
 // Logo
 export * from './dashLogo'
+
+// Transaction
+export * from './transactionStatusIcon'

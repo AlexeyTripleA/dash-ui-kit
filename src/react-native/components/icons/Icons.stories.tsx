@@ -14,7 +14,10 @@ import {
   InfoCircleIcon,
   EyeOpenIcon,
   EyeClosedIcon,
-  TopRightArrowIcon
+  TopRightArrowIcon,
+  QueuedIcon,
+  PooledIcon,
+  BroadcastedIcon
 } from './index'
 
 const meta: Meta = {
@@ -97,6 +100,18 @@ export const AllIcons: StoryObj = {
       <View style={styles.iconContainer}>
         <TopRightArrowIcon />
         <Text style={styles.iconLabel}>TopRightArrowIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <QueuedIcon />
+        <Text style={styles.iconLabel}>QueuedIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <PooledIcon />
+        <Text style={styles.iconLabel}>PooledIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <BroadcastedIcon />
+        <Text style={styles.iconLabel}>BroadcastedIcon</Text>
       </View>
     </View>
   )
@@ -297,6 +312,45 @@ export const ColorVariations: StoryObj = {
       </View>
     </View>
   )
+}
+
+// Queued Icon
+export const Queued: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <QueuedIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 18,
+    color: '#F4A358'
+  }
+}
+
+// Pooled Icon
+export const Pooled: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <PooledIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 18,
+    color: '#008DE4'
+  }
+}
+
+// Broadcasted Icon
+export const Broadcasted: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <BroadcastedIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 18,
+    color: '#008DE4'
+  }
 }
 
 // Interactive Icons
