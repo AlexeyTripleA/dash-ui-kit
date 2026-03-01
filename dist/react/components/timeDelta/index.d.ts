@@ -1,5 +1,5 @@
 import React from 'react';
-import { type TimeDeltaFormat } from '../../utils/datetime';
+import { type TimeDeltaFormat } from '../../../shared/utils/datetime';
 export interface TimeDeltaProps {
     /** Start date for delta calculation, defaults to now */
     startDate?: Date | number | string;

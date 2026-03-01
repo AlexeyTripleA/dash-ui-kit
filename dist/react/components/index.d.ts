@@ -23,5 +23,5 @@ export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar';
 export { DashLogo, type DashLogoProps } from './dashLogo';
 export { Dialog, type DialogProps } from './dialog';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
-export type { TimeDeltaFormat } from '../utils/datetime';
+export type { TimeDeltaFormat } from '../../shared/utils/datetime';
 export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, DocumentIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon, CheckmarkIcon, FingerprintIcon, FaceIcon, SignIcon, SignLockIcon, LockIcon, PendingIcon, SearchIcon, AirplaneIcon, ExternalLinkIcon, InfoCircleIcon } from './icons';

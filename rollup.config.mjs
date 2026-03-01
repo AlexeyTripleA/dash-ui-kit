@@ -7,20 +7,27 @@ import postcssImport from 'postcss-import'
 import babel from '@rollup/plugin-babel'
 import glob from 'fast-glob'
 
-const inputFiles = {
-  index: 'src/react/index.ts'  // Только один главный entry point
-}
-const dir = 'dist/react'
-
-const external = [
-  'react',
-  'react-dom',
-  'tslib',
-  'class-variance-authority'
+// React - preserve module structure
+const reactInputFiles = [
+  'src/react/index.ts',
+  ...glob.sync('src/react/components/**/index.@(ts|tsx)'),
+  ...glob.sync('src/react/contexts/**/index.@(ts|tsx)')
 ]
 
-const isExternal = (id) => {
-  return external.some(dep => id === dep || id.startsWith(`${dep}/`))
+// React Native - single bundle for now
+const reactNativeInputFiles = {
+  index: 'src/react-native/index.ts'
+}
+
+// Shared - single bundle
+const sharedInputFiles = {
+  index: 'src/shared/index.ts'
+}
+
+const isExternal = (id, importer) => {
+  if (!importer) return false // entry points are never external
+  if (id.startsWith('.') || id.startsWith('/') || id.startsWith('\0')) return false
+  return true // externalize all npm packages
 }
 
 const sharedPlugins = [
@@ -53,49 +60,121 @@ const sharedPlugins = [
 const banner = `"use client";\n`
 
 export default [
-  // ESM
+  // React ESM (preserve modules)
   {
-    input: inputFiles,
+    input: reactInputFiles,
     external: isExternal,
     output: {
-      dir: dir,
+      dir: 'dist/react',
       format: 'esm',
-      preserveModules: false, // ← include all in bundle
+      preserveModules: true,
+      preserveModulesRoot: 'src/react',
       entryFileNames: '[name].esm.js',
-      inlineDynamicImports: true,
       sourcemap: true,
       banner: banner
     },
     plugins: [
       typescript({
-        tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        tsconfig: './tsconfig.rollup.json'
       }),
       ...sharedPlugins
     ]
   },
-  // CJS
+  // React CJS (preserve modules)
   {
-    input: inputFiles,
+    input: reactInputFiles,
     external: isExternal,
     output: {
-      dir: dir,
+      dir: 'dist/react',
       format: 'cjs',
-      preserveModules: false,  // ← Встраиваем все в bundle
+      preserveModules: true,
+      preserveModulesRoot: 'src/react',
       entryFileNames: '[name].cjs.js',
-      inlineDynamicImports: true,  // ← Встраиваем всё в один файл
       exports: 'named',
       sourcemap: true,
       banner: banner
     },
     plugins: [
       typescript({
-        tsconfig: './tsconfig.build.json',
-        compilerOptions: { outDir: 'dist/react' },
-        noEmit: true,
-        outputToFilesystem: false
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // React Native ESM
+  {
+    input: reactNativeInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/react-native',
+      format: 'esm',
+      preserveModules: false,
+      entryFileNames: '[name].esm.js',
+      inlineDynamicImports: true,
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // React Native CJS
+  {
+    input: reactNativeInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/react-native',
+      format: 'cjs',
+      preserveModules: false,
+      entryFileNames: '[name].cjs.js',
+      inlineDynamicImports: true,
+      exports: 'named',
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // Shared ESM
+  {
+    input: sharedInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/shared',
+      format: 'esm',
+      preserveModules: false,
+      entryFileNames: '[name].esm.js',
+      inlineDynamicImports: true,
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
+      }),
+      ...sharedPlugins
+    ]
+  },
+  // Shared CJS
+  {
+    input: sharedInputFiles,
+    external: isExternal,
+    output: {
+      dir: 'dist/shared',
+      format: 'cjs',
+      preserveModules: false,
+      entryFileNames: '[name].cjs.js',
+      inlineDynamicImports: true,
+      exports: 'named',
+      sourcemap: true
+    },
+    plugins: [
+      typescript({
+        tsconfig: './tsconfig.rollup.json'
       }),
       ...sharedPlugins
     ]

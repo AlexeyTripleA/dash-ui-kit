@@ -1144,4 +1144,53 @@ export const DocumentIcon: React.FC<IconProps> = ({
       </clipPath>
     </defs>
   </svg>
+)
+
+export const AsteriskIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 16,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={(size * 17) / 16}
+    viewBox='0 0 16 17'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M6.38944 0H9.61056L9.24092 8.5H6.75908L6.38944 0ZM6.38944 17L6.75908 8.5H9.24092L9.61056 17H6.38944ZM0 5.50476L1.63696 2.96825L8.60726 7.50159L7.36634 9.47143L0 5.50476ZM16 5.50476L8.63366 9.47143L7.39274 7.50159L14.363 2.96825L16 5.50476ZM16 11.4683L14.363 14.0048L7.39274 9.47143L8.63366 7.50159L16 11.4683ZM0 11.5222L7.36634 7.55556L8.60726 9.5254L1.63696 14.0587L0 11.5222Z'
+      fill='currentColor'
+    />
+  </svg>
+)
+
+export const TopRightArrowIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 25,
+  className = '',
+  onClick
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox='0 0 25 25'
+    fill='none'
+    xmlns='http://www.w3.org/2000/svg'
+    className={className}
+    onClick={onClick}
+    color={color}
+  >
+    <path
+      d='M21.3388 3.66117L21.3388 21.3388M21.3388 3.66117L3.66116 3.66117M21.3388 3.66117L3.66116 21.3388'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+    />
+  </svg>
 ) 

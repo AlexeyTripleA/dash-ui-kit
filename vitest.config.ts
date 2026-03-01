@@ -14,7 +14,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    include: ['src/react/**/*.test.{ts,tsx}'],
+    include: ['src/react/**/*.test.{ts,tsx}', 'src/react-native/**/*.test.{ts,tsx}', 'src/shared/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

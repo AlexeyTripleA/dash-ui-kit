@@ -164,4 +164,4 @@ describe('datetime utilities', () => {
       expect(getTimeDelta(start, end)).toBe('1 min. ago')
     })
   })
-}) 
+})

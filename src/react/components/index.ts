@@ -23,7 +23,7 @@ export { ProgressStepBar, type ProgressStepBarProps } from './progressStepBar'
 export { DashLogo, type DashLogoProps } from './dashLogo'
 export { Dialog, type DialogProps } from './dialog'
 export { Tabs, type TabsProps, type TabItem } from './tabs'
-export type { TimeDeltaFormat } from '../utils/datetime'
+export type { TimeDeltaFormat } from '../../shared/utils/datetime'
 export {
   ArrowIcon,
   CopyIcon,

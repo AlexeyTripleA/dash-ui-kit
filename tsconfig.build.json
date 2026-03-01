@@ -4,14 +4,16 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "dist/react",
-    "rootDir": "src/react",
+    "declarationDir": "dist",
+    "rootDir": "src",
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "Node"
   },
   "include": [
-    "src/react"
+    "src/react",
+    "src/react-native",
+    "src/shared"
   ],
   "exclude": [
     "src/**/*.test.ts",
