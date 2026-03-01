@@ -3,7 +3,7 @@
 import { __rest } from 'tslib';
 import { jsx } from 'react/jsx-runtime';
 import { useMemo } from 'react';
-import { minidenticon } from '../../node_modules/minidenticons/minidenticons.esm.js';
+import { minidenticon } from 'minidenticons';
 
 /**
  * Avatar component that creates unique identicons from usernames

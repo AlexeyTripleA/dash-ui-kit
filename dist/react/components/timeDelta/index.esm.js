@@ -4,7 +4,7 @@ import { jsx } from 'react/jsx-runtime';
 import { useState, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { NotActive } from '../notActive/index.esm.js';
-import { getTimeDelta } from '../../src/shared/utils/datetime.esm.js';
+import { getTimeDelta } from '../../shared/utils/datetime.esm.js';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 
 const wrapperStyles = cva('inline', {

@@ -8,7 +8,7 @@ var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
 var index = require('../notActive/index.cjs.js');
-var datetime = require('../../src/shared/utils/datetime.cjs.js');
+var datetime = require('../../shared/utils/datetime.cjs.js');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 
 const wrapperStyles = classVarianceAuthority.cva('inline', {

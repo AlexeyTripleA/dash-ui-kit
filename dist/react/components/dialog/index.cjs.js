@@ -3,10 +3,29 @@
 'use strict';
 
 var jsxRuntime = require('react/jsx-runtime');
-var index = require('../../node_modules/@radix-ui/react-dialog/dist/index.cjs.js');
+var Dialog = require('@radix-ui/react-dialog');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
-var index$1 = require('../icons/index.cjs.js');
+var index = require('../icons/index.cjs.js');
+
+function _interopNamespaceDefault(e) {
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () { return e[k]; }
+        });
+      }
+    });
+  }
+  n.default = e;
+  return Object.freeze(n);
+}
+
+var Dialog__namespace = /*#__PURE__*/_interopNamespaceDefault(Dialog);
 
 // Visually hidden component for accessibility
 const VisuallyHidden = ({
@@ -187,12 +206,12 @@ const DashDialog = ({
     // Keep the dialog centered but constrained by the calculated maxWidth
     // The existing left-[50%] translate-x-[-50%] will handle centering
   }
-  const DialogContent = jsxRuntime.jsxs(index.Portal, {
-    children: [jsxRuntime.jsx(index.Overlay, {
+  const DialogContent = jsxRuntime.jsxs(Dialog__namespace.Portal, {
+    children: [jsxRuntime.jsx(Dialog__namespace.Overlay, {
       className: overlayStyles({
         theme
       })
-    }), jsxRuntime.jsxs(index.Content, {
+    }), jsxRuntime.jsxs(Dialog__namespace.Content, {
       "aria-describedby": undefined,
       className: `${contentStyles({
         theme,
@@ -204,18 +223,18 @@ const DashDialog = ({
       // Render visible title in header if provided
       jsxRuntime.jsxs("div", {
         className: headerStyles(),
-        children: [jsxRuntime.jsx(index.Title, {
+        children: [jsxRuntime.jsx(Dialog__namespace.Title, {
           className: titleStyles({
             theme
           }),
           children: title
-        }), showCloseButton && jsxRuntime.jsxs(index.Close, {
+        }), showCloseButton && jsxRuntime.jsxs(Dialog__namespace.Close, {
           className: closeButtonStyles({
             theme
           }),
           children: [jsxRuntime.jsx("div", {
             className: 'w-8 h-8 flex items-center justify-center',
-            children: jsxRuntime.jsx(index$1.CrossIcon, {
+            children: jsxRuntime.jsx(index.CrossIcon, {
               size: 16
             })
           }), jsxRuntime.jsx("span", {
@@ -226,19 +245,19 @@ const DashDialog = ({
       }) :
       // No title provided - render visually hidden title for accessibility
       jsxRuntime.jsxs(jsxRuntime.Fragment, {
-        children: [jsxRuntime.jsx(index.Title, {
+        children: [jsxRuntime.jsx(Dialog__namespace.Title, {
           children: jsxRuntime.jsx(VisuallyHidden, {
             children: "Dialog"
           })
         }), showCloseButton && jsxRuntime.jsx("div", {
           className: headerStyles(),
-          children: jsxRuntime.jsxs(index.Close, {
+          children: jsxRuntime.jsxs(Dialog__namespace.Close, {
             className: closeButtonStyles({
               theme
             }),
             children: [jsxRuntime.jsx("div", {
               className: 'w-8 h-8 flex items-center justify-center',
-              children: jsxRuntime.jsx(index$1.CrossIcon, {
+              children: jsxRuntime.jsx(index.CrossIcon, {
                 size: 16
               })
             }), jsxRuntime.jsx("span", {
@@ -252,16 +271,16 @@ const DashDialog = ({
   });
   if (trigger) {
     // Uncontrolled mode with trigger
-    return jsxRuntime.jsxs(index.Root, {
+    return jsxRuntime.jsxs(Dialog__namespace.Root, {
       onOpenChange: onOpenChange,
-      children: [jsxRuntime.jsx(index.Trigger, {
+      children: [jsxRuntime.jsx(Dialog__namespace.Trigger, {
         asChild: true,
         children: trigger
       }), DialogContent]
     });
   }
   // Controlled mode
-  return jsxRuntime.jsx(index.Root, {
+  return jsxRuntime.jsx(Dialog__namespace.Root, {
     open: open,
     onOpenChange: onOpenChange,
     children: DialogContent

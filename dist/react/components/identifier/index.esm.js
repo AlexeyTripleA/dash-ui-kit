@@ -3,7 +3,7 @@
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
-import useResizeObserver from '../../node_modules/@react-hook/resize-observer/dist/module/index.esm.js';
+import useResizeObserver from '@react-hook/resize-observer';
 import useDebounce from '../../hooks/useDebounce.esm.js';
 import { NotActive } from '../notActive/index.esm.js';
 import { CopyButton } from '../copyButton/index.esm.js';

@@ -4,7 +4,7 @@ import { __rest } from 'tslib';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
-import { Root as Root2, Trigger, Value, Icon, Portal, Content as Content2, Viewport, Item, ItemText } from '../../node_modules/@radix-ui/react-select/dist/index.esm.js';
+import * as RadixSelect from '@radix-ui/react-select';
 
 const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
   variants: {
@@ -164,39 +164,39 @@ const Select = _a => {
   const iconClasses = selectIcon({
     size
   });
-  return jsxs(Root2, {
+  return jsxs(RadixSelect.Root, {
     value: value,
     defaultValue: defaultValue,
     onValueChange: onChange,
     disabled: disabled,
     name: name,
-    children: [jsxs(Trigger, {
+    children: [jsxs(RadixSelect.Trigger, {
       className: triggerClasses,
       children: [jsx("div", {
         className: 'w-full flex-1 text-left',
-        children: jsx(Value, {
+        children: jsx(RadixSelect.Value, {
           placeholder: placeholder
         })
-      }), showArrow && jsx(Icon, {
+      }), showArrow && jsx(RadixSelect.Icon, {
         asChild: true,
         children: jsx(ChevronDownIcon, {
           className: iconClasses
         })
       })]
-    }), jsx(Portal, {
-      children: jsx(Content2, {
+    }), jsx(RadixSelect.Portal, {
+      children: jsx(RadixSelect.Content, {
         className: contentClasses,
         position: 'popper',
         sideOffset: 5,
-        children: jsx(Viewport, {
+        children: jsx(RadixSelect.Viewport, {
           className: viewportClasses,
-          children: options.map(option => jsx(Item, {
+          children: options.map(option => jsx(RadixSelect.Item, {
             value: option.value,
             className: itemClasses,
             disabled: option.disabled,
             children: jsx("div", {
               className: 'w-full flex-1 text-left',
-              children: jsx(ItemText, {
+              children: jsx(RadixSelect.ItemText, {
                 className: 'w-full',
                 children: option.content || option.label
               })

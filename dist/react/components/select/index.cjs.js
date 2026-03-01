@@ -8,7 +8,26 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
-var index = require('../../node_modules/@radix-ui/react-select/dist/index.cjs.js');
+var RadixSelect = require('@radix-ui/react-select');
+
+function _interopNamespaceDefault(e) {
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
+        });
+    }
+    n.default = e;
+    return Object.freeze(n);
+}
+
+var RadixSelect__namespace = /*#__PURE__*/_interopNamespaceDefault(RadixSelect);
 
 const selectTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
   variants: {
@@ -168,39 +187,39 @@ const Select = _a => {
   const iconClasses = selectIcon({
     size
   });
-  return jsxRuntime.jsxs(index.Root, {
+  return jsxRuntime.jsxs(RadixSelect__namespace.Root, {
     value: value,
     defaultValue: defaultValue,
     onValueChange: onChange,
     disabled: disabled,
     name: name,
-    children: [jsxRuntime.jsxs(index.Trigger, {
+    children: [jsxRuntime.jsxs(RadixSelect__namespace.Trigger, {
       className: triggerClasses,
       children: [jsxRuntime.jsx("div", {
         className: 'w-full flex-1 text-left',
-        children: jsxRuntime.jsx(index.Value, {
+        children: jsxRuntime.jsx(RadixSelect__namespace.Value, {
           placeholder: placeholder
         })
-      }), showArrow && jsxRuntime.jsx(index.Icon, {
+      }), showArrow && jsxRuntime.jsx(RadixSelect__namespace.Icon, {
         asChild: true,
         children: jsxRuntime.jsx(ChevronDownIcon, {
           className: iconClasses
         })
       })]
-    }), jsxRuntime.jsx(index.Portal, {
-      children: jsxRuntime.jsx(index.Content, {
+    }), jsxRuntime.jsx(RadixSelect__namespace.Portal, {
+      children: jsxRuntime.jsx(RadixSelect__namespace.Content, {
         className: contentClasses,
         position: 'popper',
         sideOffset: 5,
-        children: jsxRuntime.jsx(index.Viewport, {
+        children: jsxRuntime.jsx(RadixSelect__namespace.Viewport, {
           className: viewportClasses,
-          children: options.map(option => jsxRuntime.jsx(index.Item, {
+          children: options.map(option => jsxRuntime.jsx(RadixSelect__namespace.Item, {
             value: option.value,
             className: itemClasses,
             disabled: option.disabled,
             children: jsxRuntime.jsx("div", {
               className: 'w-full flex-1 text-left',
-              children: jsxRuntime.jsx(index.ItemText, {
+              children: jsxRuntime.jsx(RadixSelect__namespace.ItemText, {
                 className: 'w-full',
                 children: option.content || option.label
               })

@@ -7,7 +7,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
-var minidenticons = require('../../node_modules/minidenticons/minidenticons.cjs.js');
+var minidenticons = require('minidenticons');
 
 /**
  * Avatar component that creates unique identicons from usernames

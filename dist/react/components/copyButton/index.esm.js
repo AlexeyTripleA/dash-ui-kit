@@ -4,7 +4,7 @@ import { __rest } from 'tslib';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { useState } from 'react';
 import { cva } from 'class-variance-authority';
-import { Root as Root2, Trigger, Portal, Content as Content2, Arrow as Arrow2 } from '../../node_modules/@radix-ui/react-popover/dist/index.esm.js';
+import * as Popover from '@radix-ui/react-popover';
 import { CopyIcon } from '../icons/index.esm.js';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { copyToClipboard } from '../../utils/copyToClipboard.esm.js';
@@ -38,9 +38,9 @@ const CopyButton = _a => {
     setOpen(true);
     setTimeout(() => setOpen(false), 1000);
   };
-  return jsxs(Root2, {
+  return jsxs(Popover.Root, {
     open: open,
-    children: [jsx(Trigger, {
+    children: [jsx(Popover.Trigger, {
       asChild: true,
       children: jsx("button", Object.assign({
         type: 'button',
@@ -54,12 +54,12 @@ const CopyButton = _a => {
           color: theme === 'light' ? '#000000' : '#ffffff'
         })
       }))
-    }), jsx(Portal, {
-      children: jsxs(Content2, {
+    }), jsx(Popover.Portal, {
+      children: jsxs(Popover.Content, {
         className: 'bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg',
         side: 'top',
         sideOffset: 5,
-        children: ["Copied", jsx(Arrow2, {
+        children: ["Copied", jsx(Popover.Arrow, {
           className: 'fill-white'
         })]
       })

@@ -5,10 +5,29 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var jsxRuntime = require('react/jsx-runtime');
-var index = require('../../node_modules/@radix-ui/react-accordion/dist/index.cjs.js');
+var RadixAccordion = require('@radix-ui/react-accordion');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
-var index$1 = require('../icons/index.cjs.js');
+var index = require('../icons/index.cjs.js');
+
+function _interopNamespaceDefault(e) {
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () { return e[k]; }
+        });
+      }
+    });
+  }
+  n.default = e;
+  return Object.freeze(n);
+}
+
+var RadixAccordion__namespace = /*#__PURE__*/_interopNamespaceDefault(RadixAccordion);
 
 const accordionRootStyles = classVarianceAuthority.cva(`
     w-full
@@ -124,7 +143,7 @@ const Accordion = ({
     theme,
     border
   }) + (className ? ` ${className}` : '');
-  return jsxRuntime.jsx(index.Root, {
+  return jsxRuntime.jsx(RadixAccordion__namespace.Root, {
     type: 'single',
     collapsible: true,
     className: rootClasses,
@@ -135,10 +154,10 @@ const Accordion = ({
         onOpenChange(value === 'item-1');
       }
     },
-    children: jsxRuntime.jsxs(index.Item, {
+    children: jsxRuntime.jsxs(RadixAccordion__namespace.Item, {
       value: 'item-1',
       className: `AccordionItem ${accordionItemStyles()} group`,
-      children: [jsxRuntime.jsxs(index.Trigger, {
+      children: [jsxRuntime.jsxs(RadixAccordion__namespace.Trigger, {
         className: `${accordionTriggerStyles({
           theme
         })}`,
@@ -149,7 +168,7 @@ const Accordion = ({
           className: 'flex items-center gap-3',
           children: [rightElement && jsxRuntime.jsx("div", {
             children: rightElement
-          }), jsxRuntime.jsx(index$1.ChevronIcon, {
+          }), jsxRuntime.jsx(index.ChevronIcon, {
             className: chevronStyles()
           })]
         })]
@@ -157,7 +176,7 @@ const Accordion = ({
         className: `${separatorStyles({
           theme
         })} group-data-[state=closed]:opacity-0 group-data-[state=open]:opacity-100`
-      }), jsxRuntime.jsx(index.Content, {
+      }), jsxRuntime.jsx(RadixAccordion__namespace.Content, {
         forceMount: true,
         className: accordionContentStyles(),
         children: jsxRuntime.jsx("div", {

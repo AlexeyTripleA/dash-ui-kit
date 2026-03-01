@@ -1,7 +1,7 @@
 "use client";
 
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
-import { Portal, Overlay, Content, Title, Close, Root, Trigger } from '../../node_modules/@radix-ui/react-dialog/dist/index.esm.js';
+import * as Dialog from '@radix-ui/react-dialog';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { CrossIcon } from '../icons/index.esm.js';
@@ -185,12 +185,12 @@ const DashDialog = ({
     // Keep the dialog centered but constrained by the calculated maxWidth
     // The existing left-[50%] translate-x-[-50%] will handle centering
   }
-  const DialogContent = jsxs(Portal, {
-    children: [jsx(Overlay, {
+  const DialogContent = jsxs(Dialog.Portal, {
+    children: [jsx(Dialog.Overlay, {
       className: overlayStyles({
         theme
       })
-    }), jsxs(Content, {
+    }), jsxs(Dialog.Content, {
       "aria-describedby": undefined,
       className: `${contentStyles({
         theme,
@@ -202,12 +202,12 @@ const DashDialog = ({
       // Render visible title in header if provided
       jsxs("div", {
         className: headerStyles(),
-        children: [jsx(Title, {
+        children: [jsx(Dialog.Title, {
           className: titleStyles({
             theme
           }),
           children: title
-        }), showCloseButton && jsxs(Close, {
+        }), showCloseButton && jsxs(Dialog.Close, {
           className: closeButtonStyles({
             theme
           }),
@@ -224,13 +224,13 @@ const DashDialog = ({
       }) :
       // No title provided - render visually hidden title for accessibility
       jsxs(Fragment, {
-        children: [jsx(Title, {
+        children: [jsx(Dialog.Title, {
           children: jsx(VisuallyHidden, {
             children: "Dialog"
           })
         }), showCloseButton && jsx("div", {
           className: headerStyles(),
-          children: jsxs(Close, {
+          children: jsxs(Dialog.Close, {
             className: closeButtonStyles({
               theme
             }),
@@ -250,16 +250,16 @@ const DashDialog = ({
   });
   if (trigger) {
     // Uncontrolled mode with trigger
-    return jsxs(Root, {
+    return jsxs(Dialog.Root, {
       onOpenChange: onOpenChange,
-      children: [jsx(Trigger, {
+      children: [jsx(Dialog.Trigger, {
         asChild: true,
         children: trigger
       }), DialogContent]
     });
   }
   // Controlled mode
-  return jsx(Root, {
+  return jsx(Dialog.Root, {
     open: open,
     onOpenChange: onOpenChange,
     children: DialogContent

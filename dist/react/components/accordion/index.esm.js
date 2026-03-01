@@ -1,7 +1,7 @@
 "use client";
 
 import { jsx, jsxs } from 'react/jsx-runtime';
-import { Root as Root2, Item, Trigger as Trigger2, Content as Content2 } from '../../node_modules/@radix-ui/react-accordion/dist/index.esm.js';
+import * as RadixAccordion from '@radix-ui/react-accordion';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { ChevronIcon } from '../icons/index.esm.js';
@@ -120,7 +120,7 @@ const Accordion = ({
     theme,
     border
   }) + (className ? ` ${className}` : '');
-  return jsx(Root2, {
+  return jsx(RadixAccordion.Root, {
     type: 'single',
     collapsible: true,
     className: rootClasses,
@@ -131,10 +131,10 @@ const Accordion = ({
         onOpenChange(value === 'item-1');
       }
     },
-    children: jsxs(Item, {
+    children: jsxs(RadixAccordion.Item, {
       value: 'item-1',
       className: `AccordionItem ${accordionItemStyles()} group`,
-      children: [jsxs(Trigger2, {
+      children: [jsxs(RadixAccordion.Trigger, {
         className: `${accordionTriggerStyles({
           theme
         })}`,
@@ -153,7 +153,7 @@ const Accordion = ({
         className: `${separatorStyles({
           theme
         })} group-data-[state=closed]:opacity-0 group-data-[state=open]:opacity-100`
-      }), jsx(Content2, {
+      }), jsx(RadixAccordion.Content, {
         forceMount: true,
         className: accordionContentStyles(),
         children: jsx("div", {

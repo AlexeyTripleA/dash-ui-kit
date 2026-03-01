@@ -1,8 +1,8 @@
 "use client";
 
 import { jsxs, jsx } from 'react/jsx-runtime';
-import React__default from 'react';
-import { Root as Root2, List, Trigger, Content } from '../../node_modules/@radix-ui/react-tabs/dist/index.esm.js';
+import React from 'react';
+import * as RadixTabs from '@radix-ui/react-tabs';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 
@@ -103,7 +103,7 @@ const Tabs = ({
   const {
     theme
   } = useTheme();
-  const [internalValue, setInternalValue] = React__default.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
+  const [internalValue, setInternalValue] = React.useState(defaultValue || ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.value) || '');
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;
   const handleValueChange = newValue => {
@@ -122,11 +122,11 @@ const Tabs = ({
     theme,
     size
   }) + (contentClassName ? ` ${contentClassName}` : '');
-  return jsxs(Root2, {
+  return jsxs(RadixTabs.Root, {
     className: rootClasses,
     value: currentValue,
     onValueChange: handleValueChange,
-    children: [jsx(List, {
+    children: [jsx(RadixTabs.List, {
       className: listClasses,
       children: items.map(item => {
         const isActive = currentValue === item.value;
@@ -135,14 +135,14 @@ const Tabs = ({
           active: isActive,
           size
         }) + (triggerClassName ? ` ${triggerClassName}` : '');
-        return jsx(Trigger, {
+        return jsx(RadixTabs.Trigger, {
           value: item.value,
           disabled: item.disabled,
           className: triggerClasses,
           children: item.label
         }, item.value);
       })
-    }), items.map(item => jsx(Content, {
+    }), items.map(item => jsx(RadixTabs.Content, {
       value: item.value,
       className: contentClasses,
       children: item.content

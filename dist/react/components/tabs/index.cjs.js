@@ -6,9 +6,28 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
-var index = require('../../node_modules/@radix-ui/react-tabs/dist/index.cjs.js');
+var RadixTabs = require('@radix-ui/react-tabs');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+
+function _interopNamespaceDefault(e) {
+    var n = Object.create(null);
+    if (e) {
+        Object.keys(e).forEach(function (k) {
+            if (k !== 'default') {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
+        });
+    }
+    n.default = e;
+    return Object.freeze(n);
+}
+
+var RadixTabs__namespace = /*#__PURE__*/_interopNamespaceDefault(RadixTabs);
 
 const tabsRootStyles = classVarianceAuthority.cva('flex flex-col w-full', {
   variants: {
@@ -126,11 +145,11 @@ const Tabs = ({
     theme,
     size
   }) + (contentClassName ? ` ${contentClassName}` : '');
-  return jsxRuntime.jsxs(index.Root, {
+  return jsxRuntime.jsxs(RadixTabs__namespace.Root, {
     className: rootClasses,
     value: currentValue,
     onValueChange: handleValueChange,
-    children: [jsxRuntime.jsx(index.List, {
+    children: [jsxRuntime.jsx(RadixTabs__namespace.List, {
       className: listClasses,
       children: items.map(item => {
         const isActive = currentValue === item.value;
@@ -139,14 +158,14 @@ const Tabs = ({
           active: isActive,
           size
         }) + (triggerClassName ? ` ${triggerClassName}` : '');
-        return jsxRuntime.jsx(index.Trigger, {
+        return jsxRuntime.jsx(RadixTabs__namespace.Trigger, {
           value: item.value,
           disabled: item.disabled,
           className: triggerClasses,
           children: item.label
         }, item.value);
       })
-    }), items.map(item => jsxRuntime.jsx(index.Content, {
+    }), items.map(item => jsxRuntime.jsx(RadixTabs__namespace.Content, {
       value: item.value,
       className: contentClasses,
       children: item.content

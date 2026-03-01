@@ -24,18 +24,10 @@ const sharedInputFiles = {
   index: 'src/shared/index.ts'
 }
 
-const external = [
-  'react',
-  'react-dom',
-  'react-native',
-  'react-native-svg',
-  'expo-blur',
-  'tslib',
-  'class-variance-authority'
-]
-
-const isExternal = (id) => {
-  return external.some(dep => id === dep || id.startsWith(`${dep}/`))
+const isExternal = (id, importer) => {
+  if (!importer) return false // entry points are never external
+  if (id.startsWith('.') || id.startsWith('/') || id.startsWith('\0')) return false
+  return true // externalize all npm packages
 }
 
 const sharedPlugins = [

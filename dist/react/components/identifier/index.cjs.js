@@ -7,12 +7,12 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
-var index = require('../../node_modules/@react-hook/resize-observer/dist/module/index.cjs.js');
+var useResizeObserver = require('@react-hook/resize-observer');
 var useDebounce = require('../../hooks/useDebounce.cjs.js');
-var index$2 = require('../notActive/index.cjs.js');
-var index$3 = require('../copyButton/index.cjs.js');
+var index$1 = require('../notActive/index.cjs.js');
+var index$2 = require('../copyButton/index.cjs.js');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
-var index$1 = require('../avatar/index.cjs.js');
+var index = require('../avatar/index.cjs.js');
 
 /** CVA for the root container, now with light/dark theme */
 const identifier = classVarianceAuthority.cva('flex items-center font-dash-grotesque text-sm font-normal break-all', {
@@ -89,7 +89,7 @@ const HighlightedID = ({
   children,
   mode
 }) => {
-  if (children == null || children === '') return jsxRuntime.jsx(index$2.NotActive, {});
+  if (children == null || children === '') return jsxRuntime.jsx(index$1.NotActive, {});
   const text = String(children);
   const count = 5;
   const first = text.slice(0, count);
@@ -119,7 +119,7 @@ const MiddleEllipsisText = ({
   children,
   edgeChars
 }) => {
-  if (children == null || children === '') return jsxRuntime.jsx(index$2.NotActive, {});
+  if (children == null || children === '') return jsxRuntime.jsx(index$1.NotActive, {});
   const text = String(children);
   if (text.length <= edgeChars * 2) {
     return jsxRuntime.jsx(jsxRuntime.Fragment, {
@@ -176,7 +176,7 @@ const Identifier = ({
     }
   });
   if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis) linesAdjustment = false;
-  index.default(symbolsRef, entry => {
+  useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width);
   });
   const measureChar = React.useCallback(() => {
@@ -259,7 +259,7 @@ const Identifier = ({
   const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis' : 'flex-1 leading-[1rem]';
   return jsxRuntime.jsxs("div", {
     className: rootClass,
-    children: [(avatar !== null && avatar !== void 0 ? avatar : false) && children != null && children !== '' && jsxRuntime.jsx(index$1.Avatar, {
+    children: [(avatar !== null && avatar !== void 0 ? avatar : false) && children != null && children !== '' && jsxRuntime.jsx(index.Avatar, {
       username: children,
       className: 'w-6 h-6 mr-2 flex-shrink-0'
     }), jsxRuntime.jsx("div", {
@@ -274,8 +274,8 @@ const Identifier = ({
       }) : children != null && children !== '' && highlight != null ? jsxRuntime.jsx(HighlightedID, {
         mode: highlight,
         children: children
-      }) : children !== null && children !== void 0 ? children : jsxRuntime.jsx(index$2.NotActive, {})
-    }), (copyButton !== null && copyButton !== void 0 ? copyButton : false) && children != null && children !== '' && jsxRuntime.jsx(index$3.CopyButton, {
+      }) : children !== null && children !== void 0 ? children : jsxRuntime.jsx(index$1.NotActive, {})
+    }), (copyButton !== null && copyButton !== void 0 ? copyButton : false) && children != null && children !== '' && jsxRuntime.jsx(index$2.CopyButton, {
       className: 'ml-3',
       text: children
     })]
