@@ -15,6 +15,7 @@ declare const textStyles: (props?: ({
     dim?: boolean | null | undefined;
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type TextVariants = Omit<VariantProps<typeof textStyles>, 'theme'>;
+type TextColor = 'default' | 'blue' | 'blue-dark' | 'red';
 export interface TextProps extends TextVariants {
     /** Render as this element or component (e.g. 'h1' or Link). */
     as?: React.ElementType;
@@ -22,6 +23,10 @@ export interface TextProps extends TextVariants {
     className?: string;
     /** Text children. */
     children?: React.ReactNode;
+    /** Color override for light theme. */
+    colorLight?: TextColor;
+    /** Color override for dark theme. */
+    colorDark?: TextColor;
 }
 /**
  * A versatile text component with size, color, weight, decoration,

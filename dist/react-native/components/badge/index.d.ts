@@ -17,6 +17,18 @@ export interface BadgeProps extends Omit<PressableProps, 'style'> {
      */
     color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
     /**
+     * Light or dark theme
+     */
+    theme?: 'light' | 'dark';
+    /**
+     * Color override for light theme
+     */
+    colorLight?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
+    /**
+     * Color override for dark theme
+     */
+    colorDark?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
+    /**
      * Size of the badge
      */
     size?: 'xxs' | 'xs' | 'sm' | 'xl';

@@ -20,6 +20,10 @@ export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaE
     weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
     error?: boolean;
     success?: boolean;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success';
 }
 /**
  * A versatile textarea component that adapts to light/dark theme,

@@ -4,6 +4,7 @@ import { __rest } from 'tslib';
 import { jsx } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const textStyles = cva('', {
   variants: {
@@ -95,13 +96,18 @@ const Text = _a => {
   var {
       as,
       className = '',
-      children
+      children,
+      color,
+      colorLight,
+      colorDark
     } = _a,
-    variantProps = __rest(_a, ["as", "className", "children"]);
+    variantProps = __rest(_a, ["as", "className", "children", "color", "colorLight", "colorDark"]);
   const {
     theme
   } = useTheme();
+  const effectiveColor = useColorScheme(color, colorLight, colorDark);
   const classes = textStyles(Object.assign(Object.assign({}, variantProps), {
+    color: effectiveColor,
     theme
   })) + (className !== '' ? ` ${className}` : '');
   const Component = as !== null && as !== void 0 ? as : 'span';

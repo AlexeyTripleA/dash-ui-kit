@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { Button } from '../button/index.esm.js';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const textareaContainer = cva('relative flex items-baseline transition-all w-full', {
   variants: {
@@ -143,7 +144,7 @@ const textarea = cva('w-full bg-transparent outline-none resize-none transition-
  * />
  */
 const Textarea = _a => {
-  var _b, _c;
+  var _b, _c, _d;
   var {
       className = '',
       onChange,
@@ -152,18 +153,21 @@ const Textarea = _a => {
       rows = 3,
       size = 'xl',
       variant = 'outlined',
-      colorScheme = 'default',
+      colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       font = 'main',
       weight = 'light',
       error = false,
       success = false,
       disabled = false
     } = _a,
-    props = __rest(_a, ["className", "onChange", "showPasteButton", "validator", "rows", "size", "variant", "colorScheme", "font", "weight", "error", "success", "disabled"]);
+    props = __rest(_a, ["className", "onChange", "showPasteButton", "validator", "rows", "size", "variant", "colorScheme", "colorSchemeLight", "colorSchemeDark", "font", "weight", "error", "success", "disabled"]);
   const {
     theme
   } = useTheme();
-  const [value, setValue] = useState((_c = (_b = props.value) !== null && _b !== void 0 ? _b : props.defaultValue) !== null && _c !== void 0 ? _c : '');
+  const effectiveColorScheme = (_b = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
+  const [value, setValue] = useState((_d = (_c = props.value) !== null && _c !== void 0 ? _c : props.defaultValue) !== null && _d !== void 0 ? _d : '');
   const [isValid, setIsValid] = useState(null);
   const textareaRef = useRef(null);
   const handleChange = e => {
@@ -203,7 +207,7 @@ const Textarea = _a => {
   };
   const hasValue = value !== '';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   let finalIsValid = isValid;
   if (error) {
     finalColorScheme = 'error';

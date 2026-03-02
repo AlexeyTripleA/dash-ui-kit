@@ -43,6 +43,10 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
     position?: OverlayMenuPosition;
     width?: string | number;
     onClose?: () => void;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray';
 }
 /**
  * Overlay menu component that opens above the trigger with overlay positioning.

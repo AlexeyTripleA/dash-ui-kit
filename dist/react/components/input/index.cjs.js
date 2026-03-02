@@ -10,6 +10,7 @@ var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 var index = require('../icons/index.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const input = classVarianceAuthority.cva('w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]', {
   variants: {
@@ -127,9 +128,12 @@ const input = classVarianceAuthority.cva('w-full transition-all font-inter place
  * />
  */
 const Input = _a => {
+  var _b;
   var {
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       variant,
       error = false,
@@ -140,15 +144,16 @@ const Input = _a => {
       prefixClassName = '',
       showPasswordToggle = true
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "type", "prefix", "prefixClassName", "showPasswordToggle"]);
+    props = tslib.__rest(_a, ["className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "variant", "error", "success", "disabled", "type", "prefix", "prefixClassName", "showPasswordToggle"]);
   const {
     theme
   } = ThemeContext.useTheme();
   const [showPassword, setShowPassword] = React.useState(false);
   const [prefixWidth, setPrefixWidth] = React.useState(0);
   const prefixRef = React.useRef(null);
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const classes = input({
     theme,

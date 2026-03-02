@@ -10,10 +10,16 @@ declare const buttonStyles: (props?: ({
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type ButtonVariants = Omit<VariantProps<typeof buttonStyles>, 'disabled'>;
 export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVariants {
+    /** Light or dark theme */
+    theme?: 'light' | 'dark';
     /** Solid, outline, or ghost style */
     variant?: 'solid' | 'outline' | 'ghost';
     /** Color scheme for the button */
     colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
     /** Size of the button */
     size?: 'sm' | 'md' | 'lg' | 'xl';
     /** Border radius style */

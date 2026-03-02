@@ -1,4 +1,5 @@
 import React from 'react';
+type BadgeColor = 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     /**
      * Content of the badge
@@ -11,7 +12,15 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     /**
      * Color theme
      */
-    color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
+    color?: BadgeColor;
+    /**
+     * Color override for light theme
+     */
+    colorLight?: BadgeColor;
+    /**
+     * Color override for dark theme
+     */
+    colorDark?: BadgeColor;
     /**
      * Size of the badge
      */

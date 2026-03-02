@@ -16,6 +16,10 @@ export interface ValueCardProps extends Omit<ValueCardVariants, 'theme'> {
     link?: string;
     className?: string;
     children: React.ReactNode;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow';
     /** Additional props to pass to the underlying element */
     [key: string]: any;
 }

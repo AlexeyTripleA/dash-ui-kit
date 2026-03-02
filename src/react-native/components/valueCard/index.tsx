@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { cva, VariantProps } from 'class-variance-authority'
 import { cn } from '../../utils/tw'
+import { resolveColorScheme } from '../../utils/resolveColorScheme'
 
 /**
  * ValueCard CVA - twrnc-compatible classes.
@@ -70,6 +71,10 @@ export interface ValueCardProps
   theme?: 'light' | 'dark'
   /** Color scheme */
   colorScheme?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow'
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow'
   /** Size variant */
   size?: 'xs' | 'sm' | 'md' | 'xl'
   /** Whether the card is clickable (shows press feedback) */
@@ -92,7 +97,9 @@ export interface ValueCardProps
  */
 export const ValueCard: React.FC<ValueCardProps> = ({
   theme = 'light',
-  colorScheme = 'default',
+  colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size = 'md',
   clickable = false,
   loading = false,
@@ -105,10 +112,11 @@ export const ValueCard: React.FC<ValueCardProps> = ({
 }) => {
   const isClickable = Boolean(onPress ?? clickable)
   const isDisabled = loading
+  const effectiveColorScheme = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
 
   const classes = valueCardStyles({
     theme,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     clickable: isClickable,
     loading,
@@ -122,7 +130,7 @@ export const ValueCard: React.FC<ValueCardProps> = ({
     <ActivityIndicator
       testID="value-card-loading"
       size="small"
-      color={colorScheme === 'green' ? '#22c55e' : colorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'}
+      color={effectiveColorScheme === 'green' ? '#22c55e' : effectiveColorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'}
     />
   ) : (
     children

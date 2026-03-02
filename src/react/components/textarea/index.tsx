@@ -2,6 +2,7 @@ import React, { useState, useRef, TextareaHTMLAttributes } from 'react'
 import { Button } from '../button'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const textareaContainer = cva(
   'relative flex items-baseline transition-all w-full',
@@ -136,6 +137,10 @@ export interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaE
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold'
   error?: boolean
   success?: boolean
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success'
 }
 
 /**
@@ -162,7 +167,9 @@ export const Textarea: React.FC<TextareaProps> = ({
   rows = 3,
   size = 'xl',
   variant = 'outlined',
-  colorScheme = 'default',
+  colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   font = 'main',
   weight = 'light',
   error = false,
@@ -171,6 +178,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   ...props
 }) => {
   const { theme } = useTheme()
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
   const [value, setValue] = useState<string>((props.value as string) ?? (props.defaultValue as string) ?? '')
   const [isValid, setIsValid] = useState<boolean | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -221,7 +229,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   const hasValue = value !== ''
 
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  let finalColorScheme = effectiveColorScheme
   let finalIsValid: boolean | null = isValid
   
   if (error) {

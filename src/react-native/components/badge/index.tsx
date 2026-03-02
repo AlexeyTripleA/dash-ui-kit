@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Pressable, ViewStyle, TextStyle, PressableProps } from 'react-native'
 import { cva, VariantProps } from 'class-variance-authority'
 import { cn } from '../../utils/tw'
+import { resolveColorScheme } from '../../utils/resolveColorScheme'
 
 /**
  * Badge component props
@@ -21,6 +22,21 @@ export interface BadgeProps extends Omit<PressableProps, 'style'> {
    * Color theme
    */
   color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange'
+
+  /**
+   * Light or dark theme
+   */
+  theme?: 'light' | 'dark'
+
+  /**
+   * Color override for light theme
+   */
+  colorLight?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange'
+
+  /**
+   * Color override for dark theme
+   */
+  colorDark?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange'
 
   /**
    * Size of the badge
@@ -295,8 +311,11 @@ const COLOR_KEY_MAP: Record<string, string> = {
  */
 export const Badge: React.FC<BadgeProps> = ({
   children,
+  theme = 'light',
   variant = 'default',
-  color = 'blue',
+  color,
+  colorLight,
+  colorDark,
   size = 'sm',
   borderRadius,
   className = '',
@@ -305,8 +324,10 @@ export const Badge: React.FC<BadgeProps> = ({
   onPress,
   ...props
 }) => {
+  const effectiveColor = resolveColorScheme(theme, color, colorLight, colorDark) ?? 'blue'
+
   // Generate the color_variant key for CVA using explicit mapping
-  const normalizedColor = COLOR_KEY_MAP[color] || color
+  const normalizedColor = COLOR_KEY_MAP[effectiveColor] || effectiveColor
   const colorVariantKey = `color_variant_${normalizedColor}_${variant}`
 
   // Build the badge container classes with proper typing

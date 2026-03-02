@@ -8,6 +8,7 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const styles = classVarianceAuthority.cva(`
     dash-btn-base
@@ -500,24 +501,28 @@ const styles = classVarianceAuthority.cva(`
  * press animation, and customizable size. Supports light/dark theme.
  */
 const Button = _a => {
+  var _b;
   var {
       children,
       variant,
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       rounded,
       disabled = false,
       className = ''
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "size", "rounded", "disabled", "className"]);
+    props = tslib.__rest(_a, ["children", "variant", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "rounded", "disabled", "className"]);
   const {
     theme
   } = ThemeContext.useTheme();
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'brand';
   const state = disabled ? 'disabled' : 'active';
   const classes = styles({
     theme,
     variant,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     rounded,
     state

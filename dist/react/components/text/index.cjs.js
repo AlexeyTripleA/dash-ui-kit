@@ -8,6 +8,7 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const textStyles = classVarianceAuthority.cva('', {
   variants: {
@@ -99,13 +100,18 @@ const Text = _a => {
   var {
       as,
       className = '',
-      children
+      children,
+      color,
+      colorLight,
+      colorDark
     } = _a,
-    variantProps = tslib.__rest(_a, ["as", "className", "children"]);
+    variantProps = tslib.__rest(_a, ["as", "className", "children", "color", "colorLight", "colorDark"]);
   const {
     theme
   } = ThemeContext.useTheme();
+  const effectiveColor = useColorScheme.useColorScheme(color, colorLight, colorDark);
   const classes = textStyles(Object.assign(Object.assign({}, variantProps), {
+    color: effectiveColor,
     theme
   })) + (className !== '' ? ` ${className}` : '');
   const Component = as !== null && as !== void 0 ? as : 'span';

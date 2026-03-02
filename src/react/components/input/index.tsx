@@ -2,6 +2,7 @@ import React, { InputHTMLAttributes, useState, useRef, useEffect } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
 import { EyeOpenIcon, EyeClosedIcon } from '../icons'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const input = cva(
   'w-full transition-all font-inter placeholder:text-opacity-60 text-[0.875rem] leading-[1.0625rem]',
@@ -125,6 +126,10 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   success?: boolean
   prefix?: string | React.ReactNode
   prefixClassName?: string
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'light-gray'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'light-gray'
   /**
    * Controls visibility toggle for password inputs. When false, the eye icon is hidden and no extra right padding is applied.
    * Defaults to true.
@@ -150,6 +155,8 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 export const Input: React.FC<InputProps> = ({
   className = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   variant,
   error = false,
@@ -166,8 +173,10 @@ export const Input: React.FC<InputProps> = ({
   const [prefixWidth, setPrefixWidth] = useState(0)
   const prefixRef = useRef<HTMLDivElement>(null)
 
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
+
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  let finalColorScheme: typeof effectiveColorScheme = effectiveColorScheme
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 

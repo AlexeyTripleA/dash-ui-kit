@@ -4,6 +4,7 @@
 
 var jsxRuntime = require('react/jsx-runtime');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const colorConfig = {
   blue: {
@@ -29,12 +30,16 @@ function ProgressStepBar({
   currentStep,
   totalSteps,
   className = '',
-  color = 'blue'
+  color,
+  colorLight,
+  colorDark
 }) {
+  var _a;
   const {
     theme
   } = ThemeContext.useTheme();
-  const colors = colorConfig[color];
+  const effectiveColor = (_a = useColorScheme.useColorScheme(color, colorLight, colorDark)) !== null && _a !== void 0 ? _a : 'blue';
+  const colors = colorConfig[effectiveColor];
   return jsxRuntime.jsx("div", {
     className: `flex gap-2 w-full ${className}`,
     children: Array.from({

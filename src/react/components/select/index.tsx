@@ -2,6 +2,7 @@ import React from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
 import * as RadixSelect from '@radix-ui/react-select'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const selectTrigger = cva(
   'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between',
@@ -132,6 +133,10 @@ export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> 
   placeholder?: string
   disabled?: boolean
   name?: string
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success'
 }
 
   // Arrow icon
@@ -171,6 +176,8 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
 export const Select: React.FC<SelectProps> = ({
   className = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   error = false,
   success = false,
@@ -187,8 +194,10 @@ export const Select: React.FC<SelectProps> = ({
 }) => {
   const { theme } = useTheme()
 
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
+
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  let finalColorScheme: typeof effectiveColorScheme = effectiveColorScheme
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 

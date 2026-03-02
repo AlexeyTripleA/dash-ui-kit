@@ -5,6 +5,7 @@ import { jsxs, jsx } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import * as RadixSelect from '@radix-ui/react-select';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const selectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] focus:ring-2 inline-flex items-center justify-between', {
   variants: {
@@ -123,9 +124,12 @@ const ChevronDownIcon = ({
  * />
  */
 const Select = _a => {
+  var _b;
   var {
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -139,12 +143,13 @@ const Select = _a => {
       placeholder = 'Select an option...',
       name
     } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
+    __rest(_a, ["className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
   const {
     theme
   } = useTheme();
+  const effectiveColorScheme = (_b = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const triggerClasses = selectTrigger({
     theme,

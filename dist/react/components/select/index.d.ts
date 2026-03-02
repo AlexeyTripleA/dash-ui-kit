@@ -27,6 +27,10 @@ export interface SelectProps extends Omit<SelectVariants, 'theme' | 'disabled'> 
     placeholder?: string;
     disabled?: boolean;
     name?: string;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success';
 }
 /**
  * A versatile select component built on Radix UI that adapts to light/dark theme,

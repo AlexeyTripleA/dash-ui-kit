@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { CrossIcon } from '../icons/index.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const overlayMenuTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
@@ -266,10 +267,13 @@ const ChevronDownIcon = ({
  * @param width - Custom width (default: 200px for context-menu)
  */
 const OverlayMenu = _a => {
+  var _b;
   var {
       className = '',
       contentClassName = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -291,14 +295,15 @@ const OverlayMenu = _a => {
       width,
       onClose
     } = _a,
-    props = __rest(_a, ["className", "contentClassName", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
+    props = __rest(_a, ["className", "contentClassName", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
   const {
     theme
   } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
+  const effectiveColorScheme = (_b = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const isContextMenu = variant === 'context-menu';
   // Handle Escape key

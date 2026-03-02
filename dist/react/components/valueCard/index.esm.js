@@ -4,6 +4,7 @@ import { __rest } from 'tslib';
 import { jsx } from 'react/jsx-runtime';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const valueCard = cva('flex items-center transition-all outline outline-1 outline-offset-[-1px]', {
   variants: {
@@ -132,10 +133,13 @@ const valueCard = cva('flex items-center transition-all outline outline-1 outlin
  * </ValueCard>
  */
 const ValueCard = _a => {
+  var _b;
   var {
       as,
       link = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       clickable = false,
       loading,
@@ -143,14 +147,15 @@ const ValueCard = _a => {
       className = '',
       children
     } = _a,
-    props = __rest(_a, ["as", "link", "colorScheme", "size", "clickable", "loading", "border", "className", "children"]);
+    props = __rest(_a, ["as", "link", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "clickable", "loading", "border", "className", "children"]);
   const {
     theme
   } = useTheme();
+  const effectiveColorScheme = (_b = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   const isClickable = Boolean(link !== '' || clickable);
   const classes = valueCard({
     theme,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     clickable: isClickable,
     loading,

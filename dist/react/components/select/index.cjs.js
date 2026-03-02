@@ -9,6 +9,7 @@ var jsxRuntime = require('react/jsx-runtime');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 var RadixSelect = require('@radix-ui/react-select');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 function _interopNamespaceDefault(e) {
     var n = Object.create(null);
@@ -146,9 +147,12 @@ const ChevronDownIcon = ({
  * />
  */
 const Select = _a => {
+  var _b;
   var {
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -162,12 +166,13 @@ const Select = _a => {
       placeholder = 'Select an option...',
       name
     } = _a;
-    tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
+    tslib.__rest(_a, ["className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "disabled", "options", "showArrow", "value", "defaultValue", "onChange", "placeholder", "name"]);
   const {
     theme
   } = ThemeContext.useTheme();
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const triggerClasses = selectTrigger({
     theme,

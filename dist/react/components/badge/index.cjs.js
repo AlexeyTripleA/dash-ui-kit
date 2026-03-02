@@ -6,18 +6,23 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const Badge = _a => {
+  var _b;
   var {
       children,
       variant = 'default',
-      color = 'blue',
+      color,
+      colorLight,
+      colorDark,
       size = 'sm',
       borderRadius,
       className = '',
       onClick
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "onClick"]);
+    props = tslib.__rest(_a, ["children", "variant", "color", "colorLight", "colorDark", "size", "borderRadius", "className", "onClick"]);
+  const effectiveColor = (_b = useColorScheme.useColorScheme(color, colorLight, colorDark)) !== null && _b !== void 0 ? _b : 'blue';
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors';
   // Size classes with default border radius
   const sizeClasses = {
@@ -76,7 +81,7 @@ const Badge = _a => {
         bordered: 'outline outline-1 outline-[#F98F12] text-[#F98F12]'
       }
     };
-    return colorMap[color][variant];
+    return colorMap[effectiveColor][variant];
   };
   const classes = [baseClasses, sizeClasses[size], getVariantClasses(), borderRadius && borderRadiusClasses[borderRadius], className].filter(Boolean).join(' ');
   return jsxRuntime.jsx("span", Object.assign({

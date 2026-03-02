@@ -1,6 +1,7 @@
 import React from 'react'
 import { cva } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const styles = cva(
   `
@@ -563,6 +564,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: 'solid' | 'outline'
   /** Color scheme for the button */
   colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
   /** Size of the button */
   size?: 'sm' | 'md' | 'xl'
   /** Border radius style */
@@ -577,6 +582,8 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   variant,
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   rounded,
   disabled = false,
@@ -584,9 +591,10 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const { theme } = useTheme()
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'brand'
   const state = disabled ? 'disabled' : 'active'
   const classes =
-    styles({ theme, variant, colorScheme, size, rounded, state }) +
+    styles({ theme, variant, colorScheme: effectiveColorScheme, size, rounded, state }) +
     (className !== '' ? ` ${className}` : '')
 
   return (
