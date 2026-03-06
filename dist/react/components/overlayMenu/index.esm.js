@@ -449,7 +449,7 @@ const OverlayMenu = _a => {
           children: items.map((item, index) => {
             var _a;
             return jsx("div", {
-              className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''} ${(_a = item.className) !== null && _a !== void 0 ? _a : ''}`,
+              className: `${itemClasses} ${item.disabled ? 'opacity-50 !cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''} ${(_a = item.className) !== null && _a !== void 0 ? _a : ''}`,
               onClick: () => handleItemClick(item),
               children: item.content
             }, item.id);

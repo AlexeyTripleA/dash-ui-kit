@@ -590,7 +590,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
+                  className={`${itemClasses} ${item.disabled ? 'opacity-50 !cursor-not-allowed' : ''} ${
                     showItemBorders && index < items.length - 1
                       ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`
                       : ''
