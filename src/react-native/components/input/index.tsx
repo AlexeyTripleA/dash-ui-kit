@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { cva, VariantProps } from 'class-variance-authority'
 import { cn } from '../../utils/tw'
+import { resolveColorScheme } from '../../utils/resolveColorScheme'
 import { EyeOpenIcon, EyeClosedIcon } from '../icons'
 
 const inputStyles = cva(
@@ -103,6 +104,12 @@ const inputStyles = cva(
 type InputVariants = VariantProps<typeof inputStyles>
 
 export interface InputProps extends Omit<TextInputProps, 'editable'>, Omit<InputVariants, 'disabled'> {
+  /** Light or dark theme */
+  theme?: 'light' | 'dark'
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'light-gray'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'light-gray'
   className?: string
   error?: boolean
   success?: boolean
@@ -145,8 +152,11 @@ export interface InputProps extends Omit<TextInputProps, 'editable'>, Omit<Input
  * />
  */
 export const Input: React.FC<InputProps> = ({
+  theme = 'light',
   className = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   variant,
   error = false,
@@ -163,7 +173,8 @@ export const Input: React.FC<InputProps> = ({
   const [showPassword, setShowPassword] = useState(false)
 
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  const effectiveColorScheme = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
+  let finalColorScheme: typeof effectiveColorScheme = effectiveColorScheme
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 

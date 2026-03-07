@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
 import { CrossIcon } from '../icons'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const overlayMenuTrigger = cva(
   'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between',
@@ -300,6 +301,7 @@ export interface OverlayMenuItem {
   content: React.ReactNode
   onClick?: () => void
   disabled?: boolean
+  className?: string
 }
 
 export interface OverlayMenuPosition {
@@ -311,6 +313,7 @@ export interface OverlayMenuPosition {
 
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
   className?: string
+  triggerClassName?: string
   contentClassName?: string
   error?: boolean
   success?: boolean
@@ -325,12 +328,19 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
   triggerContent?: React.ReactNode
   placeholder?: string
   showItemBorders?: boolean
+  wrapperClassName?: string
   variant?: 'dropdown' | 'context-menu'
+  align?: 'left' | 'center' | 'right'
   headerContent?: React.ReactNode
   showCloseButton?: boolean
+  closeButtonAlign?: 'left' | 'center' | 'right'
   position?: OverlayMenuPosition
   width?: string | number
   onClose?: () => void
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray'
 }
 
 /**
@@ -343,10 +353,66 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
  * @param position - Position object for context-menu variant
  * @param width - Custom width (default: 200px for context-menu)
  */
+const closeButtonAlignClasses: Record<'left' | 'center' | 'right', string> = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end',
+}
+
+interface OverlayMenuHeaderProps {
+  headerClasses: string
+  hasContent: boolean
+  showCloseButton: boolean
+  closeButtonAlign: 'left' | 'center' | 'right'
+  isContextMenu: boolean
+  theme: 'light' | 'dark'
+  onClose: () => void
+  children?: React.ReactNode
+}
+
+const OverlayMenuHeader: React.FC<OverlayMenuHeaderProps> = ({
+  headerClasses,
+  hasContent,
+  showCloseButton,
+  closeButtonAlign,
+  isContextMenu,
+  theme,
+  onClose,
+  children,
+}) => {
+  const isCloseOnly = showCloseButton && !hasContent
+
+  return (
+    <div
+      className={`${headerClasses} ${isCloseOnly ? closeButtonAlignClasses[closeButtonAlign] : ''} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`}
+      onClick={!showCloseButton && !isContextMenu ? onClose : undefined}
+    >
+      {hasContent && (
+        <div className='w-full flex-1'>{children}</div>
+      )}
+      {showCloseButton && (
+        <button
+          className='flex items-center cursor-pointer hover:opacity-70 transition-opacity'
+          onClick={onClose}
+          aria-label='Close menu'
+        >
+          <CrossIcon
+            size={16}
+            color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
+          />
+        </button>
+      )}
+    </div>
+  )
+}
+
 export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   className = '',
+  triggerClassName = '',
   contentClassName = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   error = false,
   success = false,
@@ -362,8 +428,11 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   placeholder = 'Menu',
   showItemBorders = true,
   variant = 'dropdown',
+  align = 'left',
+  wrapperClassName = '',
   headerContent,
   showCloseButton = false,
+  closeButtonAlign = 'right',
   position,
   width,
   onClose,
@@ -373,8 +442,10 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   const [isOpen, setIsOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
+
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  let finalColorScheme: typeof effectiveColorScheme = effectiveColorScheme
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 
@@ -397,6 +468,12 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   const handleClose = () => {
     setIsOpen(false)
     onClose?.()
+  }
+
+  const alignClasses: Record<'left' | 'center' | 'right', string> = {
+    left: 'left-0',
+    center: 'left-1/2 -translate-x-1/2',
+    right: 'right-0',
   }
 
   const triggerClasses = overlayMenuTrigger({
@@ -446,13 +523,13 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   }
 
   return (
-    <div className={isContextMenu ? '' : 'relative'}>
+    <div className={isContextMenu ? wrapperClassName : `relative ${wrapperClassName}`}>
       {/* Trigger button - only for dropdown variant */}
       {!isContextMenu && (
         <button
           ref={triggerRef}
           type='button'
-          className={triggerClasses}
+          className={`${triggerClasses} ${triggerClassName}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           name={name}
@@ -486,7 +563,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
           {/* Overlay content */}
           <div
             className={`${contentClasses} ${isContextMenu ? 'fixed' : ''} ${
-              !isContextMenu ? 'top-0 left-0 right-0' : ''
+              !isContextMenu ? `top-0 ${alignClasses[align]}` : ''
             } overflow-y-auto ${contentClassName}`}
             style={{ 
               maxHeight,
@@ -494,27 +571,18 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
             }}
           >
             {/* Custom header for context-menu or overlayLabel for dropdown */}
-            {(headerContent || overlayLabel) && (
-              <div 
-                className={`${headerClasses} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`}
-                onClick={!showCloseButton && !isContextMenu ? handleClose : undefined}
+            {(headerContent || overlayLabel || showCloseButton) && (
+              <OverlayMenuHeader
+                headerClasses={headerClasses}
+                hasContent={!!(headerContent || overlayLabel)}
+                showCloseButton={showCloseButton || (isContextMenu && !!headerContent)}
+                closeButtonAlign={closeButtonAlign}
+                isContextMenu={isContextMenu}
+                theme={theme}
+                onClose={handleClose}
               >
-                <div className='w-full flex-1'>
-                  {headerContent || overlayLabel}
-                </div>
-                {(showCloseButton || (isContextMenu && headerContent)) && (
-                  <button
-                    className='flex items-center cursor-pointer hover:opacity-70 transition-opacity'
-                    onClick={handleClose}
-                    aria-label='Close menu'
-                  >
-                    <CrossIcon 
-                      size={16} 
-                      color={theme === 'dark' ? '#FFFFFF' : '#0C1C33'}
-                    />
-                  </button>
-                )}
-              </div>
+                {headerContent || overlayLabel}
+              </OverlayMenuHeader>
             )}
 
             {/* Menu items */}
@@ -522,11 +590,11 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
               {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${
-                    showItemBorders && index < items.length - 1 
+                  className={`${itemClasses} ${item.disabled ? 'opacity-50 !cursor-not-allowed' : ''} ${
+                    showItemBorders && index < items.length - 1
                       ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}`
                       : ''
-                  }`}
+                  } ${item.className ?? ''}`}
                   onClick={() => handleItemClick(item)}
                 >
                   {item.content}

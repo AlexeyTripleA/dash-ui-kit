@@ -1,11 +1,16 @@
 import React from 'react'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useColorScheme } from '../../hooks/useColorScheme'
+
+type HeadingColor = 'black' | 'gray' | 'blue' | 'red' | 'green'
 
 interface HeadingProps {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
   weight?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold'
-  color?: 'black' | 'gray' | 'blue' | 'red' | 'green'
+  color?: HeadingColor
+  colorLight?: HeadingColor
+  colorDark?: HeadingColor
   className?: string
   children: React.ReactNode
 }
@@ -49,17 +54,20 @@ export const Heading: React.FC<HeadingProps> = ({
   as = 'h1',
   size = '2xl',
   weight = 'extrabold', 
-  color = 'black',
+  color,
+  colorLight,
+  colorDark,
   className = '',
   children
 }) => {
   const { theme } = useTheme()
+  const effectiveColor = useColorScheme(color, colorLight, colorDark) ?? 'black'
   const Component = as
   
   const classes = [
     sizeClasses[size],
     weightClasses[weight],
-    colorClasses[theme][color],
+    colorClasses[theme][effectiveColor],
     'tracking-[-0.4px]',
     className
   ].filter(Boolean).join(' ')

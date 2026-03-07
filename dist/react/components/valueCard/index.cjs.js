@@ -8,6 +8,7 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const valueCard = classVarianceAuthority.cva('flex items-center transition-all outline outline-1 outline-offset-[-1px]', {
   variants: {
@@ -136,10 +137,13 @@ const valueCard = classVarianceAuthority.cva('flex items-center transition-all o
  * </ValueCard>
  */
 const ValueCard = _a => {
+  var _b;
   var {
       as,
       link = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       clickable = false,
       loading,
@@ -147,14 +151,15 @@ const ValueCard = _a => {
       className = '',
       children
     } = _a,
-    props = tslib.__rest(_a, ["as", "link", "colorScheme", "size", "clickable", "loading", "border", "className", "children"]);
+    props = tslib.__rest(_a, ["as", "link", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "clickable", "loading", "border", "className", "children"]);
   const {
     theme
   } = ThemeContext.useTheme();
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   const isClickable = Boolean(link !== '' || clickable);
   const classes = valueCard({
     theme,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     clickable: isClickable,
     loading,

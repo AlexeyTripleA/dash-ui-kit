@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
 import { CrossIcon } from '../icons'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const overlaySelectTrigger = cva(
   'w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between',
@@ -264,6 +265,10 @@ export interface OverlaySelectProps extends Omit<OverlaySelectVariants, 'theme' 
   name?: string
   overlayLabel?: string
   maxHeight?: string
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray'
 }
 
 // Arrow icon
@@ -296,6 +301,8 @@ const ChevronDownIcon: React.FC<{ className?: string }> = ({ className }) => (
 export const OverlaySelect: React.FC<OverlaySelectProps> = ({
   className = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   error = false,
   success = false,
@@ -317,8 +324,10 @@ export const OverlaySelect: React.FC<OverlaySelectProps> = ({
   const [isOpen, setIsOpen] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
+
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme
+  let finalColorScheme: typeof effectiveColorScheme = effectiveColorScheme
   if (error) finalColorScheme = 'error'
   else if (success) finalColorScheme = 'success'
 

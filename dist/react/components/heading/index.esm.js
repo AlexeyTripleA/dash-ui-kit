@@ -2,6 +2,7 @@
 
 import { jsx } from 'react/jsx-runtime';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const sizeClasses = {
   xs: 'text-xs',
@@ -39,15 +40,19 @@ const Heading = ({
   as = 'h1',
   size = '2xl',
   weight = 'extrabold',
-  color = 'black',
+  color,
+  colorLight,
+  colorDark,
   className = '',
   children
 }) => {
+  var _a;
   const {
     theme
   } = useTheme();
+  const effectiveColor = (_a = useColorScheme(color, colorLight, colorDark)) !== null && _a !== void 0 ? _a : 'black';
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][effectiveColor], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
   return jsx(Component, {
     className: classes,
     children: children

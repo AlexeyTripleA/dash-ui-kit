@@ -95,6 +95,41 @@ describe('Input', () => {
     })
   })
 
+  describe('theme-specific colorScheme', () => {
+    it('uses colorSchemeLight when theme is light', () => {
+      // colorSchemeLight="brand" with theme="light" should produce same style as explicit colorScheme="brand"
+      const { getByPlaceholderText: getOverride } = render(
+        <Input placeholder="Override" theme="light" colorScheme="default" colorSchemeLight="brand" />
+      )
+      const { getByPlaceholderText: getExplicit } = render(
+        <Input placeholder="Explicit" colorScheme="brand" />
+      )
+      expect(getOverride('Override').props.style).toEqual(getExplicit('Explicit').props.style)
+    })
+
+    it('uses colorSchemeDark when theme is dark', () => {
+      // colorSchemeDark="brand" with theme="dark" should produce different style than theme="dark" with default
+      const { getByPlaceholderText: getOverride } = render(
+        <Input placeholder="Override" theme="dark" colorScheme="default" colorSchemeDark="brand" />
+      )
+      const { getByPlaceholderText: getDefault } = render(
+        <Input placeholder="Default" theme="dark" colorScheme="default" />
+      )
+      expect(getOverride('Override').props.style).not.toEqual(getDefault('Default').props.style)
+    })
+
+    it('falls back to colorScheme when no theme-specific prop set', () => {
+      // Without overrides, colorScheme is always used regardless of theme
+      const { getByPlaceholderText: getLight } = render(
+        <Input placeholder="Light" theme="light" colorScheme="brand" />
+      )
+      const { getByPlaceholderText: getExplicit } = render(
+        <Input placeholder="Explicit" colorScheme="brand" />
+      )
+      expect(getLight('Light').props.style).toEqual(getExplicit('Explicit').props.style)
+    })
+  })
+
   describe('States', () => {
     it('renders disabled state', () => {
       const { getByPlaceholderText } = render(

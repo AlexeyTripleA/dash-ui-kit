@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { cva, VariantProps } from 'class-variance-authority'
 import { cn } from '../../utils/tw'
+import { resolveColorScheme } from '../../utils/resolveColorScheme'
 
 const buttonStyles = cva(
   'items-center justify-center flex-row min-h-11 transition-colors border border-transparent',
@@ -294,10 +295,16 @@ const textStyles = cva('font-medium', {
 type ButtonVariants = Omit<VariantProps<typeof buttonStyles>, 'disabled'>
 
 export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVariants {
+  /** Light or dark theme */
+  theme?: 'light' | 'dark'
   /** Solid, outline, or ghost style */
   variant?: 'solid' | 'outline' | 'ghost'
   /** Color scheme for the button */
   colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue'
   /** Size of the button */
   size?: 'sm' | 'md' | 'lg' | 'xl'
   /** Border radius style */
@@ -321,8 +328,11 @@ export interface ButtonProps extends Omit<PressableProps, 'style'>, ButtonVarian
  * Uses Pressable for touch interactions and twrnc for Tailwind styling.
  */
 export const Button: React.FC<ButtonProps> = ({
+  theme = 'light',
   variant,
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   rounded,
   disabled = false,
@@ -335,11 +345,12 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const isDisabled = disabled || loading
+  const effectiveColorScheme = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark) ?? 'brand'
 
   const buttonClasses =
     buttonStyles({
       variant,
-      colorScheme,
+      colorScheme: effectiveColorScheme,
       size,
       rounded,
       disabled: isDisabled,
@@ -347,7 +358,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   const textClasses = textStyles({
     variant,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
   })
 
@@ -368,7 +379,7 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'solid' && colorScheme === 'brand' ? '#fff' : '#3B82F6'}
+          color={variant === 'solid' && effectiveColorScheme === 'brand' ? '#fff' : '#3B82F6'}
         />
       ) : typeof children === 'string' ? (
         <Text style={textStyleMerged}>{children}</Text>

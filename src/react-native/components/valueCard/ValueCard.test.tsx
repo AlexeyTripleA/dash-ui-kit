@@ -292,6 +292,53 @@ describe('ValueCard Component', () => {
     })
   })
 
+  describe('theme-specific colorScheme', () => {
+    it('uses colorSchemeLight when theme is light', () => {
+      // colorSchemeLight="green" with theme="light" should produce same style as explicit colorScheme="green"
+      const { getByTestId: getOverride } = render(
+        <ValueCard testID="override" theme="light" colorScheme="default" colorSchemeLight="green">
+          Override
+        </ValueCard>
+      )
+      const { getByTestId: getExplicit } = render(
+        <ValueCard testID="explicit" colorScheme="green">
+          Explicit
+        </ValueCard>
+      )
+      expect(getOverride('override').props.style).toEqual(getExplicit('explicit').props.style)
+    })
+
+    it('uses colorSchemeDark when theme is dark', () => {
+      // colorSchemeDark="green" with theme="dark" should produce different style than theme="dark" without override
+      const { getByTestId: getOverride } = render(
+        <ValueCard testID="override" theme="dark" colorScheme="default" colorSchemeDark="green">
+          Override
+        </ValueCard>
+      )
+      const { getByTestId: getDefault } = render(
+        <ValueCard testID="default" theme="dark" colorScheme="default">
+          Default
+        </ValueCard>
+      )
+      expect(getOverride('override').props.style).not.toEqual(getDefault('default').props.style)
+    })
+
+    it('falls back to colorScheme when no theme-specific prop set', () => {
+      // Without overrides, the resolved colorScheme equals the base colorScheme
+      const { getByTestId: getWithTheme } = render(
+        <ValueCard testID="with-theme" theme="light" colorScheme="green">
+          With Theme
+        </ValueCard>
+      )
+      const { getByTestId: getExplicit } = render(
+        <ValueCard testID="explicit" colorScheme="green">
+          Explicit
+        </ValueCard>
+      )
+      expect(getWithTheme('with-theme').props.style).toEqual(getExplicit('explicit').props.style)
+    })
+  })
+
   describe('Combined variants', () => {
     it('renders green xs with border', () => {
       const { getByText } = render(

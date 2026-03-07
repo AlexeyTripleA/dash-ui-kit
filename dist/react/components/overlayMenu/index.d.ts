@@ -14,6 +14,7 @@ export interface OverlayMenuItem {
     content: React.ReactNode;
     onClick?: () => void;
     disabled?: boolean;
+    className?: string;
 }
 export interface OverlayMenuPosition {
     top?: number;
@@ -23,6 +24,7 @@ export interface OverlayMenuPosition {
 }
 export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'disabled'> {
     className?: string;
+    triggerClassName?: string;
     contentClassName?: string;
     error?: boolean;
     success?: boolean;
@@ -37,22 +39,19 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
     triggerContent?: React.ReactNode;
     placeholder?: string;
     showItemBorders?: boolean;
+    wrapperClassName?: string;
     variant?: 'dropdown' | 'context-menu';
+    align?: 'left' | 'center' | 'right';
     headerContent?: React.ReactNode;
     showCloseButton?: boolean;
+    closeButtonAlign?: 'left' | 'center' | 'right';
     position?: OverlayMenuPosition;
     width?: string | number;
     onClose?: () => void;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'gray' | 'lightGray';
 }
-/**
- * Overlay menu component that opens above the trigger with overlay positioning.
- * Supports custom content items with onClick handlers.
- *
- * @param variant - 'dropdown' (default) or 'context-menu'
- * @param headerContent - Custom header content (for context-menu variant)
- * @param showCloseButton - Show close button in header
- * @param position - Position object for context-menu variant
- * @param width - Custom width (default: 200px for context-menu)
- */
 export declare const OverlayMenu: React.FC<OverlayMenuProps>;
 export default OverlayMenu;

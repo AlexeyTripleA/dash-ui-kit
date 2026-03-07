@@ -9,6 +9,12 @@ declare const inputStyles: (props?: ({
 } & import("class-variance-authority/dist/types").ClassProp) | undefined) => string;
 type InputVariants = VariantProps<typeof inputStyles>;
 export interface InputProps extends Omit<TextInputProps, 'editable'>, Omit<InputVariants, 'disabled'> {
+    /** Light or dark theme */
+    theme?: 'light' | 'dark';
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'light-gray';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'light-gray';
     className?: string;
     error?: boolean;
     success?: boolean;

@@ -4,6 +4,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     variant?: 'solid' | 'outline';
     /** Color scheme for the button */
     colorScheme?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'brand' | 'mint' | 'gray' | 'red' | 'lightBlue' | 'lightGray' | 'white' | 'halfWhite' | 'halfBlue';
     /** Size of the button */
     size?: 'sm' | 'md' | 'xl';
     /** Border radius style */

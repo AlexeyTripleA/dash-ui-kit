@@ -209,6 +209,12 @@ const Heading = _a => {
   }));
 };
 
+function resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark) {
+  if (theme === 'light' && colorSchemeLight !== undefined) return colorSchemeLight;
+  if (theme === 'dark' && colorSchemeDark !== undefined) return colorSchemeDark;
+  return colorScheme;
+}
+
 const buttonStyles = classVarianceAuthority.cva('items-center justify-center flex-row min-h-11 transition-colors border border-transparent', {
   variants: {
     variant: {
@@ -460,9 +466,13 @@ const textStyles$1 = classVarianceAuthority.cva('font-medium', {
  * Uses Pressable for touch interactions and twrnc for Tailwind styling.
  */
 const Button = _a => {
+  var _b;
   var {
+      theme = 'light',
       variant,
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       rounded,
       disabled = false,
@@ -473,18 +483,19 @@ const Button = _a => {
       children,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["variant", "colorScheme", "size", "rounded", "disabled", "loading", "className", "style", "textStyle", "children", "onPress"]);
+    props = tslib.__rest(_a, ["theme", "variant", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "rounded", "disabled", "loading", "className", "style", "textStyle", "children", "onPress"]);
   const isDisabled = disabled || loading;
+  const effectiveColorScheme = (_b = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'brand';
   const buttonClasses = buttonStyles({
     variant,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     rounded,
     disabled: isDisabled
   }) + (className ? ` ${className}` : '');
   const textClasses = textStyles$1({
     variant,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size
   });
   // Convert Tailwind classes to React Native style objects
@@ -501,7 +512,7 @@ const Button = _a => {
   }, props, {
     children: loading ? jsxRuntime.jsx(reactNative.ActivityIndicator, {
       size: "small",
-      color: variant === 'solid' && colorScheme === 'brand' ? '#fff' : '#3B82F6'
+      color: variant === 'solid' && effectiveColorScheme === 'brand' ? '#fff' : '#3B82F6'
     }) : typeof children === 'string' ? jsxRuntime.jsx(reactNative.Text, {
       style: textStyleMerged,
       children: children
@@ -1017,9 +1028,13 @@ const inputStyles = classVarianceAuthority.cva('w-full font-normal text-sm leadi
  * />
  */
 const Input = _a => {
+  var _b;
   var {
+      theme = 'light',
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       variant,
       error = false,
@@ -1032,10 +1047,11 @@ const Input = _a => {
       style,
       textStyle
     } = _a,
-    props = tslib.__rest(_a, ["className", "colorScheme", "size", "variant", "error", "success", "disabled", "secureTextEntry", "prefix", "prefixStyle", "showPasswordToggle", "style", "textStyle"]);
+    props = tslib.__rest(_a, ["theme", "className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "variant", "error", "success", "disabled", "secureTextEntry", "prefix", "prefixStyle", "showPasswordToggle", "style", "textStyle"]);
   const [showPassword, setShowPassword] = react.useState(false);
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  const effectiveColorScheme = (_b = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const classes = inputStyles({
     colorScheme: finalColorScheme,
@@ -1595,10 +1611,14 @@ const COLOR_KEY_MAP = {
  * Supports 28 style combinations (7 colors × 4 variants) with 4 sizes and optional custom border radius.
  */
 const Badge = _a => {
+  var _b;
   var {
       children,
+      theme = 'light',
       variant = 'default',
-      color = 'blue',
+      color,
+      colorLight,
+      colorDark,
       size = 'sm',
       borderRadius,
       className = '',
@@ -1606,9 +1626,10 @@ const Badge = _a => {
       textStyle,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "color", "size", "borderRadius", "className", "style", "textStyle", "onPress"]);
+    props = tslib.__rest(_a, ["children", "theme", "variant", "color", "colorLight", "colorDark", "size", "borderRadius", "className", "style", "textStyle", "onPress"]);
+  const effectiveColor = (_b = resolveColorScheme(theme, color, colorLight, colorDark)) !== null && _b !== void 0 ? _b : 'blue';
   // Generate the color_variant key for CVA using explicit mapping
-  const normalizedColor = COLOR_KEY_MAP[color] || color;
+  const normalizedColor = COLOR_KEY_MAP[effectiveColor] || effectiveColor;
   const colorVariantKey = `color_variant_${normalizedColor}_${variant}`;
   // Build the badge container classes with proper typing
   const badgeVariantProps = {
@@ -2198,9 +2219,12 @@ const valueCardStyles = classVarianceAuthority.cva('flex flex-row items-center',
  * clickability, loading state, and optional border.
  */
 const ValueCard = _a => {
+  var _b;
   var {
       theme = 'light',
-      colorScheme = 'default',
+      colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size = 'md',
       clickable = false,
       loading = false,
@@ -2210,12 +2234,13 @@ const ValueCard = _a => {
       children,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["theme", "colorScheme", "size", "clickable", "loading", "border", "className", "style", "children", "onPress"]);
+    props = tslib.__rest(_a, ["theme", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "clickable", "loading", "border", "className", "style", "children", "onPress"]);
   const isClickable = Boolean(onPress !== null && onPress !== void 0 ? onPress : clickable);
   const isDisabled = loading;
+  const effectiveColorScheme = (_b = resolveColorScheme(theme, colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   const classes = valueCardStyles({
     theme,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     clickable: isClickable,
     loading,
@@ -2226,7 +2251,7 @@ const ValueCard = _a => {
   const content = loading ? jsxRuntime.jsx(reactNative.ActivityIndicator, {
     testID: "value-card-loading",
     size: "small",
-    color: colorScheme === 'green' ? '#22c55e' : colorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'
+    color: effectiveColorScheme === 'green' ? '#22c55e' : effectiveColorScheme === 'lightBlue' ? '#4C7EFF' : '#6B7280'
   }) : children;
   if (isClickable && !isDisabled) {
     return jsxRuntime.jsx(reactNative.Pressable, Object.assign({
@@ -2846,6 +2871,7 @@ exports.colors = colors;
 exports.getShadow = getShadow;
 exports.hexToRgba = hexToRgba;
 exports.opacity = opacity;
+exports.resolveColorScheme = resolveColorScheme;
 exports.rgba = rgba;
 exports.shadows = shadows;
 exports.spacing = spacing;

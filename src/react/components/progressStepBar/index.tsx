@@ -1,11 +1,16 @@
 import React from 'react'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useColorScheme } from '../../hooks/useColorScheme'
+
+type ProgressColor = 'blue' | 'red' | 'orange'
 
 interface ProgressStepBarProps {
   currentStep: number
   totalSteps: number
   className?: string
-  color?: 'blue' | 'red' | 'orange'
+  color?: ProgressColor
+  colorLight?: ProgressColor
+  colorDark?: ProgressColor
 }
 
 const colorConfig = {
@@ -33,10 +38,13 @@ export function ProgressStepBar({
   currentStep, 
   totalSteps, 
   className = '',
-  color = 'blue'
+  color,
+  colorLight,
+  colorDark
 }: ProgressStepBarProps): React.JSX.Element {
   const { theme } = useTheme()
-  const colors = colorConfig[color]
+  const effectiveColor = useColorScheme(color, colorLight, colorDark) ?? 'blue'
+  const colors = colorConfig[effectiveColor]
   
   return (
     <div className={`flex gap-2 w-full ${className}`}>

@@ -2,6 +2,7 @@
 
 import { jsx } from 'react/jsx-runtime';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const colorConfig = {
   blue: {
@@ -27,12 +28,16 @@ function ProgressStepBar({
   currentStep,
   totalSteps,
   className = '',
-  color = 'blue'
+  color,
+  colorLight,
+  colorDark
 }) {
+  var _a;
   const {
     theme
   } = useTheme();
-  const colors = colorConfig[color];
+  const effectiveColor = (_a = useColorScheme(color, colorLight, colorDark)) !== null && _a !== void 0 ? _a : 'blue';
+  const colors = colorConfig[effectiveColor];
   return jsx("div", {
     className: `flex gap-2 w-full ${className}`,
     children: Array.from({

@@ -1,6 +1,7 @@
 import React from 'react'
 import { cva, VariantProps } from 'class-variance-authority'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useColorScheme } from '../../hooks/useColorScheme'
 
 const valueCard = cva(
   'flex items-center transition-all outline outline-1 outline-offset-[-1px]',
@@ -79,6 +80,10 @@ export interface ValueCardProps extends Omit<ValueCardVariants, 'theme'> {
   link?: string
   className?: string
   children: React.ReactNode
+  /** Color scheme override for light theme */
+  colorSchemeLight?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow'
+  /** Color scheme override for dark theme */
+  colorSchemeDark?: 'default' | 'transparent' | 'green' | 'lightBlue' | 'white' | 'lightGray' | 'yellow'
   /** Additional props to pass to the underlying element */
   [key: string]: any
 }
@@ -97,6 +102,8 @@ export const ValueCard: React.FC<ValueCardProps> = ({
   as,
   link = '',
   colorScheme,
+  colorSchemeLight,
+  colorSchemeDark,
   size,
   clickable = false,
   loading,
@@ -106,11 +113,12 @@ export const ValueCard: React.FC<ValueCardProps> = ({
   ...props
 }) => {
   const { theme } = useTheme()
+  const effectiveColorScheme = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark) ?? 'default'
   const isClickable = Boolean(link !== '' || clickable)
 
   const classes = valueCard({
     theme,
-    colorScheme,
+    colorScheme: effectiveColorScheme,
     size,
     clickable: isClickable,
     loading,

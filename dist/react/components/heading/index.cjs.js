@@ -4,6 +4,7 @@
 
 var jsxRuntime = require('react/jsx-runtime');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const sizeClasses = {
   xs: 'text-xs',
@@ -41,15 +42,19 @@ const Heading = ({
   as = 'h1',
   size = '2xl',
   weight = 'extrabold',
-  color = 'black',
+  color,
+  colorLight,
+  colorDark,
   className = '',
   children
 }) => {
+  var _a;
   const {
     theme
   } = ThemeContext.useTheme();
+  const effectiveColor = (_a = useColorScheme.useColorScheme(color, colorLight, colorDark)) !== null && _a !== void 0 ? _a : 'black';
   const Component = as;
-  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][color], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
+  const classes = [sizeClasses[size], weightClasses[weight], colorClasses[theme][effectiveColor], 'tracking-[-0.4px]', className].filter(Boolean).join(' ');
   return jsxRuntime.jsx(Component, {
     className: classes,
     children: children

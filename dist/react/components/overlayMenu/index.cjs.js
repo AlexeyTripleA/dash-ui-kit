@@ -10,6 +10,7 @@ var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 var index = require('../icons/index.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const overlayMenuTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
@@ -269,11 +270,48 @@ const ChevronDownIcon = ({
  * @param position - Position object for context-menu variant
  * @param width - Custom width (default: 200px for context-menu)
  */
+const closeButtonAlignClasses = {
+  left: 'justify-start',
+  center: 'justify-center',
+  right: 'justify-end'
+};
+const OverlayMenuHeader = ({
+  headerClasses,
+  hasContent,
+  showCloseButton,
+  closeButtonAlign,
+  isContextMenu,
+  theme,
+  onClose,
+  children
+}) => {
+  const isCloseOnly = showCloseButton && !hasContent;
+  return jsxRuntime.jsxs("div", {
+    className: `${headerClasses} ${isCloseOnly ? closeButtonAlignClasses[closeButtonAlign] : ''} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`,
+    onClick: !showCloseButton && !isContextMenu ? onClose : undefined,
+    children: [hasContent && jsxRuntime.jsx("div", {
+      className: 'w-full flex-1',
+      children: children
+    }), showCloseButton && jsxRuntime.jsx("button", {
+      className: 'flex items-center cursor-pointer hover:opacity-70 transition-opacity',
+      onClick: onClose,
+      "aria-label": 'Close menu',
+      children: jsxRuntime.jsx(index.CrossIcon, {
+        size: 16,
+        color: theme === 'dark' ? '#FFFFFF' : '#0C1C33'
+      })
+    })]
+  });
+};
 const OverlayMenu = _a => {
+  var _b;
   var {
       className = '',
+      triggerClassName = '',
       contentClassName = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -289,20 +327,24 @@ const OverlayMenu = _a => {
       placeholder = 'Menu',
       showItemBorders = true,
       variant = 'dropdown',
+      align = 'left',
+      wrapperClassName = '',
       headerContent,
       showCloseButton = false,
+      closeButtonAlign = 'right',
       position,
       width,
       onClose
     } = _a,
-    props = tslib.__rest(_a, ["className", "contentClassName", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "headerContent", "showCloseButton", "position", "width", "onClose"]);
+    props = tslib.__rest(_a, ["className", "triggerClassName", "contentClassName", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "align", "wrapperClassName", "headerContent", "showCloseButton", "closeButtonAlign", "position", "width", "onClose"]);
   const {
     theme
   } = ThemeContext.useTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const triggerRef = React.useRef(null);
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const isContextMenu = variant === 'context-menu';
   // Handle Escape key
@@ -319,6 +361,11 @@ const OverlayMenu = _a => {
   const handleClose = () => {
     setIsOpen(false);
     onClose === null || onClose === void 0 ? void 0 : onClose();
+  };
+  const alignClasses = {
+    left: 'left-0',
+    center: 'left-1/2 -translate-x-1/2',
+    right: 'right-0'
   };
   const triggerClasses = overlayMenuTrigger({
     theme,
@@ -366,11 +413,11 @@ const OverlayMenu = _a => {
     return styles;
   };
   return jsxRuntime.jsxs("div", {
-    className: isContextMenu ? '' : 'relative',
+    className: isContextMenu ? wrapperClassName : `relative ${wrapperClassName}`,
     children: [!isContextMenu && jsxRuntime.jsxs("button", Object.assign({
       ref: triggerRef,
       type: 'button',
-      className: triggerClasses,
+      className: `${triggerClasses} ${triggerClassName}`,
       onClick: () => !disabled && setIsOpen(!isOpen),
       disabled: disabled,
       name: name
@@ -389,31 +436,28 @@ const OverlayMenu = _a => {
         className: `${isContextMenu ? 'fixed' : 'fixed'} inset-0 z-40`,
         onClick: handleClose
       }), jsxRuntime.jsxs("div", {
-        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? 'top-0 left-0 right-0' : ''} overflow-y-auto ${contentClassName}`,
+        className: `${contentClasses} ${isContextMenu ? 'fixed' : ''} ${!isContextMenu ? `top-0 ${alignClasses[align]}` : ''} overflow-y-auto ${contentClassName}`,
         style: Object.assign({
           maxHeight
         }, getPositionStyles()),
-        children: [(headerContent || overlayLabel) && jsxRuntime.jsxs("div", {
-          className: `${headerClasses} ${!showCloseButton && !isContextMenu ? 'cursor-pointer' : ''}`,
-          onClick: !showCloseButton && !isContextMenu ? handleClose : undefined,
-          children: [jsxRuntime.jsx("div", {
-            className: 'w-full flex-1',
-            children: headerContent || overlayLabel
-          }), (showCloseButton || isContextMenu && headerContent) && jsxRuntime.jsx("button", {
-            className: 'flex items-center cursor-pointer hover:opacity-70 transition-opacity',
-            onClick: handleClose,
-            "aria-label": 'Close menu',
-            children: jsxRuntime.jsx(index.CrossIcon, {
-              size: 16,
-              color: theme === 'dark' ? '#FFFFFF' : '#0C1C33'
-            })
-          })]
+        children: [(headerContent || overlayLabel || showCloseButton) && jsxRuntime.jsx(OverlayMenuHeader, {
+          headerClasses: headerClasses,
+          hasContent: !!(headerContent || overlayLabel),
+          showCloseButton: showCloseButton || isContextMenu && !!headerContent,
+          closeButtonAlign: closeButtonAlign,
+          isContextMenu: isContextMenu,
+          theme: theme,
+          onClose: handleClose,
+          children: headerContent || overlayLabel
         }), jsxRuntime.jsx("div", {
-          children: items.map((item, index) => jsxRuntime.jsx("div", {
-            className: `${itemClasses} ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''}`,
-            onClick: () => handleItemClick(item),
-            children: item.content
-          }, item.id))
+          children: items.map((item, index) => {
+            var _a;
+            return jsxRuntime.jsx("div", {
+              className: `${itemClasses} ${item.disabled ? 'opacity-50 !cursor-not-allowed' : ''} ${showItemBorders && index < items.length - 1 ? `border-b ${theme === 'dark' ? 'border-[rgba(255,255,255,0.15)]' : 'border-[rgba(12,28,51,0.05)]'}` : ''} ${(_a = item.className) !== null && _a !== void 0 ? _a : ''}`,
+              onClick: () => handleItemClick(item),
+              children: item.content
+            }, item.id);
+          })
         })]
       })]
     })]

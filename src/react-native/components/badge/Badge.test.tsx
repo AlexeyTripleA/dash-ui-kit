@@ -255,6 +255,34 @@ describe('Badge Component', () => {
     })
   })
 
+  describe('theme-specific colorScheme', () => {
+    it('uses colorLight when theme is light', () => {
+      const { getByText } = render(
+        <Badge theme="light" color="blue" colorLight="red">Light</Badge>
+      )
+      const text = getByText('Light')
+      expect(text.props.className).toContain('text-[#CD2E00]')
+      expect(text.props.className).not.toContain('text-[#4C7EFF]')
+    })
+
+    it('uses colorDark when theme is dark', () => {
+      const { getByText } = render(
+        <Badge theme="dark" color="blue" colorDark="red">Dark</Badge>
+      )
+      const text = getByText('Dark')
+      expect(text.props.className).toContain('text-[#CD2E00]')
+      expect(text.props.className).not.toContain('text-[#4C7EFF]')
+    })
+
+    it('falls back to color when no theme-specific prop set', () => {
+      const { getByText } = render(
+        <Badge theme="light" color="red">Fallback</Badge>
+      )
+      const text = getByText('Fallback')
+      expect(text.props.className).toContain('text-[#CD2E00]')
+    })
+  })
+
   describe('Sizes', () => {
     it('renders xxs size', () => {
       const { getByText } = render(<Badge size="xxs">Extra Extra Small</Badge>)

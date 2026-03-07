@@ -10,6 +10,7 @@ var React = require('react');
 var index = require('../button/index.cjs.js');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const textareaContainer = classVarianceAuthority.cva('relative flex items-baseline transition-all w-full', {
   variants: {
@@ -147,7 +148,7 @@ const textarea = classVarianceAuthority.cva('w-full bg-transparent outline-none 
  * />
  */
 const Textarea = _a => {
-  var _b, _c;
+  var _b, _c, _d;
   var {
       className = '',
       onChange,
@@ -156,18 +157,21 @@ const Textarea = _a => {
       rows = 3,
       size = 'xl',
       variant = 'outlined',
-      colorScheme = 'default',
+      colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       font = 'main',
       weight = 'light',
       error = false,
       success = false,
       disabled = false
     } = _a,
-    props = tslib.__rest(_a, ["className", "onChange", "showPasteButton", "validator", "rows", "size", "variant", "colorScheme", "font", "weight", "error", "success", "disabled"]);
+    props = tslib.__rest(_a, ["className", "onChange", "showPasteButton", "validator", "rows", "size", "variant", "colorScheme", "colorSchemeLight", "colorSchemeDark", "font", "weight", "error", "success", "disabled"]);
   const {
     theme
   } = ThemeContext.useTheme();
-  const [value, setValue] = React.useState((_c = (_b = props.value) !== null && _b !== void 0 ? _b : props.defaultValue) !== null && _c !== void 0 ? _c : '');
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
+  const [value, setValue] = React.useState((_d = (_c = props.value) !== null && _c !== void 0 ? _c : props.defaultValue) !== null && _d !== void 0 ? _d : '');
   const [isValid, setIsValid] = React.useState(null);
   const textareaRef = React.useRef(null);
   const handleChange = e => {
@@ -207,7 +211,7 @@ const Textarea = _a => {
   };
   const hasValue = value !== '';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   let finalIsValid = isValid;
   if (error) {
     finalColorScheme = 'error';

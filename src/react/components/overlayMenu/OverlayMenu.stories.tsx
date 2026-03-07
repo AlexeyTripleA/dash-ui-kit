@@ -903,3 +903,49 @@ export const HeaderContentVariants: StoryFn<OverlayMenuProps> = () => {
     </div>
   )
 }
+
+export const IconTriggerWithAlign: StoryFn<OverlayMenuProps> = () => {
+  return (
+    <div className='space-y-12 p-8'>
+      <div>
+        <label className='block text-xs text-gray-500 mb-3'>align=&quot;left&quot; (default)</label>
+        <OverlayMenu
+          items={basicMenuItems}
+          align='left'
+          showArrow={false}
+          wrapperClassName='w-fit'
+          triggerClassName='!w-auto !bg-transparent !border-0 !outline-none p-1.5 rounded-md hover:bg-gray-100'
+          triggerContent={<KebabMenuIcon />}
+        />
+      </div>
+
+      <div className='flex justify-center'>
+        <div>
+          <label className='block text-xs text-gray-500 mb-3'>align=&quot;center&quot;</label>
+          <OverlayMenu
+            items={basicMenuItems}
+            align='center'
+            showArrow={false}
+            wrapperClassName='w-fit'
+            triggerClassName='!w-auto !bg-transparent !border-0 !outline-none p-1.5 rounded-md hover:bg-gray-100'
+            triggerContent={<KebabMenuIcon />}
+          />
+        </div>
+      </div>
+
+      <div className='flex justify-end'>
+        <div>
+          <label className='block text-xs text-gray-500 mb-3'>align=&quot;right&quot;</label>
+          <OverlayMenu
+            items={basicMenuItems}
+            align='right'
+            showArrow={false}
+            wrapperClassName='w-fit'
+            triggerClassName='!w-auto !bg-transparent !border-0 !outline-none p-1.5 rounded-md hover:bg-gray-100'
+            triggerContent={<KebabMenuIcon />}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}

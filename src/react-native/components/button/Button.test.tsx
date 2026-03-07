@@ -194,6 +194,34 @@ describe('Button Component', () => {
     })
   })
 
+  describe('theme-specific colorScheme', () => {
+    it('uses colorSchemeLight when theme is light', () => {
+      const { getByText } = render(
+        <Button theme="light" colorScheme="brand" colorSchemeLight="mint">Light</Button>
+      )
+      const button = getByText('Light').parent
+      expect(button?.props.className).toContain('bg-dash-mint')
+      expect(button?.props.className).not.toContain('bg-dash-brand')
+    })
+
+    it('uses colorSchemeDark when theme is dark', () => {
+      const { getByText } = render(
+        <Button theme="dark" colorScheme="brand" colorSchemeDark="mint">Dark</Button>
+      )
+      const button = getByText('Dark').parent
+      expect(button?.props.className).toContain('bg-dash-mint')
+      expect(button?.props.className).not.toContain('bg-dash-brand')
+    })
+
+    it('falls back to colorScheme when no theme-specific prop set', () => {
+      const { getByText } = render(
+        <Button theme="light" colorScheme="mint">Fallback</Button>
+      )
+      const button = getByText('Fallback').parent
+      expect(button?.props.className).toContain('bg-dash-mint')
+    })
+  })
+
   describe('Text colors', () => {
     it('renders white text for brand solid button', () => {
       const { getByText } = render(

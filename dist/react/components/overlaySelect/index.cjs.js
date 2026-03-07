@@ -10,6 +10,7 @@ var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 var index = require('../icons/index.cjs.js');
+var useColorScheme = require('../../hooks/useColorScheme.cjs.js');
 
 const overlaySelectTrigger = classVarianceAuthority.cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
@@ -231,9 +232,12 @@ const ChevronDownIcon = ({
  * Simple select component without additional button functionality.
  */
 const OverlaySelect = _a => {
+  var _b;
   var {
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -250,14 +254,15 @@ const OverlaySelect = _a => {
       overlayLabel,
       maxHeight = '200px'
     } = _a;
-    tslib.__rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
+    tslib.__rest(_a, ["className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
   const {
     theme
   } = ThemeContext.useTheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const triggerRef = React.useRef(null);
+  const effectiveColorScheme = (_b = useColorScheme.useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const triggerClasses = overlaySelectTrigger({
     theme,

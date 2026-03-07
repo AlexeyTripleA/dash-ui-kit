@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { cva } from 'class-variance-authority';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { CrossIcon } from '../icons/index.esm.js';
+import { useColorScheme } from '../../hooks/useColorScheme.esm.js';
 
 const overlaySelectTrigger = cva('w-full transition-all font-inter appearance-none cursor-pointer relative text-[0.875rem] leading-[1.0625rem] inline-flex items-center justify-between', {
   variants: {
@@ -227,9 +228,12 @@ const ChevronDownIcon = ({
  * Simple select component without additional button functionality.
  */
 const OverlaySelect = _a => {
+  var _b;
   var {
       className = '',
       colorScheme,
+      colorSchemeLight,
+      colorSchemeDark,
       size,
       error = false,
       success = false,
@@ -246,14 +250,15 @@ const OverlaySelect = _a => {
       overlayLabel,
       maxHeight = '200px'
     } = _a;
-    __rest(_a, ["className", "colorScheme", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
+    __rest(_a, ["className", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "options", "showArrow", "value", "defaultValue", "onValueChange", "placeholder", "name", "overlayLabel", "maxHeight"]);
   const {
     theme
   } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef(null);
+  const effectiveColorScheme = (_b = useColorScheme(colorScheme, colorSchemeLight, colorSchemeDark)) !== null && _b !== void 0 ? _b : 'default';
   // Determine color scheme based on state
-  let finalColorScheme = colorScheme;
+  let finalColorScheme = effectiveColorScheme;
   if (error) finalColorScheme = 'error';else if (success) finalColorScheme = 'success';
   const triggerClasses = overlaySelectTrigger({
     theme,

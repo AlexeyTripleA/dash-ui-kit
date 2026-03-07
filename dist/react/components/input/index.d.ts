@@ -14,6 +14,10 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
     success?: boolean;
     prefix?: string | React.ReactNode;
     prefixClassName?: string;
+    /** Color scheme override for light theme */
+    colorSchemeLight?: 'default' | 'brand' | 'error' | 'success' | 'light-gray';
+    /** Color scheme override for dark theme */
+    colorSchemeDark?: 'default' | 'brand' | 'error' | 'success' | 'light-gray';
     /**
      * Controls visibility toggle for password inputs. When false, the eye icon is hidden and no extra right padding is applied.
      * Defaults to true.

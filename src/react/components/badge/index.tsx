@@ -1,4 +1,7 @@
 import React from 'react';
+import { useColorScheme } from '../../hooks/useColorScheme'
+
+type BadgeColor = 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
@@ -14,7 +17,17 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * Color theme
    */
-  color?: 'blue' | 'white' | 'gray' | 'light-gray' | 'turquoise' | 'red' | 'orange';
+  color?: BadgeColor;
+
+  /**
+   * Color override for light theme
+   */
+  colorLight?: BadgeColor;
+
+  /**
+   * Color override for dark theme
+   */
+  colorDark?: BadgeColor;
 
   /**
    * Size of the badge
@@ -40,13 +53,16 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 export const Badge: React.FC<BadgeProps> = ({
   children,
   variant = 'default',
-  color = 'blue',
+  color,
+  colorLight,
+  colorDark,
   size = 'sm',
   borderRadius,
   className = '',
   onClick,
   ...props
 }) => {
+  const effectiveColor = useColorScheme(color, colorLight, colorDark) ?? 'blue'
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors';
   
   // Size classes with default border radius
@@ -109,7 +125,7 @@ export const Badge: React.FC<BadgeProps> = ({
       },
     }
     
-    return colorMap[color][variant];
+    return colorMap[effectiveColor][variant];
   }
   
   const classes = [
