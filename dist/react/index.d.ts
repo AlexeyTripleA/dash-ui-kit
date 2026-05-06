@@ -23,6 +23,8 @@ export { ProgressStepBar, type ProgressStepBarProps } from './components/progres
 export { DashLogo, type DashLogoProps } from './components/dashLogo';
 export { Dialog, type DialogProps } from './components/dialog';
 export { Tabs, type TabsProps, type TabItem } from './components/tabs';
+export { Tooltip, type TooltipProps } from './components/tooltip';
+export { Popover, type PopoverProps } from './components/popover';
 export type { TimeDeltaFormat } from '../shared/utils/datetime';
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext';
 export { ArrowIcon, CopyIcon, SuccessIcon, ErrorIcon, QueuedIcon, PooledIcon, BroadcastedIcon, CalendarIcon, EyeOpenIcon, EyeClosedIcon, CheckIcon, KeyIcon, ProtectedMessageIcon, SmartphoneIcon, CrossIcon, WalletIcon, PlusIcon, FilterIcon, EditIcon, DeleteIcon, DocumentIcon, ChevronIcon, BurgerMenuIcon, KebabMenuIcon, CircleProcessIcon, CreditsIcon, WebIcon, ChainSmallIcon, SettingsIcon, ShieldSmallIcon, QuestionMessageIcon, CheckmarkIcon, FingerprintIcon, FaceIcon, SignIcon, SignLockIcon, LockIcon, PendingIcon, SearchIcon, AirplaneIcon, ExternalLinkIcon, InfoCircleIcon } from './components/icons';

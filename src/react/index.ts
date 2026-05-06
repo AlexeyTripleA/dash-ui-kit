@@ -23,6 +23,8 @@ export { ProgressStepBar, type ProgressStepBarProps } from './components/progres
 export { DashLogo, type DashLogoProps } from './components/dashLogo'
 export { Dialog, type DialogProps } from './components/dialog'
 export { Tabs, type TabsProps, type TabItem } from './components/tabs'
+export { Tooltip, type TooltipProps } from './components/tooltip'
+export { Popover, type PopoverProps } from './components/popover'
 export type { TimeDeltaFormat } from '../shared/utils/datetime'
 export { ThemeProvider, useTheme, type Theme, type ThemeContextValue, type ThemeProviderProps } from './contexts/ThemeContext'
 export {
