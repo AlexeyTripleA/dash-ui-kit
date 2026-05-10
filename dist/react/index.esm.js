@@ -25,6 +25,8 @@ export { ProgressStepBar } from './components/progressStepBar/index.esm.js';
 export { DashLogo } from './components/dashLogo/index.esm.js';
 export { DashDialog as Dialog } from './components/dialog/index.esm.js';
 export { Tabs } from './components/tabs/index.esm.js';
+export { Tooltip } from './components/tooltip/index.esm.js';
+export { Popover } from './components/popover/index.esm.js';
 export { ThemeProvider, useTheme } from './contexts/ThemeContext.esm.js';
 export { AirplaneIcon, ArrowIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, WalletIcon, WebIcon } from './components/icons/index.esm.js';
 //# sourceMappingURL=index.esm.js.map

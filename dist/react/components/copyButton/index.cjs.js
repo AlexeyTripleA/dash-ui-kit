@@ -8,7 +8,7 @@ var tslib = require('tslib');
 var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
 var classVarianceAuthority = require('class-variance-authority');
-var Popover = require('@radix-ui/react-popover');
+var PopoverPrimitive = require('@radix-ui/react-popover');
 var index = require('../icons/index.cjs.js');
 var ThemeContext = require('../../contexts/ThemeContext.cjs.js');
 var copyToClipboard = require('../../utils/copyToClipboard.cjs.js');
@@ -30,7 +30,7 @@ function _interopNamespaceDefault(e) {
     return Object.freeze(n);
 }
 
-var Popover__namespace = /*#__PURE__*/_interopNamespaceDefault(Popover);
+var PopoverPrimitive__namespace = /*#__PURE__*/_interopNamespaceDefault(PopoverPrimitive);
 
 const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
   variants: {
@@ -61,9 +61,9 @@ const CopyButton = _a => {
     setOpen(true);
     setTimeout(() => setOpen(false), 1000);
   };
-  return jsxRuntime.jsxs(Popover__namespace.Root, {
+  return jsxRuntime.jsxs(PopoverPrimitive__namespace.Root, {
     open: open,
-    children: [jsxRuntime.jsx(Popover__namespace.Trigger, {
+    children: [jsxRuntime.jsx(PopoverPrimitive__namespace.Trigger, {
       asChild: true,
       children: jsxRuntime.jsx("button", Object.assign({
         type: 'button',
@@ -77,12 +77,12 @@ const CopyButton = _a => {
           color: theme === 'light' ? '#000000' : '#ffffff'
         })
       }))
-    }), jsxRuntime.jsx(Popover__namespace.Portal, {
-      children: jsxRuntime.jsxs(Popover__namespace.Content, {
+    }), jsxRuntime.jsx(PopoverPrimitive__namespace.Portal, {
+      children: jsxRuntime.jsxs(PopoverPrimitive__namespace.Content, {
         className: 'bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg',
         side: 'top',
         sideOffset: 5,
-        children: ["Copied", jsxRuntime.jsx(Popover__namespace.Arrow, {
+        children: ["Copied", jsxRuntime.jsx(PopoverPrimitive__namespace.Arrow, {
           className: 'fill-white'
         })]
       })
