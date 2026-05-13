@@ -68,5 +68,6 @@ export {
   SearchIcon,
   AirplaneIcon,
   ExternalLinkIcon,
-  InfoCircleIcon
+  InfoCircleIcon,
+  RefreshIcon
 } from './icons'

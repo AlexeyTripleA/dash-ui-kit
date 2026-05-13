@@ -44,7 +44,8 @@ import {
   ExternalLinkIcon,
   InfoCircleIcon,
   TopRightArrowIcon,
-  AsteriskIcon
+  AsteriskIcon,
+  RefreshIcon
 } from './index'
 
 const meta: Meta = {
@@ -255,6 +256,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <AsteriskIcon />
         <span className="text-sm">AsteriskIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <RefreshIcon />
+        <span className="text-sm">RefreshIcon</span>
       </div>
     </div>
   ),
@@ -738,6 +743,16 @@ export const Asterisk: StoryObj = {
   render: (args) => <AsteriskIcon {...args} />,
   args: {
     size: 16,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Refresh Icon
+export const Refresh: StoryObj = {
+  render: (args) => <RefreshIcon {...args} />,
+  args: {
+    size: 13,
     color: '#0C1C33',
     className: ''
   }

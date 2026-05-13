@@ -69,6 +69,7 @@ export {
   SearchIcon,
   AirplaneIcon,
   ExternalLinkIcon,
-  InfoCircleIcon
+  InfoCircleIcon,
+  RefreshIcon
 } from './components/icons'
 export type { IconProps } from './components/icons'

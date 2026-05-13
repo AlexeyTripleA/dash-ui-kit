@@ -18,7 +18,8 @@ import {
   QueuedIcon,
   PooledIcon,
   BroadcastedIcon,
-  AsteriskIcon
+  AsteriskIcon,
+  RefreshIcon
 } from './index'
 
 const meta: Meta = {
@@ -117,6 +118,10 @@ export const AllIcons: StoryObj = {
       <View style={styles.iconContainer}>
         <AsteriskIcon />
         <Text style={styles.iconLabel}>AsteriskIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <RefreshIcon />
+        <Text style={styles.iconLabel}>RefreshIcon</Text>
       </View>
     </View>
   )
@@ -367,6 +372,19 @@ export const Asterisk: StoryObj = {
   ),
   args: {
     size: 16,
+    color: '#0C1C33'
+  }
+}
+
+// Refresh Icon
+export const Refresh: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <RefreshIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 13,
     color: '#0C1C33'
   }
 }

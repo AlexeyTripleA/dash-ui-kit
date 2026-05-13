@@ -18,6 +18,7 @@ export declare const InfoCircleIcon: React.FC<IconProps>;
 export declare const EyeOpenIcon: React.FC<IconProps>;
 export declare const EyeClosedIcon: React.FC<IconProps>;
 export declare const AsteriskIcon: React.FC<IconProps>;
+export declare const RefreshIcon: React.FC<IconProps>;
 export declare const TopRightArrowIcon: React.FC<IconProps>;
 export declare const QueuedIcon: React.FC<IconProps>;
 export declare const PooledIcon: React.FC<IconProps>;
@@ -40,4 +41,5 @@ export declare const Icons: {
     PooledIcon: React.FC<IconProps>;
     BroadcastedIcon: React.FC<IconProps>;
     AsteriskIcon: React.FC<IconProps>;
+    RefreshIcon: React.FC<IconProps>;
 };
