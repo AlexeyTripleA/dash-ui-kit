@@ -96,6 +96,7 @@ exports.PooledIcon = index$r.PooledIcon;
 exports.ProtectedMessageIcon = index$r.ProtectedMessageIcon;
 exports.QuestionMessageIcon = index$r.QuestionMessageIcon;
 exports.QueuedIcon = index$r.QueuedIcon;
+exports.RefreshIcon = index$r.RefreshIcon;
 exports.SearchIcon = index$r.SearchIcon;
 exports.SettingsIcon = index$r.SettingsIcon;
 exports.ShieldSmallIcon = index$r.ShieldSmallIcon;

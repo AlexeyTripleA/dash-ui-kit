@@ -1051,6 +1051,25 @@ const InfoCircleIcon = ({
     })
   })]
 });
+const RefreshIcon = ({
+  color = '#0C1C33',
+  size = 13,
+  className = '',
+  onClick
+}) => jsx("svg", {
+  width: size,
+  height: size,
+  viewBox: '0 0 13 13',
+  fill: 'none',
+  xmlns: 'http://www.w3.org/2000/svg',
+  className: className,
+  onClick: onClick,
+  color: color,
+  children: jsx("path", {
+    d: 'M0 6.5C0 2.91015 2.91013 0 6.5 0C8.09402 0 9.55415 0.57443 10.6846 1.52637V0.50293C10.6846 0.226789 10.9084 0.00292969 11.1846 0.00292969C11.4607 0.00293123 11.6846 0.22679 11.6846 0.50293V2.75293C11.6846 2.76547 11.6816 2.77773 11.6807 2.79004C11.68 2.79824 11.6788 2.80629 11.6777 2.81445C11.6472 3.06139 11.4398 3.25293 11.1846 3.25293H8.93457C8.65843 3.25293 8.43457 3.02907 8.43457 2.75293C8.43457 2.47679 8.65843 2.25293 8.93457 2.25293H9.99414C9.04373 1.46998 7.82707 1 6.5 1C3.46242 1 1 3.46243 1 6.5C1 9.53758 3.46242 12 6.5 12C9.53757 12 12 9.53758 12 6.5C12 6.22386 12.2239 6 12.5 6C12.7761 6 13 6.22386 13 6.5C13 10.0899 10.0899 13 6.5 13C2.91013 13 0 10.0899 0 6.5Z',
+    fill: 'currentColor'
+  })
+});
 const DocumentIcon = ({
   color = '#4C7EFF',
   size = 14,
@@ -1124,5 +1143,5 @@ const TopRightArrowIcon = ({
   })
 });
 
-export { AirplaneIcon, ArrowIcon, AsteriskIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, TopRightArrowIcon, WalletIcon, WebIcon };
+export { AirplaneIcon, ArrowIcon, AsteriskIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, RefreshIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, TopRightArrowIcon, WalletIcon, WebIcon };
 //# sourceMappingURL=index.esm.js.map
