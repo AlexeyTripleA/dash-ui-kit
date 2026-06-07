@@ -45,7 +45,8 @@ import {
   InfoCircleIcon,
   TopRightArrowIcon,
   AsteriskIcon,
-  RefreshIcon
+  RefreshIcon,
+  AttentionCircleIcon
 } from './index'
 
 const meta: Meta = {
@@ -260,6 +261,10 @@ export const AllIcons: StoryObj = {
       <div className="flex flex-col items-center gap-2">
         <RefreshIcon />
         <span className="text-sm">RefreshIcon</span>
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <AttentionCircleIcon />
+        <span className="text-sm">AttentionCircleIcon</span>
       </div>
     </div>
   ),
@@ -753,6 +758,16 @@ export const Refresh: StoryObj = {
   render: (args) => <RefreshIcon {...args} />,
   args: {
     size: 13,
+    color: '#0C1C33',
+    className: ''
+  }
+}
+
+// Attention Circle Icon
+export const AttentionCircle: StoryObj = {
+  render: (args) => <AttentionCircleIcon {...args} />,
+  args: {
+    size: 27,
     color: '#0C1C33',
     className: ''
   }
