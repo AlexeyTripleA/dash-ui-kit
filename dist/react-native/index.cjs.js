@@ -933,6 +933,26 @@ const BroadcastedIcon = ({
     strokeLinejoin: 'round'
   })]
 });
+const AttentionCircleIcon = ({
+  color = '#0C1C33',
+  size = 27,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 27 27',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsx(Svg.Path, {
+    d: 'M26.5032 13.2516C26.5032 20.5702 20.5702 26.5032 13.2516 26.5032C5.93294 26.5032 0 20.5702 0 13.2516C0 5.93294 5.93294 0 13.2516 0C20.5702 0 26.5032 5.93294 26.5032 13.2516Z',
+    fill: color,
+    fillOpacity: '0.03'
+  }), jsxRuntime.jsx(Svg.Path, {
+    d: 'M11.9999 18.701V16.7927H14.1626V18.701H11.9999ZM11.9999 15.8386V7.25158H14.1626V15.8386H11.9999Z',
+    fill: color
+  })]
+});
 // Export all icons as a collection
 const Icons = {
   ArrowIcon,
@@ -952,7 +972,8 @@ const Icons = {
   PooledIcon,
   BroadcastedIcon,
   AsteriskIcon,
-  RefreshIcon
+  RefreshIcon,
+  AttentionCircleIcon
 };
 
 const inputStyles = classVarianceAuthority.cva('w-full font-normal text-sm leading-[17px]', {
@@ -2850,6 +2871,7 @@ function getShadow(size) {
 
 exports.ArrowIcon = ArrowIcon;
 exports.AsteriskIcon = AsteriskIcon;
+exports.AttentionCircleIcon = AttentionCircleIcon;
 exports.Avatar = Avatar;
 exports.Badge = Badge;
 exports.BigNumber = BigNumber;
