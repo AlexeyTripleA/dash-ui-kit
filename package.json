@@ -13,6 +13,10 @@
   "license": "ISC",
   "type": "module",
   "author": "pshenmic.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexeyTripleA/dash-ui-kit.git"
+  },
   "files": [
     "dist",
     "tailwind.config.rn.js"
