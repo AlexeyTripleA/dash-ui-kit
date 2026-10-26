@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { cva } from 'class-variance-authority'
 import * as Popover from '@radix-ui/react-popover'
 import { CopyIcon } from '../icons'
 import { useTheme } from '../../contexts/ThemeContext'
 import copyToClipboard, { CopyResult } from '../../utils/copyToClipboard'
+
+/** How the last copy attempt ended; 'idle' hides the feedback popover. */
+type CopyState = 'idle' | 'copied' | 'failed'
+
+const FEEDBACK_DURATION_MS = 1000
 
 const copyBtn = cva(
   'p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors',
@@ -25,22 +30,49 @@ export interface CopyButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
   text: string
   /** Optional callback that will be called with the copy result */
   onCopy?: (result: CopyResult) => void
+  /** Feedback shown after a successful copy */
+  copiedLabel?: string
+  /** Feedback shown after a failed copy */
+  failedLabel?: string
 }
 
-export const CopyButton: React.FC<CopyButtonProps> = ({ text, className, onCopy, ...props }) => {
+export const CopyButton: React.FC<CopyButtonProps> = ({
+  text,
+  className,
+  onCopy,
+  copiedLabel = 'Copied',
+  failedLabel = 'Copy failed',
+  ...props
+}) => {
   const { theme } = useTheme()
-  const [open, setOpen] = useState(false)
+  const [state, setState] = useState<CopyState>('idle')
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => {
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current)
+  }, [])
+
+  const showResult = (result: CopyState) => {
+    setState(result)
+
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS)
+  }
 
   const handleCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     e.preventDefault()
-    copyToClipboard(text, onCopy)
-    setOpen(true)
-    setTimeout(() => setOpen(false), 1000)
+
+    copyToClipboard(text, (result) => {
+      showResult(result.status ? 'copied' : 'failed')
+      onCopy?.(result)
+    })
   }
 
+  const failed = state === 'failed'
+
   return (
-    <Popover.Root open={open}>
+    <Popover.Root open={state !== 'idle'}>
       <Popover.Trigger asChild>
         <button
           type='button'
@@ -56,11 +88,12 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className, onCopy,
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className='bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg'
+          className={`bg-white text-sm px-2 py-1 rounded shadow-lg ${failed ? 'text-red-600' : 'text-gray-900'}`}
           side='top'
           sideOffset={5}
+          role='status'
         >
-          Copied
+          {failed ? failedLabel : copiedLabel}
           <Popover.Arrow className='fill-white' />
         </Popover.Content>
       </Popover.Portal>

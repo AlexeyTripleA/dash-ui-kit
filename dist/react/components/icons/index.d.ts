@@ -51,3 +51,4 @@ export declare const DocumentIcon: React.FC<IconProps>;
 export declare const AsteriskIcon: React.FC<IconProps>;
 export declare const TopRightArrowIcon: React.FC<IconProps>;
 export declare const AttentionCircleIcon: React.FC<IconProps>;
+export declare const BellIcon: React.FC<IconProps>;

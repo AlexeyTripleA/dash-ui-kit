@@ -41,7 +41,12 @@ export interface BadgeProps extends Omit<PressableProps, 'style'> {
   /**
    * Size of the badge
    */
-  size?: 'xxs' | 'xs' | 'sm' | 'xl'
+  size?: 'xxs' | 'xs' | 'sm' | 'xl' | 'icon' | 'counter'
+
+  /**
+   * Shape: pill (rounded sides), square (24x24 icon tile) or circle (fixed size, no padding)
+   */
+  shape?: 'pill' | 'square' | 'circle'
 
   /**
    * Border radius variant
@@ -79,6 +84,14 @@ const badgeStyles = cva(
         xs: 'px-2 py-1 text-xs rounded-full',
         sm: 'px-[34px] py-[10px] text-xs rounded-full',
         xl: 'px-9 py-4 text-lg rounded-full',
+        icon: 'w-6 h-6 p-0 shrink-0 rounded-[6px]',
+        counter: 'min-w-5 h-5 px-1 rounded-full',
+      },
+      shape: {
+        default: '',
+        pill: 'rounded-full',
+        square: 'rounded-[6px]',
+        circle: 'rounded-full aspect-square px-0',
       },
       borderRadius: {
         default: '',
@@ -178,6 +191,7 @@ const badgeStyles = cva(
     },
     defaultVariants: {
       size: 'sm',
+      shape: 'default',
       borderRadius: 'default',
     },
   }
@@ -191,6 +205,8 @@ const textStyles = cva('font-medium', {
       xs: 'text-xs',
       sm: 'text-xs',
       xl: 'text-lg',
+      icon: 'text-[10px] leading-none',
+      counter: 'text-[10px] leading-none',
     },
     // Text colors for each color and variant combination
     color_variant_blue_default: {
@@ -317,6 +333,7 @@ export const Badge: React.FC<BadgeProps> = ({
   colorLight,
   colorDark,
   size = 'sm',
+  shape,
   borderRadius,
   className = '',
   style,
@@ -333,6 +350,7 @@ export const Badge: React.FC<BadgeProps> = ({
   // Build the badge container classes with proper typing
   const badgeVariantProps: BadgeVariantProps = {
     size,
+    shape: shape || 'default',
     borderRadius: borderRadius || 'default',
     [colorVariantKey]: true,
   }

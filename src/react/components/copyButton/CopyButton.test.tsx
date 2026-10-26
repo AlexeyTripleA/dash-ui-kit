@@ -56,24 +56,72 @@ describe('CopyButton', () => {
     const button = screen.getByRole('button')
     fireEvent.click(button)
     
-    expect(copyToClipboard.default).toHaveBeenCalledWith(testText, undefined)
+    expect(copyToClipboard.default).toHaveBeenCalledWith(testText, expect.any(Function))
   })
 
-  it('calls copyToClipboard with callback when provided', async () => {
-    const testText = 'Hello, World!'
+  it('forwards the copy result to the onCopy callback', async () => {
+    const result = { status: true }
     const mockCallback = vi.fn()
     const copyToClipboard = await import('../../utils/copyToClipboard')
+    vi.mocked(copyToClipboard.default).mockImplementationOnce((_text, callback) => callback?.(result))
     
     render(
       <TestWrapper>
-        <CopyButton text={testText} onCopy={mockCallback} />
+        <CopyButton text="test" onCopy={mockCallback} />
       </TestWrapper>
     )
     
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
+    fireEvent.click(screen.getByRole('button'))
     
-    expect(copyToClipboard.default).toHaveBeenCalledWith(testText, mockCallback)
+    expect(mockCallback).toHaveBeenCalledWith(result)
+  })
+
+  it('shows the success feedback when the copy succeeds', async () => {
+    const copyToClipboard = await import('../../utils/copyToClipboard')
+    vi.mocked(copyToClipboard.default).mockImplementationOnce((_text, callback) => callback?.({ status: true }))
+    
+    render(
+      <TestWrapper>
+        <CopyButton text="test" />
+      </TestWrapper>
+    )
+    
+    fireEvent.click(screen.getByRole('button'))
+    
+    expect(await screen.findByText('Copied')).toBeInTheDocument()
+  })
+
+  it('shows the failure feedback when the copy fails', async () => {
+    const copyToClipboard = await import('../../utils/copyToClipboard')
+    vi.mocked(copyToClipboard.default).mockImplementationOnce((_text, callback) =>
+      callback?.({ status: false, message: new Error('denied') })
+    )
+    
+    render(
+      <TestWrapper>
+        <CopyButton text="test" />
+      </TestWrapper>
+    )
+    
+    fireEvent.click(screen.getByRole('button'))
+    
+    expect(await screen.findByText('Copy failed')).toBeInTheDocument()
+    expect(screen.queryByText('Copied')).not.toBeInTheDocument()
+  })
+
+  it('uses custom feedback labels when provided', async () => {
+    const copyToClipboard = await import('../../utils/copyToClipboard')
+    vi.mocked(copyToClipboard.default).mockImplementationOnce((_text, callback) => callback?.({ status: true }))
+    
+    render(
+      <TestWrapper>
+        <CopyButton text="test" copiedLabel="Saved" />
+      </TestWrapper>
+    )
+    
+    fireEvent.click(screen.getByRole('button'))
+    
+    expect(await screen.findByText('Saved')).toBeInTheDocument()
   })
 
   it('prevents default behavior and stops propagation on click', () => {

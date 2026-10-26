@@ -32,7 +32,12 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * Size of the badge
    */
-  size?: 'xxs' | 'xs' | 'sm' | 'xl';
+  size?: 'xxs' | 'xs' | 'sm' | 'xl' | 'icon' | 'counter';
+
+  /**
+   * Shape: pill (rounded sides), square (24x24 icon tile) or circle (fixed size, no padding)
+   */
+  shape?: 'pill' | 'square' | 'circle';
 
   /**
    * Border radius variant
@@ -57,6 +62,7 @@ export const Badge: React.FC<BadgeProps> = ({
   colorLight,
   colorDark,
   size = 'sm',
+  shape,
   borderRadius,
   className = '',
   onClick,
@@ -71,6 +77,15 @@ export const Badge: React.FC<BadgeProps> = ({
     xs: 'px-[0.5rem] py-[0.25rem] text-xs rounded-full',
     sm: 'px-[2.125rem] py-[0.625rem] text-xs rounded-full',
     xl: 'px-[2.25rem] py-4 text-lg rounded-full',
+    icon: 'w-6 h-6 shrink-0 p-0 text-[0.625rem] leading-none rounded-[0.375rem]',
+    counter: 'min-w-5 h-5 px-1 text-[0.625rem] leading-none rounded-full',
+  }
+
+  // Shape classes (override size border radius)
+  const shapeClasses = {
+    pill: 'rounded-full',
+    square: 'rounded-[0.375rem]',
+    circle: 'rounded-full aspect-square !px-0',
   }
 
   // Border radius classes (overrides size border radius)
@@ -132,6 +147,7 @@ export const Badge: React.FC<BadgeProps> = ({
     baseClasses,
     sizeClasses[size],
     getVariantClasses(),
+    shape && shapeClasses[shape],
     borderRadius && borderRadiusClasses[borderRadius],
     className,
   ].filter(Boolean).join(' ')

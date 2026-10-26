@@ -951,6 +951,29 @@ const AttentionCircleIcon = ({
     fill: color
   })]
 });
+const BellIcon = ({
+  color = '#0C1C33',
+  size = 24,
+  onPress
+}) => jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsx(Path, {
+    d: 'M12 4.5C9.24 4.5 7 6.74 7 9.5V12.9L5.5 15.4V16.5H18.5V15.4L17 12.9V9.5C17 6.74 14.76 4.5 12 4.5Z',
+    stroke: color,
+    strokeWidth: '1.07',
+    strokeLinejoin: 'round'
+  }), jsx(Path, {
+    d: 'M10 18.75C10.3 19.6 11.08 20.2 12 20.2C12.92 20.2 13.7 19.6 14 18.75',
+    stroke: color,
+    strokeWidth: '1.07',
+    strokeLinecap: 'round'
+  })]
+});
 // Export all icons as a collection
 const Icons = {
   ArrowIcon,
@@ -971,7 +994,8 @@ const Icons = {
   BroadcastedIcon,
   AsteriskIcon,
   RefreshIcon,
-  AttentionCircleIcon
+  AttentionCircleIcon,
+  BellIcon
 };
 
 const inputStyles = cva('w-full font-normal text-sm leading-[17px]', {
@@ -1428,7 +1452,15 @@ const badgeStyles = cva('inline-flex items-center justify-center font-medium', {
       xxs: 'px-1 py-1 text-xs rounded-full',
       xs: 'px-2 py-1 text-xs rounded-full',
       sm: 'px-[34px] py-[10px] text-xs rounded-full',
-      xl: 'px-9 py-4 text-lg rounded-full'
+      xl: 'px-9 py-4 text-lg rounded-full',
+      icon: 'w-6 h-6 p-0 shrink-0 rounded-[6px]',
+      counter: 'min-w-5 h-5 px-1 rounded-full'
+    },
+    shape: {
+      default: '',
+      pill: 'rounded-full',
+      square: 'rounded-[6px]',
+      circle: 'rounded-full aspect-square px-0'
     },
     borderRadius: {
       default: '',
@@ -1528,6 +1560,7 @@ const badgeStyles = cva('inline-flex items-center justify-center font-medium', {
   },
   defaultVariants: {
     size: 'sm',
+    shape: 'default',
     borderRadius: 'default'
   }
 });
@@ -1538,7 +1571,9 @@ const textStyles = cva('font-medium', {
       xxs: 'text-xs',
       xs: 'text-xs',
       sm: 'text-xs',
-      xl: 'text-lg'
+      xl: 'text-lg',
+      icon: 'text-[10px] leading-none',
+      counter: 'text-[10px] leading-none'
     },
     // Text colors for each color and variant combination
     color_variant_blue_default: {
@@ -1656,13 +1691,14 @@ const Badge = _a => {
       colorLight,
       colorDark,
       size = 'sm',
+      shape,
       borderRadius,
       className = '',
       style,
       textStyle,
       onPress
     } = _a,
-    props = __rest(_a, ["children", "theme", "variant", "color", "colorLight", "colorDark", "size", "borderRadius", "className", "style", "textStyle", "onPress"]);
+    props = __rest(_a, ["children", "theme", "variant", "color", "colorLight", "colorDark", "size", "shape", "borderRadius", "className", "style", "textStyle", "onPress"]);
   const effectiveColor = (_b = resolveColorScheme(theme, color, colorLight, colorDark)) !== null && _b !== void 0 ? _b : 'blue';
   // Generate the color_variant key for CVA using explicit mapping
   const normalizedColor = COLOR_KEY_MAP[effectiveColor] || effectiveColor;
@@ -1670,6 +1706,7 @@ const Badge = _a => {
   // Build the badge container classes with proper typing
   const badgeVariantProps = {
     size,
+    shape: shape || 'default',
     borderRadius: borderRadius || 'default',
     [colorVariantKey]: true
   };
@@ -1818,11 +1855,7 @@ function getClipboard() {
     const ExpoClipboard = require('expo-clipboard');
     if ((ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.setStringAsync) && (ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.getStringAsync)) {
       clipboardInstance = {
-        setString: text => {
-          ExpoClipboard.setStringAsync(text).catch(err => {
-            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
-          });
-        },
+        setString: text => ExpoClipboard.setStringAsync(text),
         getString: () => ExpoClipboard.getStringAsync()
       };
       return clipboardInstance;
@@ -1849,7 +1882,7 @@ function getClipboard() {
   console.warn('[dash-ui-kit] No clipboard library found. Please install either:\n' + '  - expo-clipboard (for Expo projects): npx expo install expo-clipboard\n' + '  - @react-native-clipboard/clipboard (for React Native): npm install @react-native-clipboard/clipboard');
   clipboardInstance = {
     setString: () => {
-      console.warn('[dash-ui-kit] Clipboard not available');
+      throw new Error('[dash-ui-kit] Clipboard not available');
     },
     getString: async () => ''
   };
@@ -1861,12 +1894,25 @@ function getClipboard() {
  */
 const Clipboard = {
   /**
-   * Set string to clipboard
+   * Set string to clipboard, ignoring the result
    * @param text - Text to copy
    */
   setString: text => {
-    const clipboard = getClipboard();
-    clipboard.setString(text);
+    void Clipboard.setStringAsync(text);
+  },
+  /**
+   * Set string to clipboard and report whether it worked
+   * @param text - Text to copy
+   * @returns Promise resolving to true on success, false on failure
+   */
+  setStringAsync: async text => {
+    try {
+      await getClipboard().setString(text);
+      return true;
+    } catch (err) {
+      console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+      return false;
+    }
   },
   /**
    * Get string from clipboard
@@ -1881,7 +1927,7 @@ const Clipboard = {
 const FEEDBACK_DURATION_MS = 1000;
 /**
  * React Native CopyButton component. Copies text to clipboard on press
- * and shows "Copied!" feedback briefly.
+ * and briefly reports whether the copy succeeded.
  */
 const CopyButton = ({
   text,
@@ -1889,16 +1935,18 @@ const CopyButton = ({
   className = '',
   style,
   textStyle,
-  accessibilityLabel = 'Copy to clipboard'
+  accessibilityLabel = 'Copy to clipboard',
+  copiedLabel = 'Copied!',
+  failedLabel = 'Copy failed'
 }) => {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState('idle');
   const timeoutRef = useRef(null);
-  const handlePress = useCallback(() => {
-    Clipboard.setString(text);
-    setCopied(true);
-    onCopy === null || onCopy === void 0 ? void 0 : onCopy(true);
+  const handlePress = useCallback(async () => {
+    const success = await Clipboard.setStringAsync(text);
+    setState(success ? 'copied' : 'failed');
+    onCopy === null || onCopy === void 0 ? void 0 : onCopy(success);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS);
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS);
   }, [text, onCopy]);
   useEffect(() => {
     return () => {
@@ -1907,10 +1955,13 @@ const CopyButton = ({
   }, []);
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
-  const copiedTextClasses = 'text-xs text-dash-brand font-medium';
-  const copiedTextStyle = [cn(copiedTextClasses), textStyle].filter(Boolean);
+  const failed = state === 'failed';
+  const feedbackTextClasses = `text-xs font-medium ${failed ? 'text-red-600' : 'text-dash-brand'}`;
+  const feedbackTextStyle = [cn(feedbackTextClasses), textStyle].filter(Boolean);
   return jsx(Pressable, {
-    onPress: handlePress,
+    onPress: () => {
+      void handlePress();
+    },
     style: ({
       pressed
     }) => [buttonStyle, pressed && {
@@ -1918,11 +1969,11 @@ const CopyButton = ({
     }].filter(Boolean),
     accessibilityLabel: accessibilityLabel,
     accessibilityRole: "button",
-    children: copied ? jsx(View, {
+    children: state !== 'idle' ? jsx(View, {
       style: cn('items-center justify-center min-w-4 min-h-4'),
       children: jsx(Text$1, {
-        style: copiedTextStyle,
-        children: "Copied!"
+        style: feedbackTextStyle,
+        children: failed ? failedLabel : copiedLabel
       })
     }) : jsx(CopyIcon, {
       color: "#0C1C33",
@@ -1978,6 +2029,47 @@ const identifier = cva('flex flex-row items-center font-dash-grotesque text-sm f
     highlight: 'default'
   }
 });
+/** CVA for ID text: theme color, size and weight */
+const identifierText = cva('', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-white'
+    },
+    size: {
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl'
+    },
+    weight: {
+      light: 'font-light',
+      normal: 'font-normal',
+      medium: 'font-medium'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'sm',
+    weight: 'normal'
+  }
+});
+/** Off-screen box that lets text take its natural single-line width */
+const MEASURE_STYLE = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: 10000,
+  opacity: 0,
+  alignItems: 'flex-start'
+};
+/** Lets an auto-fitted ID shrink to its parent width */
+const AUTO_ROOT_STYLE = {
+  width: '100%',
+  flexShrink: 1,
+  minWidth: 0
+};
 /** CVA for each symbol text: inherits root color or dims */
 const symbol = cva('flex-1', {
   variants: {
@@ -2030,6 +2122,7 @@ const highlightModes = {
 const HighlightedID = ({
   children,
   mode,
+  count = 5,
   theme = 'light',
   textStyle
 }) => {
@@ -2038,39 +2131,77 @@ const HighlightedID = ({
   });
   const text = String(children);
   const cfg = highlightModes[mode];
-  const count = 5;
-  const minLength = count * 2 + 1; // 11
-  if (text.length < minLength) {
-    const symbolStyle = [cn(symbol({
-      dim: cfg.middle
-    })), textStyle].filter(Boolean);
-    return jsx(Text$1, {
-      style: symbolStyle,
+  const edge = Math.min(count, Math.floor(text.length / 2));
+  return jsxs(Text$1, {
+    style: textStyle,
+    children: [jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.first
+      })),
+      children: text.slice(0, edge)
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(edge, text.length - edge)
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.last
+      })),
+      children: text.slice(text.length - edge)
+    })]
+  });
+};
+/**
+ * HighlightedMiddleEllipsis subcomponent
+ * Renders a middle-ellipsis ID with bright edges and a dim middle part
+ */
+const HighlightedMiddleEllipsis = ({
+  children,
+  edgeChars,
+  highlightChars,
+  mode,
+  textStyle
+}) => {
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsx(HighlightedID, {
+      mode: mode,
+      count: highlightChars,
+      textStyle: textStyle,
       children: text
     });
   }
-  const first = text.slice(0, count);
-  const middle = text.slice(count, text.length - count);
-  const last = text.slice(-5);
-  const firstStyle = [cn(symbol({
-    dim: !cfg.first
-  })), textStyle].filter(Boolean);
-  const middleStyle = [cn(symbol({
-    dim: !cfg.middle
-  })), textStyle].filter(Boolean);
-  const lastStyle = [cn(symbol({
-    dim: !cfg.last
-  })), textStyle].filter(Boolean);
+  const bright = Math.min(highlightChars, edgeChars);
+  const cfg = highlightModes[mode];
   return jsxs(Text$1, {
+    style: textStyle,
+    numberOfLines: 1,
     children: [jsx(Text$1, {
-      style: firstStyle,
-      children: first
+      style: cn(symbol({
+        dim: !cfg.first
+      })),
+      children: text.slice(0, bright)
     }), jsx(Text$1, {
-      style: middleStyle,
-      children: middle
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(bright, edgeChars)
     }), jsx(Text$1, {
-      style: lastStyle,
-      children: last
+      style: cn(symbol({
+        dim: true
+      })),
+      children: "\u2026"
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(text.length - edgeChars, text.length - bright)
+    }), jsx(Text$1, {
+      style: cn(symbol({
+        dim: !cfg.last
+      })),
+      children: text.slice(text.length - bright)
     })]
   });
 };
@@ -2097,16 +2228,15 @@ const MiddleEllipsisText = ({
   }
   const first = text.slice(0, edgeChars);
   const last = text.slice(-edgeChars);
-  const ellipsisStyle = [cn('opacity-50'), textStyle].filter(Boolean);
   return jsxs(Text$1, {
+    style: textStyle,
+    numberOfLines: 1,
     children: [jsx(Text$1, {
-      style: textStyle,
       children: first
     }), jsx(Text$1, {
-      style: ellipsisStyle,
+      style: cn('opacity-50'),
       children: "\u2026"
     }), jsx(Text$1, {
-      style: textStyle,
       children: last
     })]
   });
@@ -2127,6 +2257,7 @@ const MiddleEllipsisText = ({
  * <Identifier highlight="both">0x1234567890abcdef</Identifier>
  * <Identifier avatar copyButton>alice@example.com</Identifier>
  * <Identifier middleEllipsis edgeChars={6}>very-long-identifier</Identifier>
+ * <Identifier middleEllipsis="auto" highlight="both">very-long-identifier</Identifier>
  * <Identifier maxLines={2}>Multi-line\nidentifier\ntext</Identifier>
  * ```
  */
@@ -2141,18 +2272,21 @@ const Identifier = _a => {
       className = '',
       middleEllipsis = false,
       edgeChars = 4,
+      highlightChars = 5,
+      size,
+      weight,
       theme = 'light',
       style,
       textStyle
     } = _a,
-    props = __rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style", "textStyle"]);
+    props = __rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "highlightChars", "size", "weight", "theme", "style", "textStyle"]);
   const [containerWidth, setContainerWidth] = useState(0);
-  // Handle container layout changes
-  const handleLayout = useCallback(event => {
-    const {
-      width
-    } = event.nativeEvent.layout;
-    setContainerWidth(width);
+  const [textWidth, setTextWidth] = useState(0);
+  const [ellipsisWidth, setEllipsisWidth] = useState(0);
+  const autoEllipsis = middleEllipsis === 'auto';
+  const hasText = children != null && children !== '';
+  const handleContainerLayout = useCallback(event => {
+    setContainerWidth(event.nativeEvent.layout.width);
   }, []);
   const rootClasses = `${identifier({
     theme: theme,
@@ -2160,42 +2294,103 @@ const Identifier = _a => {
     highlight
   })} ${className}`.trim();
   // Determine if we should use standard ellipsis with numberOfLines
-  const useStandardEllipsis = ellipsis === true && !middleEllipsis && maxLines === 0;
-  const useMaxLines = maxLines > 0 && !middleEllipsis;
+  const useStandardEllipsis = ellipsis === true && middleEllipsis === false && maxLines === 0;
+  const useMaxLines = maxLines > 0 && middleEllipsis === false;
   // Symbol container classes
-  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden' : 'flex-1';
+  const symbolContainerClass = ellipsis === true || autoEllipsis ? 'flex-1 overflow-hidden' : 'flex-1';
   // Merge text styles
-  const finalTextStyle = [cn('leading-4'), textStyle].filter(Boolean);
+  const idTextStyle = [cn(identifierText({
+    theme,
+    size,
+    weight
+  })), textStyle].filter(Boolean);
+  const finalTextStyle = [cn('leading-4'), ...idTextStyle];
+  /** Characters kept per side in auto mode, `null` when the whole ID fits */
+  const getAutoEdgeChars = () => {
+    var _a;
+    const len = (_a = children === null || children === void 0 ? void 0 : children.length) !== null && _a !== void 0 ? _a : 0;
+    if (textWidth === 0 || containerWidth === 0 || len === 0) return null;
+    if (textWidth <= containerWidth) return null;
+    const avgChar = textWidth / len;
+    return Math.max(Math.floor((containerWidth - ellipsisWidth) / avgChar / 2) - 1, 1);
+  };
+  const renderSymbols = text => {
+    if (middleEllipsis === false) {
+      if (highlight != null) {
+        return jsx(HighlightedID, {
+          mode: highlight,
+          count: highlightChars,
+          theme: theme,
+          textStyle: idTextStyle,
+          children: text
+        });
+      }
+      return jsx(Text$1, {
+        numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
+        ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
+        style: finalTextStyle,
+        children: text
+      });
+    }
+    const edge = autoEllipsis ? getAutoEdgeChars() : edgeChars;
+    if (edge == null) {
+      return highlight != null ? jsx(HighlightedID, {
+        mode: highlight,
+        count: highlightChars,
+        theme: theme,
+        textStyle: idTextStyle,
+        children: text
+      }) : jsx(Text$1, {
+        style: idTextStyle,
+        numberOfLines: 1,
+        children: text
+      });
+    }
+    return highlight != null ? jsx(HighlightedMiddleEllipsis, {
+      edgeChars: edge,
+      highlightChars: highlightChars,
+      mode: highlight,
+      textStyle: idTextStyle,
+      children: text
+    }) : jsx(MiddleEllipsisText, {
+      edgeChars: edge,
+      theme: theme,
+      textStyle: idTextStyle,
+      children: text
+    });
+  };
+  const isTruncated = ellipsis === true || middleEllipsis !== false;
   return jsxs(View, Object.assign({
-    style: [cn(rootClasses), style].filter(Boolean),
-    onLayout: handleLayout
+    style: [cn(rootClasses), autoEllipsis ? AUTO_ROOT_STYLE : undefined, style].filter(Boolean)
   }, props, {
-    children: [avatar && children != null && children !== '' && jsx(Avatar, {
+    children: [avatar && hasText && jsx(Avatar, {
       username: children,
       className: "mr-2",
       width: 24,
       height: 24
-    }), jsx(View, {
+    }), jsxs(View, {
       style: cn(symbolContainerClass),
-      children: children != null && children !== '' && middleEllipsis ? jsx(MiddleEllipsisText, {
-        edgeChars: edgeChars,
-        theme: theme,
-        textStyle: textStyle,
-        children: children
-      }) : children != null && children !== '' && highlight != null ? jsx(HighlightedID, {
-        mode: highlight,
-        theme: theme,
-        textStyle: textStyle,
-        children: children
-      }) : children != null && children !== '' ? jsx(Text$1, {
-        numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
-        ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
-        style: finalTextStyle,
-        children: children
-      }) : jsx(NotActive, {
+      onLayout: autoEllipsis ? handleContainerLayout : undefined,
+      accessible: isTruncated && hasText ? true : undefined,
+      accessibilityLabel: isTruncated && hasText ? children : undefined,
+      children: [hasText ? renderSymbols(children) : jsx(NotActive, {
         theme: theme
-      })
-    }), copyButton && children != null && children !== '' && jsx(CopyButton, {
+      }), autoEllipsis && hasText && jsxs(View, {
+        style: MEASURE_STYLE,
+        pointerEvents: 'none',
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants',
+        children: [jsx(Text$1, {
+          style: idTextStyle,
+          onLayout: e => setTextWidth(e.nativeEvent.layout.width),
+          children: children
+        }), jsx(Text$1, {
+          style: idTextStyle,
+          onLayout: e => setEllipsisWidth(e.nativeEvent.layout.width),
+          children: "\u2026"
+        })]
+      })]
+    }), copyButton && hasText && jsx(CopyButton, {
       className: "ml-3",
       text: children
     })]
@@ -2867,5 +3062,5 @@ function getShadow(size) {
   return shadows[size].ios;
 }
 
-export { ArrowIcon, AsteriskIcon, AttentionCircleIcon, Avatar, Badge, BigNumber, BroadcastedIcon, Button, CheckIcon, ChevronIcon, Clipboard, CopyButton, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, Identifier, InfoCircleIcon, Input, NotActive, PlusIcon, PooledIcon, QueuedIcon, RefreshIcon, SearchIcon, SuccessIcon, Tabs, Text, TopRightArrowIcon, TransactionStatusIcon, ValueCard, borderRadius, borderWidth, cn, colors, getShadow, hexToRgba, opacity, resolveColorScheme, rgba, shadows, spacing, tw, typography, useDebounce, zIndex };
+export { ArrowIcon, AsteriskIcon, AttentionCircleIcon, Avatar, Badge, BellIcon, BigNumber, BroadcastedIcon, Button, CheckIcon, ChevronIcon, Clipboard, CopyButton, CopyIcon, CrossIcon, DashLogo, ErrorIcon, EyeClosedIcon, EyeOpenIcon, Heading, Icons, Identifier, InfoCircleIcon, Input, NotActive, PlusIcon, PooledIcon, QueuedIcon, RefreshIcon, SearchIcon, SuccessIcon, Tabs, Text, TopRightArrowIcon, TransactionStatusIcon, ValueCard, borderRadius, borderWidth, cn, colors, getShadow, hexToRgba, opacity, resolveColorScheme, rgba, shadows, spacing, tw, typography, useDebounce, zIndex };
 //# sourceMappingURL=index.esm.js.map

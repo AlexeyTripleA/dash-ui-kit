@@ -454,6 +454,34 @@ export const AttentionCircleIcon: React.FC<IconProps> = ({
   </Svg>
 )
 
+export const BellIcon: React.FC<IconProps> = ({
+  color = '#0C1C33',
+  size = 24,
+  onPress
+}) => (
+  <Svg
+    width={size}
+    height={size}
+    viewBox='0 0 24 24'
+    fill='none'
+    onPress={onPress}
+    color={color}
+  >
+    <Path
+      d='M12 4.5C9.24 4.5 7 6.74 7 9.5V12.9L5.5 15.4V16.5H18.5V15.4L17 12.9V9.5C17 6.74 14.76 4.5 12 4.5Z'
+      stroke={color}
+      strokeWidth='1.07'
+      strokeLinejoin='round'
+    />
+    <Path
+      d='M10 18.75C10.3 19.6 11.08 20.2 12 20.2C12.92 20.2 13.7 19.6 14 18.75'
+      stroke={color}
+      strokeWidth='1.07'
+      strokeLinecap='round'
+    />
+  </Svg>
+)
+
 // Export all icons as a collection
 export const Icons = {
   ArrowIcon,
@@ -475,4 +503,5 @@ export const Icons = {
   AsteriskIcon,
   RefreshIcon,
   AttentionCircleIcon,
+  BellIcon,
 }

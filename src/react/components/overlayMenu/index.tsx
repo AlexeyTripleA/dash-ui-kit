@@ -55,6 +55,11 @@ const overlayMenuTrigger = cva(
         class: 'outline-red-500 focus:outline-red-500'
       },
       {
+        colorScheme: 'error',
+        border: false,
+        class: 'outline outline-1 outline-offset-[-1px] outline-red-500 focus:outline-red-500'
+      },
+      {
         colorScheme: 'success',
         border: true,
         class: 'outline-green-500 focus:outline-green-500'
@@ -321,6 +326,8 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
   filled?: boolean
   items?: OverlayMenuItem[]
   showArrow?: boolean
+  /** Extra classes for the built-in arrow, e.g. its color or opacity */
+  arrowClassName?: string
   disabled?: boolean
   name?: string
   overlayLabel?: string
@@ -421,6 +428,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
   disabled = false,
   items = [],
   showArrow = true,
+  arrowClassName = '',
   name,
   overlayLabel,
   maxHeight = '200px',
@@ -535,7 +543,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
           name={name}
           {...props}
         >
-          <div className='w-full flex-1 text-left'>
+          <div className='w-full min-w-0 flex-1 text-left'>
             {triggerContent || (
               <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}>
                 {placeholder}
@@ -546,7 +554,7 @@ export const OverlayMenu: React.FC<OverlayMenuProps> = ({
             <ChevronDownIcon 
               className={`transition-transform ${isOpen ? 'rotate-180' : ''} ${
                 size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'
-              }`} 
+              } shrink-0 ${arrowClassName}`}
             />
           )}
         </button>

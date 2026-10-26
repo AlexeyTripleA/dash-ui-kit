@@ -24,7 +24,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
     /**
      * Size of the badge
      */
-    size?: 'xxs' | 'xs' | 'sm' | 'xl';
+    size?: 'xxs' | 'xs' | 'sm' | 'xl' | 'icon' | 'counter';
+    /**
+     * Shape: pill (rounded sides), square (24x24 icon tile) or circle (fixed size, no padding)
+     */
+    shape?: 'pill' | 'square' | 'circle';
     /**
      * Border radius variant
      */

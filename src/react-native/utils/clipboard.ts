@@ -30,11 +30,7 @@ function getClipboard(): ClipboardAPI {
     const ExpoClipboard = require('expo-clipboard');
     if (ExpoClipboard?.setStringAsync && ExpoClipboard?.getStringAsync) {
       clipboardInstance = {
-        setString: (text: string) => {
-          ExpoClipboard.setStringAsync(text).catch((err: Error) => {
-            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
-          });
-        },
+        setString: (text: string) => ExpoClipboard.setStringAsync(text),
         getString: () => ExpoClipboard.getStringAsync(),
       };
       return clipboardInstance;
@@ -68,7 +64,7 @@ function getClipboard(): ClipboardAPI {
   
   clipboardInstance = {
     setString: () => {
-      console.warn('[dash-ui-kit] Clipboard not available');
+      throw new Error('[dash-ui-kit] Clipboard not available');
     },
     getString: async () => '',
   };
@@ -82,12 +78,26 @@ function getClipboard(): ClipboardAPI {
  */
 const Clipboard = {
   /**
-   * Set string to clipboard
+   * Set string to clipboard, ignoring the result
    * @param text - Text to copy
    */
   setString: (text: string): void => {
-    const clipboard = getClipboard();
-    clipboard.setString(text);
+    void Clipboard.setStringAsync(text);
+  },
+
+  /**
+   * Set string to clipboard and report whether it worked
+   * @param text - Text to copy
+   * @returns Promise resolving to true on success, false on failure
+   */
+  setStringAsync: async (text: string): Promise<boolean> => {
+    try {
+      await getClipboard().setString(text);
+      return true;
+    } catch (err) {
+      console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+      return false;
+    }
   },
 
   /**

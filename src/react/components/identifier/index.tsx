@@ -15,12 +15,24 @@ import { Avatar } from '../avatar'
 
 /** CVA for the root container, now with light/dark theme */
 const identifier = cva(
-  'flex items-center font-dash-grotesque text-sm font-normal break-all',
+  'flex items-center font-dash-grotesque break-all',
   {
     variants: {
       theme: {
         light: 'text-gray-900',
         dark: 'text-white'
+      },
+      size: {
+        xs: 'text-xs',
+        sm: 'text-sm',
+        md: 'text-base',
+        lg: 'text-lg',
+        xl: 'text-xl'
+      },
+      weight: {
+        light: 'font-light',
+        normal: 'font-normal',
+        medium: 'font-medium'
       },
       ellipsis: {
         false: '',
@@ -37,6 +49,8 @@ const identifier = cva(
     },
     defaultVariants: {
       theme: 'light',
+      size: 'sm',
+      weight: 'normal',
       ellipsis: false,
       highlight: 'default'
     }
@@ -75,17 +89,21 @@ export interface IdentifierProps extends IdentifierVariants {
   linesAdjustment?: boolean
   maxLines?: number
   className?: string
-  middleEllipsis?: boolean
+  /** Cut the middle of the ID: `true` keeps `edgeChars` per side, `'auto'` fits the ID to the container width */
+  middleEllipsis?: boolean | 'auto'
+  /** Characters kept on each side with `middleEllipsis={true}` */
   edgeChars?: number
+  /** Characters highlighted on each side in `highlight` modes */
+  highlightChars?: number
 }
 
-const HighlightedID: React.FC<PropsWithChildren<{ mode: HighlightMode }>> = ({ children, mode }) => {
+const HighlightedID: React.FC<PropsWithChildren<{ mode: HighlightMode, count?: number }>> = ({ children, mode, count = 5 }) => {
   if (children == null || children === '') return <NotActive />
   const text: string = String(children)
-  const count = 5
-  const first: string = text.slice(0, count)
-  const middle: string = text.slice(count, text.length - count)
-  const last: string = text.slice(-count)
+  const edge = Math.min(count, Math.floor(text.length / 2))
+  const first: string = text.slice(0, edge)
+  const middle: string = text.slice(edge, text.length - edge)
+  const last: string = text.slice(text.length - edge)
   const cfg = highlightModes[mode]
 
   return (
@@ -117,6 +135,32 @@ const MiddleEllipsisText: React.FC<{ children: string; edgeChars: number }> = ({
   )
 }
 
+/** Middle-ellipsis ID with bright edges and a dim middle part */
+const HighlightedMiddleEllipsis: React.FC<{
+  children: string
+  edgeChars: number
+  highlightChars: number
+  mode: HighlightMode
+}> = ({ children, edgeChars, highlightChars, mode }) => {
+  const text: string = String(children)
+  if (text.length <= edgeChars * 2) {
+    return <HighlightedID mode={mode} count={highlightChars}>{text}</HighlightedID>
+  }
+
+  const bright = Math.min(highlightChars, edgeChars)
+  const cfg = highlightModes[mode]
+
+  return (
+    <>
+      <span className={symbol({ dim: !cfg.first })}>{text.slice(0, bright)}</span>
+      <span className={symbol({ dim: !cfg.middle })}>{text.slice(bright, edgeChars)}</span>
+      <span className={symbol({ dim: true })}>&hellip;</span>
+      <span className={symbol({ dim: !cfg.middle })}>{text.slice(text.length - edgeChars, text.length - bright)}</span>
+      <span className={symbol({ dim: !cfg.last })}>{text.slice(text.length - bright)}</span>
+    </>
+  )
+}
+
 /**
  * Identifier component shows an ID string with optional highlighting, avatar,
  * copy button, dynamic line adjustment, and multi-line clamp.
@@ -131,7 +175,10 @@ const Identifier: React.FC<IdentifierProps> = ({
   maxLines = 0,
   className,
   middleEllipsis = false,
-  edgeChars = 4
+  edgeChars = 4,
+  highlightChars = 5,
+  size,
+  weight
 }) => {
   const { theme } = useTheme()
   const symbolsRef = useRef<HTMLDivElement>(null)
@@ -139,6 +186,8 @@ const Identifier: React.FC<IdentifierProps> = ({
   const [charWidth, setCharWidth] = useState(0)
   const [linesMaxWidth, setLinesMaxWidth] = useState<'none' | string>('none')
   const [widthCounted, setWidthCounted] = useState(false)
+  const [textWidth, setTextWidth] = useState(0)
+  const [ellipsisWidth, setEllipsisWidth] = useState(0)
   const prevWinRef = useRef<number | null>(null)
   const [winWidth, setWinWidth] = useState(0)
   const { debouncedValue: debouncedWin, cancel: cancelDebounce } = useDebounce(winWidth, {
@@ -149,27 +198,41 @@ const Identifier: React.FC<IdentifierProps> = ({
     }
   })
 
-  if ((ellipsis ?? false) || maxLines > 0 || middleEllipsis) linesAdjustment = false
+  const autoEllipsis = middleEllipsis === 'auto'
+  if ((ellipsis ?? false) || maxLines > 0 || middleEllipsis !== false) linesAdjustment = false
 
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width)
   })
 
-  const measureChar = useCallback((): number => {
-    if ((symbolsRef.current == null) || !linesAdjustment) return 0
+  const measureText = useCallback((text: string): number => {
+    if (symbolsRef.current == null) return 0
     const temp = document.createElement('span')
     const styles = getComputedStyle(symbolsRef.current)
     temp.style.position = 'absolute'
     temp.style.visibility = 'hidden'
+    temp.style.whiteSpace = 'nowrap'
     temp.style.fontFamily = styles.fontFamily
     temp.style.fontSize = styles.fontSize
     temp.style.fontWeight = styles.fontWeight
-    temp.textContent = 'A'
+    temp.style.letterSpacing = styles.letterSpacing
+    temp.textContent = text
     document.body.appendChild(temp)
     const w = temp.getBoundingClientRect().width
     document.body.removeChild(temp)
     return w > 0 ? w : 0
-  }, [linesAdjustment])
+  }, [])
+
+  const measureChar = useCallback((): number => {
+    if (!linesAdjustment) return 0
+    return measureText('A')
+  }, [linesAdjustment, measureText])
+
+  useEffect(() => {
+    if (!autoEllipsis || children == null || children === '') return
+    setTextWidth(measureText(children))
+    setEllipsisWidth(measureText('\u2026'))
+  }, [autoEllipsis, children, containerWidth, measureText])
 
   useEffect(() => {
     if ((symbolsRef.current == null) || !linesAdjustment) return
@@ -228,8 +291,33 @@ const Identifier: React.FC<IdentifierProps> = ({
     }
   }, [cancelDebounce])
 
+  /** Characters kept per side in auto mode, `null` when the whole ID fits */
+  const getAutoEdgeChars = (): number | null => {
+    const len = children?.length ?? 0
+    if (textWidth === 0 || containerWidth === 0 || len === 0) return null
+    if (textWidth <= containerWidth) return null
+    const avgChar = textWidth / len
+    return Math.max(Math.floor((containerWidth - ellipsisWidth) / avgChar / 2) - 1, 1)
+  }
+
+  const renderSymbols = (text: string): React.ReactNode => {
+    if (middleEllipsis === false) {
+      return highlight != null ? <HighlightedID mode={highlight} count={highlightChars}>{text}</HighlightedID> : text
+    }
+
+    const edge = autoEllipsis ? getAutoEdgeChars() : edgeChars
+    if (edge == null) {
+      return highlight != null ? <HighlightedID mode={highlight} count={highlightChars}>{text}</HighlightedID> : text
+    }
+
+    return highlight != null
+      ? <HighlightedMiddleEllipsis edgeChars={edge} highlightChars={highlightChars} mode={highlight}>{text}</HighlightedMiddleEllipsis>
+      : <MiddleEllipsisText edgeChars={edge}>{text}</MiddleEllipsisText>
+  }
+
   const rootClass =
-    identifier({ theme, ellipsis, highlight }) +
+    identifier({ theme, size, weight, ellipsis, highlight }) +
+    (autoEllipsis ? ' w-full min-w-0' : '') +
     (className != null && className !== '' ? ` ${className}` : '')
 
   const clampStyles: React.CSSProperties = maxLines > 0
@@ -244,7 +332,11 @@ const Identifier: React.FC<IdentifierProps> = ({
 
   const symbolContainerClass = ellipsis === true
     ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis'
-    : 'flex-1 leading-[1rem]'
+    : autoEllipsis
+      ? 'flex-1 min-w-0 overflow-hidden whitespace-nowrap leading-[1rem]'
+      : 'flex-1 leading-[1rem]'
+
+  const isTruncated = ellipsis === true || middleEllipsis !== false
 
   return (
     <div className={rootClass}>
@@ -257,15 +349,14 @@ const Identifier: React.FC<IdentifierProps> = ({
       <div
         ref={symbolsRef}
         className={symbolContainerClass}
+        title={isTruncated && children != null && children !== '' ? children : undefined}
         style={{
           ...(widthCounted && maxLines === 0 ? { maxWidth: linesMaxWidth } : {}),
           ...clampStyles
         }}
       >
-        {children != null && children !== '' && middleEllipsis
-          ? <MiddleEllipsisText edgeChars={edgeChars}>{children}</MiddleEllipsisText>
-          : children != null && children !== '' && highlight != null
-          ? <HighlightedID mode={highlight}>{children}</HighlightedID>
+        {children != null && children !== ''
+          ? renderSymbols(children)
           : (children ?? <NotActive />)}
       </div>
       {(copyButton ?? false) && children != null && children !== '' && (

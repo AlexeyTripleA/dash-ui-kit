@@ -27,5 +27,8 @@ export { DashDialog as Dialog } from './dialog/index.esm.js';
 export { Tabs } from './tabs/index.esm.js';
 export { Tooltip } from './tooltip/index.esm.js';
 export { Popover } from './popover/index.esm.js';
-export { AirplaneIcon, ArrowIcon, AsteriskIcon, AttentionCircleIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, RefreshIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, TopRightArrowIcon, WalletIcon, WebIcon } from './icons/index.esm.js';
+export { Checkbox } from './checkbox/index.esm.js';
+export { Slider } from './slider/index.esm.js';
+export { Stepper } from './stepper/index.esm.js';
+export { AirplaneIcon, ArrowIcon, AsteriskIcon, AttentionCircleIcon, BellIcon, BroadcastedIcon, BurgerMenuIcon, CalendarIcon, ChainSmallIcon, CheckIcon, CheckmarkIcon, ChevronIcon, CircleProcessIcon, CopyIcon, CreditsIcon, CrossIcon, DeleteIcon, DocumentIcon, EditIcon, ErrorIcon, ExternalLinkIcon, EyeClosedIcon, EyeOpenIcon, FaceIcon, FilterIcon, FingerprintIcon, InfoCircleIcon, KebabMenuIcon, KeyIcon, LockIcon, PendingIcon, PlusIcon, PooledIcon, ProtectedMessageIcon, QuestionMessageIcon, QueuedIcon, RefreshIcon, SearchIcon, SettingsIcon, ShieldSmallIcon, SignIcon, SignLockIcon, SmartphoneIcon, SuccessIcon, TopRightArrowIcon, WalletIcon, WebIcon } from './icons/index.esm.js';
 //# sourceMappingURL=index.esm.js.map

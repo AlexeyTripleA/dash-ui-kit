@@ -13,10 +13,16 @@
  */
 declare const Clipboard: {
     /**
-     * Set string to clipboard
+     * Set string to clipboard, ignoring the result
      * @param text - Text to copy
      */
     setString: (text: string) => void;
+    /**
+     * Set string to clipboard and report whether it worked
+     * @param text - Text to copy
+     * @returns Promise resolving to true on success, false on failure
+     */
+    setStringAsync: (text: string) => Promise<boolean>;
     /**
      * Get string from clipboard
      * @returns Promise with clipboard content

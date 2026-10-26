@@ -953,6 +953,29 @@ const AttentionCircleIcon = ({
     fill: color
   })]
 });
+const BellIcon = ({
+  color = '#0C1C33',
+  size = 24,
+  onPress
+}) => jsxRuntime.jsxs(Svg, {
+  width: size,
+  height: size,
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  onPress: onPress,
+  color: color,
+  children: [jsxRuntime.jsx(Svg.Path, {
+    d: 'M12 4.5C9.24 4.5 7 6.74 7 9.5V12.9L5.5 15.4V16.5H18.5V15.4L17 12.9V9.5C17 6.74 14.76 4.5 12 4.5Z',
+    stroke: color,
+    strokeWidth: '1.07',
+    strokeLinejoin: 'round'
+  }), jsxRuntime.jsx(Svg.Path, {
+    d: 'M10 18.75C10.3 19.6 11.08 20.2 12 20.2C12.92 20.2 13.7 19.6 14 18.75',
+    stroke: color,
+    strokeWidth: '1.07',
+    strokeLinecap: 'round'
+  })]
+});
 // Export all icons as a collection
 const Icons = {
   ArrowIcon,
@@ -973,7 +996,8 @@ const Icons = {
   BroadcastedIcon,
   AsteriskIcon,
   RefreshIcon,
-  AttentionCircleIcon
+  AttentionCircleIcon,
+  BellIcon
 };
 
 const inputStyles = classVarianceAuthority.cva('w-full font-normal text-sm leading-[17px]', {
@@ -1430,7 +1454,15 @@ const badgeStyles = classVarianceAuthority.cva('inline-flex items-center justify
       xxs: 'px-1 py-1 text-xs rounded-full',
       xs: 'px-2 py-1 text-xs rounded-full',
       sm: 'px-[34px] py-[10px] text-xs rounded-full',
-      xl: 'px-9 py-4 text-lg rounded-full'
+      xl: 'px-9 py-4 text-lg rounded-full',
+      icon: 'w-6 h-6 p-0 shrink-0 rounded-[6px]',
+      counter: 'min-w-5 h-5 px-1 rounded-full'
+    },
+    shape: {
+      default: '',
+      pill: 'rounded-full',
+      square: 'rounded-[6px]',
+      circle: 'rounded-full aspect-square px-0'
     },
     borderRadius: {
       default: '',
@@ -1530,6 +1562,7 @@ const badgeStyles = classVarianceAuthority.cva('inline-flex items-center justify
   },
   defaultVariants: {
     size: 'sm',
+    shape: 'default',
     borderRadius: 'default'
   }
 });
@@ -1540,7 +1573,9 @@ const textStyles = classVarianceAuthority.cva('font-medium', {
       xxs: 'text-xs',
       xs: 'text-xs',
       sm: 'text-xs',
-      xl: 'text-lg'
+      xl: 'text-lg',
+      icon: 'text-[10px] leading-none',
+      counter: 'text-[10px] leading-none'
     },
     // Text colors for each color and variant combination
     color_variant_blue_default: {
@@ -1658,13 +1693,14 @@ const Badge = _a => {
       colorLight,
       colorDark,
       size = 'sm',
+      shape,
       borderRadius,
       className = '',
       style,
       textStyle,
       onPress
     } = _a,
-    props = tslib.__rest(_a, ["children", "theme", "variant", "color", "colorLight", "colorDark", "size", "borderRadius", "className", "style", "textStyle", "onPress"]);
+    props = tslib.__rest(_a, ["children", "theme", "variant", "color", "colorLight", "colorDark", "size", "shape", "borderRadius", "className", "style", "textStyle", "onPress"]);
   const effectiveColor = (_b = resolveColorScheme(theme, color, colorLight, colorDark)) !== null && _b !== void 0 ? _b : 'blue';
   // Generate the color_variant key for CVA using explicit mapping
   const normalizedColor = COLOR_KEY_MAP[effectiveColor] || effectiveColor;
@@ -1672,6 +1708,7 @@ const Badge = _a => {
   // Build the badge container classes with proper typing
   const badgeVariantProps = {
     size,
+    shape: shape || 'default',
     borderRadius: borderRadius || 'default',
     [colorVariantKey]: true
   };
@@ -1820,11 +1857,7 @@ function getClipboard() {
     const ExpoClipboard = require('expo-clipboard');
     if ((ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.setStringAsync) && (ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.getStringAsync)) {
       clipboardInstance = {
-        setString: text => {
-          ExpoClipboard.setStringAsync(text).catch(err => {
-            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
-          });
-        },
+        setString: text => ExpoClipboard.setStringAsync(text),
         getString: () => ExpoClipboard.getStringAsync()
       };
       return clipboardInstance;
@@ -1851,7 +1884,7 @@ function getClipboard() {
   console.warn('[dash-ui-kit] No clipboard library found. Please install either:\n' + '  - expo-clipboard (for Expo projects): npx expo install expo-clipboard\n' + '  - @react-native-clipboard/clipboard (for React Native): npm install @react-native-clipboard/clipboard');
   clipboardInstance = {
     setString: () => {
-      console.warn('[dash-ui-kit] Clipboard not available');
+      throw new Error('[dash-ui-kit] Clipboard not available');
     },
     getString: async () => ''
   };
@@ -1863,12 +1896,25 @@ function getClipboard() {
  */
 const Clipboard = {
   /**
-   * Set string to clipboard
+   * Set string to clipboard, ignoring the result
    * @param text - Text to copy
    */
   setString: text => {
-    const clipboard = getClipboard();
-    clipboard.setString(text);
+    void Clipboard.setStringAsync(text);
+  },
+  /**
+   * Set string to clipboard and report whether it worked
+   * @param text - Text to copy
+   * @returns Promise resolving to true on success, false on failure
+   */
+  setStringAsync: async text => {
+    try {
+      await getClipboard().setString(text);
+      return true;
+    } catch (err) {
+      console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+      return false;
+    }
   },
   /**
    * Get string from clipboard
@@ -1883,7 +1929,7 @@ const Clipboard = {
 const FEEDBACK_DURATION_MS = 1000;
 /**
  * React Native CopyButton component. Copies text to clipboard on press
- * and shows "Copied!" feedback briefly.
+ * and briefly reports whether the copy succeeded.
  */
 const CopyButton = ({
   text,
@@ -1891,16 +1937,18 @@ const CopyButton = ({
   className = '',
   style,
   textStyle,
-  accessibilityLabel = 'Copy to clipboard'
+  accessibilityLabel = 'Copy to clipboard',
+  copiedLabel = 'Copied!',
+  failedLabel = 'Copy failed'
 }) => {
-  const [copied, setCopied] = react.useState(false);
+  const [state, setState] = react.useState('idle');
   const timeoutRef = react.useRef(null);
-  const handlePress = react.useCallback(() => {
-    Clipboard.setString(text);
-    setCopied(true);
-    onCopy === null || onCopy === void 0 ? void 0 : onCopy(true);
+  const handlePress = react.useCallback(async () => {
+    const success = await Clipboard.setStringAsync(text);
+    setState(success ? 'copied' : 'failed');
+    onCopy === null || onCopy === void 0 ? void 0 : onCopy(success);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS);
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS);
   }, [text, onCopy]);
   react.useEffect(() => {
     return () => {
@@ -1909,10 +1957,13 @@ const CopyButton = ({
   }, []);
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
-  const copiedTextClasses = 'text-xs text-dash-brand font-medium';
-  const copiedTextStyle = [cn(copiedTextClasses), textStyle].filter(Boolean);
+  const failed = state === 'failed';
+  const feedbackTextClasses = `text-xs font-medium ${failed ? 'text-red-600' : 'text-dash-brand'}`;
+  const feedbackTextStyle = [cn(feedbackTextClasses), textStyle].filter(Boolean);
   return jsxRuntime.jsx(reactNative.Pressable, {
-    onPress: handlePress,
+    onPress: () => {
+      void handlePress();
+    },
     style: ({
       pressed
     }) => [buttonStyle, pressed && {
@@ -1920,11 +1971,11 @@ const CopyButton = ({
     }].filter(Boolean),
     accessibilityLabel: accessibilityLabel,
     accessibilityRole: "button",
-    children: copied ? jsxRuntime.jsx(reactNative.View, {
+    children: state !== 'idle' ? jsxRuntime.jsx(reactNative.View, {
       style: cn('items-center justify-center min-w-4 min-h-4'),
       children: jsxRuntime.jsx(reactNative.Text, {
-        style: copiedTextStyle,
-        children: "Copied!"
+        style: feedbackTextStyle,
+        children: failed ? failedLabel : copiedLabel
       })
     }) : jsxRuntime.jsx(CopyIcon, {
       color: "#0C1C33",
@@ -1980,6 +2031,47 @@ const identifier = classVarianceAuthority.cva('flex flex-row items-center font-d
     highlight: 'default'
   }
 });
+/** CVA for ID text: theme color, size and weight */
+const identifierText = classVarianceAuthority.cva('', {
+  variants: {
+    theme: {
+      light: 'text-gray-900',
+      dark: 'text-white'
+    },
+    size: {
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl'
+    },
+    weight: {
+      light: 'font-light',
+      normal: 'font-normal',
+      medium: 'font-medium'
+    }
+  },
+  defaultVariants: {
+    theme: 'light',
+    size: 'sm',
+    weight: 'normal'
+  }
+});
+/** Off-screen box that lets text take its natural single-line width */
+const MEASURE_STYLE = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: 10000,
+  opacity: 0,
+  alignItems: 'flex-start'
+};
+/** Lets an auto-fitted ID shrink to its parent width */
+const AUTO_ROOT_STYLE = {
+  width: '100%',
+  flexShrink: 1,
+  minWidth: 0
+};
 /** CVA for each symbol text: inherits root color or dims */
 const symbol = classVarianceAuthority.cva('flex-1', {
   variants: {
@@ -2032,6 +2124,7 @@ const highlightModes = {
 const HighlightedID = ({
   children,
   mode,
+  count = 5,
   theme = 'light',
   textStyle
 }) => {
@@ -2040,39 +2133,77 @@ const HighlightedID = ({
   });
   const text = String(children);
   const cfg = highlightModes[mode];
-  const count = 5;
-  const minLength = count * 2 + 1; // 11
-  if (text.length < minLength) {
-    const symbolStyle = [cn(symbol({
-      dim: cfg.middle
-    })), textStyle].filter(Boolean);
-    return jsxRuntime.jsx(reactNative.Text, {
-      style: symbolStyle,
+  const edge = Math.min(count, Math.floor(text.length / 2));
+  return jsxRuntime.jsxs(reactNative.Text, {
+    style: textStyle,
+    children: [jsxRuntime.jsx(reactNative.Text, {
+      style: cn(symbol({
+        dim: !cfg.first
+      })),
+      children: text.slice(0, edge)
+    }), jsxRuntime.jsx(reactNative.Text, {
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(edge, text.length - edge)
+    }), jsxRuntime.jsx(reactNative.Text, {
+      style: cn(symbol({
+        dim: !cfg.last
+      })),
+      children: text.slice(text.length - edge)
+    })]
+  });
+};
+/**
+ * HighlightedMiddleEllipsis subcomponent
+ * Renders a middle-ellipsis ID with bright edges and a dim middle part
+ */
+const HighlightedMiddleEllipsis = ({
+  children,
+  edgeChars,
+  highlightChars,
+  mode,
+  textStyle
+}) => {
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsxRuntime.jsx(HighlightedID, {
+      mode: mode,
+      count: highlightChars,
+      textStyle: textStyle,
       children: text
     });
   }
-  const first = text.slice(0, count);
-  const middle = text.slice(count, text.length - count);
-  const last = text.slice(-5);
-  const firstStyle = [cn(symbol({
-    dim: !cfg.first
-  })), textStyle].filter(Boolean);
-  const middleStyle = [cn(symbol({
-    dim: !cfg.middle
-  })), textStyle].filter(Boolean);
-  const lastStyle = [cn(symbol({
-    dim: !cfg.last
-  })), textStyle].filter(Boolean);
+  const bright = Math.min(highlightChars, edgeChars);
+  const cfg = highlightModes[mode];
   return jsxRuntime.jsxs(reactNative.Text, {
+    style: textStyle,
+    numberOfLines: 1,
     children: [jsxRuntime.jsx(reactNative.Text, {
-      style: firstStyle,
-      children: first
+      style: cn(symbol({
+        dim: !cfg.first
+      })),
+      children: text.slice(0, bright)
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: middleStyle,
-      children: middle
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(bright, edgeChars)
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: lastStyle,
-      children: last
+      style: cn(symbol({
+        dim: true
+      })),
+      children: "\u2026"
+    }), jsxRuntime.jsx(reactNative.Text, {
+      style: cn(symbol({
+        dim: !cfg.middle
+      })),
+      children: text.slice(text.length - edgeChars, text.length - bright)
+    }), jsxRuntime.jsx(reactNative.Text, {
+      style: cn(symbol({
+        dim: !cfg.last
+      })),
+      children: text.slice(text.length - bright)
     })]
   });
 };
@@ -2099,16 +2230,15 @@ const MiddleEllipsisText = ({
   }
   const first = text.slice(0, edgeChars);
   const last = text.slice(-edgeChars);
-  const ellipsisStyle = [cn('opacity-50'), textStyle].filter(Boolean);
   return jsxRuntime.jsxs(reactNative.Text, {
+    style: textStyle,
+    numberOfLines: 1,
     children: [jsxRuntime.jsx(reactNative.Text, {
-      style: textStyle,
       children: first
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: ellipsisStyle,
+      style: cn('opacity-50'),
       children: "\u2026"
     }), jsxRuntime.jsx(reactNative.Text, {
-      style: textStyle,
       children: last
     })]
   });
@@ -2129,6 +2259,7 @@ const MiddleEllipsisText = ({
  * <Identifier highlight="both">0x1234567890abcdef</Identifier>
  * <Identifier avatar copyButton>alice@example.com</Identifier>
  * <Identifier middleEllipsis edgeChars={6}>very-long-identifier</Identifier>
+ * <Identifier middleEllipsis="auto" highlight="both">very-long-identifier</Identifier>
  * <Identifier maxLines={2}>Multi-line\nidentifier\ntext</Identifier>
  * ```
  */
@@ -2143,18 +2274,21 @@ const Identifier = _a => {
       className = '',
       middleEllipsis = false,
       edgeChars = 4,
+      highlightChars = 5,
+      size,
+      weight,
       theme = 'light',
       style,
       textStyle
     } = _a,
-    props = tslib.__rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "theme", "style", "textStyle"]);
+    props = tslib.__rest(_a, ["children", "ellipsis", "highlight", "avatar", "copyButton", "maxLines", "className", "middleEllipsis", "edgeChars", "highlightChars", "size", "weight", "theme", "style", "textStyle"]);
   const [containerWidth, setContainerWidth] = react.useState(0);
-  // Handle container layout changes
-  const handleLayout = react.useCallback(event => {
-    const {
-      width
-    } = event.nativeEvent.layout;
-    setContainerWidth(width);
+  const [textWidth, setTextWidth] = react.useState(0);
+  const [ellipsisWidth, setEllipsisWidth] = react.useState(0);
+  const autoEllipsis = middleEllipsis === 'auto';
+  const hasText = children != null && children !== '';
+  const handleContainerLayout = react.useCallback(event => {
+    setContainerWidth(event.nativeEvent.layout.width);
   }, []);
   const rootClasses = `${identifier({
     theme: theme,
@@ -2162,42 +2296,103 @@ const Identifier = _a => {
     highlight
   })} ${className}`.trim();
   // Determine if we should use standard ellipsis with numberOfLines
-  const useStandardEllipsis = ellipsis === true && !middleEllipsis && maxLines === 0;
-  const useMaxLines = maxLines > 0 && !middleEllipsis;
+  const useStandardEllipsis = ellipsis === true && middleEllipsis === false && maxLines === 0;
+  const useMaxLines = maxLines > 0 && middleEllipsis === false;
   // Symbol container classes
-  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden' : 'flex-1';
+  const symbolContainerClass = ellipsis === true || autoEllipsis ? 'flex-1 overflow-hidden' : 'flex-1';
   // Merge text styles
-  const finalTextStyle = [cn('leading-4'), textStyle].filter(Boolean);
+  const idTextStyle = [cn(identifierText({
+    theme,
+    size,
+    weight
+  })), textStyle].filter(Boolean);
+  const finalTextStyle = [cn('leading-4'), ...idTextStyle];
+  /** Characters kept per side in auto mode, `null` when the whole ID fits */
+  const getAutoEdgeChars = () => {
+    var _a;
+    const len = (_a = children === null || children === void 0 ? void 0 : children.length) !== null && _a !== void 0 ? _a : 0;
+    if (textWidth === 0 || containerWidth === 0 || len === 0) return null;
+    if (textWidth <= containerWidth) return null;
+    const avgChar = textWidth / len;
+    return Math.max(Math.floor((containerWidth - ellipsisWidth) / avgChar / 2) - 1, 1);
+  };
+  const renderSymbols = text => {
+    if (middleEllipsis === false) {
+      if (highlight != null) {
+        return jsxRuntime.jsx(HighlightedID, {
+          mode: highlight,
+          count: highlightChars,
+          theme: theme,
+          textStyle: idTextStyle,
+          children: text
+        });
+      }
+      return jsxRuntime.jsx(reactNative.Text, {
+        numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
+        ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
+        style: finalTextStyle,
+        children: text
+      });
+    }
+    const edge = autoEllipsis ? getAutoEdgeChars() : edgeChars;
+    if (edge == null) {
+      return highlight != null ? jsxRuntime.jsx(HighlightedID, {
+        mode: highlight,
+        count: highlightChars,
+        theme: theme,
+        textStyle: idTextStyle,
+        children: text
+      }) : jsxRuntime.jsx(reactNative.Text, {
+        style: idTextStyle,
+        numberOfLines: 1,
+        children: text
+      });
+    }
+    return highlight != null ? jsxRuntime.jsx(HighlightedMiddleEllipsis, {
+      edgeChars: edge,
+      highlightChars: highlightChars,
+      mode: highlight,
+      textStyle: idTextStyle,
+      children: text
+    }) : jsxRuntime.jsx(MiddleEllipsisText, {
+      edgeChars: edge,
+      theme: theme,
+      textStyle: idTextStyle,
+      children: text
+    });
+  };
+  const isTruncated = ellipsis === true || middleEllipsis !== false;
   return jsxRuntime.jsxs(reactNative.View, Object.assign({
-    style: [cn(rootClasses), style].filter(Boolean),
-    onLayout: handleLayout
+    style: [cn(rootClasses), autoEllipsis ? AUTO_ROOT_STYLE : undefined, style].filter(Boolean)
   }, props, {
-    children: [avatar && children != null && children !== '' && jsxRuntime.jsx(Avatar, {
+    children: [avatar && hasText && jsxRuntime.jsx(Avatar, {
       username: children,
       className: "mr-2",
       width: 24,
       height: 24
-    }), jsxRuntime.jsx(reactNative.View, {
+    }), jsxRuntime.jsxs(reactNative.View, {
       style: cn(symbolContainerClass),
-      children: children != null && children !== '' && middleEllipsis ? jsxRuntime.jsx(MiddleEllipsisText, {
-        edgeChars: edgeChars,
-        theme: theme,
-        textStyle: textStyle,
-        children: children
-      }) : children != null && children !== '' && highlight != null ? jsxRuntime.jsx(HighlightedID, {
-        mode: highlight,
-        theme: theme,
-        textStyle: textStyle,
-        children: children
-      }) : children != null && children !== '' ? jsxRuntime.jsx(reactNative.Text, {
-        numberOfLines: useStandardEllipsis ? 1 : useMaxLines ? maxLines : undefined,
-        ellipsizeMode: useStandardEllipsis || useMaxLines ? 'tail' : undefined,
-        style: finalTextStyle,
-        children: children
-      }) : jsxRuntime.jsx(NotActive, {
+      onLayout: autoEllipsis ? handleContainerLayout : undefined,
+      accessible: isTruncated && hasText ? true : undefined,
+      accessibilityLabel: isTruncated && hasText ? children : undefined,
+      children: [hasText ? renderSymbols(children) : jsxRuntime.jsx(NotActive, {
         theme: theme
-      })
-    }), copyButton && children != null && children !== '' && jsxRuntime.jsx(CopyButton, {
+      }), autoEllipsis && hasText && jsxRuntime.jsxs(reactNative.View, {
+        style: MEASURE_STYLE,
+        pointerEvents: 'none',
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants',
+        children: [jsxRuntime.jsx(reactNative.Text, {
+          style: idTextStyle,
+          onLayout: e => setTextWidth(e.nativeEvent.layout.width),
+          children: children
+        }), jsxRuntime.jsx(reactNative.Text, {
+          style: idTextStyle,
+          onLayout: e => setEllipsisWidth(e.nativeEvent.layout.width),
+          children: "\u2026"
+        })]
+      })]
+    }), copyButton && hasText && jsxRuntime.jsx(CopyButton, {
       className: "ml-3",
       text: children
     })]
@@ -2874,6 +3069,7 @@ exports.AsteriskIcon = AsteriskIcon;
 exports.AttentionCircleIcon = AttentionCircleIcon;
 exports.Avatar = Avatar;
 exports.Badge = Badge;
+exports.BellIcon = BellIcon;
 exports.BigNumber = BigNumber;
 exports.BroadcastedIcon = BroadcastedIcon;
 exports.Button = Button;

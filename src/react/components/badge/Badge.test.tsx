@@ -2,6 +2,7 @@ import '@testing-library/jest-dom'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Badge } from './index'
+import { ThemeProvider } from '../../contexts/ThemeContext'
 
 describe('Badge', () => {
   it('renders with provided text', () => {
@@ -141,5 +142,30 @@ describe('Badge', () => {
     expect(badge).toHaveClass('py-[0.25rem]')
     expect(badge).toHaveClass('bg-[#4C7EFF]')
     expect(badge).toHaveClass('rounded-[0.25rem]')
+  })
+
+  describe('shapes and icon sizes', () => {
+    const renderWithTheme = (component: React.ReactElement) =>
+      render(<ThemeProvider initialTheme='light'>{component}</ThemeProvider>)
+
+    it('renders a 24x24 square icon badge', () => {
+      renderWithTheme(<Badge size='icon'>L1</Badge>)
+      expect(screen.getByText('L1')).toHaveClass('w-6', 'h-6', 'p-0', 'rounded-[0.375rem]')
+    })
+
+    it('turns the icon badge into a circle', () => {
+      renderWithTheme(<Badge size='icon' shape='circle'>L2</Badge>)
+      expect(screen.getByText('L2')).toHaveClass('w-6', 'h-6', 'rounded-full')
+    })
+
+    it('renders a counter badge', () => {
+      renderWithTheme(<Badge size='counter' variant='solid' color='red'>3</Badge>)
+      expect(screen.getByText('3')).toHaveClass('min-w-5', 'h-5', 'text-[0.625rem]', 'rounded-full')
+    })
+
+    it('makes a square badge with shape square', () => {
+      renderWithTheme(<Badge size='xs' shape='square'>Tag</Badge>)
+      expect(screen.getByText('Tag')).toHaveClass('rounded-[0.375rem]')
+    })
   })
 })

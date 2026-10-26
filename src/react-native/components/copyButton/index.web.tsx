@@ -3,6 +3,9 @@ import { Pressable, Text, View, ViewStyle } from 'react-native'
 import { CopyIcon } from '../icons'
 import { cn } from '../../utils/tw'
 
+/** How the last copy attempt ended; 'idle' shows the icon again. */
+type CopyState = 'idle' | 'copied' | 'failed'
+
 const FEEDBACK_DURATION_MS = 1000
 
 export interface CopyButtonProps {
@@ -16,11 +19,15 @@ export interface CopyButtonProps {
   style?: ViewStyle
   /** Accessible label for the button */
   accessibilityLabel?: string
+  /** Feedback shown after a successful copy */
+  copiedLabel?: string
+  /** Feedback shown after a failed copy */
+  failedLabel?: string
 }
 
 /**
  * Web CopyButton component. Uses navigator.clipboard.writeText() for browser.
- * Copies text to clipboard on press and shows "Copied!" feedback briefly.
+ * Copies text to clipboard on press and briefly reports whether the copy succeeded.
  */
 export const CopyButton: React.FC<CopyButtonProps> = ({
   text,
@@ -28,21 +35,26 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   className = '',
   style,
   accessibilityLabel = 'Copy to clipboard',
+  copiedLabel = 'Copied!',
+  failedLabel = 'Copy failed',
 }) => {
-  const [copied, setCopied] = useState(false)
+  const [state, setState] = useState<CopyState>('idle')
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handlePress = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      onCopy?.(true)
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS)
-    } catch (err) {
-      console.error('Failed to copy:', err)
-      onCopy?.(false)
-    }
+    const success = await navigator.clipboard
+      .writeText(text)
+      .then(() => true)
+      .catch((err) => {
+        console.error('Failed to copy:', err)
+        return false
+      })
+
+    setState(success ? 'copied' : 'failed')
+    onCopy?.(success)
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS)
   }, [text, onCopy])
 
   useEffect(() => {
@@ -54,18 +66,21 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim()
   const buttonStyle = cn(buttonClasses)
 
+  const failed = state === 'failed'
+  const feedbackTextClasses = `text-xs font-medium ${failed ? 'text-red-600' : 'text-dash-brand'}`
+
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={() => { void handlePress() }}
       style={({ pressed }) =>
         [buttonStyle, style, pressed && { opacity: 0.7 }].filter(Boolean)
       }
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
     >
-      {copied ? (
+      {state !== 'idle' ? (
         <View style={cn('items-center justify-center min-w-4 min-h-4')}>
-          <Text style={cn('text-xs text-dash-brand font-medium')}>Copied!</Text>
+          <Text style={cn(feedbackTextClasses)}>{failed ? failedLabel : copiedLabel}</Text>
         </View>
       ) : (
         <CopyIcon color="#0C1C33" size={16} />

@@ -14,8 +14,16 @@ export interface IdentifierProps extends IdentifierVariants, Omit<ViewProps, 'st
     copyButton?: boolean;
     maxLines?: number;
     className?: string;
-    middleEllipsis?: boolean;
+    /** Cut the middle of the ID: `true` keeps `edgeChars` per side, `'auto'` fits the ID to the container width */
+    middleEllipsis?: boolean | 'auto';
+    /** Characters kept on each side with `middleEllipsis={true}` */
     edgeChars?: number;
+    /** Characters highlighted on each side in `highlight` modes */
+    highlightChars?: number;
+    /** Text size */
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    /** Text weight */
+    weight?: 'light' | 'normal' | 'medium';
     /** Theme to use */
     theme?: 'light' | 'dark';
     /** Custom container style (overrides Tailwind classes) */
@@ -39,6 +47,7 @@ export interface IdentifierProps extends IdentifierVariants, Omit<ViewProps, 'st
  * <Identifier highlight="both">0x1234567890abcdef</Identifier>
  * <Identifier avatar copyButton>alice@example.com</Identifier>
  * <Identifier middleEllipsis edgeChars={6}>very-long-identifier</Identifier>
+ * <Identifier middleEllipsis="auto" highlight="both">very-long-identifier</Identifier>
  * <Identifier maxLines={2}>Multi-line\nidentifier\ntext</Identifier>
  * ```
  */
