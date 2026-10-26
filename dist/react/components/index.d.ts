@@ -25,5 +25,8 @@ export { Dialog, type DialogProps } from './dialog';
 export { Tabs, type TabsProps, type TabItem } from './tabs';
 export { Tooltip, type TooltipProps } from './tooltip';
 export { Popover, type PopoverProps } from './popover';
+export { Checkbox, type CheckboxProps } from './checkbox';
+export { Slider, type SliderProps } from './slider';
+export { Stepper, type StepperProps, type StepperStep, type StepperStatus } from './stepper';
 export type { TimeDeltaFormat } from '../../shared/utils/datetime';
 export * from './icons';

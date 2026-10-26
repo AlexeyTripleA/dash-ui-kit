@@ -32,6 +32,8 @@ export interface OverlayMenuProps extends Omit<OverlayMenuVariants, 'theme' | 'd
     filled?: boolean;
     items?: OverlayMenuItem[];
     showArrow?: boolean;
+    /** Extra classes for the built-in arrow, e.g. its color or opacity */
+    arrowClassName?: string;
     disabled?: boolean;
     name?: string;
     overlayLabel?: string;

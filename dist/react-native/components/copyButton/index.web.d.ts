@@ -11,10 +11,14 @@ export interface CopyButtonProps {
     style?: ViewStyle;
     /** Accessible label for the button */
     accessibilityLabel?: string;
+    /** Feedback shown after a successful copy */
+    copiedLabel?: string;
+    /** Feedback shown after a failed copy */
+    failedLabel?: string;
 }
 /**
  * Web CopyButton component. Uses navigator.clipboard.writeText() for browser.
- * Copies text to clipboard on press and shows "Copied!" feedback briefly.
+ * Copies text to clipboard on press and briefly reports whether the copy succeeded.
  */
 export declare const CopyButton: React.FC<CopyButtonProps>;
 export default CopyButton;

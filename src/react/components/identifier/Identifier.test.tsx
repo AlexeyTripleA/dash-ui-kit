@@ -152,4 +152,51 @@ describe.concurrent('Identifier', () => {
     expect(avatar).toHaveAttribute('alt', 'test-id')
     expect(copyButton).toBeInTheDocument()
   })
-}) 
+
+  it('highlights edges and dims the middle with middleEllipsis and highlight', () => {
+    const { container } = renderWithTheme(
+      <Identifier middleEllipsis edgeChars={8} highlight='both'>{longId}</Identifier>
+    )
+
+    const spans = container.querySelectorAll('span')
+    expect(Array.from(spans).map(s => s.textContent)).toEqual(['abcde', 'fgh', '\u2026', '345', '67890'])
+    expect(spans[0]).not.toHaveClass('text-gray-500')
+    expect(spans[1]).toHaveClass('text-gray-500')
+    expect(spans[4]).not.toHaveClass('text-gray-500')
+  })
+
+  it('uses highlightChars for the number of highlighted characters', () => {
+    const { container } = renderWithTheme(
+      <Identifier highlight='both' highlightChars={3}>{longId}</Identifier>
+    )
+
+    const spans = container.querySelectorAll('span')
+    expect(spans[0].textContent).toBe('abc')
+    expect(spans[2].textContent).toBe('890')
+  })
+
+  it('does not duplicate characters of a short highlighted ID', () => {
+    renderWithTheme(<Identifier highlight='both'>abcd</Identifier>)
+
+    expect(screen.getByText('ab')).toBeInTheDocument()
+    expect(screen.getByText('cd')).toBeInTheDocument()
+  })
+
+  it('puts the full ID into the title when truncated', () => {
+    const { container } = renderWithTheme(<Identifier middleEllipsis>{longId}</Identifier>)
+
+    expect(container.querySelector(`[title="${longId}"]`)).not.toBeNull()
+  })
+
+  it('renders the whole ID in auto mode before the container is measured', () => {
+    renderWithTheme(<Identifier middleEllipsis='auto'>{longId}</Identifier>)
+
+    expect(screen.getByText(longId)).toBeInTheDocument()
+  })
+
+  it('applies size and weight variants', () => {
+    const { container } = renderWithTheme(<Identifier size='xl' weight='light'>{longId}</Identifier>)
+
+    expect(container.firstChild).toHaveClass('text-xl', 'font-light')
+  })
+})

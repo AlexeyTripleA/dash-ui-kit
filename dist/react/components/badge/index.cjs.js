@@ -17,11 +17,12 @@ const Badge = _a => {
       colorLight,
       colorDark,
       size = 'sm',
+      shape,
       borderRadius,
       className = '',
       onClick
     } = _a,
-    props = tslib.__rest(_a, ["children", "variant", "color", "colorLight", "colorDark", "size", "borderRadius", "className", "onClick"]);
+    props = tslib.__rest(_a, ["children", "variant", "color", "colorLight", "colorDark", "size", "shape", "borderRadius", "className", "onClick"]);
   const effectiveColor = (_b = useColorScheme.useColorScheme(color, colorLight, colorDark)) !== null && _b !== void 0 ? _b : 'blue';
   const baseClasses = 'inline-flex items-center justify-center font-medium transition-colors';
   // Size classes with default border radius
@@ -29,7 +30,15 @@ const Badge = _a => {
     xxs: 'px-1 py-1 text-xs gap-2 rounded-full',
     xs: 'px-[0.5rem] py-[0.25rem] text-xs rounded-full',
     sm: 'px-[2.125rem] py-[0.625rem] text-xs rounded-full',
-    xl: 'px-[2.25rem] py-4 text-lg rounded-full'
+    xl: 'px-[2.25rem] py-4 text-lg rounded-full',
+    icon: 'w-6 h-6 shrink-0 p-0 text-[0.625rem] leading-none rounded-[0.375rem]',
+    counter: 'min-w-5 h-5 px-1 text-[0.625rem] leading-none rounded-full'
+  };
+  // Shape classes (override size border radius)
+  const shapeClasses = {
+    pill: 'rounded-full',
+    square: 'rounded-[0.375rem]',
+    circle: 'rounded-full aspect-square !px-0'
   };
   // Border radius classes (overrides size border radius)
   const borderRadiusClasses = {
@@ -83,7 +92,7 @@ const Badge = _a => {
     };
     return colorMap[effectiveColor][variant];
   };
-  const classes = [baseClasses, sizeClasses[size], getVariantClasses(), borderRadius && borderRadiusClasses[borderRadius], className].filter(Boolean).join(' ');
+  const classes = [baseClasses, sizeClasses[size], getVariantClasses(), shape && shapeClasses[shape], borderRadius && borderRadiusClasses[borderRadius], className].filter(Boolean).join(' ');
   return jsxRuntime.jsx("span", Object.assign({
     className: classes,
     onClick: onClick

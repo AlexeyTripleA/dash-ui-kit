@@ -11,11 +11,23 @@ import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { Avatar } from '../avatar/index.esm.js';
 
 /** CVA for the root container, now with light/dark theme */
-const identifier = cva('flex items-center font-dash-grotesque text-sm font-normal break-all', {
+const identifier = cva('flex items-center font-dash-grotesque break-all', {
   variants: {
     theme: {
       light: 'text-gray-900',
       dark: 'text-white'
+    },
+    size: {
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl'
+    },
+    weight: {
+      light: 'font-light',
+      normal: 'font-normal',
+      medium: 'font-medium'
     },
     ellipsis: {
       false: '',
@@ -32,6 +44,8 @@ const identifier = cva('flex items-center font-dash-grotesque text-sm font-norma
   },
   defaultVariants: {
     theme: 'light',
+    size: 'sm',
+    weight: 'normal',
     ellipsis: false,
     highlight: 'default'
   }
@@ -83,14 +97,15 @@ const highlightModes = {
 };
 const HighlightedID = ({
   children,
-  mode
+  mode,
+  count = 5
 }) => {
   if (children == null || children === '') return jsx(NotActive, {});
   const text = String(children);
-  const count = 5;
-  const first = text.slice(0, count);
-  const middle = text.slice(count, text.length - count);
-  const last = text.slice(-5);
+  const edge = Math.min(count, Math.floor(text.length / 2));
+  const first = text.slice(0, edge);
+  const middle = text.slice(edge, text.length - edge);
+  const last = text.slice(text.length - edge);
   const cfg = highlightModes[mode];
   return jsxs(Fragment, {
     children: [jsx("span", {
@@ -135,6 +150,52 @@ const MiddleEllipsisText = ({
     })]
   });
 };
+/** Middle-ellipsis ID with bright edges and a dim middle part */
+const HighlightedMiddleEllipsis = ({
+  children,
+  edgeChars,
+  highlightChars,
+  mode
+}) => {
+  const text = String(children);
+  if (text.length <= edgeChars * 2) {
+    return jsx(HighlightedID, {
+      mode: mode,
+      count: highlightChars,
+      children: text
+    });
+  }
+  const bright = Math.min(highlightChars, edgeChars);
+  const cfg = highlightModes[mode];
+  return jsxs(Fragment, {
+    children: [jsx("span", {
+      className: symbol({
+        dim: !cfg.first
+      }),
+      children: text.slice(0, bright)
+    }), jsx("span", {
+      className: symbol({
+        dim: !cfg.middle
+      }),
+      children: text.slice(bright, edgeChars)
+    }), jsx("span", {
+      className: symbol({
+        dim: true
+      }),
+      children: "\u2026"
+    }), jsx("span", {
+      className: symbol({
+        dim: !cfg.middle
+      }),
+      children: text.slice(text.length - edgeChars, text.length - bright)
+    }), jsx("span", {
+      className: symbol({
+        dim: !cfg.last
+      }),
+      children: text.slice(text.length - bright)
+    })]
+  });
+};
 /**
  * Identifier component shows an ID string with optional highlighting, avatar,
  * copy button, dynamic line adjustment, and multi-line clamp.
@@ -149,7 +210,10 @@ const Identifier = ({
   maxLines = 0,
   className,
   middleEllipsis = false,
-  edgeChars = 4
+  edgeChars = 4,
+  highlightChars = 5,
+  size,
+  weight
 }) => {
   const {
     theme
@@ -159,6 +223,8 @@ const Identifier = ({
   const [charWidth, setCharWidth] = useState(0);
   const [linesMaxWidth, setLinesMaxWidth] = useState('none');
   const [widthCounted, setWidthCounted] = useState(false);
+  const [textWidth, setTextWidth] = useState(0);
+  const [ellipsisWidth, setEllipsisWidth] = useState(0);
   const prevWinRef = useRef(null);
   const [winWidth, setWinWidth] = useState(0);
   const {
@@ -171,25 +237,37 @@ const Identifier = ({
       // console.log('Window width debounced to:', newWidth)
     }
   });
-  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis) linesAdjustment = false;
+  const autoEllipsis = middleEllipsis === 'auto';
+  if ((ellipsis !== null && ellipsis !== void 0 ? ellipsis : false) || maxLines > 0 || middleEllipsis !== false) linesAdjustment = false;
   useResizeObserver(symbolsRef, entry => {
     setContainerWidth(entry.contentRect.width);
   });
-  const measureChar = useCallback(() => {
-    if (symbolsRef.current == null || !linesAdjustment) return 0;
+  const measureText = useCallback(text => {
+    if (symbolsRef.current == null) return 0;
     const temp = document.createElement('span');
     const styles = getComputedStyle(symbolsRef.current);
     temp.style.position = 'absolute';
     temp.style.visibility = 'hidden';
+    temp.style.whiteSpace = 'nowrap';
     temp.style.fontFamily = styles.fontFamily;
     temp.style.fontSize = styles.fontSize;
     temp.style.fontWeight = styles.fontWeight;
-    temp.textContent = 'A';
+    temp.style.letterSpacing = styles.letterSpacing;
+    temp.textContent = text;
     document.body.appendChild(temp);
     const w = temp.getBoundingClientRect().width;
     document.body.removeChild(temp);
     return w > 0 ? w : 0;
-  }, [linesAdjustment]);
+  }, []);
+  const measureChar = useCallback(() => {
+    if (!linesAdjustment) return 0;
+    return measureText('A');
+  }, [linesAdjustment, measureText]);
+  useEffect(() => {
+    if (!autoEllipsis || children == null || children === '') return;
+    setTextWidth(measureText(children));
+    setEllipsisWidth(measureText('\u2026'));
+  }, [autoEllipsis, children, containerWidth, measureText]);
   useEffect(() => {
     if (symbolsRef.current == null || !linesAdjustment) return;
     const measuredWidth = measureChar();
@@ -240,11 +318,48 @@ const Identifier = ({
       cancelDebounce();
     };
   }, [cancelDebounce]);
+  /** Characters kept per side in auto mode, `null` when the whole ID fits */
+  const getAutoEdgeChars = () => {
+    var _a;
+    const len = (_a = children === null || children === void 0 ? void 0 : children.length) !== null && _a !== void 0 ? _a : 0;
+    if (textWidth === 0 || containerWidth === 0 || len === 0) return null;
+    if (textWidth <= containerWidth) return null;
+    const avgChar = textWidth / len;
+    return Math.max(Math.floor((containerWidth - ellipsisWidth) / avgChar / 2) - 1, 1);
+  };
+  const renderSymbols = text => {
+    if (middleEllipsis === false) {
+      return highlight != null ? jsx(HighlightedID, {
+        mode: highlight,
+        count: highlightChars,
+        children: text
+      }) : text;
+    }
+    const edge = autoEllipsis ? getAutoEdgeChars() : edgeChars;
+    if (edge == null) {
+      return highlight != null ? jsx(HighlightedID, {
+        mode: highlight,
+        count: highlightChars,
+        children: text
+      }) : text;
+    }
+    return highlight != null ? jsx(HighlightedMiddleEllipsis, {
+      edgeChars: edge,
+      highlightChars: highlightChars,
+      mode: highlight,
+      children: text
+    }) : jsx(MiddleEllipsisText, {
+      edgeChars: edge,
+      children: text
+    });
+  };
   const rootClass = identifier({
     theme,
+    size,
+    weight,
     ellipsis,
     highlight
-  }) + (className != null && className !== '' ? ` ${className}` : '');
+  }) + (autoEllipsis ? ' w-full min-w-0' : '') + (className != null && className !== '' ? ` ${className}` : '');
   const clampStyles = maxLines > 0 ? {
     display: '-webkit-box',
     WebkitLineClamp: maxLines,
@@ -252,7 +367,8 @@ const Identifier = ({
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   } : {};
-  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis' : 'flex-1 leading-[1rem]';
+  const symbolContainerClass = ellipsis === true ? 'flex-1 overflow-hidden whitespace-nowrap text-ellipsis' : autoEllipsis ? 'flex-1 min-w-0 overflow-hidden whitespace-nowrap leading-[1rem]' : 'flex-1 leading-[1rem]';
+  const isTruncated = ellipsis === true || middleEllipsis !== false;
   return jsxs("div", {
     className: rootClass,
     children: [(avatar !== null && avatar !== void 0 ? avatar : false) && children != null && children !== '' && jsx(Avatar, {
@@ -261,16 +377,11 @@ const Identifier = ({
     }), jsx("div", {
       ref: symbolsRef,
       className: symbolContainerClass,
+      title: isTruncated && children != null && children !== '' ? children : undefined,
       style: Object.assign(Object.assign({}, widthCounted && maxLines === 0 ? {
         maxWidth: linesMaxWidth
       } : {}), clampStyles),
-      children: children != null && children !== '' && middleEllipsis ? jsx(MiddleEllipsisText, {
-        edgeChars: edgeChars,
-        children: children
-      }) : children != null && children !== '' && highlight != null ? jsx(HighlightedID, {
-        mode: highlight,
-        children: children
-      }) : children !== null && children !== void 0 ? children : jsx(NotActive, {})
+      children: children != null && children !== '' ? renderSymbols(children) : children !== null && children !== void 0 ? children : jsx(NotActive, {})
     }), (copyButton !== null && copyButton !== void 0 ? copyButton : false) && children != null && children !== '' && jsx(CopyButton, {
       className: 'ml-3',
       text: children

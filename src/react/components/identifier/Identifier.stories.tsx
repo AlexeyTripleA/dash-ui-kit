@@ -28,7 +28,19 @@ const meta: Meta<typeof Identifier> = {
       control: 'boolean',
     },
     middleEllipsis: {
-      control: 'boolean',
+      control: { type: 'select' },
+      options: [false, true, 'auto'],
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    weight: {
+      control: { type: 'select' },
+      options: ['light', 'normal', 'medium'],
+    },
+    highlightChars: {
+      control: { type: 'number', min: 1, max: 20 },
     },
     linesAdjustment: {
       control: 'boolean',
@@ -147,6 +159,38 @@ export const MiddleEllipsisShort: Story = {
     children: 'short-id',
     middleEllipsis: true,
     edgeChars: 4,
+  },
+}
+
+export const MiddleEllipsisHighlighted: Story = {
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    middleEllipsis: true,
+    highlight: 'both',
+    edgeChars: 10,
+  },
+}
+
+export const MiddleEllipsisAuto: Story = {
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    middleEllipsis: 'auto',
+    highlight: 'both',
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: '200px', resize: 'horizontal', overflow: 'hidden', border: '1px dashed #ccc' }}>
+        <Story />
+      </div>
+    ),
+  ],
+}
+
+export const SizeAndWeight: Story = {
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    size: 'xl',
+    weight: 'light',
   },
 }
 

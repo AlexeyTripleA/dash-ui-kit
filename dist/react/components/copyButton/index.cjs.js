@@ -32,6 +32,7 @@ function _interopNamespaceDefault(e) {
 
 var PopoverPrimitive__namespace = /*#__PURE__*/_interopNamespaceDefault(PopoverPrimitive);
 
+const FEEDBACK_DURATION_MS = 1000;
 const copyBtn = classVarianceAuthority.cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
   variants: {
     theme: {
@@ -47,22 +48,35 @@ const CopyButton = _a => {
   var {
       text,
       className,
-      onCopy
+      onCopy,
+      copiedLabel = 'Copied',
+      failedLabel = 'Copy failed'
     } = _a,
-    props = tslib.__rest(_a, ["text", "className", "onCopy"]);
+    props = tslib.__rest(_a, ["text", "className", "onCopy", "copiedLabel", "failedLabel"]);
   const {
     theme
   } = ThemeContext.useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState('idle');
+  const timeoutRef = React.useRef(null);
+  React.useEffect(() => () => {
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+  }, []);
+  const showResult = result => {
+    setState(result);
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS);
+  };
   const handleCopy = e => {
     e.stopPropagation();
     e.preventDefault();
-    copyToClipboard.copyToClipboard(text, onCopy);
-    setOpen(true);
-    setTimeout(() => setOpen(false), 1000);
+    copyToClipboard.copyToClipboard(text, result => {
+      showResult(result.status ? 'copied' : 'failed');
+      onCopy === null || onCopy === void 0 ? void 0 : onCopy(result);
+    });
   };
+  const failed = state === 'failed';
   return jsxRuntime.jsxs(PopoverPrimitive__namespace.Root, {
-    open: open,
+    open: state !== 'idle',
     children: [jsxRuntime.jsx(PopoverPrimitive__namespace.Trigger, {
       asChild: true,
       children: jsxRuntime.jsx("button", Object.assign({
@@ -79,10 +93,11 @@ const CopyButton = _a => {
       }))
     }), jsxRuntime.jsx(PopoverPrimitive__namespace.Portal, {
       children: jsxRuntime.jsxs(PopoverPrimitive__namespace.Content, {
-        className: 'bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg',
+        className: `bg-white text-sm px-2 py-1 rounded shadow-lg ${failed ? 'text-red-600' : 'text-gray-900'}`,
         side: 'top',
         sideOffset: 5,
-        children: ["Copied", jsxRuntime.jsx(PopoverPrimitive__namespace.Arrow, {
+        role: 'status',
+        children: [failed ? failedLabel : copiedLabel, jsxRuntime.jsx(PopoverPrimitive__namespace.Arrow, {
           className: 'fill-white'
         })]
       })

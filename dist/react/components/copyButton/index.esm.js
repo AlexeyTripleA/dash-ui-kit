@@ -2,13 +2,14 @@
 
 import { __rest } from 'tslib';
 import { jsxs, jsx } from 'react/jsx-runtime';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { cva } from 'class-variance-authority';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { CopyIcon } from '../icons/index.esm.js';
 import { useTheme } from '../../contexts/ThemeContext.esm.js';
 import { copyToClipboard } from '../../utils/copyToClipboard.esm.js';
 
+const FEEDBACK_DURATION_MS = 1000;
 const copyBtn = cva('p-0 flex-shrink-0 h-[max-content] min-w-0 bg-transparent transition-colors', {
   variants: {
     theme: {
@@ -24,22 +25,35 @@ const CopyButton = _a => {
   var {
       text,
       className,
-      onCopy
+      onCopy,
+      copiedLabel = 'Copied',
+      failedLabel = 'Copy failed'
     } = _a,
-    props = __rest(_a, ["text", "className", "onCopy"]);
+    props = __rest(_a, ["text", "className", "onCopy", "copiedLabel", "failedLabel"]);
   const {
     theme
   } = useTheme();
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState('idle');
+  const timeoutRef = useRef(null);
+  useEffect(() => () => {
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+  }, []);
+  const showResult = result => {
+    setState(result);
+    if (timeoutRef.current !== null) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS);
+  };
   const handleCopy = e => {
     e.stopPropagation();
     e.preventDefault();
-    copyToClipboard(text, onCopy);
-    setOpen(true);
-    setTimeout(() => setOpen(false), 1000);
+    copyToClipboard(text, result => {
+      showResult(result.status ? 'copied' : 'failed');
+      onCopy === null || onCopy === void 0 ? void 0 : onCopy(result);
+    });
   };
+  const failed = state === 'failed';
   return jsxs(PopoverPrimitive.Root, {
-    open: open,
+    open: state !== 'idle',
     children: [jsx(PopoverPrimitive.Trigger, {
       asChild: true,
       children: jsx("button", Object.assign({
@@ -56,10 +70,11 @@ const CopyButton = _a => {
       }))
     }), jsx(PopoverPrimitive.Portal, {
       children: jsxs(PopoverPrimitive.Content, {
-        className: 'bg-white text-gray-900 text-sm px-2 py-1 rounded shadow-lg',
+        className: `bg-white text-sm px-2 py-1 rounded shadow-lg ${failed ? 'text-red-600' : 'text-gray-900'}`,
         side: 'top',
         sideOffset: 5,
-        children: ["Copied", jsx(PopoverPrimitive.Arrow, {
+        role: 'status',
+        children: [failed ? failedLabel : copiedLabel, jsx(PopoverPrimitive.Arrow, {
           className: 'fill-white'
         })]
       })

@@ -9,14 +9,18 @@ export interface CopyButtonProps {
     className?: string;
     /** Custom container style (overrides Tailwind classes) */
     style?: ViewStyle;
-    /** Custom text style for "Copied!" text (overrides Tailwind text classes) */
+    /** Custom text style for the feedback text (overrides Tailwind text classes) */
     textStyle?: TextStyle;
     /** Accessible label for the button */
     accessibilityLabel?: string;
+    /** Feedback shown after a successful copy */
+    copiedLabel?: string;
+    /** Feedback shown after a failed copy */
+    failedLabel?: string;
 }
 /**
  * React Native CopyButton component. Copies text to clipboard on press
- * and shows "Copied!" feedback briefly.
+ * and briefly reports whether the copy succeeded.
  */
 export declare const CopyButton: React.FC<CopyButtonProps>;
 export default CopyButton;

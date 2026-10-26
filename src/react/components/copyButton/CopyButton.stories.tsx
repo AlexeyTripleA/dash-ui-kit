@@ -17,6 +17,14 @@ const meta: Meta<typeof CopyButton> = {
     className: {
       control: 'text',
       description: 'Additional CSS classes'
+    },
+    copiedLabel: {
+      control: 'text',
+      description: 'Feedback shown after a successful copy'
+    },
+    failedLabel: {
+      control: 'text',
+      description: 'Feedback shown after a failed copy'
     }
   },
 }
@@ -58,5 +66,13 @@ export const Disabled: Story = {
   args: {
     text: 'Disabled copy button',
     disabled: true,
+  },
+}
+
+export const CustomLabels: Story = {
+  args: {
+    text: 'Copy button with custom feedback',
+    copiedLabel: 'Saved to clipboard',
+    failedLabel: 'Could not copy',
   },
 } 

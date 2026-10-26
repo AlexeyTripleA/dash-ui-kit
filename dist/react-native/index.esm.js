@@ -1818,11 +1818,7 @@ function getClipboard() {
     const ExpoClipboard = require('expo-clipboard');
     if ((ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.setStringAsync) && (ExpoClipboard === null || ExpoClipboard === void 0 ? void 0 : ExpoClipboard.getStringAsync)) {
       clipboardInstance = {
-        setString: text => {
-          ExpoClipboard.setStringAsync(text).catch(err => {
-            console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
-          });
-        },
+        setString: text => ExpoClipboard.setStringAsync(text),
         getString: () => ExpoClipboard.getStringAsync()
       };
       return clipboardInstance;
@@ -1849,7 +1845,7 @@ function getClipboard() {
   console.warn('[dash-ui-kit] No clipboard library found. Please install either:\n' + '  - expo-clipboard (for Expo projects): npx expo install expo-clipboard\n' + '  - @react-native-clipboard/clipboard (for React Native): npm install @react-native-clipboard/clipboard');
   clipboardInstance = {
     setString: () => {
-      console.warn('[dash-ui-kit] Clipboard not available');
+      throw new Error('[dash-ui-kit] Clipboard not available');
     },
     getString: async () => ''
   };
@@ -1861,12 +1857,25 @@ function getClipboard() {
  */
 const Clipboard = {
   /**
-   * Set string to clipboard
+   * Set string to clipboard, ignoring the result
    * @param text - Text to copy
    */
   setString: text => {
-    const clipboard = getClipboard();
-    clipboard.setString(text);
+    void Clipboard.setStringAsync(text);
+  },
+  /**
+   * Set string to clipboard and report whether it worked
+   * @param text - Text to copy
+   * @returns Promise resolving to true on success, false on failure
+   */
+  setStringAsync: async text => {
+    try {
+      await getClipboard().setString(text);
+      return true;
+    } catch (err) {
+      console.warn('[dash-ui-kit] Failed to copy to clipboard:', err);
+      return false;
+    }
   },
   /**
    * Get string from clipboard
@@ -1881,7 +1890,7 @@ const Clipboard = {
 const FEEDBACK_DURATION_MS = 1000;
 /**
  * React Native CopyButton component. Copies text to clipboard on press
- * and shows "Copied!" feedback briefly.
+ * and briefly reports whether the copy succeeded.
  */
 const CopyButton = ({
   text,
@@ -1889,16 +1898,18 @@ const CopyButton = ({
   className = '',
   style,
   textStyle,
-  accessibilityLabel = 'Copy to clipboard'
+  accessibilityLabel = 'Copy to clipboard',
+  copiedLabel = 'Copied!',
+  failedLabel = 'Copy failed'
 }) => {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState('idle');
   const timeoutRef = useRef(null);
-  const handlePress = useCallback(() => {
-    Clipboard.setString(text);
-    setCopied(true);
-    onCopy === null || onCopy === void 0 ? void 0 : onCopy(true);
+  const handlePress = useCallback(async () => {
+    const success = await Clipboard.setStringAsync(text);
+    setState(success ? 'copied' : 'failed');
+    onCopy === null || onCopy === void 0 ? void 0 : onCopy(success);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setCopied(false), FEEDBACK_DURATION_MS);
+    timeoutRef.current = setTimeout(() => setState('idle'), FEEDBACK_DURATION_MS);
   }, [text, onCopy]);
   useEffect(() => {
     return () => {
@@ -1907,10 +1918,13 @@ const CopyButton = ({
   }, []);
   const buttonClasses = `p-0 flex-shrink-0 min-w-0 bg-transparent ${className}`.trim();
   const buttonStyle = [cn(buttonClasses), style].filter(Boolean);
-  const copiedTextClasses = 'text-xs text-dash-brand font-medium';
-  const copiedTextStyle = [cn(copiedTextClasses), textStyle].filter(Boolean);
+  const failed = state === 'failed';
+  const feedbackTextClasses = `text-xs font-medium ${failed ? 'text-red-600' : 'text-dash-brand'}`;
+  const feedbackTextStyle = [cn(feedbackTextClasses), textStyle].filter(Boolean);
   return jsx(Pressable, {
-    onPress: handlePress,
+    onPress: () => {
+      void handlePress();
+    },
     style: ({
       pressed
     }) => [buttonStyle, pressed && {
@@ -1918,11 +1932,11 @@ const CopyButton = ({
     }].filter(Boolean),
     accessibilityLabel: accessibilityLabel,
     accessibilityRole: "button",
-    children: copied ? jsx(View, {
+    children: state !== 'idle' ? jsx(View, {
       style: cn('items-center justify-center min-w-4 min-h-4'),
       children: jsx(Text$1, {
-        style: copiedTextStyle,
-        children: "Copied!"
+        style: feedbackTextStyle,
+        children: failed ? failedLabel : copiedLabel
       })
     }) : jsx(CopyIcon, {
       color: "#0C1C33",

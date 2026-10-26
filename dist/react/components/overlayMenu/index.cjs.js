@@ -57,6 +57,10 @@ const overlayMenuTrigger = classVarianceAuthority.cva('w-full transition-all fon
     border: true,
     class: 'outline-red-500 focus:outline-red-500'
   }, {
+    colorScheme: 'error',
+    border: false,
+    class: 'outline outline-1 outline-offset-[-1px] outline-red-500 focus:outline-red-500'
+  }, {
     colorScheme: 'success',
     border: true,
     class: 'outline-green-500 focus:outline-green-500'
@@ -320,6 +324,7 @@ const OverlayMenu = _a => {
       disabled = false,
       items = [],
       showArrow = true,
+      arrowClassName = '',
       name,
       overlayLabel,
       maxHeight = '200px',
@@ -336,7 +341,7 @@ const OverlayMenu = _a => {
       width,
       onClose
     } = _a,
-    props = tslib.__rest(_a, ["className", "triggerClassName", "contentClassName", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "align", "wrapperClassName", "headerContent", "showCloseButton", "closeButtonAlign", "position", "width", "onClose"]);
+    props = tslib.__rest(_a, ["className", "triggerClassName", "contentClassName", "colorScheme", "colorSchemeLight", "colorSchemeDark", "size", "error", "success", "border", "filled", "disabled", "items", "showArrow", "arrowClassName", "name", "overlayLabel", "maxHeight", "triggerContent", "placeholder", "showItemBorders", "variant", "align", "wrapperClassName", "headerContent", "showCloseButton", "closeButtonAlign", "position", "width", "onClose"]);
   const {
     theme
   } = ThemeContext.useTheme();
@@ -423,13 +428,13 @@ const OverlayMenu = _a => {
       name: name
     }, props, {
       children: [jsxRuntime.jsx("div", {
-        className: 'w-full flex-1 text-left',
+        className: 'w-full min-w-0 flex-1 text-left',
         children: triggerContent || jsxRuntime.jsx("span", {
           className: theme === 'dark' ? 'text-gray-400' : 'text-gray-500',
           children: placeholder
         })
       }), showArrow && jsxRuntime.jsx(ChevronDownIcon, {
-        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'}`
+        className: `transition-transform ${isOpen ? 'rotate-180' : ''} ${size === 'sm' ? 'w-3 h-3' : 'w-4 h-4'} shrink-0 ${arrowClassName}`
       })]
     })), isOpen && jsxRuntime.jsxs(jsxRuntime.Fragment, {
       children: [jsxRuntime.jsx("div", {
