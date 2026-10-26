@@ -13,7 +13,10 @@ const meta = {
       options: [undefined, 'default', 'dim', 'highlight', 'first', 'last', 'both'] 
     },
     ellipsis: { control: 'boolean' },
-    middleEllipsis: { control: 'boolean' },
+    middleEllipsis: { control: 'select', options: [false, true, 'auto'] },
+    highlightChars: { control: { type: 'number', min: 1, max: 20, step: 1 } },
+    size: { control: 'select', options: ['xs', 'sm', 'md', 'lg', 'xl'] },
+    weight: { control: 'select', options: ['light', 'normal', 'medium'] },
     maxLines: { control: { type: 'number', min: 0, max: 10, step: 1 } },
     edgeChars: { control: { type: 'number', min: 2, max: 20, step: 1 } },
     avatar: { control: 'boolean' },
@@ -221,6 +224,49 @@ export const MiddleEllipsis: Story = {
       </View>
     </View>
   ),
+}
+
+/**
+ * Middle ellipsis with bright edges and a dim middle part
+ */
+export const MiddleEllipsisHighlighted: Story = {
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    middleEllipsis: true,
+    highlight: 'both',
+    edgeChars: 10,
+  },
+}
+
+/**
+ * Middle ellipsis fitted to the container width
+ */
+export const MiddleEllipsisAuto: Story = {
+  render: (args) => (
+    <View style={{ gap: 12 }}>
+      {[80, 160, 240, 400].map(width => (
+        <View key={width} style={{ width, borderWidth: 1, borderStyle: 'dashed', borderColor: '#ccc' }}>
+          <Identifier {...args} />
+        </View>
+      ))}
+    </View>
+  ),
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    middleEllipsis: 'auto',
+    highlight: 'both',
+  },
+}
+
+/**
+ * Text size and weight
+ */
+export const SizeAndWeight: Story = {
+  args: {
+    children: 'yM5CAJVUf1abc7iGTzRxnvUsAoc47Z12Ca',
+    size: 'xl',
+    weight: 'light',
+  },
 }
 
 /**

@@ -24,6 +24,7 @@ export declare const QueuedIcon: React.FC<IconProps>;
 export declare const PooledIcon: React.FC<IconProps>;
 export declare const BroadcastedIcon: React.FC<IconProps>;
 export declare const AttentionCircleIcon: React.FC<IconProps>;
+export declare const BellIcon: React.FC<IconProps>;
 export declare const Icons: {
     ArrowIcon: React.FC<IconProps>;
     CopyIcon: React.FC<IconProps>;
@@ -44,4 +45,5 @@ export declare const Icons: {
     AsteriskIcon: React.FC<IconProps>;
     RefreshIcon: React.FC<IconProps>;
     AttentionCircleIcon: React.FC<IconProps>;
+    BellIcon: React.FC<IconProps>;
 };

@@ -23,8 +23,13 @@ const meta: Meta<typeof Badge> = {
     },
     size: {
       control: 'select',
-      options: ['xxs', 'xs', 'sm', 'xl'],
+      options: ['xxs', 'xs', 'sm', 'xl', 'icon', 'counter'],
       description: 'Badge size',
+    },
+    shape: {
+      control: 'select',
+      options: [undefined, 'pill', 'square', 'circle'],
+      description: 'Badge shape',
     },
     borderRadius: {
       control: 'select',
@@ -152,6 +157,18 @@ export const BorderRadiusVariants: Story = {
     <View style={{ gap: 12, alignItems: 'flex-start' }}>
       <Badge color="blue" variant="solid">Default Border Radius (Full)</Badge>
       <Badge color="blue" variant="solid" borderRadius="xs">XS Border Radius</Badge>
+    </View>
+  ),
+}
+
+// Icon tiles and counters
+export const IconAndCounter: Story = {
+  render: () => (
+    <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+      <Badge color="blue" variant="flat" size="icon">L1</Badge>
+      <Badge color="blue" variant="flat" size="icon" shape="circle">L2</Badge>
+      <Badge color="red" variant="solid" size="counter">3</Badge>
+      <Badge color="red" variant="solid" size="counter">12</Badge>
     </View>
   ),
 }

@@ -20,7 +20,8 @@ import {
   BroadcastedIcon,
   AsteriskIcon,
   RefreshIcon,
-  AttentionCircleIcon
+  AttentionCircleIcon,
+  BellIcon
 } from './index'
 
 const meta: Meta = {
@@ -127,6 +128,10 @@ export const AllIcons: StoryObj = {
       <View style={styles.iconContainer}>
         <AttentionCircleIcon />
         <Text style={styles.iconLabel}>AttentionCircleIcon</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <BellIcon />
+        <Text style={styles.iconLabel}>BellIcon</Text>
       </View>
     </View>
   )
@@ -403,6 +408,19 @@ export const AttentionCircle: StoryObj = {
   ),
   args: {
     size: 27,
+    color: '#0C1C33'
+  }
+}
+
+// Bell Icon
+export const Bell: StoryObj = {
+  render: (args) => (
+    <View style={{ padding: 20 }}>
+      <BellIcon {...args} />
+    </View>
+  ),
+  args: {
+    size: 24,
     color: '#0C1C33'
   }
 }
